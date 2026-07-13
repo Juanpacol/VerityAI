@@ -6,7 +6,11 @@
     "category": "safety",
     "severity": "critical",
     "formal_spec": "PRE: arr has length n > 0; POST: all array accesses use indices in [0, n-1]",
-    "applies_to": ["python", "java", "cpp"],
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
     "test_code": "def test_bounds(arr, idx):\n    assert 0 <= idx < len(arr)\n    return arr[idx]"
   },
   {
@@ -16,7 +20,11 @@
     "category": "security",
     "severity": "critical",
     "formal_spec": "PRE: ptr is not null; POST: dereference is safe",
-    "applies_to": ["cpp", "java", "python"],
+    "applies_to": [
+      "cpp",
+      "java",
+      "python"
+    ],
     "test_code": "def test_null_check(obj):\n    if obj is not None:\n        return obj.method()\n    return None"
   },
   {
@@ -26,7 +34,11 @@
     "category": "security",
     "severity": "critical",
     "formal_spec": "PRE: user_input is untrusted; POST: query uses parameterized statement",
-    "applies_to": ["python", "java", "cpp"],
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
     "test_code": "def safe_query(cursor, user_id):\n    cursor.execute('SELECT * FROM users WHERE id = ?', (user_id,))\n    return cursor.fetchall()"
   },
   {
@@ -36,7 +48,11 @@
     "category": "correctness",
     "severity": "high",
     "formal_spec": "PRE: array is sorted; INV: array remains sorted; POST: array is still sorted",
-    "applies_to": ["python", "java", "cpp"],
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
     "test_code": "def maintains_sorted(arr):\n    assert all(arr[i] <= arr[i+1] for i in range(len(arr)-1))"
   },
   {
@@ -46,7 +62,11 @@
     "category": "correctness",
     "severity": "high",
     "formal_spec": "PRE: function signature; POST: returned value satisfies postcondition",
-    "applies_to": ["python", "java", "cpp"],
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
     "test_code": "def validate_return(result, expected):\n    assert result == expected or result == -1"
   },
   {
@@ -56,7 +76,11 @@
     "category": "correctness",
     "severity": "high",
     "formal_spec": "PRE: loop has bounded counter; POST: loop terminates",
-    "applies_to": ["python", "java", "cpp"],
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
     "test_code": "for i in range(n):\n    # bounded by n iterations\n    pass"
   },
   {
@@ -66,7 +90,11 @@
     "category": "correctness",
     "severity": "high",
     "formal_spec": "PRE: function is recursive; POST: has base case that prevents infinite recursion",
-    "applies_to": ["python", "java", "cpp"],
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
     "test_code": "def recursive_fn(n):\n    if n <= 1:\n        return 1\n    return n * recursive_fn(n - 1)"
   },
   {
@@ -76,7 +104,570 @@
     "category": "correctness",
     "severity": "medium",
     "formal_spec": "PRE: array has property P; POST: after mutation, array still has property P",
-    "applies_to": ["python", "java", "cpp"],
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
     "test_code": "def safe_mutation(arr):\n    original_len = len(arr)\n    arr[0] = 99\n    assert len(arr) == original_len"
+  },
+  {
+    "id": "rule_no_xss",
+    "name": "XSS Prevention",
+    "description": "Verify that user-controlled output is escaped before rendering in HTML context",
+    "category": "security",
+    "severity": "critical",
+    "formal_spec": "PRE: output_contains_user_input; POST: output_is_html_escaped",
+    "applies_to": [
+      "python",
+      "java"
+    ],
+    "test_code": "def safe_render(user_input):\n    import html\n    return html.escape(user_input)"
+  },
+  {
+    "id": "rule_no_path_traversal",
+    "name": "Path Traversal Prevention",
+    "description": "Verify that file paths built from user input cannot escape the intended directory",
+    "category": "security",
+    "severity": "critical",
+    "formal_spec": "PRE: path_contains_user_input; POST: path_is_within_base_directory",
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
+    "test_code": "import os\ndef safe_path(base_dir, user_path):\n    full = os.path.realpath(os.path.join(base_dir, user_path))\n    assert full.startswith(os.path.realpath(base_dir))\n    return full"
+  },
+  {
+    "id": "rule_no_command_injection",
+    "name": "Command Injection Prevention",
+    "description": "Verify that shell commands do not interpolate unsanitized user input",
+    "category": "security",
+    "severity": "critical",
+    "formal_spec": "PRE: command_contains_user_input; POST: command_uses_argument_list_not_shell_string",
+    "applies_to": [
+      "python",
+      "java"
+    ],
+    "test_code": "import subprocess\ndef safe_run(user_arg):\n    subprocess.run(['ls', user_arg], shell=False)"
+  },
+  {
+    "id": "rule_no_insecure_deserialization",
+    "name": "Insecure Deserialization Prevention",
+    "description": "Verify that untrusted data is not deserialized with unsafe loaders (e.g. pickle)",
+    "category": "security",
+    "severity": "critical",
+    "formal_spec": "PRE: data_source_is_untrusted; POST: deserializer_is_safe_format",
+    "applies_to": [
+      "python"
+    ],
+    "test_code": "import json\ndef safe_deserialize(data):\n    return json.loads(data)"
+  },
+  {
+    "id": "rule_no_hardcoded_secrets",
+    "name": "No Hardcoded Secrets",
+    "description": "Verify that credentials, API keys, and tokens are not hardcoded in source",
+    "category": "security",
+    "severity": "high",
+    "formal_spec": "PRE: code_contains_credential_pattern; POST: credential_loaded_from_env_or_vault",
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
+    "test_code": "import os\napi_key = os.environ['API_KEY']"
+  },
+  {
+    "id": "rule_no_weak_crypto",
+    "name": "No Weak Cryptography",
+    "description": "Verify that weak hash/cipher algorithms (MD5, SHA1, DES) are not used for security purposes",
+    "category": "security",
+    "severity": "high",
+    "formal_spec": "PRE: code_uses_crypto_primitive; POST: primitive_is_modern_and_approved",
+    "applies_to": [
+      "python",
+      "java"
+    ],
+    "test_code": "import hashlib\ndef safe_hash(data):\n    return hashlib.sha256(data).hexdigest()"
+  },
+  {
+    "id": "rule_no_xxe",
+    "name": "XXE Prevention",
+    "description": "Verify that XML parsers disable external entity resolution",
+    "category": "security",
+    "severity": "high",
+    "formal_spec": "PRE: code_parses_xml; POST: external_entities_disabled",
+    "applies_to": [
+      "python",
+      "java"
+    ],
+    "test_code": "from defusedxml import ElementTree as ET\ndef safe_parse(xml_str):\n    return ET.fromstring(xml_str)"
+  },
+  {
+    "id": "rule_no_ssrf",
+    "name": "SSRF Prevention",
+    "description": "Verify that outbound requests to user-supplied URLs validate against an allowlist",
+    "category": "security",
+    "severity": "high",
+    "formal_spec": "PRE: request_url_from_user_input; POST: url_host_is_allowlisted",
+    "applies_to": [
+      "python",
+      "java"
+    ],
+    "test_code": "def safe_fetch(url, allowlist):\n    from urllib.parse import urlparse\n    host = urlparse(url).hostname\n    assert host in allowlist"
+  },
+  {
+    "id": "rule_csrf_token_required",
+    "name": "CSRF Token Required",
+    "description": "Verify that state-changing endpoints require a valid CSRF token",
+    "category": "security",
+    "severity": "medium",
+    "formal_spec": "PRE: endpoint_is_state_changing; POST: request_includes_valid_csrf_token",
+    "applies_to": [
+      "python",
+      "java"
+    ],
+    "test_code": "def handle_post(request):\n    assert request.csrf_token == session.csrf_token"
+  },
+  {
+    "id": "rule_no_unsafe_eval",
+    "name": "No Unsafe eval/exec",
+    "description": "Verify that eval()/exec() are not called on user-controlled strings",
+    "category": "security",
+    "severity": "critical",
+    "formal_spec": "PRE: eval_or_exec_called; POST: argument_is_not_user_controlled",
+    "applies_to": [
+      "python"
+    ],
+    "test_code": "def safe_compute(expression_ast):\n    return evaluate_ast(expression_ast)  # not raw eval()"
+  },
+  {
+    "id": "rule_no_off_by_one",
+    "name": "Off-by-One Prevention",
+    "description": "Verify loop and index bounds do not systematically over- or under-shoot by one",
+    "category": "correctness",
+    "severity": "high",
+    "formal_spec": "PRE: loop_has_explicit_bound; POST: bound_matches_intended_range",
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
+    "test_code": "for i in range(len(arr)):\n    process(arr[i])"
+  },
+  {
+    "id": "rule_no_integer_overflow",
+    "name": "Integer Overflow Prevention",
+    "description": "Verify arithmetic on bounded integer types cannot silently wrap around",
+    "category": "correctness",
+    "severity": "high",
+    "formal_spec": "PRE: fixed_width_integer_arithmetic; POST: result_within_type_bounds_checked",
+    "applies_to": [
+      "java",
+      "cpp"
+    ],
+    "test_code": "assert result <= INT_MAX and result >= INT_MIN"
+  },
+  {
+    "id": "rule_no_unsafe_type_coercion",
+    "name": "No Unsafe Type Coercion",
+    "description": "Verify implicit type conversions do not lose precision or change semantics silently",
+    "category": "correctness",
+    "severity": "medium",
+    "formal_spec": "PRE: implicit_type_conversion_present; POST: conversion_is_explicit_and_checked",
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
+    "test_code": "value = int(user_input) if user_input.isdigit() else None"
+  },
+  {
+    "id": "rule_no_division_by_zero",
+    "name": "Division by Zero Prevention",
+    "description": "Verify divisor is checked to be non-zero before division",
+    "category": "correctness",
+    "severity": "high",
+    "formal_spec": "PRE: division_operation_present; POST: divisor_checked_nonzero",
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
+    "test_code": "def safe_div(a, b):\n    assert b != 0\n    return a / b"
+  },
+  {
+    "id": "rule_no_uninitialized_variable",
+    "name": "No Uninitialized Variable Use",
+    "description": "Verify all variables are assigned before being read",
+    "category": "correctness",
+    "severity": "high",
+    "formal_spec": "PRE: variable_declared; POST: variable_assigned_before_use",
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
+    "test_code": "total = 0\nfor x in values:\n    total += x"
+  },
+  {
+    "id": "rule_no_mutable_default_argument",
+    "name": "No Mutable Default Arguments",
+    "description": "Verify function defaults do not use mutable objects (list, dict) shared across calls",
+    "category": "correctness",
+    "severity": "medium",
+    "formal_spec": "PRE: function_has_default_argument; POST: default_is_immutable_or_none",
+    "applies_to": [
+      "python"
+    ],
+    "test_code": "def append_item(item, items=None):\n    if items is None:\n        items = []\n    items.append(item)\n    return items"
+  },
+  {
+    "id": "rule_no_float_equality",
+    "name": "No Direct Float Equality",
+    "description": "Verify floating point values are compared with a tolerance, not exact equality",
+    "category": "correctness",
+    "severity": "medium",
+    "formal_spec": "PRE: comparison_between_floats; POST: comparison_uses_epsilon_tolerance",
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
+    "test_code": "assert abs(a - b) < 1e-9"
+  },
+  {
+    "id": "rule_unicode_normalization",
+    "name": "Unicode Normalization Before Comparison",
+    "description": "Verify strings from external sources are normalized before equality comparison",
+    "category": "correctness",
+    "severity": "low",
+    "formal_spec": "PRE: string_from_external_source; POST: string_normalized_before_compare",
+    "applies_to": [
+      "python",
+      "java"
+    ],
+    "test_code": "import unicodedata\na = unicodedata.normalize('NFC', s1)\nb = unicodedata.normalize('NFC', s2)\nassert a == b"
+  },
+  {
+    "id": "rule_no_exception_swallowing",
+    "name": "No Silent Exception Swallowing",
+    "description": "Verify caught exceptions are logged or re-raised, not silently discarded",
+    "category": "correctness",
+    "severity": "medium",
+    "formal_spec": "PRE: except_block_present; POST: exception_logged_or_reraised",
+    "applies_to": [
+      "python",
+      "java"
+    ],
+    "test_code": "try:\n    risky()\nexcept ValueError as e:\n    logger.error(e)\n    raise"
+  },
+  {
+    "id": "rule_no_infinite_recursion_risk",
+    "name": "Bounded Recursion Depth",
+    "description": "Verify recursive calls strictly decrease toward the base case",
+    "category": "correctness",
+    "severity": "high",
+    "formal_spec": "PRE: function_is_recursive; POST: recursive_argument_strictly_decreases",
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
+    "test_code": "def countdown(n):\n    if n <= 0:\n        return\n    countdown(n - 1)"
+  },
+  {
+    "id": "rule_consistent_return_types",
+    "name": "Consistent Return Types",
+    "description": "Verify a function returns the same type across all code paths",
+    "category": "correctness",
+    "severity": "medium",
+    "formal_spec": "PRE: function_has_multiple_return_paths; POST: all_paths_return_same_type",
+    "applies_to": [
+      "python"
+    ],
+    "test_code": "def find(arr, target):\n    for i, v in enumerate(arr):\n        if v == target:\n            return i\n    return -1"
+  },
+  {
+    "id": "rule_no_shared_mutable_state",
+    "name": "No Unprotected Shared Mutable State",
+    "description": "Verify shared mutable state accessed by multiple threads is protected by a lock",
+    "category": "concurrency",
+    "severity": "critical",
+    "formal_spec": "PRE: variable_accessed_by_multiple_threads; POST: access_guarded_by_lock",
+    "applies_to": [
+      "python",
+      "java"
+    ],
+    "test_code": "with lock:\n    counter += 1"
+  },
+  {
+    "id": "rule_consistent_lock_ordering",
+    "name": "Consistent Lock Ordering",
+    "description": "Verify multiple locks are always acquired in the same global order to prevent deadlock",
+    "category": "concurrency",
+    "severity": "critical",
+    "formal_spec": "PRE: multiple_locks_acquired; POST: acquisition_order_is_globally_consistent",
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
+    "test_code": "with lock_a:\n    with lock_b:\n        critical_section()"
+  },
+  {
+    "id": "rule_atomic_counter_updates",
+    "name": "Atomic Counter Updates",
+    "description": "Verify counters shared across threads use atomic operations instead of read-modify-write",
+    "category": "concurrency",
+    "severity": "high",
+    "formal_spec": "PRE: counter_incremented_by_multiple_threads; POST: increment_is_atomic",
+    "applies_to": [
+      "python",
+      "java"
+    ],
+    "test_code": "from threading import Lock\ncounter_lock = Lock()\ndef increment():\n    with counter_lock:\n        counter[0] += 1"
+  },
+  {
+    "id": "rule_no_double_checked_locking_bug",
+    "name": "Safe Double-Checked Locking",
+    "description": "Verify double-checked locking patterns use proper memory barriers/volatile semantics",
+    "category": "concurrency",
+    "severity": "high",
+    "formal_spec": "PRE: double_checked_locking_pattern_present; POST: shared_field_declared_volatile_or_atomic",
+    "applies_to": [
+      "java",
+      "cpp"
+    ],
+    "test_code": "if instance is None:\n    with lock:\n        if instance is None:\n            instance = create()"
+  },
+  {
+    "id": "rule_no_race_on_check_then_act",
+    "name": "No Check-Then-Act Race",
+    "description": "Verify check-then-act sequences on shared resources are performed atomically",
+    "category": "concurrency",
+    "severity": "high",
+    "formal_spec": "PRE: check_then_act_on_shared_resource; POST: check_and_act_combined_atomically",
+    "applies_to": [
+      "python",
+      "java"
+    ],
+    "test_code": "with lock:\n    if resource.available():\n        resource.acquire()"
+  },
+  {
+    "id": "rule_thread_pool_bounded",
+    "name": "Bounded Thread/Worker Pool",
+    "description": "Verify concurrent worker pools have an upper bound to prevent resource exhaustion",
+    "category": "concurrency",
+    "severity": "medium",
+    "formal_spec": "PRE: worker_pool_created; POST: pool_size_is_bounded",
+    "applies_to": [
+      "python",
+      "java"
+    ],
+    "test_code": "from concurrent.futures import ThreadPoolExecutor\nexecutor = ThreadPoolExecutor(max_workers=10)"
+  },
+  {
+    "id": "rule_avoid_nested_loop_quadratic",
+    "name": "Avoid Unnecessary Quadratic Nested Loops",
+    "description": "Verify nested loops over the same collection are replaced with a hash-based lookup when possible",
+    "category": "performance",
+    "severity": "medium",
+    "formal_spec": "PRE: nested_loop_over_same_collection; POST: lookup_uses_set_or_dict_when_feasible",
+    "applies_to": [
+      "python",
+      "java"
+    ],
+    "test_code": "seen = set(other_list)\nresult = [x for x in items if x in seen]"
+  },
+  {
+    "id": "rule_avoid_string_concat_in_loop",
+    "name": "Avoid String Concatenation in Loop",
+    "description": "Verify strings are built with a list/join or buffer instead of repeated += in a loop",
+    "category": "performance",
+    "severity": "low",
+    "formal_spec": "PRE: string_concatenation_inside_loop; POST: uses_list_append_and_join",
+    "applies_to": [
+      "python",
+      "java"
+    ],
+    "test_code": "parts = []\nfor item in items:\n    parts.append(str(item))\nresult = ''.join(parts)"
+  },
+  {
+    "id": "rule_prefer_generator_for_large_sequences",
+    "name": "Prefer Generators for Large Sequences",
+    "description": "Verify large intermediate sequences use generators/iterators instead of materialized lists",
+    "category": "performance",
+    "severity": "low",
+    "formal_spec": "PRE: large_intermediate_sequence_created; POST: sequence_is_lazy_generator",
+    "applies_to": [
+      "python"
+    ],
+    "test_code": "def evens(n):\n    for i in range(n):\n        if i % 2 == 0:\n            yield i"
+  },
+  {
+    "id": "rule_memoize_repeated_computation",
+    "name": "Memoize Repeated Pure Computation",
+    "description": "Verify expensive pure functions called repeatedly with the same arguments are memoized",
+    "category": "performance",
+    "severity": "medium",
+    "formal_spec": "PRE: pure_function_called_repeatedly_same_args; POST: result_cached",
+    "applies_to": [
+      "python",
+      "java"
+    ],
+    "test_code": "from functools import lru_cache\n@lru_cache(maxsize=None)\ndef fib(n):\n    return n if n < 2 else fib(n-1) + fib(n-2)"
+  },
+  {
+    "id": "rule_use_appropriate_sort_complexity",
+    "name": "Use Appropriate Sort Complexity",
+    "description": "Verify sorting uses an O(n log n) algorithm rather than an O(n^2) algorithm for large inputs",
+    "category": "performance",
+    "severity": "medium",
+    "formal_spec": "PRE: sorting_large_collection; POST: algorithm_complexity_is_n_log_n",
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
+    "test_code": "arr.sort()  # Timsort, O(n log n)"
+  },
+  {
+    "id": "rule_avoid_unnecessary_copy",
+    "name": "Avoid Unnecessary Data Copies",
+    "description": "Verify large collections are not copied when a view/reference would suffice",
+    "category": "performance",
+    "severity": "low",
+    "formal_spec": "PRE: large_collection_passed_or_returned; POST: copy_avoided_unless_mutation_required",
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
+    "test_code": "def read_only_view(data):\n    return data  # no copy needed for read-only access"
+  },
+  {
+    "id": "rule_avoid_repeated_len_in_loop_condition",
+    "name": "Avoid Repeated Expensive Calls in Loop Condition",
+    "description": "Verify expensive calls in a loop condition are hoisted out when the value doesn't change",
+    "category": "performance",
+    "severity": "low",
+    "formal_spec": "PRE: expensive_call_in_loop_condition; POST: value_computed_once_before_loop",
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
+    "test_code": "n = len(arr)\nfor i in range(n):\n    process(arr[i])"
+  },
+  {
+    "id": "rule_early_termination",
+    "name": "Early Loop Termination When Possible",
+    "description": "Verify loops searching for a condition exit early via break/return instead of scanning fully",
+    "category": "performance",
+    "severity": "low",
+    "formal_spec": "PRE: loop_searches_for_condition; POST: loop_breaks_on_match",
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
+    "test_code": "for x in items:\n    if matches(x):\n        return x"
+  },
+  {
+    "id": "rule_descriptive_naming",
+    "name": "Descriptive Variable Naming",
+    "description": "Verify variable and function names describe their purpose rather than being single letters (except loop indices)",
+    "category": "style",
+    "severity": "low",
+    "formal_spec": "PRE: identifier_declared; POST: identifier_name_is_descriptive",
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
+    "test_code": "user_count = len(active_users)"
+  },
+  {
+    "id": "rule_no_magic_numbers",
+    "name": "No Unexplained Magic Numbers",
+    "description": "Verify numeric literals with non-obvious meaning are extracted into named constants",
+    "category": "style",
+    "severity": "low",
+    "formal_spec": "PRE: numeric_literal_with_domain_meaning; POST: literal_replaced_by_named_constant",
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
+    "test_code": "MAX_RETRIES = 3\nfor attempt in range(MAX_RETRIES):\n    pass"
+  },
+  {
+    "id": "rule_function_length_bounded",
+    "name": "Bounded Function Length",
+    "description": "Verify functions remain reasonably short and focused on a single responsibility",
+    "category": "style",
+    "severity": "info",
+    "formal_spec": "PRE: function_defined; POST: function_body_line_count_below_threshold",
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
+    "test_code": "def process(data):\n    validated = validate(data)\n    return transform(validated)"
+  },
+  {
+    "id": "rule_single_responsibility",
+    "name": "Single Responsibility per Function",
+    "description": "Verify a function performs one coherent task rather than several unrelated ones",
+    "category": "style",
+    "severity": "info",
+    "formal_spec": "PRE: function_defined; POST: function_has_one_primary_purpose",
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
+    "test_code": "def compute_total(items):\n    return sum(item.price for item in items)"
+  },
+  {
+    "id": "rule_docstring_present",
+    "name": "Public Function Docstring Present",
+    "description": "Verify public functions include a docstring describing behavior, parameters, and return value",
+    "category": "style",
+    "severity": "info",
+    "formal_spec": "PRE: function_is_public; POST: function_has_docstring",
+    "applies_to": [
+      "python"
+    ],
+    "test_code": "def add(a, b):\n    \"\"\"Return the sum of a and b.\"\"\"\n    return a + b"
+  },
+  {
+    "id": "rule_consistent_indentation",
+    "name": "Consistent Indentation",
+    "description": "Verify code uses consistent indentation (spaces vs tabs) throughout a file",
+    "category": "style",
+    "severity": "info",
+    "formal_spec": "PRE: file_contains_indentation; POST: indentation_style_is_uniform",
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
+    "test_code": "def f():\n    return 1"
+  },
+  {
+    "id": "rule_no_resource_leak",
+    "name": "No Resource Leak",
+    "description": "Verify opened files, sockets, or connections are closed via context managers or explicit cleanup",
+    "category": "correctness",
+    "severity": "high",
+    "formal_spec": "PRE: resource_opened; POST: resource_closed_in_finally_or_context_manager",
+    "applies_to": [
+      "python",
+      "java",
+      "cpp"
+    ],
+    "test_code": "with open(path) as f:\n    data = f.read()"
   }
 ]

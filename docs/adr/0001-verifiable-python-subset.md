@@ -306,4 +306,44 @@ Phase 1 Semana 1 is done when:
 
 ---
 
+## Addendum (Phase 1 Week 4): SSA Versioning for Assignment Semantics
+
+**Date**: 2026-07-13
+**Trigger**: Running the converter against the full 20-algorithm seed dataset
+(not just hand-picked snippets) immediately surfaced a soundness bug: the
+initial implementation mapped each Python variable name to a single, reused
+Z3 variable. Sequential reassignment — `x = 5; x = x + 1` — therefore produced
+the constraint `x == x + 1`, which is unsatisfiable for every integer. The
+converter was reporting ordinary, correct code as failing verification.
+
+**Fix**: Assignment (`ast.Assign`) and augmented assignment (`ast.AugAssign`)
+now create a **new, version-suffixed Z3 variable** on every write
+(`x`, `x__v2`, `x__v3`, ...) and rebind `self.variables[name]` to the latest
+version. Reads always resolve to whatever is currently bound. RHS expressions
+are evaluated *before* rebinding the LHS, so `x = x + 1` correctly reads the
+prior version on the right and introduces a fresh version on the left.
+
+**Related fix, same root cause**: the original `convert_code` used
+`ast.walk()` to dispatch every node in the tree, which visits statements
+inside `if`/`for` bodies twice — once directly, and once again through the
+parent's own explicit body-processing. This double-processing added an
+**unconditional** copy of a branch's assignment constraint alongside the
+correctly `Implies(test, ...)`-wrapped one, silently over-constraining
+conditional code. Fixed by dispatching each statement exactly once, walking
+only `tree.body` (and each function's `.body`) rather than the full tree.
+
+**Verification**: `tests/unit/test_ast_extended.py::TestASTConverterSSASoundness`
+pins both fixes down as permanent regressions, and
+`tests/integration/test_week4_e2e.py` runs the converter against all 20 seed
+algorithms to catch this class of bug before it reaches Phase 2.
+
+**Lesson for the plan's own risk section**: this is precisely the risk this
+ADR called out for loops/recursion — but it turned out sequential assignment
+itself needed the same rigor. Confirms the "walking skeleton before scaling
+seed data" sequencing decision was correct: this bug was invisible against
+the 3 seed rules used in Week 1 and only surfaced once real algorithms with
+multi-statement bodies were run through the pipeline in Week 4.
+
+---
+
 **Next**: Implement `symbolic/z3_engine.py` and `symbolic/ast_to_smt.py` based on this definition.

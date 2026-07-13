@@ -105,6 +105,90 @@ n2 = len(arr)
         assert any("len_arr" in str(c) for c in constraints)
 
 
+class TestASTConverterSSASoundness:
+    """Regression tests for SSA variable versioning (Week 4 correctness fix).
+
+    Without versioning, `x = x + 1` translates to the Z3 constraint
+    `x == x + 1`, which is unsatisfiable for every integer — the converter
+    would report correct, ordinary code as failing verification. These
+    tests pin down that reassignment is handled soundly.
+    """
+
+    def test_sequential_reassignment_is_satisfiable(self):
+        """x = 5; x = x + 1; assert x == 6 must be SAT, not UNSAT."""
+        from verityai.symbolic.z3_engine import Z3Engine
+
+        converter = ASTtoSMTConverter()
+        code = "x = 5\nx = x + 1\nassert x == 6"
+        constraints, non_verifiable = converter.convert_code(code)
+
+        assert non_verifiable == []
+
+        engine = Z3Engine()
+        status, _ = engine.check_satisfiable(constraints)
+        assert status.value == "pass"  # SAT
+
+    def test_aug_assign_sequential_is_satisfiable(self):
+        """x = 5; x += 1; assert x == 6 must be SAT (AugAssign SSA)."""
+        from verityai.symbolic.z3_engine import Z3Engine
+
+        converter = ASTtoSMTConverter()
+        code = "x = 5\nx += 1\nassert x == 6"
+        constraints, non_verifiable = converter.convert_code(code)
+
+        assert non_verifiable == []
+
+        engine = Z3Engine()
+        status, _ = engine.check_satisfiable(constraints)
+        assert status.value == "pass"
+
+    def test_reassignment_to_wrong_value_is_unsat(self):
+        """x = 5; x = x + 1; assert x == 100 must be UNSAT (still catches real bugs)."""
+        from verityai.symbolic.z3_engine import Z3Engine
+
+        converter = ASTtoSMTConverter()
+        code = "x = 5\nx = x + 1\nassert x == 100"
+        constraints, non_verifiable = converter.convert_code(code)
+
+        engine = Z3Engine()
+        status, _ = engine.check_satisfiable(constraints)
+        assert status.value == "fail"  # UNSAT
+
+    def test_if_branch_does_not_leak_unconditional_constraint(self):
+        """Assignment inside an if-body must not become an unconditional
+        constraint outside that branch (the pre-Week-4 double-processing bug).
+        """
+        from verityai.symbolic.z3_engine import Z3Engine
+
+        converter = ASTtoSMTConverter()
+        code = """
+x = 10
+if x > 100:
+    y = 1
+else:
+    y = 2
+assert y == 2
+"""
+        constraints, non_verifiable = converter.convert_code(code)
+
+        engine = Z3Engine()
+        status, _ = engine.check_satisfiable(constraints)
+        # x=10 takes the else branch, so y must be 2 -> satisfiable
+        assert status.value == "pass"
+
+    def test_aug_assign_in_loop_body_does_not_crash(self):
+        """Real seed-data pattern: accumulator += x inside a range loop."""
+        converter = ASTtoSMTConverter()
+        code = """
+total = 0
+for i in range(5):
+    total += i
+"""
+        constraints, non_verifiable = converter.convert_code(code)
+        # Should not crash; loop accumulator pattern is at least partially handled
+        assert isinstance(constraints, list)
+
+
 class TestASTConverterIntegration:
     """Integration tests for extended converter."""
 
