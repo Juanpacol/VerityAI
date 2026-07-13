@@ -68,9 +68,7 @@ def test_verification_result():
 
 def test_counterexample():
     """Test creating a Counterexample."""
-    from uuid import uuid4
-
-    rule_id = uuid4()
+    rule_id = "rule_null_check"
     counterexample = Counterexample(
         rule_id=rule_id,
         input_values={"x": None},
