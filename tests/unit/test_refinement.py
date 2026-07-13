@@ -1,6 +1,11 @@
-"""Unit tests for incremental verification (agent/refinement.py)."""
+"""Unit tests for incremental verification + intent parsing (agent/refinement.py)."""
 
-from verityai.agent.refinement import IncrementalVerifier, extract_functions
+from verityai.agent.refinement import (
+    IncrementalVerifier,
+    RefinementIntentType,
+    extract_functions,
+    parse_refinement_intent,
+)
 from verityai.ontology.models import VerificationResult, VerificationStatus
 
 TWO_FUNCTIONS = """
@@ -88,6 +93,52 @@ class TestIncrementalVerifierCaching:
         incremental.verify(only_foo)
 
         assert "bar" not in incremental._cache
+
+
+class TestParseRefinementIntent:
+    def test_thread_safety_keyword(self):
+        intent = parse_refinement_intent("make it thread-safe")
+        assert intent.intent_type == RefinementIntentType.THREAD_SAFETY
+        assert intent.requires_code_change is True
+
+    def test_input_validation_keyword(self):
+        intent = parse_refinement_intent("add input validation")
+        assert intent.intent_type == RefinementIntentType.INPUT_VALIDATION
+
+    def test_error_handling_keyword(self):
+        intent = parse_refinement_intent("add error handling for bad input")
+        assert intent.intent_type == RefinementIntentType.ERROR_HANDLING
+
+    def test_performance_keyword(self):
+        intent = parse_refinement_intent("make this faster")
+        assert intent.intent_type == RefinementIntentType.PERFORMANCE
+
+    def test_logging_keyword(self):
+        intent = parse_refinement_intent("add logging to this function")
+        assert intent.intent_type == RefinementIntentType.LOGGING
+
+    def test_show_proof_does_not_require_code_change(self):
+        intent = parse_refinement_intent("show me the proof")
+        assert intent.intent_type == RefinementIntentType.SHOW_PROOF
+        assert intent.requires_code_change is False
+
+    def test_explain_does_not_require_code_change(self):
+        intent = parse_refinement_intent("explain why this is correct")
+        assert intent.intent_type == RefinementIntentType.EXPLAIN
+        assert intent.requires_code_change is False
+
+    def test_unmatched_text_falls_back_to_generic_edit(self):
+        intent = parse_refinement_intent("rename the variable to total_count")
+        assert intent.intent_type == RefinementIntentType.GENERIC_EDIT
+        assert intent.requires_code_change is True
+
+    def test_is_case_insensitive(self):
+        intent = parse_refinement_intent("SHOW ME THE PROOF")
+        assert intent.intent_type == RefinementIntentType.SHOW_PROOF
+
+    def test_raw_text_preserved(self):
+        intent = parse_refinement_intent("make it thread-safe")
+        assert intent.raw_text == "make it thread-safe"
 
 
 class TestIncrementalVerifierCombining:

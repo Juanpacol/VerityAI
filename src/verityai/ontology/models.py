@@ -119,6 +119,29 @@ class ReasoningTrace(BaseModel):
     verification_result: Optional[VerificationResult] = None
     failure_reason: Optional[str] = None  # Why it failed (injected for next attempt)
     confidence_score: float = Field(ge=0.0, le=1.0)
+    refinement_intent: Optional[str] = None  # Classified intent for refinement turns (e.g. "thread_safety")
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class FeedbackType(str, Enum):
+    """Production feedback on a generated+verified code attempt."""
+    ACCEPT = "accept"
+    REJECT = "reject"
+    CORRECT = "correct"
+
+
+class Feedback(BaseModel):
+    """User feedback tied back to the ReasoningTrace it responds to.
+
+    Input to the continuous learning loop: REJECT/CORRECT feedback with a
+    `reason` can be turned into a candidate KG rule (see
+    agent/continuous_learning.py).
+    """
+    id: UUID = Field(default_factory=uuid4)
+    trace_id: UUID
+    feedback_type: FeedbackType
+    reason: Optional[str] = None  # Why rejected/corrected
+    corrected_code: Optional[str] = None  # User-supplied fix, if feedback_type == CORRECT
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 

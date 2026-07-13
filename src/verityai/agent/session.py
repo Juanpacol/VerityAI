@@ -15,7 +15,7 @@ from uuid import UUID, uuid4
 
 from verityai.agent.confidence import compute_confidence
 from verityai.agent.orchestrator import Orchestrator
-from verityai.agent.refinement import IncrementalVerifier
+from verityai.agent.refinement import IncrementalVerifier, RefinementIntent, parse_refinement_intent
 from verityai.neural.ollama_client import OllamaGenerationError
 from verityai.ontology.models import (
     GenerationRequest,
@@ -74,7 +74,11 @@ class ConversationSession:
     def refine(self, refinement_prompt: str) -> GenerationResponse:
         """Apply a follow-up instruction to the current code.
 
-        Generates once (no retry budget — a refinement turn is a quick
+        The prompt is first classified into a `RefinementIntent`. Intents
+        that only ask about the *existing* result ("show me the proof",
+        "explain") are answered from the last turn's already-computed
+        verification — no LLM call, no re-verification. Everything else
+        generates once (no retry budget — a refinement turn is a quick
         edit, not a fresh search) and incrementally re-verifies only the
         functions whose source changed.
 
@@ -83,6 +87,10 @@ class ConversationSession:
         """
         if not self.turns:
             raise ValueError("Cannot refine before an initial start() call")
+
+        intent = parse_refinement_intent(refinement_prompt)
+        if not intent.requires_code_change:
+            return self._respond_from_last_turn(refinement_prompt, intent)
 
         language = self.turns[-1].response.language
         combined_prompt = (
@@ -109,6 +117,7 @@ class ConversationSession:
             llm_reasoning=reasoning,
             verification_result=verification_result,
             confidence_score=confidence,
+            refinement_intent=intent.intent_type.value,
         )
 
         if verification_result.status == VerificationStatus.PASS:
@@ -127,6 +136,39 @@ class ConversationSession:
             confidence=confidence,
             explanation=debugger.explain_failure(verification_result),
             status=status,
+        )
+        self.turns.append(SessionTurn(user_message=refinement_prompt, response=response))
+        return response
+
+    def _respond_from_last_turn(
+        self, refinement_prompt: str, intent: RefinementIntent
+    ) -> GenerationResponse:
+        """Answer a SHOW_PROOF/EXPLAIN request without calling the LLM or verifier.
+
+        Reuses the last turn's code + verification result — these intents
+        ask about work already done, not for a new change.
+        """
+        last_response = self.turns[-1].response
+
+        trace = ReasoningTrace(
+            user_prompt=refinement_prompt,
+            generated_code=last_response.code,
+            attempt_number=1,
+            kg_context={},
+            llm_reasoning="",
+            verification_result=last_response.final_verification,
+            confidence_score=last_response.confidence,
+            refinement_intent=intent.intent_type.value,
+        )
+
+        response = GenerationResponse(
+            code=last_response.code,
+            language=last_response.language,
+            traces=[trace],
+            final_verification=last_response.final_verification,
+            confidence=last_response.confidence,
+            explanation=last_response.explanation,
+            status=last_response.status,
         )
         self.turns.append(SessionTurn(user_message=refinement_prompt, response=response))
         return response
