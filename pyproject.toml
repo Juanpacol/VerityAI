@@ -1,0 +1,92 @@
+[build-system]
+requires = ["setuptools>=65.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "verityai"
+version = "0.0.1"
+description = "Neuro-symbolic code verification: LLM-generated code + formal proofs + explainability"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+    {name = "Juan Pablo Botero Espinosa", email = "juanpabloboteroespinosa@gmail.com"}
+]
+
+dependencies = [
+    # LLM + Orchestration
+    "langchain>=0.1.0",
+    "ollama>=0.0.1",
+
+    # Knowledge Graph
+    "neo4j>=5.15.0",
+
+    # Symbolic verification
+    "z3-solver>=4.12.2",
+
+    # Data models
+    "pydantic>=2.0.0",
+
+    # Web API
+    "fastapi>=0.100.0",
+    "uvicorn>=0.23.0",
+
+    # Database ORM
+    "sqlalchemy>=2.0.0",
+    "psycopg2-binary>=2.9.0",
+
+    # Caching
+    "redis>=5.0.0",
+
+    # CLI
+    "click>=8.1.0",
+    "typer>=0.9.0",
+    "rich>=13.0.0",
+
+    # Utilities
+    "python-dotenv>=1.0.0",
+    "pyyaml>=6.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "flake8>=6.0.0",
+    "mypy>=1.0.0",
+]
+
+research = [
+    "jupyter>=1.0.0",
+    "notebook>=6.5.0",
+    "matplotlib>=3.7.0",
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+]
+
+[project.scripts]
+verityai = "verityai.cli:main"
+
+[tool.setuptools]
+packages = ["verityai"]
+
+[tool.setuptools.package-data]
+verityai = ["py.typed"]
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false

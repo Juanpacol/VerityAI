@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  # Neo4j Knowledge Graph
+  neo4j:
+    image: neo4j:5.15-community
+    container_name: verityai-neo4j
+    environment:
+      NEO4J_AUTH: neo4j/verityai_password_123
+      NEO4J_ACCEPT_LICENSE_AGREEMENT: "yes"
+    ports:
+      - "7474:7474"  # Web UI
+      - "7687:7687"  # Bolt protocol (Python driver)
+    volumes:
+      - neo4j_data:/var/lib/neo4j/data
+      - neo4j_plugins:/var/lib/neo4j/plugins
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7474"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # PostgreSQL (trace storage, audit logs)
+  postgres:
+    image: postgres:15-alpine
+    container_name: verityai-postgres
+    environment:
+      POSTGRES_USER: verityai_user
+      POSTGRES_PASSWORD: verityai_pass_123
+      POSTGRES_DB: verityai_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U verityai_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis (caching + session storage)
+  redis:
+    image: redis:7-alpine
+    container_name: verityai-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Ollama (LLM inference)
+  ollama:
+    image: ollama/ollama:latest
+    container_name: verityai-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      OLLAMA_HOST: 0.0.0.0:11434
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # Note: Model needs to be pulled manually after container starts
+    # docker-compose exec ollama ollama pull llama2:13b
+
+volumes:
+  neo4j_data:
+  neo4j_plugins:
+  postgres_data:
+  redis_data:
+  ollama_data:
+
+networks:
+  default:
+    name: verityai-network
