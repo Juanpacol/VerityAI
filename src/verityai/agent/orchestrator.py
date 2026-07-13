@@ -78,14 +78,16 @@ class Orchestrator:
 
         while not state.is_exhausted:
             try:
-                code, reasoning = self._generate(state, kg_context)
+                code, reasoning = self.generate_once(
+                    state.user_prompt, kg_context, state.last_failure_reason
+                )
             except OllamaGenerationError as e:
                 # LLM is unreachable/failing — no point burning remaining
                 # attempts on requests that will fail identically.
                 logger.error(f"Generation failed, aborting retry loop: {e}")
                 return self._build_error_response(state, str(e))
 
-            verification_result = self._verify(code)
+            verification_result = self.verify_code(code)
             confidence = compute_confidence(verification_result)
 
             state.record_attempt(
@@ -125,12 +127,22 @@ class Orchestrator:
             logger.warning(f"Failed to fetch KG context, proceeding without it: {e}")
             return {}
 
-    def _generate(self, state: AgentState, kg_context: dict) -> tuple[str, str]:
-        """Build the prompt (with retry context if applicable) and call the LLM."""
+    def generate_once(
+        self,
+        user_prompt: str,
+        kg_context: dict,
+        previous_failure: Optional[str] = None,
+    ) -> tuple[str, str]:
+        """Build a prompt and call the LLM once, returning (code, reasoning).
+
+        Public so callers outside the retry loop (e.g. session.py's
+        single-turn refinement) can reuse generation without pulling in
+        the full AgentState/retry machinery.
+        """
         prompt = self.prompt_builder.build_generation_prompt(
-            user_request=state.user_prompt,
+            user_request=user_prompt,
             kg_context=kg_context,
-            previous_failure=state.last_failure_reason,
+            previous_failure=previous_failure,
         )
 
         raw_response = self.llm_client.generate(prompt)
@@ -156,11 +168,12 @@ class Orchestrator:
 
         return raw_response.strip(), ""
 
-    def _verify(self, code: str) -> VerificationResult:
+    def verify_code(self, code: str) -> VerificationResult:
         """Run the code through the AST converter + Z3 satisfiability check.
 
         See module docstring for the MVP scope of what "verification" means
-        without a target postcondition.
+        without a target postcondition. Public so IncrementalVerifier
+        (refinement.py) can call it per-function across conversation turns.
         """
         converter = ASTtoSMTConverter(allow_partial=True)
 
