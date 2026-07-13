@@ -260,14 +260,14 @@ class SymbolicDebugger:
             lines.append("  - Adding loop invariants")
             lines.append("  - Breaking problem into smaller pieces")
 
-        lines.append(f"\nMetadata:")
+        lines.append("\nMetadata:")
         if verification_result.metadata:
             lines.append(f"  Total Z3 queries: {verification_result.metadata.get('total_queries', 'N/A')}")
             lines.append(
                 f"  Unknown queries: {verification_result.metadata.get('unknown_queries', 'N/A')}"
             )
-            lines.append(
-                f"  Success rate: {verification_result.metadata.get('success_rate', 'N/A'):.1%}"
-            )
+            success_rate = verification_result.metadata.get("success_rate")
+            success_rate_str = f"{success_rate:.1%}" if isinstance(success_rate, (int, float)) else "N/A"
+            lines.append(f"  Success rate: {success_rate_str}")
 
         return "\n".join(lines)

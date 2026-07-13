@@ -204,3 +204,23 @@ class TestSymbolicDebugger:
         explanation = debugger.explain_failure(result)
 
         assert "TIMEOUT" in explanation or "timeout" in explanation.lower()
+
+    def test_explain_failure_handles_missing_success_rate_in_metadata(self):
+        """Metadata without a 'success_rate' key must not crash formatting (regression)."""
+        source = "x = 5\nassert x == 999"
+        debugger = SymbolicDebugger(source)
+
+        result = VerificationResult(
+            code_id="test",
+            status=VerificationStatus.FAIL,
+            confidence=0.0,
+            violations=[],
+            z3_result="unsat",
+            z3_model=None,
+            duration_seconds=0.05,
+            metadata={"non_verifiable_nodes": [], "total_queries": 1},
+        )
+
+        explanation = debugger.explain_failure(result)
+
+        assert "N/A" in explanation
