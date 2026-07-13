@@ -45,7 +45,7 @@ class Rule(BaseModel):
 
 class Counterexample(BaseModel):
     """A concrete input that violates a rule."""
-    rule_id: UUID
+    rule_id: Optional[str] = None
     input_values: dict[str, Any]
     expected_output: Optional[Any] = None
     actual_output: Optional[Any] = None

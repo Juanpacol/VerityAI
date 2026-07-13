@@ -1,0 +1,82 @@
+[
+  {
+    "id": "rule_bounds_check",
+    "name": "Array Bounds Check",
+    "description": "Verify that array accesses are within bounds [0, len(arr))",
+    "category": "safety",
+    "severity": "critical",
+    "formal_spec": "PRE: arr has length n > 0; POST: all array accesses use indices in [0, n-1]",
+    "applies_to": ["python", "java", "cpp"],
+    "test_code": "def test_bounds(arr, idx):\n    assert 0 <= idx < len(arr)\n    return arr[idx]"
+  },
+  {
+    "id": "rule_no_null_dereference",
+    "name": "No Null Dereference",
+    "description": "Verify that pointers/references are not null before dereferencing",
+    "category": "security",
+    "severity": "critical",
+    "formal_spec": "PRE: ptr is not null; POST: dereference is safe",
+    "applies_to": ["cpp", "java", "python"],
+    "test_code": "def test_null_check(obj):\n    if obj is not None:\n        return obj.method()\n    return None"
+  },
+  {
+    "id": "rule_no_sql_injection",
+    "name": "SQL Injection Prevention",
+    "description": "Verify that SQL queries use parameterized queries, not string concatenation",
+    "category": "security",
+    "severity": "critical",
+    "formal_spec": "PRE: user_input is untrusted; POST: query uses parameterized statement",
+    "applies_to": ["python", "java", "cpp"],
+    "test_code": "def safe_query(cursor, user_id):\n    cursor.execute('SELECT * FROM users WHERE id = ?', (user_id,))\n    return cursor.fetchall()"
+  },
+  {
+    "id": "rule_array_invariant",
+    "name": "Array Invariant",
+    "description": "Verify array properties maintained throughout algorithm",
+    "category": "correctness",
+    "severity": "high",
+    "formal_spec": "PRE: array is sorted; INV: array remains sorted; POST: array is still sorted",
+    "applies_to": ["python", "java", "cpp"],
+    "test_code": "def maintains_sorted(arr):\n    assert all(arr[i] <= arr[i+1] for i in range(len(arr)-1))"
+  },
+  {
+    "id": "rule_return_value",
+    "name": "Return Value Correctness",
+    "description": "Verify that return values match postconditions",
+    "category": "correctness",
+    "severity": "high",
+    "formal_spec": "PRE: function signature; POST: returned value satisfies postcondition",
+    "applies_to": ["python", "java", "cpp"],
+    "test_code": "def validate_return(result, expected):\n    assert result == expected or result == -1"
+  },
+  {
+    "id": "rule_loop_termination",
+    "name": "Loop Termination",
+    "description": "Verify that loops terminate after finite iterations",
+    "category": "correctness",
+    "severity": "high",
+    "formal_spec": "PRE: loop has bounded counter; POST: loop terminates",
+    "applies_to": ["python", "java", "cpp"],
+    "test_code": "for i in range(n):\n    # bounded by n iterations\n    pass"
+  },
+  {
+    "id": "rule_recursion_base_case",
+    "name": "Recursion Base Case",
+    "description": "Verify that recursive functions have a base case",
+    "category": "correctness",
+    "severity": "high",
+    "formal_spec": "PRE: function is recursive; POST: has base case that prevents infinite recursion",
+    "applies_to": ["python", "java", "cpp"],
+    "test_code": "def recursive_fn(n):\n    if n <= 1:\n        return 1\n    return n * recursive_fn(n - 1)"
+  },
+  {
+    "id": "rule_array_mutation",
+    "name": "Array Mutation Safety",
+    "description": "Verify that array mutations preserve invariants",
+    "category": "correctness",
+    "severity": "medium",
+    "formal_spec": "PRE: array has property P; POST: after mutation, array still has property P",
+    "applies_to": ["python", "java", "cpp"],
+    "test_code": "def safe_mutation(arr):\n    original_len = len(arr)\n    arr[0] = 99\n    assert len(arr) == original_len"
+  }
+]
