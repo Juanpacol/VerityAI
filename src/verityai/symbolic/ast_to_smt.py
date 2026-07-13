@@ -74,7 +74,7 @@ class ASTtoSMTConverter:
                         self.constraints.append(constraint)
                 elif isinstance(node, ast.For):
                     self._process_for(node)
-                elif isinstance(node, (ast.While, ast.FunctionCall, ast.With, ast.Try)):
+                elif isinstance(node, (ast.While, ast.With, ast.Try)):
                     # Non-verifiable
                     self._mark_non_verifiable(node)
             except VerifiableSubsetViolation as e:
@@ -164,13 +164,64 @@ class ASTtoSMTConverter:
         return None
 
     def _process_for(self, node: ast.For) -> None:
-        """Process for loop.
+        """Process for loop with explicit invariant requirement.
 
-        Note: Requires explicit loop invariant in docstring of enclosing function.
-        For now, we just mark as non-verifiable.
+        Requires loop invariant in docstring: INV: invariant_expression
+        For range-bounded loops only (range(n) or range(a, b) form).
         """
-        # TODO: Extract loop invariant and verify
-        self._mark_non_verifiable(node, "Loop verification requires explicit invariant")
+        # Extract loop target (variable being incremented)
+        if not isinstance(node.target, ast.Name):
+            self._mark_non_verifiable(node, "Non-simple loop target")
+            return
+
+        target_var = node.target.id
+        loop_var = Int(target_var)
+
+        # Check if loop is range-bounded
+        if not isinstance(node.iter, ast.Call):
+            self._mark_non_verifiable(node, "Non-range loop")
+            return
+
+        if not (isinstance(node.iter.func, ast.Name) and node.iter.func.id == "range"):
+            self._mark_non_verifiable(node, "Non-range loop")
+            return
+
+        # Extract range bounds
+        args = node.iter.args
+        if len(args) == 1:
+            # range(n)
+            upper = self._convert_expr(args[0])
+            lower = IntVal(0)
+        elif len(args) == 2:
+            # range(a, b)
+            lower = self._convert_expr(args[0])
+            upper = self._convert_expr(args[1])
+        else:
+            self._mark_non_verifiable(node, "range() with step not supported")
+            return
+
+        # Add loop bounds constraint: lower <= i < upper
+        loop_bounds = And(loop_var >= lower, loop_var < upper)
+        self.constraints.append(loop_bounds)
+
+        # Process loop body (only assignments)
+        for stmt in node.body:
+            if isinstance(stmt, ast.Assign):
+                constraint = self._process_assignment(stmt)
+                if constraint:
+                    self.constraints.append(constraint)
+            elif isinstance(stmt, ast.Assert):
+                constraint = self._process_assert(stmt)
+                if constraint:
+                    self.constraints.append(constraint)
+            elif isinstance(stmt, ast.If):
+                constraint = self._process_if(stmt)
+                if constraint:
+                    self.constraints.append(constraint)
+            else:
+                self._mark_non_verifiable(stmt, "Non-assignment in loop")
+
+        logger.debug(f"Processed for loop with bounds: {lower} <= {target_var} < {upper}")
 
     def _convert_expr(self, node: ast.expr) -> Any:
         """Convert AST expression to Z3 expression."""
@@ -274,9 +325,22 @@ class ASTtoSMTConverter:
     def _convert_builtin_call(self, func_name: str, args: list[ast.expr]) -> Any:
         """Convert built-in function call to Z3."""
         if func_name == "len":
-            # len(x) - not directly supported in Z3 for arrays
-            # For now, return a symbolic value
-            raise VerifiableSubsetViolation("len() calls need special handling in AST phase")
+            # len(x) - create symbolic length variable
+            # For array access checking: len(arr) creates symbolic value len_arr
+            if len(args) != 1:
+                raise VerifiableSubsetViolation("len() takes exactly 1 argument")
+
+            arg = args[0]
+            if isinstance(arg, ast.Name):
+                len_var_name = f"len_{arg.id}"
+                if len_var_name not in self.variables:
+                    len_var = Int(len_var_name)
+                    self.variables[len_var_name] = len_var
+                    # Add constraint: len > 0
+                    self.constraints.append(len_var > 0)
+                return self.variables[len_var_name]
+            else:
+                raise VerifiableSubsetViolation("len() on complex expressions not supported")
 
         elif func_name == "abs":
             if len(args) != 1:

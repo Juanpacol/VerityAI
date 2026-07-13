@@ -2,6 +2,7 @@
 
 from .ast_to_smt import ASTtoSMTConverter, VerifiableSubsetViolation
 from .counterexample import CounterexampleGenerator
+from .debugger import SymbolicDebugger
 from .rule_engine import RuleEngine
 from .z3_engine import Z3Engine
 
@@ -11,4 +12,5 @@ __all__ = [
     "VerifiableSubsetViolation",
     "RuleEngine",
     "CounterexampleGenerator",
+    "SymbolicDebugger",
 ]
