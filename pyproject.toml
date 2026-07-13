@@ -7,7 +7,7 @@ name = "verityai"
 version = "0.0.1"
 description = "Neuro-symbolic code verification: LLM-generated code + formal proofs + explainability"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.9"
 license = {text = "MIT"}
 authors = [
     {name = "Juan Pablo Botero Espinosa", email = "juanpabloboteroespinosa@gmail.com"}
@@ -71,7 +71,10 @@ research = [
 verityai = "verityai.cli:main"
 
 [tool.setuptools]
-packages = ["verityai"]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.setuptools.package-data]
 verityai = ["py.typed"]
