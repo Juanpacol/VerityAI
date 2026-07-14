@@ -20,7 +20,6 @@ actually output.
 import json
 import time
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Any, Callable
 
 from verityai.agent.orchestrator import Orchestrator
@@ -165,9 +164,7 @@ def run_all_baselines(
     }
 
     for task in tasks:
-        results["raw_llm"].append(
-            run_raw_llm_baseline(llm_client_factory(task, "raw_llm"), task)
-        )
+        results["raw_llm"].append(run_raw_llm_baseline(llm_client_factory(task, "raw_llm"), task))
         results["single_shot_z3"].append(
             run_single_shot_z3_baseline(
                 llm_client_factory(task, "single_shot_z3"), task, timeout_seconds

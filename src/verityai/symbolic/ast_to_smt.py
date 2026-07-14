@@ -30,6 +30,7 @@ logger = logging.getLogger(__name__)
 
 class VerifiableSubsetViolation(Exception):
     """Raised when code contains non-verifiable constructs."""
+
     pass
 
 
@@ -413,7 +414,9 @@ class ASTtoSMTConverter:
         )
 
         result = self._wrap_branches_in_implies(test, body_constraints, else_constraints)
-        path_result = self._wrap_branches_in_implies(test, path_body_constraints, path_else_constraints)
+        path_result = self._wrap_branches_in_implies(
+            test, path_body_constraints, path_else_constraints
+        )
         return result, path_result, merge_constraints
 
     def _merge_branch_variables(
@@ -465,11 +468,15 @@ class ASTtoSMTConverter:
 
         result = None
         if body_constraints:
-            body_constraint = And(body_constraints) if len(body_constraints) > 1 else body_constraints[0]
+            body_constraint = (
+                And(body_constraints) if len(body_constraints) > 1 else body_constraints[0]
+            )
             result = Implies(test, body_constraint)
 
         if else_constraints:
-            else_constraint = And(else_constraints) if len(else_constraints) > 1 else else_constraints[0]
+            else_constraint = (
+                And(else_constraints) if len(else_constraints) > 1 else else_constraints[0]
+            )
             else_implication = Implies(Not(test), else_constraint)
             result = And(result, else_implication) if result is not None else else_implication
 
@@ -550,7 +557,7 @@ class ASTtoSMTConverter:
             elif isinstance(node.value, float):
                 return RealVal(node.value)
             else:
-                raise VerifiableSubsetViolation(f"Unsupported constant: {node.value}")
+                raise VerifiableSubsetViolation(f"Unsupported constant: {node.value!r}")
 
         elif isinstance(node, ast.Name):
             if node.id not in self.variables:
@@ -708,9 +715,11 @@ class ASTtoSMTConverter:
         """Mark a node as non-verifiable."""
         lineno = getattr(node, "lineno", 0)
         node_type = type(node).__name__
-        self.non_verifiable_nodes.append({
-            "line": lineno,
-            "type": node_type,
-            "reason": reason,
-        })
+        self.non_verifiable_nodes.append(
+            {
+                "line": lineno,
+                "type": node_type,
+                "reason": reason,
+            }
+        )
         logger.debug(f"Line {lineno}: {node_type} not verifiable ({reason})")

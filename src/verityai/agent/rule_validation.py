@@ -11,7 +11,7 @@ must clear two gates before it's written to the KG:
 """
 
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 from uuid import UUID
@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 
 class RuleValidationStatus(str, Enum):
     """Outcome of screening a candidate rule's test_code against Z3."""
+
     CONSISTENT = "consistent"  # Z3 found the test_code satisfiable
     CONTRADICTORY = "contradictory"  # Z3 found it UNSAT -- self-contradictory
     UNVERIFIABLE = "unverifiable"  # No test_code, or outside the verifiable subset
@@ -88,6 +89,7 @@ class ApprovalDecision(str, Enum):
 @dataclass
 class PendingRuleApproval:
     """One candidate rule sitting in the approval queue."""
+
     rule: Rule
     validation: RuleValidationResult
     decision: ApprovalDecision = ApprovalDecision.PENDING
@@ -136,11 +138,7 @@ class RuleApprovalQueue:
 
     def approved_unapplied(self) -> list[PendingRuleApproval]:
         """Approved entries not yet written to the KG."""
-        return [
-            e
-            for e in self._queue
-            if e.decision == ApprovalDecision.APPROVED and not e.applied
-        ]
+        return [e for e in self._queue if e.decision == ApprovalDecision.APPROVED and not e.applied]
 
     def mark_applied(self, rule_id: UUID) -> None:
         """Record that an approved rule has been ingested into the KG."""

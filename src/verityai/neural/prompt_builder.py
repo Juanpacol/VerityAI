@@ -143,9 +143,7 @@ Always explain your thinking before the code."""
 
         sanitized = text[:max_length]
         if len(text) > max_length:
-            logger.warning(
-                f"{field_name} truncated from {len(text)} to {max_length} chars"
-            )
+            logger.warning(f"{field_name} truncated from {len(text)} to {max_length} chars")
 
         # Neutralize attempts to break out of our delimiter block.
         sanitized = sanitized.replace(_USER_REQUEST_START, "[REDACTED_DELIMITER]")

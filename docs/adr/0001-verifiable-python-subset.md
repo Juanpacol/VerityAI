@@ -1,8 +1,8 @@
 # ADR-0001: Verifiable Python Subset Definition
 
-**Date**: 2026-07-13  
-**Status**: ACCEPTED  
-**Author**: Juan Pablo Botero Espinosa  
+**Date**: 2026-07-13
+**Status**: ACCEPTED
+**Author**: Juan Pablo Botero Espinosa
 **Scope**: Phase 1 (Z3 AST converter scope)
 
 ## Problem

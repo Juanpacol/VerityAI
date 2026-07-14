@@ -150,7 +150,7 @@ Suggested fix:
         """
         lines = [
             f"Counterexample: {counterexample.description}",
-            f"Inputs that cause failure:",
+            "Inputs that cause failure:",
         ]
 
         for key, value in counterexample.input_values.items():

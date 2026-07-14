@@ -9,7 +9,6 @@ This script is the Phase 0 deliverable acceptance criterion:
 4. All communication works end-to-end
 """
 
-import os
 import sys
 import time
 from pathlib import Path
@@ -19,12 +18,13 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 import requests
 from neo4j import GraphDatabase
+
 from verityai.neural.ollama_client import OllamaClient
 
 
 def check_service_health(service_name: str, url: str, max_retries: int = 10) -> bool:
     """Check if a service is healthy."""
-    for attempt in range(max_retries):
+    for _attempt in range(max_retries):
         try:
             response = requests.get(url, timeout=2)
             if response.status_code == 200:
@@ -118,13 +118,6 @@ def main():
 
     print("\n1. Checking service health...")
 
-    services = [
-        ("Neo4j", "http://localhost:7474"),
-        ("Ollama", "http://localhost:11434/api/tags"),
-        ("PostgreSQL", None),  # We'll test via schema
-        ("Redis", None),  # We'll test via ping
-    ]
-
     # Health checks
     print("\nService Health Checks:")
     all_healthy = True
@@ -138,6 +131,7 @@ def main():
     # PostgreSQL check
     try:
         import psycopg2
+
         conn = psycopg2.connect(
             host="localhost",
             database="verityai_db",
@@ -154,16 +148,28 @@ def main():
     # Redis check (try with docker-compose exec if redis-py not available)
     try:
         import redis
+
         r = redis.Redis(host="localhost", port=6379, socket_connect_timeout=2)
         r.ping()
         print("✓ Redis is healthy")
-    except Exception as e:
+    except Exception:
         # Try via docker-compose exec
         import subprocess
+
         try:
             result = subprocess.run(
-                ["docker-compose", "-f", "docker/docker-compose.yml", "exec", "-T", "redis", "redis-cli", "ping"],
-                capture_output=True, timeout=5
+                [
+                    "docker-compose",
+                    "-f",
+                    "docker/docker-compose.yml",
+                    "exec",
+                    "-T",
+                    "redis",
+                    "redis-cli",
+                    "ping",
+                ],
+                capture_output=True,
+                timeout=5,
             )
             if result.returncode == 0:
                 print("✓ Redis is healthy")

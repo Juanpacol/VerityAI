@@ -11,8 +11,12 @@ from verityai.ontology.models import VerificationStatus
 
 def outcome(ground_truth, status, confidence=1.0, latency=0.1, attempts=1, task_id="t"):
     return BenchmarkOutcome(
-        task_id=task_id, ground_truth=ground_truth, predicted_status=status,
-        confidence=confidence, latency_seconds=latency, attempts=attempts,
+        task_id=task_id,
+        ground_truth=ground_truth,
+        predicted_status=status,
+        confidence=confidence,
+        latency_seconds=latency,
+        attempts=attempts,
     )
 
 

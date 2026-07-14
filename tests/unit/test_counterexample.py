@@ -1,8 +1,5 @@
 """Unit tests for counterexample generation."""
 
-import pytest
-from z3 import Int, Solver
-
 from verityai.ontology.models import Counterexample
 from verityai.symbolic.counterexample import CounterexampleGenerator
 
@@ -46,7 +43,7 @@ class MockZ3Model:
 
     def decls(self):
         """Return mock declarations."""
-        return [MockDecl(name) for name in self.values.keys()]
+        return [MockDecl(name) for name in self.values]
 
     def __getitem__(self, decl):
         """Return mock Z3 value."""
@@ -201,6 +198,7 @@ class TestCounterexampleGenerator:
 
     def test_counterexample_with_extraction_error(self):
         """Test handling extraction errors gracefully."""
+
         # Create a broken model that raises on decls()
         class BrokenModel:
             def decls(self):

@@ -17,13 +17,12 @@ from verityai.ontology.models import VerificationStatus
 from verityai.symbolic.verify import verify_python_snippet
 
 BENCHMARKS_DIR = (
-    Path(__file__).parent.parent.parent
-    / "src" / "verityai" / "evaluation" / "benchmarks"
+    Path(__file__).parent.parent.parent / "src" / "verityai" / "evaluation" / "benchmarks"
 )
 
-ALL_TASKS = load_benchmark_tasks(str(BENCHMARKS_DIR / "correctness_benchmarks.json")) + load_benchmark_tasks(
-    str(BENCHMARKS_DIR / "security_benchmarks.json")
-)
+ALL_TASKS = load_benchmark_tasks(
+    str(BENCHMARKS_DIR / "correctness_benchmarks.json")
+) + load_benchmark_tasks(str(BENCHMARKS_DIR / "security_benchmarks.json"))
 
 
 class TestBenchmarkGroundTruth:

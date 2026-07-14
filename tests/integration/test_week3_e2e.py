@@ -6,32 +6,10 @@ that re-verification on later turns was incremental (only the changed
 function was sent through Z3 again) rather than a claim of "implemented".
 """
 
-from typing import Optional
-
+from tests.fakes import FakeLLMClient, wrap_code
 from verityai.agent.orchestrator import Orchestrator
 from verityai.agent.session import ConversationSession
-from verityai.neural.ollama_client import OllamaGenerationError
 from verityai.ontology.models import GenerationRequest, VerificationStatus
-
-
-class FakeLLMClient:
-    def __init__(self, responses: list[str]):
-        self.responses = responses
-        self.call_count = 0
-        self.prompts_seen: list[str] = []
-
-    def generate(self, prompt: str, system_prompt: Optional[str] = None) -> str:
-        self.prompts_seen.append(prompt)
-        if self.call_count >= len(self.responses):
-            raise OllamaGenerationError("No more scripted responses", attempts=1)
-        response = self.responses[self.call_count]
-        self.call_count += 1
-        return response
-
-
-def wrap_code(code: str) -> str:
-    return f"Here is the code:\n\n```python\n{code}\n```"
-
 
 TURN1_CODE = """def compute_total():
     x = 1
@@ -78,7 +56,9 @@ class TestThreeTurnRefinementConversation:
         # Turn 3: ask for the proof — must NOT call the LLM or re-verify anything.
         turn3 = session.refine("show me the proof")
         assert llm.call_count == 2  # unchanged: no LLM call for this turn
-        assert session._incremental_verifier.last_reverified == ["compute_total"]  # unchanged from turn 2
+        assert session._incremental_verifier.last_reverified == [
+            "compute_total"
+        ]  # unchanged from turn 2
         assert turn3.code == turn2.code
         assert "passed" in turn3.explanation.lower() or "✓" in turn3.explanation
 

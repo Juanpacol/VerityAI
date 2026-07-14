@@ -1,7 +1,7 @@
 """Neo4j client for querying knowledge graph."""
 
 import logging
-from typing import Any, Optional
+from typing import Optional
 
 from neo4j import Driver
 
@@ -236,8 +236,9 @@ class KGClient:
         """
         query = "MATCH (r:Rule) RETURN COUNT(r) as count"
         with self.driver.session() as session:
-            result = session.run(query)
-            return result.single()["count"]
+            record = session.run(query).single()
+            assert record is not None, "COUNT query must return exactly one row"
+            return int(record["count"])
 
     def get_algorithm_count(self) -> int:
         """Get total count of algorithms in KG.
@@ -247,5 +248,6 @@ class KGClient:
         """
         query = "MATCH (a:Algorithm) RETURN COUNT(a) as count"
         with self.driver.session() as session:
-            result = session.run(query)
-            return result.single()["count"]
+            record = session.run(query).single()
+            assert record is not None, "COUNT query must return exactly one row"
+            return int(record["count"])

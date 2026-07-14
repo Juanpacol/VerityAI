@@ -4,41 +4,9 @@ Uses a fake LLM client (no live Ollama needed) so these tests run fully
 offline and deterministically.
 """
 
-from typing import Optional
-
-import pytest
-
+from tests.fakes import AlwaysFailingLLMClient, FakeLLMClient, wrap_code
 from verityai.agent.orchestrator import Orchestrator
-from verityai.neural.ollama_client import OllamaGenerationError
 from verityai.ontology.models import GenerationRequest, VerificationStatus
-
-
-class FakeLLMClient:
-    """Stand-in for OllamaClient that returns scripted responses in sequence."""
-
-    def __init__(self, responses: list[str]):
-        self.responses = responses
-        self.call_count = 0
-        self.prompts_seen: list[str] = []
-
-    def generate(self, prompt: str, system_prompt: Optional[str] = None) -> str:
-        self.prompts_seen.append(prompt)
-        if self.call_count >= len(self.responses):
-            raise OllamaGenerationError("No more scripted responses", attempts=1)
-        response = self.responses[self.call_count]
-        self.call_count += 1
-        return response
-
-
-class AlwaysFailingLLMClient:
-    """Stand-in for a completely unreachable Ollama server."""
-
-    def generate(self, prompt: str, system_prompt: Optional[str] = None) -> str:
-        raise OllamaGenerationError("Connection refused", attempts=3)
-
-
-def wrap_code(code: str, reasoning: str = "Here is the implementation:") -> str:
-    return f"{reasoning}\n\n```python\n{code}\n```"
 
 
 class TestOrchestratorSuccessPath:
@@ -56,7 +24,7 @@ class TestOrchestratorSuccessPath:
         assert result.final_verification.status == VerificationStatus.PASS
 
     def test_code_extracted_from_fenced_block(self):
-        llm = FakeLLMClient([wrap_code("x = 1\nassert x == 1", reasoning="Simple assignment.")])
+        llm = FakeLLMClient([wrap_code("x = 1\nassert x == 1")])
         orchestrator = Orchestrator(llm_client=llm)
 
         result = orchestrator.run(GenerationRequest(prompt="test"))

@@ -7,8 +7,12 @@ from verityai.ontology.models import VerificationStatus
 
 def outcome(ground_truth, status, confidence=1.0, latency=0.1):
     return BenchmarkOutcome(
-        task_id="t", ground_truth=ground_truth, predicted_status=status,
-        confidence=confidence, latency_seconds=latency, attempts=1,
+        task_id="t",
+        ground_truth=ground_truth,
+        predicted_status=status,
+        confidence=confidence,
+        latency_seconds=latency,
+        attempts=1,
     )
 
 

@@ -5,62 +5,14 @@ is needed -- the same offline-testable pattern (FakeLLMClient, in-memory
 sqlite) used throughout the rest of this codebase.
 """
 
-from typing import Optional
 from uuid import uuid4
 
 import pytest
-from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import StaticPool
 
+from tests.fakes import AlwaysFailingLLMClient, FakeLLMClient, wrap_code
 from verityai.agent.orchestrator import Orchestrator
-from verityai.agent.trace import Base as TraceBase
-from verityai.agent.trace import TraceStore
-from verityai.api.rest import (
-    app,
-    get_audit_log_store,
-    get_kg_client,
-    get_orchestrator,
-    get_trace_store,
-)
-from verityai.api.rate_limit import reset_rate_limit_state
-from verityai.compliance.audit_log import AuditLogStore
-from verityai.compliance.audit_log import Base as AuditLogBase
+from verityai.api.rest import app, get_audit_log_store, get_kg_client, get_orchestrator
 from verityai.kg.client import KGClient
-from verityai.neural.ollama_client import OllamaGenerationError
-
-
-@pytest.fixture(autouse=True)
-def _reset_rate_limit():
-    # All requests through TestClient share one pseudo client IP, so
-    # without this, request counts would accumulate across the whole test
-    # session and eventually trip 429s unrelated to what a test is
-    # actually checking.
-    reset_rate_limit_state()
-    yield
-
-
-class FakeLLMClient:
-    def __init__(self, responses: list[str]):
-        self.responses = responses
-        self.call_count = 0
-
-    def generate(self, prompt: str, system_prompt: Optional[str] = None) -> str:
-        if self.call_count >= len(self.responses):
-            raise OllamaGenerationError("No more scripted responses", attempts=1)
-        response = self.responses[self.call_count]
-        self.call_count += 1
-        return response
-
-
-class AlwaysFailingLLMClient:
-    def generate(self, prompt: str, system_prompt: Optional[str] = None) -> str:
-        raise OllamaGenerationError("Connection refused", attempts=3)
-
-
-def wrap_code(code: str) -> str:
-    return f"```python\n{code}\n```"
 
 
 def _override_orchestrator_with(llm_client) -> None:
@@ -68,23 +20,10 @@ def _override_orchestrator_with(llm_client) -> None:
 
 
 @pytest.fixture
-def client():
-    # StaticPool: FastAPI runs sync endpoints in a worker thread, and a
-    # plain sqlite in-memory DB is otherwise per-connection -- without
-    # this, the endpoint's thread would see a fresh, table-less database.
-    engine = create_engine(
-        "sqlite:///:memory:", connect_args={"check_same_thread": False}, poolclass=StaticPool
-    )
-    TraceBase.metadata.create_all(engine)
-    AuditLogBase.metadata.create_all(engine)
-    session = sessionmaker(bind=engine)()
-
-    app.dependency_overrides[get_trace_store] = lambda: TraceStore(session)
-    app.dependency_overrides[get_audit_log_store] = lambda: AuditLogStore(session)
-    yield TestClient(app)
-
-    app.dependency_overrides.clear()
-    session.close()
+def client(api_client):
+    """Alias for the shared `api_client` fixture (tests/conftest.py) --
+    kept so existing test signatures in this file don't all need renaming."""
+    return api_client
 
 
 class TestHealthEndpoint:
@@ -284,7 +223,9 @@ RULE_RECORD = {
 
 class TestKGEndpoints:
     def test_list_algorithms_returns_kg_data(self, client):
-        app.dependency_overrides[get_kg_client] = lambda: KGClient(FakeNeo4jDriver([ALGORITHM_RECORD]))
+        app.dependency_overrides[get_kg_client] = lambda: KGClient(
+            FakeNeo4jDriver([ALGORITHM_RECORD])
+        )
 
         response = client.get("/kg/algorithms?language=python")
 

@@ -5,11 +5,12 @@ from enum import Enum
 from typing import Any, Optional
 from uuid import UUID, uuid4
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class VerificationStatus(str, Enum):
     """Result of symbolic verification."""
+
     PASS = "pass"
     FAIL = "fail"
     UNKNOWN = "unknown"
@@ -19,6 +20,7 @@ class VerificationStatus(str, Enum):
 
 class Rule(BaseModel):
     """Symbolic rule in the Knowledge Graph."""
+
     id: UUID = Field(default_factory=uuid4)
     name: str
     description: str
@@ -31,21 +33,23 @@ class Rule(BaseModel):
     examples: dict[str, Any] = Field(default_factory=dict)
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
-    class Config:
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "name": "no_null_dereference",
                 "description": "Ensure no null pointer dereferences",
                 "category": "security",
                 "condition": "If x is used, x must not be None",
                 "severity": "critical",
-                "applies_to": ["python", "java", "c++"]
+                "applies_to": ["python", "java", "c++"],
             }
         }
+    )
 
 
 class Counterexample(BaseModel):
     """A concrete input that violates a rule."""
+
     rule_id: Optional[str] = None
     input_values: dict[str, Any]
     expected_output: Optional[Any] = None
@@ -57,6 +61,7 @@ class Counterexample(BaseModel):
 
 class Pattern(BaseModel):
     """A verified code pattern."""
+
     id: UUID = Field(default_factory=uuid4)
     name: str
     description: str
@@ -73,6 +78,7 @@ class Pattern(BaseModel):
 
 class Algorithm(BaseModel):
     """A canonical algorithm (subset of Pattern)."""
+
     id: UUID = Field(default_factory=uuid4)
     name: str
     description: str
@@ -84,20 +90,22 @@ class Algorithm(BaseModel):
     test_cases: list[dict[str, Any]] = Field(default_factory=list)
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
-    class Config:
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "name": "binary_search",
                 "description": "Search for target in sorted array",
                 "code": "def binary_search(arr, target):\n    left, right = 0, len(arr) - 1\n    while left <= right:\n        mid = (left + right) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            left = mid + 1\n        else:\n            right = mid - 1\n    return -1",
                 "complexity_time": "O(log n)",
-                "complexity_space": "O(1)"
+                "complexity_space": "O(1)",
             }
         }
+    )
 
 
 class VerificationResult(BaseModel):
     """Result of verifying code against rules."""
+
     code_id: str  # ID of the code snippet being verified
     status: VerificationStatus
     confidence: float = Field(ge=0.0, le=1.0)  # 0.0 to 1.0
@@ -112,6 +120,7 @@ class VerificationResult(BaseModel):
 
 class ReasoningTrace(BaseModel):
     """Full trace of reasoning for code generation + verification."""
+
     id: UUID = Field(default_factory=uuid4)
     user_prompt: str
     generated_code: str
@@ -121,12 +130,15 @@ class ReasoningTrace(BaseModel):
     verification_result: Optional[VerificationResult] = None
     failure_reason: Optional[str] = None  # Why it failed (injected for next attempt)
     confidence_score: float = Field(ge=0.0, le=1.0)
-    refinement_intent: Optional[str] = None  # Classified intent for refinement turns (e.g. "thread_safety")
+    refinement_intent: Optional[str] = (
+        None  # Classified intent for refinement turns (e.g. "thread_safety")
+    )
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 
 class FeedbackType(str, Enum):
     """Production feedback on a generated+verified code attempt."""
+
     ACCEPT = "accept"
     REJECT = "reject"
     CORRECT = "correct"
@@ -139,6 +151,7 @@ class Feedback(BaseModel):
     `reason` can be turned into a candidate KG rule (see
     agent/continuous_learning.py).
     """
+
     id: UUID = Field(default_factory=uuid4)
     trace_id: UUID
     feedback_type: FeedbackType
@@ -149,6 +162,7 @@ class Feedback(BaseModel):
 
 class GenerationRequest(BaseModel):
     """Request to generate code."""
+
     prompt: str
     language: str = "python"
     max_attempts: int = 3
@@ -157,6 +171,7 @@ class GenerationRequest(BaseModel):
 
 class GenerationResponse(BaseModel):
     """Response with generated code + verification proof."""
+
     code: str
     language: str
     traces: list[ReasoningTrace]  # All attempts
@@ -175,6 +190,7 @@ class ComplianceReport(BaseModel):
     from the developer-facing GenerationResponse itself. See
     agent/compliance/report_generator.py for SARIF/PDF export.
     """
+
     id: UUID = Field(default_factory=uuid4)
     trace_id: Optional[UUID] = None  # Final (accepted) trace this report covers
     user_prompt: str
@@ -199,6 +215,7 @@ class AuditLogEntry(BaseModel):
     (a username, an API key label, or "system" for automated calls),
     recorded as-is rather than validated against a user directory.
     """
+
     id: UUID = Field(default_factory=uuid4)
     actor: str
     action: str  # e.g. "generate", "accept", "reject", "report_exported"

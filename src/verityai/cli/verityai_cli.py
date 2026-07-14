@@ -52,7 +52,7 @@ def generate(
         )
     except OllamaGenerationError as e:
         console.print(f"[bold red]Generation failed:[/bold red] {e}")
-        raise typer.Exit(code=1)
+        raise typer.Exit(code=1) from e
 
     if response.code:
         console.print(Syntax(response.code, language, theme="monokai", line_numbers=True))

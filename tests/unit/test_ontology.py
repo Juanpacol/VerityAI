@@ -1,6 +1,5 @@
 """Unit tests for ontology models."""
 
-import pytest
 from verityai.ontology.models import (
     Algorithm,
     Counterexample,

@@ -79,12 +79,14 @@ class RuleEngine:
                         new_derived.add(consequence)
 
                         # Log trace
-                        self.inference_trace.append({
-                            "iteration": iteration,
-                            "rule": rule.name,
-                            "preconditions_met": list(self.facts),
-                            "derived": consequence,
-                        })
+                        self.inference_trace.append(
+                            {
+                                "iteration": iteration,
+                                "rule": rule.name,
+                                "preconditions_met": list(self.facts),
+                                "derived": consequence,
+                            }
+                        )
 
             # No new facts derived → fixed point reached
             if not new_derived:
@@ -118,11 +120,7 @@ class RuleEngine:
         precondition_facts = [f.strip() for f in pre_section.split(",")]
 
         # All preconditions must be in current facts
-        for precond in precondition_facts:
-            if precond and precond not in self.facts:
-                return False
-
-        return True
+        return all(not precond or precond in self.facts for precond in precondition_facts)
 
     def _derive_consequence(self, rule: Rule) -> Optional[str]:
         """Extract consequence from rule formal_spec.
@@ -175,7 +173,9 @@ class RuleEngine:
 
         return VerificationStatus.UNKNOWN, f"No consequence derived from {rule.name}"
 
-    def get_applicable_rules(self, code_facts: dict[str, Any], language: str = "python") -> list[Rule]:
+    def get_applicable_rules(
+        self, code_facts: dict[str, Any], language: str = "python"
+    ) -> list[Rule]:
         """Get all rules applicable to code given current facts.
 
         Args:

@@ -8,7 +8,6 @@ distribution across the full seed dataset, rather than asserting a vague
 import json
 from pathlib import Path
 
-import pytest
 from z3 import Int
 
 from verityai.ontology.models import VerificationStatus
@@ -182,8 +181,17 @@ class TestKnowledgeGraphSeedShape:
     """Validate the shape of seed data matches what kg/ingestion.py expects."""
 
     def test_algorithms_have_required_fields_for_ingestion(self):
-        required = {"id", "name", "description", "code", "language",
-                    "complexity_time", "complexity_space", "verified", "rules_satisfied"}
+        required = {
+            "id",
+            "name",
+            "description",
+            "code",
+            "language",
+            "complexity_time",
+            "complexity_space",
+            "verified",
+            "rules_satisfied",
+        }
         algorithms = load_algorithms()
 
         for algo in algorithms:
@@ -191,8 +199,15 @@ class TestKnowledgeGraphSeedShape:
             assert not missing, f"{algo['id']} missing fields: {missing}"
 
     def test_rules_have_required_fields_for_ingestion(self):
-        required = {"id", "name", "description", "category", "severity",
-                    "formal_spec", "applies_to"}
+        required = {
+            "id",
+            "name",
+            "description",
+            "category",
+            "severity",
+            "formal_spec",
+            "applies_to",
+        }
         rules = load_rules()
 
         for rule in rules:
@@ -203,7 +218,8 @@ class TestKnowledgeGraphSeedShape:
         """RuleEngine's forward chaining depends on PRE:/POST: markers being present."""
         rules = load_rules()
         malformed = [
-            r["id"] for r in rules
+            r["id"]
+            for r in rules
             if "PRE:" not in r["formal_spec"] or "POST:" not in r["formal_spec"]
         ]
         assert malformed == [], f"Rules missing PRE:/POST: markers: {malformed}"

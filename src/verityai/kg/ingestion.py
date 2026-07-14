@@ -2,8 +2,7 @@
 
 import json
 import logging
-from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from neo4j import Driver
 
@@ -82,8 +81,9 @@ class KGIngestion:
         """
 
         with driver.session() as session:
-            result = session.run(query)
-            count = result.single()[0]
+            record = session.run(query).single()
+            assert record is not None, "COUNT query must return exactly one row"
+            count = int(record[0])
             logger.info(f"Created {count} algorithm-rule relationships")
             return count
 
@@ -211,8 +211,9 @@ class KGIngestion:
         """
         query = "MATCH (a:Algorithm) RETURN COUNT(a)"
         with self.driver.session() as session:
-            result = session.run(query)
-            return result.single()[0]
+            record = session.run(query).single()
+            assert record is not None, "COUNT query must return exactly one row"
+            return int(record[0])
 
     def get_rule_count(self) -> int:
         """Get count of Rule nodes in database.
@@ -222,5 +223,6 @@ class KGIngestion:
         """
         query = "MATCH (r:Rule) RETURN COUNT(r)"
         with self.driver.session() as session:
-            result = session.run(query)
-            return result.single()[0]
+            record = session.run(query).single()
+            assert record is not None, "COUNT query must return exactly one row"
+            return int(record[0])

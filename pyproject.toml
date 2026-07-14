@@ -57,10 +57,9 @@ dev = [
     "pytest>=7.0.0",
     "pytest-asyncio>=0.21.0",
     "pytest-cov>=4.0.0",
-    "black>=23.0.0",
-    "isort>=5.12.0",
-    "flake8>=6.0.0",
+    "ruff>=0.6.0",
     "mypy>=1.0.0",
+    "pre-commit>=3.7.0",
 ]
 
 research = [
@@ -83,17 +82,48 @@ where = ["src"]
 [tool.setuptools.package-data]
 verityai = ["py.typed"]
 
-[tool.black]
+[tool.ruff]
 line-length = 100
-target-version = ["py311"]
+# Matches requires-python below, NOT the aspirational 3.11 in [tool.mypy] --
+# this repo's actual interpreter is 3.9 (see README), and UP045's
+# Optional[X] -> X | None rewrite is a runtime TypeError under 3.9 for
+# Pydantic models (they evaluate real annotations, not deferred strings).
+target-version = "py39"
 
-[tool.isort]
-profile = "black"
-line_length = 100
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["E501"]  # line length is enforced by the formatter, not the linter
+
+[tool.ruff.lint.isort]
+known-first-party = ["verityai"]
+
+[tool.ruff.lint.flake8-bugbear]
+# FastAPI's dependency injection idiom is `param: T = Depends(get_t)` --
+# the call is intentional and cached per-request by FastAPI, not a mutable
+# default trap. Same for Header(). Without this, B008 flags every endpoint.
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Header"]
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.9"  # matches requires-python and the actual interpreter this runs under
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = false
 disallow_incomplete_defs = false
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "integration: end-to-end tests that exercise multiple components together (still offline/faked unless noted)",
+]
+
+[tool.coverage.run]
+source = ["verityai"]
+omit = ["*/tests/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]

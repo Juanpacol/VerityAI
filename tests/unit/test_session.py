@@ -4,36 +4,12 @@ Uses a fake LLM client so these run fully offline; the point under test is
 the session/incremental-verification wiring, not LLM behavior.
 """
 
-from typing import Optional
-
 import pytest
 
+from tests.fakes import FakeLLMClient, wrap_code
 from verityai.agent.orchestrator import Orchestrator
 from verityai.agent.session import ConversationSession
-from verityai.neural.ollama_client import OllamaGenerationError
-from verityai.ontology.models import GenerationRequest, VerificationStatus
-
-
-class FakeLLMClient:
-    """Stand-in for OllamaClient that returns scripted responses in sequence."""
-
-    def __init__(self, responses: list[str]):
-        self.responses = responses
-        self.call_count = 0
-        self.prompts_seen: list[str] = []
-
-    def generate(self, prompt: str, system_prompt: Optional[str] = None) -> str:
-        self.prompts_seen.append(prompt)
-        if self.call_count >= len(self.responses):
-            raise OllamaGenerationError("No more scripted responses", attempts=1)
-        response = self.responses[self.call_count]
-        self.call_count += 1
-        return response
-
-
-def wrap_code(code: str) -> str:
-    return f"Here is the code:\n\n```python\n{code}\n```"
-
+from verityai.ontology.models import GenerationRequest
 
 INITIAL_CODE = """def foo():
     x = 1
@@ -92,7 +68,11 @@ class TestSessionRefine:
 
     def test_refine_second_call_with_no_further_changes_reverifies_nothing(self):
         llm = FakeLLMClient(
-            [wrap_code(INITIAL_CODE), wrap_code(REFINED_CODE_FOO_CHANGED), wrap_code(REFINED_CODE_FOO_CHANGED)]
+            [
+                wrap_code(INITIAL_CODE),
+                wrap_code(REFINED_CODE_FOO_CHANGED),
+                wrap_code(REFINED_CODE_FOO_CHANGED),
+            ]
         )
         session = ConversationSession(orchestrator=Orchestrator(llm_client=llm))
 

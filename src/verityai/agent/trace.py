@@ -9,19 +9,17 @@ reports planned for Phase 4.
 
 import json
 import logging
-from typing import Optional
+from datetime import datetime
+from typing import Any, Optional
 from uuid import UUID
 
-from sqlalchemy import JSON, Column, DateTime, Float, Integer, String, Text
-from sqlalchemy.orm import DeclarativeBase, Session
+from sqlalchemy import JSON, DateTime, Float, Integer, String, Text
+from sqlalchemy.orm import Mapped, Session, mapped_column
 
+from verityai.db.base import Base
 from verityai.ontology.models import ReasoningTrace, VerificationResult
 
 logger = logging.getLogger(__name__)
-
-
-class Base(DeclarativeBase):
-    pass
 
 
 class TraceRecord(Base):
@@ -29,17 +27,17 @@ class TraceRecord(Base):
 
     __tablename__ = "reasoning_traces"
 
-    id = Column(String(36), primary_key=True)
-    user_prompt = Column(Text, nullable=False)
-    generated_code = Column(Text, nullable=False)
-    attempt_number = Column(Integer, nullable=False)
-    kg_context = Column(JSON, nullable=False, default=dict)
-    llm_reasoning = Column(Text, nullable=False, default="")
-    verification_status = Column(String(20), nullable=True)
-    verification_result = Column(JSON, nullable=True)
-    failure_reason = Column(Text, nullable=True)
-    confidence_score = Column(Float, nullable=False)
-    created_at = Column(DateTime, nullable=False)
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    user_prompt: Mapped[str] = mapped_column(Text)
+    generated_code: Mapped[str] = mapped_column(Text)
+    attempt_number: Mapped[int] = mapped_column(Integer)
+    kg_context: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    llm_reasoning: Mapped[str] = mapped_column(Text, default="")
+    verification_status: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
+    verification_result: Mapped[Optional[dict[str, Any]]] = mapped_column(JSON, nullable=True)
+    failure_reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    confidence_score: Mapped[float] = mapped_column(Float)
+    created_at: Mapped[datetime] = mapped_column(DateTime)
 
 
 class TraceStore:

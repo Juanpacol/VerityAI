@@ -15,6 +15,7 @@ require one:
 import time
 from typing import Optional
 
+from tests.fakes import wrap_code
 from verityai.agent.orchestrator import Orchestrator
 from verityai.neural.ollama_client import OllamaGenerationError
 from verityai.ontology.models import GenerationRequest
@@ -37,7 +38,9 @@ class SimulatedLatencyLLMClient:
     time per call, so the retry loop's sequential-ness can be measured
     instead of assumed."""
 
-    def __init__(self, responses: list[str], delay_seconds: float = SIMULATED_PER_CALL_DELAY_SECONDS):
+    def __init__(
+        self, responses: list[str], delay_seconds: float = SIMULATED_PER_CALL_DELAY_SECONDS
+    ):
         self.responses = responses
         self.delay_seconds = delay_seconds
         self.call_count = 0
@@ -49,10 +52,6 @@ class SimulatedLatencyLLMClient:
         response = self.responses[self.call_count]
         self.call_count += 1
         return response
-
-
-def wrap_code(code: str) -> str:
-    return f"Here is the code:\n\n```python\n{code}\n```"
 
 
 class TestRetryLoopIsGenuinelySequential:

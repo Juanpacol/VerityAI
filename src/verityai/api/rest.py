@@ -19,17 +19,16 @@ from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
 from verityai.agent.orchestrator import Orchestrator
-from verityai.agent.trace import Base as TraceBase
 from verityai.agent.trace import TraceStore
 from verityai.api.dashboard import render_dashboard
 from verityai.api.rate_limit import RateLimitMiddleware
 from verityai.compliance.audit_log import AuditLogStore
-from verityai.compliance.audit_log import Base as AuditLogBase
 from verityai.compliance.report_generator import (
     build_compliance_report_from_trace,
     export_to_pdf,
     export_to_sarif,
 )
+from verityai.db.base import Base
 from verityai.kg.client import KGClient
 from verityai.neural.ollama_client import OllamaClient
 from verityai.ontology.models import (
@@ -73,8 +72,10 @@ def _get_engine():
             )
         else:
             _engine = create_engine(database_url)
-        TraceBase.metadata.create_all(_engine)
-        AuditLogBase.metadata.create_all(_engine)
+        # Base.metadata already has TraceRecord + AuditLogRecord registered,
+        # since importing TraceStore/AuditLogStore above imports the modules
+        # that define them against the shared Base (verityai.db.base).
+        Base.metadata.create_all(_engine)
         _session_factory = sessionmaker(bind=_engine)
     return _engine, _session_factory
 
@@ -259,6 +260,8 @@ def list_algorithms(
 
 
 @app.get("/kg/rules", response_model=list[Rule])
-def list_rules(language: str = "python", kg_client: KGClient = Depends(get_kg_client)) -> list[Rule]:
+def list_rules(
+    language: str = "python", kg_client: KGClient = Depends(get_kg_client)
+) -> list[Rule]:
     """List all KG rules for a language -- backs the dashboard's KG explorer."""
     return kg_client.get_all_rules(language=language)

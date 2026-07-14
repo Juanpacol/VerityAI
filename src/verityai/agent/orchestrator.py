@@ -19,13 +19,13 @@ from verityai.agent.state import AgentState
 from verityai.kg.client import KGClient
 from verityai.neural.ollama_client import OllamaClient, OllamaGenerationError
 from verityai.neural.prompt_builder import PromptBuilder
+from verityai.neural.response_parsing import split_code_and_reasoning
 from verityai.ontology.models import (
     GenerationRequest,
     GenerationResponse,
     VerificationResult,
     VerificationStatus,
 )
-from verityai.neural.response_parsing import split_code_and_reasoning
 from verityai.symbolic.debugger import SymbolicDebugger
 from verityai.symbolic.verify import verify_python_snippet
 

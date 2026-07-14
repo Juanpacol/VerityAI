@@ -22,8 +22,18 @@ from dataclasses import dataclass
 # system/process/network access no verified-code snippet should need.
 DANGEROUS_MODULES = frozenset(
     {
-        "os", "subprocess", "socket", "ctypes", "shutil", "sys",
-        "pickle", "marshal", "pty", "telnetlib", "ftplib", "paramiko",
+        "os",
+        "subprocess",
+        "socket",
+        "ctypes",
+        "shutil",
+        "sys",
+        "pickle",
+        "marshal",
+        "pty",
+        "telnetlib",
+        "ftplib",
+        "paramiko",
         "multiprocessing",
     }
 )
@@ -40,11 +50,20 @@ DANGEROUS_CALL_NAMES = frozenset({"eval", "exec", "compile", "__import__", "glob
 # only trips the call-based check since the alias name won't match).
 DANGEROUS_ATTR_CALLS = frozenset(
     {
-        ("os", "system"), ("os", "popen"), ("os", "exec"), ("os", "execve"),
-        ("os", "spawn"), ("os", "spawnl"), ("os", "spawnv"),
-        ("subprocess", "run"), ("subprocess", "call"), ("subprocess", "Popen"),
-        ("subprocess", "check_output"), ("subprocess", "check_call"),
-        ("pickle", "loads"), ("pickle", "load"),
+        ("os", "system"),
+        ("os", "popen"),
+        ("os", "exec"),
+        ("os", "execve"),
+        ("os", "spawn"),
+        ("os", "spawnl"),
+        ("os", "spawnv"),
+        ("subprocess", "run"),
+        ("subprocess", "call"),
+        ("subprocess", "Popen"),
+        ("subprocess", "check_output"),
+        ("subprocess", "check_call"),
+        ("pickle", "loads"),
+        ("pickle", "load"),
         ("socket", "socket"),
         ("shutil", "rmtree"),
     }
@@ -54,6 +73,7 @@ DANGEROUS_ATTR_CALLS = frozenset(
 @dataclass(frozen=True)
 class SecurityFinding:
     """One dangerous construct found in a code snippet."""
+
     line: int
     construct: str
     description: str

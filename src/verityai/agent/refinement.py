@@ -24,6 +24,7 @@ VerifyFn = Callable[[str], VerificationResult]
 
 class RefinementIntentType(str, Enum):
     """Coarse classification of a refinement turn's request."""
+
     THREAD_SAFETY = "thread_safety"
     INPUT_VALIDATION = "input_validation"
     ERROR_HANDLING = "error_handling"
@@ -38,25 +39,34 @@ class RefinementIntentType(str, Enum):
 # (SHOW_PROOF, EXPLAIN) take priority over a code-change keyword that
 # might also appear in the same sentence (e.g. "explain why it's thread-safe").
 _INTENT_KEYWORDS: dict[RefinementIntentType, tuple[str, ...]] = {
-    RefinementIntentType.SHOW_PROOF: ("show me the proof", "show the proof", "show proof", "prove it"),
+    RefinementIntentType.SHOW_PROOF: (
+        "show me the proof",
+        "show the proof",
+        "show proof",
+        "prove it",
+    ),
     RefinementIntentType.EXPLAIN: ("explain", "why is this", "why does this"),
     RefinementIntentType.THREAD_SAFETY: ("thread-safe", "thread safe", "threadsafe", "concurren"),
     RefinementIntentType.INPUT_VALIDATION: ("valid", "sanitiz", "check input", "guard against"),
-    RefinementIntentType.ERROR_HANDLING: ("error handling", "exception", "try/except", "handle error"),
+    RefinementIntentType.ERROR_HANDLING: (
+        "error handling",
+        "exception",
+        "try/except",
+        "handle error",
+    ),
     RefinementIntentType.PERFORMANCE: ("faster", "optimi", "performance", "efficient"),
     RefinementIntentType.LOGGING: ("logging", "add log", "add a log"),
 }
 
 # Intents that only need information already computed on a prior turn —
 # no LLM call, no re-verification.
-NO_CODE_CHANGE_INTENTS = frozenset(
-    {RefinementIntentType.SHOW_PROOF, RefinementIntentType.EXPLAIN}
-)
+NO_CODE_CHANGE_INTENTS = frozenset({RefinementIntentType.SHOW_PROOF, RefinementIntentType.EXPLAIN})
 
 
 @dataclass(frozen=True)
 class RefinementIntent:
     """Structured result of classifying a free-text refinement request."""
+
     intent_type: RefinementIntentType
     raw_text: str
 
@@ -79,6 +89,7 @@ def parse_refinement_intent(text: str) -> RefinementIntent:
         if any(keyword in lowered for keyword in keywords):
             return RefinementIntent(intent_type=intent_type, raw_text=text)
     return RefinementIntent(intent_type=RefinementIntentType.GENERIC_EDIT, raw_text=text)
+
 
 # Worst-wins precedence when combining per-function results: lower number
 # means "more severe", so a single FAIL outranks passing neighbors instead

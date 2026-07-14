@@ -11,10 +11,13 @@ WEIGHT_PATTERN_SIMILARITY = 0.25
 WEIGHT_COMPLEXITY = 0.15
 WEIGHT_TEST_COVERAGE = 0.10
 
-assert abs(
-    (WEIGHT_VERIFICATION + WEIGHT_PATTERN_SIMILARITY + WEIGHT_COMPLEXITY + WEIGHT_TEST_COVERAGE)
-    - 1.0
-) < 1e-9, "Confidence weights must sum to 1.0"
+assert (
+    abs(
+        (WEIGHT_VERIFICATION + WEIGHT_PATTERN_SIMILARITY + WEIGHT_COMPLEXITY + WEIGHT_TEST_COVERAGE)
+        - 1.0
+    )
+    < 1e-9
+), "Confidence weights must sum to 1.0"
 
 
 def compute_confidence(

@@ -145,7 +145,9 @@ class TestIncrementalVerifierCombining:
     def test_one_failing_function_makes_overall_result_fail(self):
         def verify_fn(code: str) -> VerificationResult:
             status = VerificationStatus.FAIL if "bar" in code else VerificationStatus.PASS
-            return VerificationResult(code_id="", status=status, confidence=0.5 if "bar" in code else 1.0)
+            return VerificationResult(
+                code_id="", status=status, confidence=0.5 if "bar" in code else 1.0
+            )
 
         incremental = IncrementalVerifier(verify_fn)
         result = incremental.verify(TWO_FUNCTIONS)

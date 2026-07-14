@@ -1,0 +1,41 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.9
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    # Pinned to match the mypy version this project's [tool.mypy] config is
+    # actually validated against (see pyproject.toml's dev deps) -- an
+    # older mypy here previously produced spurious errors on z3 arithmetic
+    # operators that the real (newer) mypy doesn't raise.
+    rev: v1.19.1
+    hooks:
+      - id: mypy
+        # mypy's pre-commit hook runs in an isolated venv with ONLY these
+        # packages -- it does not see the project's real dependencies
+        # unless listed here too. Missing z3-solver in particular causes
+        # spurious operator-type errors on Z3 expressions that a normal
+        # `mypy src/verityai` run (with the project's venv active) does
+        # not produce.
+        additional_dependencies:
+          - pydantic>=2.0.0
+          - types-requests
+          - z3-solver>=4.12.2
+          - sqlalchemy>=2.0.0
+          - fastapi>=0.100.0
+          - neo4j>=5.15.0
+        args: [src/verityai]
+        pass_filenames: false
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+        args: [--maxkb=1000]
+      - id: check-merge-conflict
