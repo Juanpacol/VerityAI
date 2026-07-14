@@ -4,6 +4,8 @@ Uses a fake LLM client (no live Ollama needed) so these tests run fully
 offline and deterministically.
 """
 
+import pytest
+
 from tests.fakes import AlwaysFailingLLMClient, FakeLLMClient, wrap_code
 from verityai.agent.orchestrator import Orchestrator
 from verityai.ontology.models import GenerationRequest, Rule, VerificationStatus
@@ -31,6 +33,61 @@ class TestOrchestratorSuccessPath:
 
         assert "x = 1" in result.code
         assert "```" not in result.code
+
+
+class TestOrchestratorRequestTracking:
+    def test_response_request_id_matches_every_trace(self):
+        llm = FakeLLMClient(
+            [
+                wrap_code("x = 5\nassert x == 999"),  # fails
+                wrap_code("x = 5\nassert x == 5"),  # passes
+            ]
+        )
+        orchestrator = Orchestrator(llm_client=llm)
+
+        result = orchestrator.run(GenerationRequest(prompt="test", max_attempts=3))
+
+        assert result.request_id is not None
+        assert len(result.traces) == 2
+        assert all(t.request_id == result.request_id for t in result.traces)
+
+    def test_each_run_gets_a_distinct_request_id(self):
+        llm1 = FakeLLMClient([wrap_code("x = 1\nassert x == 1")])
+        llm2 = FakeLLMClient([wrap_code("x = 1\nassert x == 1")])
+
+        result1 = Orchestrator(llm_client=llm1).run(GenerationRequest(prompt="test"))
+        result2 = Orchestrator(llm_client=llm2).run(GenerationRequest(prompt="test"))
+
+        assert result1.request_id != result2.request_id
+
+    def test_trace_records_generation_seconds(self):
+        llm = FakeLLMClient([wrap_code("x = 1\nassert x == 1")])
+        orchestrator = Orchestrator(llm_client=llm)
+
+        result = orchestrator.run(GenerationRequest(prompt="test"))
+
+        assert result.traces[0].generation_seconds is not None
+        assert result.traces[0].generation_seconds >= 0.0
+
+    def test_trace_records_confidence_factors_breakdown(self):
+        llm = FakeLLMClient([wrap_code("x = 1\nassert x == 1")])
+        orchestrator = Orchestrator(llm_client=llm)
+
+        result = orchestrator.run(GenerationRequest(prompt="test"))
+
+        factors = result.traces[0].confidence_factors
+        assert factors is not None
+        assert factors["total"] == pytest.approx(result.traces[0].confidence_score)
+        assert "components" in factors
+        assert "weights" in factors
+
+    def test_error_response_still_has_request_id(self):
+        orchestrator = Orchestrator(llm_client=AlwaysFailingLLMClient())
+
+        result = orchestrator.run(GenerationRequest(prompt="test"))
+
+        assert result.status == "failed"
+        assert result.request_id is not None
 
 
 class TestOrchestratorRetryPath:

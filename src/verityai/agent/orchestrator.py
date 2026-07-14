@@ -12,9 +12,10 @@ tracked as follow-up work, not implemented in this MVP loop.
 """
 
 import logging
+import time
 from typing import Optional
 
-from verityai.agent.confidence import compute_confidence
+from verityai.agent.confidence import explain_confidence
 from verityai.agent.state import AgentState
 from verityai.kg.client import KGClient
 from verityai.kg.retrieval import HybridRetriever
@@ -89,6 +90,7 @@ class Orchestrator:
         pattern_similarity = self._extract_pattern_similarity(kg_context)
 
         while not state.is_exhausted:
+            attempt_started = time.monotonic()
             try:
                 code, reasoning = self.generate_once(
                     state.user_prompt, kg_context, state.last_failure_reason
@@ -100,9 +102,11 @@ class Orchestrator:
                 return self._build_error_response(state, str(e))
 
             verification_result = self.verify_code(code)
-            confidence = compute_confidence(
+            generation_seconds = time.monotonic() - attempt_started
+            confidence_breakdown = explain_confidence(
                 verification_result, pattern_similarity=pattern_similarity
             )
+            confidence = confidence_breakdown["total"]
 
             state.record_attempt(
                 code=code,
@@ -110,6 +114,8 @@ class Orchestrator:
                 llm_reasoning=reasoning,
                 verification_result=verification_result,
                 confidence_score=confidence,
+                generation_seconds=generation_seconds,
+                confidence_factors=confidence_breakdown,
             )
 
             logger.info(
@@ -267,6 +273,7 @@ class Orchestrator:
             confidence=state.history[-1].confidence_score if state.history else 0.0,
             explanation=explanation,
             status=response_status,
+            request_id=state.request_id,
         )
 
     def _build_error_response(self, state: AgentState, error_message: str) -> GenerationResponse:
@@ -285,4 +292,5 @@ class Orchestrator:
             confidence=0.0,
             explanation=f"Code generation failed: {error_message}",
             status="failed",
+            request_id=state.request_id,
         )

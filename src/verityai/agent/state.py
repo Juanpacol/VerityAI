@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass, field
 from typing import Any, Optional
+from uuid import UUID, uuid4
 
 from verityai.ontology.models import ReasoningTrace, VerificationResult, VerificationStatus
 
@@ -24,6 +25,10 @@ class AgentState:
     last_verification: Optional[VerificationResult] = None
     last_failure_reason: Optional[str] = None
     history: list[ReasoningTrace] = field(default_factory=list)
+    # Groups every attempt of this run for the reasoning-trace view
+    # (GET /runs/{request_id}) -- one AgentState per request, so one id
+    # generated once and stamped on every ReasoningTrace it records.
+    request_id: UUID = field(default_factory=uuid4)
 
     @property
     def is_exhausted(self) -> bool:
@@ -45,6 +50,8 @@ class AgentState:
         llm_reasoning: str,
         verification_result: VerificationResult,
         confidence_score: float,
+        generation_seconds: Optional[float] = None,
+        confidence_factors: Optional[dict[str, Any]] = None,
     ) -> ReasoningTrace:
         """Record one generate+verify attempt and update retry-relevant state.
 
@@ -54,6 +61,8 @@ class AgentState:
             llm_reasoning: LLM's explanation text (outside the code block)
             verification_result: Result of running the verifier on `code`
             confidence_score: Weighted confidence for this attempt
+            generation_seconds: Wall-clock time for this attempt's generate+verify
+            confidence_factors: agent.confidence.explain_confidence() output
 
         Returns:
             The ReasoningTrace recorded for this attempt
@@ -71,6 +80,9 @@ class AgentState:
             verification_result=verification_result,
             failure_reason=self.last_failure_reason,
             confidence_score=confidence_score,
+            request_id=self.request_id,
+            generation_seconds=generation_seconds,
+            confidence_factors=confidence_factors,
         )
         self.history.append(trace)
 

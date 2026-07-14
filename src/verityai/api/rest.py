@@ -48,6 +48,7 @@ from verityai.compliance.report_generator import (
     export_to_sarif,
 )
 from verityai.db.base import Base
+from verityai.db.migrate import ensure_additive_columns
 from verityai.kg.client import KGClient
 from verityai.neural.ollama_client import OllamaClient
 from verityai.ontology.models import (
@@ -111,6 +112,10 @@ def _get_engine():
         # since importing TraceStore/AuditLogStore above imports the modules
         # that define them against the shared Base (verityai.db.base).
         Base.metadata.create_all(_engine)
+        # create_all() never alters an existing table -- a DB from before
+        # ReasoningTrace's request_id/generation_seconds/confidence_factors
+        # existed needs this to gain those columns (see db/migrate.py).
+        ensure_additive_columns(_engine)
         _session_factory = sessionmaker(bind=_engine)
     return _engine, _session_factory
 

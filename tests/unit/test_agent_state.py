@@ -63,6 +63,43 @@ class TestAgentStateVerification:
         assert not state.is_verified
 
 
+class TestAgentStateRequestId:
+    def test_each_state_gets_a_distinct_request_id(self):
+        state1 = AgentState(user_prompt="test")
+        state2 = AgentState(user_prompt="test")
+        assert state1.request_id != state2.request_id
+
+    def test_request_id_stamped_on_every_recorded_trace(self):
+        state = AgentState(user_prompt="test")
+        trace1 = state.record_attempt("code1", {}, "r1", make_result(VerificationStatus.FAIL), 0.1)
+        trace2 = state.record_attempt("code2", {}, "r2", make_result(VerificationStatus.PASS), 0.9)
+
+        assert trace1.request_id == state.request_id
+        assert trace2.request_id == state.request_id
+
+    def test_generation_seconds_and_confidence_factors_pass_through(self):
+        state = AgentState(user_prompt="test")
+        trace = state.record_attempt(
+            "code",
+            {},
+            "r",
+            make_result(VerificationStatus.PASS),
+            0.9,
+            generation_seconds=1.23,
+            confidence_factors={"total": 0.9},
+        )
+
+        assert trace.generation_seconds == 1.23
+        assert trace.confidence_factors == {"total": 0.9}
+
+    def test_generation_seconds_and_confidence_factors_default_to_none(self):
+        state = AgentState(user_prompt="test")
+        trace = state.record_attempt("code", {}, "r", make_result(VerificationStatus.PASS), 0.9)
+
+        assert trace.generation_seconds is None
+        assert trace.confidence_factors is None
+
+
 class TestAgentStateHistory:
     def test_record_attempt_appends_to_history(self):
         state = AgentState(user_prompt="test")

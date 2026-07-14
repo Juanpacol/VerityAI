@@ -133,6 +133,13 @@ class ReasoningTrace(BaseModel):
     refinement_intent: Optional[str] = (
         None  # Classified intent for refinement turns (e.g. "thread_safety")
     )
+    # Optional so pre-existing persisted/JSON traces (written before these
+    # fields existed) keep parsing -- see db/migrate.py's additive migration.
+    request_id: Optional[UUID] = None  # Groups every attempt of one Orchestrator.run() call
+    generation_seconds: Optional[float] = None  # Wall-clock time for this attempt's generate+verify
+    confidence_factors: Optional[dict[str, Any]] = (
+        None  # agent.confidence.explain_confidence() output
+    )
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 
@@ -179,6 +186,9 @@ class GenerationResponse(BaseModel):
     confidence: float
     explanation: str  # Human-readable explanation
     status: str  # "success", "partial", "failed"
+    request_id: Optional[UUID] = (
+        None  # Groups this response's traces; see ReasoningTrace.request_id
+    )
 
 
 class ComplianceReport(BaseModel):

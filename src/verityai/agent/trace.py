@@ -38,6 +38,12 @@ class TraceRecord(Base):
     failure_reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     confidence_score: Mapped[float] = mapped_column(Float)
     created_at: Mapped[datetime] = mapped_column(DateTime)
+    # Additive fields (nullable -- rows written before these existed must
+    # keep loading; see db/migrate.py for how existing tables gain these
+    # columns without Alembic).
+    request_id: Mapped[Optional[str]] = mapped_column(String(36), nullable=True, index=True)
+    generation_seconds: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    confidence_factors: Mapped[Optional[dict[str, Any]]] = mapped_column(JSON, nullable=True)
 
 
 class TraceStore:
@@ -75,6 +81,9 @@ class TraceStore:
         record.failure_reason = trace.failure_reason
         record.confidence_score = trace.confidence_score
         record.created_at = trace.created_at
+        record.request_id = str(trace.request_id) if trace.request_id else None
+        record.generation_seconds = trace.generation_seconds
+        record.confidence_factors = trace.confidence_factors
 
         self.session.commit()
 
@@ -98,6 +107,21 @@ class TraceStore:
         )
         return [self._to_pydantic(r) for r in records]
 
+    def get_traces_by_request(self, request_id: UUID) -> list[ReasoningTrace]:
+        """Fetch every attempt of one Orchestrator.run() call, in attempt order.
+
+        Backs GET /runs/{request_id} (Commit 6). Traces written before
+        request_id existed have it as NULL and will never match here --
+        that's expected, not a bug: there's no request to group them under.
+        """
+        records = (
+            self.session.query(TraceRecord)
+            .filter(TraceRecord.request_id == str(request_id))
+            .order_by(TraceRecord.attempt_number)
+            .all()
+        )
+        return [self._to_pydantic(r) for r in records]
+
     def _to_pydantic(self, record: TraceRecord) -> ReasoningTrace:
         verification_result = (
             VerificationResult(**record.verification_result)
@@ -115,6 +139,9 @@ class TraceStore:
             failure_reason=record.failure_reason,
             confidence_score=record.confidence_score,
             created_at=record.created_at,
+            request_id=UUID(record.request_id) if record.request_id else None,
+            generation_seconds=record.generation_seconds,
+            confidence_factors=record.confidence_factors,
         )
 
 
