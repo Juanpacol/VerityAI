@@ -228,6 +228,49 @@ class KGClient:
         logger.info(f"Fetched {len(rules)} rules for language={language}")
         return rules
 
+    def get_rules_with_embeddings(
+        self, language: str = "python"
+    ) -> list[tuple[Rule, Optional[list[float]]]]:
+        """Fetch all rules for a language paired with their stored embedding, if any.
+
+        Feeds `kg.retrieval.HybridRetriever`, which is built to handle
+        partial/absent embedding coverage (a rule not yet backfilled, or
+        ingested before embeddings existed, yields `None` here) as a normal
+        degradation case, not an error.
+
+        Args:
+            language: Programming language filter
+
+        Returns:
+            List of (Rule, embedding-or-None) tuples
+        """
+        query = """
+        MATCH (r:Rule)
+        WHERE $language IN r.applies_to
+        RETURN r.id, r.name, r.description, r.category, r.severity,
+               r.formal_spec, r.applies_to, r.embedding, r.embedding_model
+        ORDER BY r.name
+        """
+
+        pairs: list[tuple[Rule, Optional[list[float]]]] = []
+        with self.driver.session() as session:
+            result = session.run(query, language=language)
+
+            for record in result:
+                rule = Rule(
+                    name=record["r.name"],
+                    description=record["r.description"],
+                    category=record["r.category"],
+                    condition=record["r.description"],
+                    severity=record["r.severity"],
+                    formal_spec=record["r.formal_spec"],
+                    applies_to=record["r.applies_to"],
+                )
+                pairs.append((rule, record["r.embedding"]))
+
+        logger.info(f"Fetched {len(pairs)} rules with embeddings for language={language}")
+        return pairs
+
     def get_rule_count(self) -> int:
         """Get total count of rules in KG.
 

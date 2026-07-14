@@ -92,3 +92,24 @@ class TestIngestLearnedRule:
         KGIngestion(driver).ingest_learned_rule(rule)
 
         assert driver.store[str(rule.id)]["test_code"] == ""
+
+
+class TestSetRuleEmbedding:
+    def test_writes_embedding_and_model(self):
+        driver = FakeDriver()
+
+        KGIngestion(driver).set_rule_embedding("rule-123", [0.1, 0.2], "llama3.2")
+
+        stored = driver.store["rule-123"]
+        assert stored["embedding"] == [0.1, 0.2]
+        assert stored["model"] == "llama3.2"
+
+    def test_uses_match_and_set_not_create(self):
+        driver = FakeDriver()
+
+        KGIngestion(driver).set_rule_embedding("rule-123", [0.1, 0.2], "llama3.2")
+
+        query_used = driver.sessions_created[-1].queries[0]
+        assert "MATCH" in query_used
+        assert "SET" in query_used
+        assert "CREATE" not in query_used

@@ -196,6 +196,28 @@ class KGIngestion:
             )
         logger.info(f"Ingested learned rule '{rule.name}' (id={rule.id}) into KG")
 
+    def set_rule_embedding(self, rule_id: str, embedding: list[float], model: str) -> None:
+        """Store an embedding vector for an existing rule.
+
+        Used by scripts/backfill_rule_embeddings.py. Records `model`
+        alongside the vector so a later change to `OLLAMA_EMBED_MODEL`
+        produces detectably-stale embeddings rather than silently mixing
+        vectors from two different embedding spaces.
+
+        Args:
+            rule_id: Rule.id (string form of the UUID)
+            embedding: Embedding vector
+            model: Name of the embedding model used to produce it
+        """
+        query = """
+        MATCH (r:Rule {id: $id})
+        SET r.embedding = $embedding, r.embedding_model = $model
+        RETURN r
+        """
+        with self.driver.session() as session:
+            session.run(query, id=rule_id, embedding=embedding, model=model)
+        logger.info(f"Stored embedding (model={model}) for rule {rule_id}")
+
     def clear_all(self) -> None:
         """Delete all nodes from database (be careful!)."""
         query = "MATCH (n) DETACH DELETE n"

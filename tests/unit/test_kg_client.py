@@ -66,6 +66,18 @@ RULE_RECORD = {
     "r.applies_to": ["python"],
 }
 
+RULE_RECORD_WITH_EMBEDDING = {
+    **RULE_RECORD,
+    "r.embedding": [0.1, 0.2, 0.3],
+    "r.embedding_model": "llama3.2",
+}
+
+RULE_RECORD_NO_EMBEDDING = {
+    **RULE_RECORD,
+    "r.embedding": None,
+    "r.embedding_model": None,
+}
+
 
 class TestGetAlgorithmById:
     def test_found_includes_description(self):
@@ -133,3 +145,28 @@ class TestGetAllRules:
     def test_empty_kg_returns_empty_list(self):
         client = KGClient(FakeDriver([]))
         assert client.get_all_rules() == []
+
+
+class TestGetRulesWithEmbeddings:
+    def test_returns_rule_and_embedding_pair(self):
+        client = KGClient(FakeDriver([RULE_RECORD_WITH_EMBEDDING]))
+        pairs = client.get_rules_with_embeddings(language="python")
+
+        assert len(pairs) == 1
+        rule, embedding = pairs[0]
+        assert rule.name == "no_null_deref"
+        assert rule.condition == "Ensure no null pointer dereferences"
+        assert embedding == [0.1, 0.2, 0.3]
+
+    def test_rule_without_embedding_yields_none(self):
+        client = KGClient(FakeDriver([RULE_RECORD_NO_EMBEDDING]))
+        pairs = client.get_rules_with_embeddings(language="python")
+
+        assert len(pairs) == 1
+        rule, embedding = pairs[0]
+        assert rule.name == "no_null_deref"
+        assert embedding is None
+
+    def test_empty_kg_returns_empty_list(self):
+        client = KGClient(FakeDriver([]))
+        assert client.get_rules_with_embeddings() == []
