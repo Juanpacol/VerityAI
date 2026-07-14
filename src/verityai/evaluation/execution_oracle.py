@@ -50,16 +50,31 @@ MEMORY_BYTES_LIMIT = 256 * 1024 * 1024  # 256 MB
 # (not a separate .py file) so there's exactly one file to keep in sync with
 # OracleResult's expectations, and so it has zero import-time dependency on
 # the rest of this package inside the child process.
+#
+# Candidate code's own stdout is redirected away during exec() and every
+# test-case call -- found the hard way (a live run against llama3.2, not
+# by inspection): LLM-generated code very commonly includes a top-level
+# `print(...)` demonstrating the function, and since that code runs via
+# plain `exec()` in this same process, its print() output was landing on
+# the SAME stdout this script uses for its final JSON result, corrupting
+# the single-line JSON the parent expects to parse. Every candidate
+# reaching this bug reported "novel" (JSON parse failure), not "correct"
+# or "buggy" -- silently invalidating the ground truth for any task whose
+# generated code happened to print anything.
 _RUNNER_SCRIPT = """
+import contextlib
+import io
 import json
 import sys
 
 payload = json.loads(sys.stdin.read())
 namespace: dict = {}
 results = []
+_devnull = io.StringIO()
 
 try:
-    exec(payload["code"], namespace)
+    with contextlib.redirect_stdout(_devnull):
+        exec(payload["code"], namespace)
 except BaseException as e:
     print(json.dumps({"load_error": f"{type(e).__name__}: {e}"}))
     sys.exit(0)
@@ -71,7 +86,8 @@ if func is None:
 
 for case in payload["test_cases"]:
     try:
-        returned = func(*case["args"])
+        with contextlib.redirect_stdout(_devnull):
+            returned = func(*case["args"])
         if case["has_expected"] and returned != case["expected"]:
             results.append({"ok": False, "returned": returned, "error": None})
         else:

@@ -1,7 +1,7 @@
 [
   {
     "id": "security_001_safe_divide",
-    "prompt": "Write a Python function that asserts a denominator is non-zero before dividing 10 by it.",
+    "prompt": "Write a Python function that asserts a denominator is non-zero before dividing 10 by it. Name the function `safe_divide`.",
     "category": "security",
     "bug_class": "missing_division_guard",
     "reference_solution": "def safe_divide():\n    numerator = 10\n    denominator = 2\n    assert denominator != 0\n    result = numerator // denominator\n    return result\n",
@@ -25,7 +25,7 @@
   },
   {
     "id": "security_003_lock_guard",
-    "prompt": "Write a Python function that asserts a lock flag is held (1) before entering a critical section.",
+    "prompt": "Write a Python function that asserts a lock flag is held (1) before entering a critical section. Name the function `critical_section`.",
     "category": "security",
     "bug_class": "missing_concurrency_guard",
     "reference_solution": "def critical_section():\n    lock_held = 1\n    assert lock_held == 1\n",
@@ -50,7 +50,7 @@
   },
   {
     "id": "security_005_bounds_check_param",
-    "prompt": "Write a Python function check_index_bounds(idx, n) with precondition 0 <= idx < n that asserts idx < n.",
+    "prompt": "Write a Python function check_index_bounds(idx, n) with precondition 0 <= idx < n that asserts idx < n. Name the function exactly `check_index_bounds`.",
     "category": "security",
     "bug_class": "off_by_one_boundary",
     "reference_solution": "def check_index_bounds(idx, n):\n    \"\"\"PRE: idx >= 0 and idx < n\"\"\"\n    assert idx < n\n",

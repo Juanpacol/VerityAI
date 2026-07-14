@@ -1,7 +1,7 @@
 [
   {
     "id": "correctness_001_max_via_ifelse",
-    "prompt": "Write a Python function that computes the maximum of two hardcoded integers a=3 and b=7, asserting the result equals 7.",
+    "prompt": "Write a Python function that computes the maximum of two hardcoded integers a=3 and b=7, asserting the result equals 7. Name the function `compute_max`.",
     "category": "correctness",
     "bug_class": "wrong_assert_constant",
     "reference_solution": "def compute_max():\n    a = 3\n    b = 7\n    if a > b:\n        result = a\n    else:\n        result = b\n    assert result == 7\n    return result\n",
@@ -16,7 +16,7 @@
   },
   {
     "id": "correctness_002_min_via_ifelse",
-    "prompt": "Write a Python function that computes the minimum of two hardcoded integers a=3 and b=7 using an if/else comparison, asserting the result equals 3.",
+    "prompt": "Write a Python function that computes the minimum of two hardcoded integers a=3 and b=7 using an if/else comparison, asserting the result equals 3. Name the function `compute_min`.",
     "category": "correctness",
     "bug_class": "wrong_comparison_operator",
     "reference_solution": "def compute_min():\n    a = 3\n    b = 7\n    if a < b:\n        result = a\n    else:\n        result = b\n    assert result == 3\n    return result\n",
@@ -31,7 +31,7 @@
   },
   {
     "id": "correctness_003_add_two",
-    "prompt": "Write a Python function that adds two hardcoded integers a=3 and b=4, asserting the result equals 7.",
+    "prompt": "Write a Python function that adds two hardcoded integers a=3 and b=4, asserting the result equals 7. Name the function `add_two`.",
     "category": "correctness",
     "bug_class": "wrong_arithmetic_operator",
     "reference_solution": "def add_two():\n    a = 3\n    b = 4\n    result = a + b\n    assert result == 7\n    return result\n",
@@ -46,7 +46,7 @@
   },
   {
     "id": "correctness_004_abs_of_negative",
-    "prompt": "Write a Python function that computes the absolute value of x=-5, asserting the result equals 5.",
+    "prompt": "Write a Python function that computes the absolute value of x=-5, asserting the result equals 5. Name the function `abs_of_negative`.",
     "category": "correctness",
     "bug_class": "wrong_assert_constant",
     "reference_solution": "def abs_of_negative():\n    x = -5\n    result = abs(x)\n    assert result == 5\n    return result\n",
@@ -61,7 +61,7 @@
   },
   {
     "id": "correctness_005_pick_min",
-    "prompt": "Write a Python function using the built-in min() on a=4, b=9, asserting the result equals 4.",
+    "prompt": "Write a Python function using the built-in min() on a=4, b=9, asserting the result equals 4. Name the function `pick_min`.",
     "category": "correctness",
     "bug_class": "wrong_assert_constant",
     "reference_solution": "def pick_min():\n    a = 4\n    b = 9\n    result = min(a, b)\n    assert result == 4\n    return result\n",
@@ -76,7 +76,7 @@
   },
   {
     "id": "correctness_006_pick_max",
-    "prompt": "Write a Python function using the built-in max() on a=4, b=9, asserting the result equals 9.",
+    "prompt": "Write a Python function using the built-in max() on a=4, b=9, asserting the result equals 9. Name the function `pick_max`.",
     "category": "correctness",
     "bug_class": "wrong_assert_constant",
     "reference_solution": "def pick_max():\n    a = 4\n    b = 9\n    result = max(a, b)\n    assert result == 9\n    return result\n",
@@ -91,7 +91,7 @@
   },
   {
     "id": "correctness_007_check_any_positive",
-    "prompt": "Write a Python function that asserts at least one of x=1, y=-1 is positive.",
+    "prompt": "Write a Python function that asserts at least one of x=1, y=-1 is positive. Name the function `check_any_positive`.",
     "category": "correctness",
     "bug_class": "and_or_confusion",
     "reference_solution": "def check_any_positive():\n    x = 1\n    y = -1\n    assert (x > 0) or (y > 0)\n",
@@ -106,7 +106,7 @@
   },
   {
     "id": "correctness_008_negate_value",
-    "prompt": "Write a Python function that negates x=5, asserting the result equals -5.",
+    "prompt": "Write a Python function that negates x=5, asserting the result equals -5. Name the function `negate_value`.",
     "category": "correctness",
     "bug_class": "missing_negation",
     "reference_solution": "def negate_value():\n    x = 5\n    result = -x\n    assert result == -5\n    return result\n",
@@ -121,7 +121,7 @@
   },
   {
     "id": "correctness_009_check_equal",
-    "prompt": "Write a Python function that asserts x=5 and y=5 are equal.",
+    "prompt": "Write a Python function that asserts x=5 and y=5 are equal. Name the function `check_equal`.",
     "category": "correctness",
     "bug_class": "wrong_equality_operator",
     "reference_solution": "def check_equal():\n    x = 5\n    y = 5\n    assert x == y\n",
@@ -136,7 +136,7 @@
   },
   {
     "id": "correctness_010_check_even",
-    "prompt": "Write a Python function that checks x=4 is even via x % 2, asserting the remainder equals 0.",
+    "prompt": "Write a Python function that checks x=4 is even via x % 2, asserting the remainder equals 0. Name the function `check_even`.",
     "category": "correctness",
     "bug_class": "wrong_assert_constant",
     "reference_solution": "def check_even():\n    x = 4\n    remainder = x % 2\n    assert remainder == 0\n    return remainder\n",
@@ -151,7 +151,7 @@
   },
   {
     "id": "correctness_011_integer_divide",
-    "prompt": "Write a Python function computing 17 // 5 using local variables a=17, b=5, asserting the result equals 3.",
+    "prompt": "Write a Python function computing 17 // 5 using local variables a=17, b=5, asserting the result equals 3. Name the function `integer_divide`.",
     "category": "correctness",
     "bug_class": "swapped_operands",
     "reference_solution": "def integer_divide():\n    a = 17\n    b = 5\n    result = a // b\n    assert result == 3\n    return result\n",
@@ -166,7 +166,7 @@
   },
   {
     "id": "correctness_012_check_in_range",
-    "prompt": "Write a Python function asserting x=10 is within an inclusive limit of 10.",
+    "prompt": "Write a Python function asserting x=10 is within an inclusive limit of 10. Name the function `check_in_range`.",
     "category": "correctness",
     "bug_class": "off_by_one_boundary",
     "reference_solution": "def check_in_range():\n    x = 10\n    limit = 10\n    assert x <= limit\n",
@@ -181,7 +181,7 @@
   },
   {
     "id": "correctness_013_max_of_two_params",
-    "prompt": "Write a Python function max_of_two(a, b) that returns the larger of the two parameters, asserting the result is >= both.",
+    "prompt": "Write a Python function max_of_two(a, b) that returns the larger of the two parameters, asserting the result is >= both. Name the function exactly `max_of_two`.",
     "category": "correctness",
     "bug_class": "wrong_comparison_direction",
     "reference_solution": "def max_of_two(a, b):\n    if a > b:\n        result = a\n    else:\n        result = b\n    assert result >= a\n    assert result >= b\n",
@@ -199,7 +199,7 @@
   },
   {
     "id": "correctness_014_min_of_two_params",
-    "prompt": "Write a Python function min_of_two(a, b) that returns the smaller of the two parameters, asserting the result is <= both.",
+    "prompt": "Write a Python function min_of_two(a, b) that returns the smaller of the two parameters, asserting the result is <= both. Name the function exactly `min_of_two`.",
     "category": "correctness",
     "bug_class": "wrong_comparison_direction",
     "reference_solution": "def min_of_two(a, b):\n    if a < b:\n        result = a\n    else:\n        result = b\n    assert result <= a\n    assert result <= b\n",
@@ -217,7 +217,7 @@
   },
   {
     "id": "correctness_015_double_identity",
-    "prompt": "Write a Python function double_value(x) that doubles x by adding it to itself, asserting the result equals 2*x.",
+    "prompt": "Write a Python function double_value(x) that doubles x by adding it to itself, asserting the result equals 2*x. Name the function exactly `double_value`.",
     "category": "correctness",
     "bug_class": "wrong_arithmetic_operator",
     "reference_solution": "def double_value(x):\n    result = x + x\n    assert result == 2 * x\n",
@@ -234,7 +234,7 @@
   },
   {
     "id": "correctness_016_triple_identity",
-    "prompt": "Write a Python function triple_value(x) that triples x by adding it to itself three times, asserting the result equals 3*x.",
+    "prompt": "Write a Python function triple_value(x) that triples x by adding it to itself three times, asserting the result equals 3*x. Name the function exactly `triple_value`.",
     "category": "correctness",
     "bug_class": "incomplete_accumulation",
     "reference_solution": "def triple_value(x):\n    result = x + x + x\n    assert result == 3 * x\n",
@@ -251,7 +251,7 @@
   },
   {
     "id": "correctness_017_swap_bigger_smaller",
-    "prompt": "Write a Python function swap_check(a, b) with precondition a != b that labels bigger/smaller correctly, asserting bigger > smaller.",
+    "prompt": "Write a Python function swap_check(a, b) with precondition a != b that labels bigger/smaller correctly, asserting bigger > smaller. Name the function exactly `swap_check`.",
     "category": "correctness",
     "bug_class": "swapped_branch_assignment",
     "reference_solution": "def swap_check(a, b):\n    \"\"\"PRE: a != b\"\"\"\n    if a > b:\n        bigger = a\n        smaller = b\n    else:\n        bigger = b\n        smaller = a\n    assert bigger > smaller\n",
@@ -269,7 +269,7 @@
   },
   {
     "id": "correctness_018_parity_range",
-    "prompt": "Write a Python function parity_check(n) with precondition n >= 0 asserting n % 2 is either 0 or 1.",
+    "prompt": "Write a Python function parity_check(n) with precondition n >= 0 asserting n % 2 is either 0 or 1. Name the function exactly `parity_check`.",
     "category": "correctness",
     "bug_class": "wrong_assert_constant",
     "reference_solution": "def parity_check(n):\n    \"\"\"PRE: n >= 0\"\"\"\n    remainder = n % 2\n    assert remainder == 0 or remainder == 1\n",
@@ -286,7 +286,7 @@
   },
   {
     "id": "correctness_019_abs_diff_nonneg",
-    "prompt": "Write a Python function abs_diff(a, b) computing the absolute difference via if/else, asserting the result is non-negative.",
+    "prompt": "Write a Python function abs_diff(a, b) computing the absolute difference via if/else, asserting the result is non-negative. Name the function exactly `abs_diff`.",
     "category": "correctness",
     "bug_class": "missing_branch_distinction",
     "reference_solution": "def abs_diff(a, b):\n    if a > b:\n        result = a - b\n    else:\n        result = b - a\n    assert result >= 0\n",
@@ -304,7 +304,7 @@
   },
   {
     "id": "correctness_020_clamp_lower_bound",
-    "prompt": "Write a Python function clamp_positive(x) that clamps negative values to 0, asserting the result is non-negative.",
+    "prompt": "Write a Python function clamp_positive(x) that clamps negative values to 0, asserting the result is non-negative. Name the function exactly `clamp_positive`.",
     "category": "correctness",
     "bug_class": "missing_clamp_logic",
     "reference_solution": "def clamp_positive(x):\n    if x < 0:\n        result = 0\n    else:\n        result = x\n    assert result >= 0\n",
@@ -321,7 +321,7 @@
   },
   {
     "id": "correctness_021_even_sum_is_even",
-    "prompt": "Write a Python function sum_of_two_evens(a, b) with precondition both are even, asserting the sum is even.",
+    "prompt": "Write a Python function sum_of_two_evens(a, b) with precondition both are even, asserting the sum is even. Name the function exactly `sum_of_two_evens`.",
     "category": "correctness",
     "bug_class": "off_by_one_constant",
     "reference_solution": "def sum_of_two_evens(a, b):\n    \"\"\"PRE: a % 2 == 0 and b % 2 == 0\"\"\"\n    result = a + b\n    assert result % 2 == 0\n",
@@ -339,7 +339,7 @@
   },
   {
     "id": "correctness_022_negate_twice_identity",
-    "prompt": "Write a Python function double_negate(x) that negates x twice, asserting the result equals x.",
+    "prompt": "Write a Python function double_negate(x) that negates x twice, asserting the result equals x. Name the function exactly `double_negate`.",
     "category": "correctness",
     "bug_class": "missing_negation",
     "reference_solution": "def double_negate(x):\n    result = -(-x)\n    assert result == x\n",

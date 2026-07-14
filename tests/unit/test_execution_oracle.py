@@ -65,6 +65,31 @@ class TestBuggyCode:
         assert result.total_cases == 2
 
 
+class TestCandidateStdoutIsolation:
+    """Regression tests: found via a real live-model run (llama3.2), not
+    by inspection. LLM-generated code very commonly includes a top-level
+    `print(...)` demonstrating the function -- since candidate code runs
+    via plain `exec()` inside the same subprocess that reports its own
+    JSON result on stdout, an un-isolated print() from the candidate
+    corrupted the single-line JSON the parent expects, making every such
+    task silently report "novel" instead of "correct"/"buggy"."""
+
+    def test_module_level_print_does_not_corrupt_the_result(self):
+        code = 'def add_two():\n    return 7\n\nprint("demo:", add_two())\n'
+        result = run_against_test_cases(code, "add_two", [case(expected=7, has_expected=True)])
+        assert result.status == "correct"
+
+    def test_print_inside_the_function_itself_does_not_corrupt_the_result(self):
+        code = 'def add_two():\n    print("computing...")\n    return 7\n'
+        result = run_against_test_cases(code, "add_two", [case(expected=7, has_expected=True)])
+        assert result.status == "correct"
+
+    def test_print_alongside_a_genuine_bug_still_reports_buggy_not_novel(self):
+        code = 'def add_two():\n    print("computing...")\n    return 6\n'
+        result = run_against_test_cases(code, "add_two", [case(expected=7, has_expected=True)])
+        assert result.status == "buggy"
+
+
 class TestUnexecutableCode:
     def test_no_test_cases_is_novel(self):
         result = run_against_test_cases("def f(): return 1", "f", [])
