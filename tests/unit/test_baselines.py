@@ -110,6 +110,52 @@ class TestRunVerityaiFullBaseline:
         assert outcome.attempts == 3
 
 
+class TestRunVerityaiFullBaselineRetrievalArms:
+    """Covers the kg_client/retrieval_strategy params added for the 3-arm
+    retrieval A/B (scripts/run_retrieval_ab.py) -- defaults must preserve
+    the exact prior behavior (the `no_kg` arm)."""
+
+    def test_defaults_run_with_no_kg_client(self):
+        """Same call as before this feature existed -- must behave identically."""
+        llm = FakeLLMClient([wrap_code(REFERENCE)])
+        outcome = run_verityai_full_baseline(llm, TASK, max_attempts=1)
+
+        assert outcome.predicted_status == VerificationStatus.PASS
+        assert outcome.ground_truth == "correct"
+
+    def test_legacy_kg_arm_runs_with_a_kg_client(self):
+        class FakeCategoryKGClient:
+            def get_rules_by_category(self, category, language="python"):
+                return []
+
+        llm = FakeLLMClient([wrap_code(REFERENCE)])
+        outcome = run_verityai_full_baseline(
+            llm,
+            TASK,
+            max_attempts=1,
+            kg_client=FakeCategoryKGClient(),
+            retrieval_strategy="legacy",
+        )
+
+        assert outcome.predicted_status == VerificationStatus.PASS
+
+    def test_hybrid_kg_arm_runs_offline_with_a_fake_kg_client(self):
+        class FakeHybridKGClient:
+            def get_rules_with_embeddings(self, language="python"):
+                return []
+
+        llm = FakeLLMClient([wrap_code(REFERENCE)])
+        outcome = run_verityai_full_baseline(
+            llm,
+            TASK,
+            max_attempts=1,
+            kg_client=FakeHybridKGClient(),
+            retrieval_strategy="hybrid",
+        )
+
+        assert outcome.predicted_status == VerificationStatus.PASS
+
+
 class TestRunAllBaselines:
     def test_runs_all_three_baselines_over_every_task(self):
         tasks = [TASK]

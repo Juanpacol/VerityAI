@@ -172,10 +172,26 @@ def run_verityai_full_baseline(
     task: BenchmarkTask,
     max_attempts: int = 3,
     timeout_seconds: float = 3.0,
+    kg_client: Optional[Any] = None,
+    retrieval_strategy: str = "legacy",
 ) -> BenchmarkOutcome:
-    """Baseline 3: VerityAI's full generate-verify-retry loop."""
+    """Baseline 3: VerityAI's full generate-verify-retry loop.
+
+    Defaults (kg_client=None, retrieval_strategy="legacy") preserve this
+    function's exact prior behavior -- which, since Orchestrator defaults
+    kg_client to None, has always actually been a `no_kg` arm rather than
+    a true "full VerityAI" arm (see docs/adr/0003-hybrid-retrieval.md and
+    scripts/run_retrieval_ab.py, which exercises all three: no_kg,
+    legacy_kg, hybrid_kg). Passing kg_client + retrieval_strategy="hybrid"
+    is what actually engages HybridRetriever.
+    """
     start = time.monotonic()
-    orchestrator = Orchestrator(llm_client=llm_client, z3_timeout_seconds=timeout_seconds)
+    orchestrator = Orchestrator(
+        llm_client=llm_client,
+        z3_timeout_seconds=timeout_seconds,
+        kg_client=kg_client,
+        retrieval_strategy=retrieval_strategy,
+    )
     response = orchestrator.run(GenerationRequest(prompt=task.prompt, max_attempts=max_attempts))
     elapsed = time.monotonic() - start
 
