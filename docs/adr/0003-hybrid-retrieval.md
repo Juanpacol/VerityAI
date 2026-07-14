@@ -15,13 +15,19 @@ practice zero KG context reached the LLM. Any retrieval improvement needed
 to fix both: give the KG a real ranking signal, and actually connect it.
 
 The corpus is small (~50 rules today, expected to grow to the low hundreds,
-not thousands) and there is no local embedding model beyond whatever's
-already pulled via Ollama (`llama3.2`, optionally `qwen3:8b` — see
-`docs/PHASE_3_METHODOLOGY.md`'s cross-model hardware findings). The Ollama
-container in `docker/docker-compose.yml` cannot resolve DNS to pull a
-dedicated embedding model (`nomic-embed-text` etc.); only the host can reach
-the network. So any embedding-based retrieval has to work with an
-LLM-as-embedder of mediocre quality, or not exist yet.
+not thousands). Two constraints assumed at design time turned out to be
+wrong once the retrieval A/B run (Commit 7) actually stood up a fresh
+Ollama instance: (1) the Docker DNS failure seen against the *old*
+`docker/docker-compose.yml` `ollama` container earlier in this project was
+container-specific, not a property of Docker networking in general — a
+freshly-created `ollama/ollama:latest` container pulled a 2GB model over
+the registry with no issue; (2) `llama3.2` itself turned out to be unusable
+as an embedder against the Ollama version actually available
+(`/api/embed` returns HTTP 501 `"This server does not support embeddings"`
+for `llama3.2` specifically, regardless of flags — see the corrected
+section below). Pulling a real dedicated embedding model
+(`nomic-embed-text`, 274MB) was not only possible but straightforward once
+attempted for real, and is what the A/B run actually used.
 
 ## Decision
 
@@ -72,16 +78,33 @@ vector index is the natural next step, with the embedding dimension
 question resolved by then (a settled `OLLAMA_EMBED_MODEL`, or a dedicated
 embedding model once Docker's Ollama container can pull one).
 
-### `llama3.2` as the embedder — a real caveat, not hidden
+### `llama3.2` cannot serve embeddings; `nomic-embed-text` can — corrected in place
 
-There is no dedicated embedding model available locally (`docker exec
-ollama wget --spider https://registry.ollama.ai` fails — no DNS in the
-container; the host can reach the network but pulling a new model into the
-container from the host isn't wired up). `OllamaClient.embed()` (Commit 1)
-works with any Ollama-served model via `POST /api/embed`, including
-`llama3.2` — a generation model, not one trained for embeddings. It produces
-*some* usable vector, but the semantic ranking quality is expected to be
-mediocre compared to a dedicated embedding model. This is why:
+**This ADR originally assumed `llama3.2` would serve as a mediocre-but-usable
+embedder, since no dedicated embedding model could be pulled.** Both halves
+of that assumption turned out to be wrong once the Commit 7 A/B run stood
+up a real Ollama instance to test against:
+
+- `POST /api/embed` against `llama3.2` returns HTTP 501:
+  `"This server does not support embeddings. Start it with --embeddings"`
+  — on Ollama 0.30.11, this is not a flag/config issue (`ollama serve
+  --help` lists no such flag on this version) but an actual per-model
+  restriction; it reproduced identically across two independent
+  containers, so it is llama3.2-specific, not an environment fluke.
+- Pulling `nomic-embed-text` (274MB, a real embedding model) worked without
+  any special configuration and produces real 768-dim embeddings via the
+  same `POST /api/embed` call.
+
+Net effect: the "mediocre LLM-as-embedder" scenario this ADR was written
+to accommodate never actually had to be used. `OLLAMA_EMBED_MODEL` — kept
+as a separate config knob from the generation model specifically so this
+kind of swap would be a config change, not a code change — is set to
+`nomic-embed-text` for the real A/B run. The degradation ladder this ADR
+already designed for (no embed_fn / embed_fn raises / no stored
+embeddings → `lexical_only`, always reported in provenance) is unchanged
+and still applies verbatim if `OLLAMA_EMBED_MODEL` is ever pointed back at
+a generation-only model like `llama3.2`, or if no embedding model is
+available at all in some other deployment:
 
 - `RetrievalResult.mode` and `degraded_reason` always report whether
   semantic scoring actually ran, and `embedding_model` is stored per-rule
@@ -90,9 +113,6 @@ mediocre compared to a dedicated embedding model. This is why:
   #3") reports whether the observed mode was `hybrid` or `lexical_only` in
   practice, and characterizes quality honestly rather than assuming the
   hybrid arm is better just because it's more sophisticated.
-- `OLLAMA_EMBED_MODEL` is a separate config knob from the generation model,
-  so swapping in a real embedding model later (once one can be pulled) is a
-  one-line config change, not a code change.
 
 ### `embed_fn` injection, not a `kg/` → `neural/` import
 
@@ -109,9 +129,11 @@ callable standing in for `embed_fn`, no Ollama mocking required
 
 ## Consequences
 
-- Retrieval quality is bounded by `llama3.2`'s embedding quality until a
-  dedicated embedding model is available — an honest, documented
-  limitation, not a hidden one.
+- Retrieval quality depends on `OLLAMA_EMBED_MODEL` being set to a real
+  embedding model (`nomic-embed-text`, confirmed working) rather than a
+  generation-only model like `llama3.2` (confirmed non-functional for
+  embeddings on the Ollama version tested) — a config requirement now
+  documented from an actual test, not an assumption.
 - `Rule` nodes gain two new properties (`embedding`, `embedding_model`),
   additive and optional — `get_rules_with_embeddings` returns `None` for
   either, and no existing query or test that doesn't ask for them is

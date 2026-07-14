@@ -113,6 +113,35 @@ Six layers, each depending only on the ones below it (`ontology/` has zero infra
 
 Full architecture documentation, module dependency graph, and key design decisions: [`CLAUDE.md`](CLAUDE.md).
 
+## Explainable retrieval + reasoning trace view
+
+KG rule retrieval can run in two modes, controlled by `VERITYAI_RETRIEVAL_STRATEGY`:
+
+- **`legacy`** (default) — fetches all rules in two hardcoded categories, no ranking.
+- **`hybrid`** — `kg/retrieval.py`'s `HybridRetriever` ranks rules against the actual
+  prompt via BM25 (lexical) + cosine similarity over embeddings (semantic), fused with
+  Reciprocal Rank Fusion. Semantic scoring is optional by design: if no embedding
+  function is configured, it raises, or no rule has a stored embedding, retrieval
+  degrades to lexical-only — reported honestly in `RetrievalResult.mode`/`degraded_reason`,
+  never silently. See [ADR-0003](docs/adr/0003-hybrid-retrieval.md) for the full
+  rationale, including a real finding from testing this against a live Ollama
+  instance: `llama3.2` cannot serve embeddings on the Ollama version tested (HTTP 501),
+  so `OLLAMA_EMBED_MODEL` needs to point at a real embedding model
+  (`nomic-embed-text` confirmed working) for hybrid mode's semantic half to engage.
+
+KG context reaching `/generate` at all is opt-in via `VERITYAI_ENABLE_KG_CONTEXT=1`
+(previously `/generate` never connected a `kg_client` in the first place — a real
+gap this closes, kept opt-in so upgrading doesn't silently change existing
+deployments' behavior).
+
+Every generation request gets a `request_id` grouping all its retry attempts.
+`GET /runs/{request_id}` returns the full attempt timeline as JSON;
+`GET /runs/{request_id}/view` renders it as a self-contained HTML page: pipeline
+stepper with real per-attempt timing, KG retrieval provenance (which rules were
+retrieved, by which method, with what score), the attempt-by-attempt code +
+verification history, a recomputed Z3 counterexample panel, and a confidence
+factor breakdown (verification/pattern similarity/complexity/test coverage).
+
 ## Project Structure
 
 ```
@@ -203,6 +232,7 @@ docker compose -f docker/docker-compose.yml exec ollama ollama pull llama3.2
 - Verification scope reference (what verifies vs. not, with examples): [`docs/VERIFICATION_SCOPE.md`](docs/VERIFICATION_SCOPE.md)
 - Verifiable subset scope decision: [`docs/adr/0001-verifiable-python-subset.md`](docs/adr/0001-verifiable-python-subset.md)
 - Parameterized verification: [`docs/adr/0002-parameterized-verification.md`](docs/adr/0002-parameterized-verification.md)
+- Hybrid KG retrieval decision: [`docs/adr/0003-hybrid-retrieval.md`](docs/adr/0003-hybrid-retrieval.md)
 - Evaluation methodology + real-run findings: [`docs/PHASE_3_METHODOLOGY.md`](docs/PHASE_3_METHODOLOGY.md)
 - What testing against a real model actually found: [`docs/CASE_STUDY.md`](docs/CASE_STUDY.md)
 - Phase-by-phase build record: `docs/PHASE_*.md`

@@ -250,6 +250,112 @@ kind of constraint a synthetic/scripted benchmark would never surface.
 Documented here instead of quietly dropping `qwen3:8b` from the results
 with no explanation.
 
+## Real run #3 (2026-07-14, three-arm retrieval A/B: no_kg vs legacy_kg vs hybrid_kg)
+
+Real run #1 suspected, and Real run #2 didn't isolate, whether KG context
+helps or hurts a small model — `verityai_full` in both prior runs was
+actually a `no_kg` arm all along (`get_orchestrator` never wired a
+`kg_client` into `/generate`; see `docs/adr/0003-hybrid-retrieval.md`).
+This run fixes that by exercising three arms on the same 28 tasks against
+the same live `llama3.2`: **`no_kg`** (no KG context at all — the prior
+runs' actual behavior), **`legacy_kg`** (fetch-all rules by two hardcoded
+categories, no ranking), and **`hybrid_kg`** (`HybridRetriever`: BM25 +
+cosine similarity fused via RRF, ranked against the actual prompt). Raw
+data: `docs/results/2026-07-14_retrieval_ab.json`.
+
+**Setup note, corrected from the original plan**: the plan assumed
+`llama3.2` itself would double as a mediocre-but-usable embedder, since no
+dedicated embedding model was thought to be pullable into the project's
+Ollama container. Both assumptions turned out to be wrong once actually
+tested — `llama3.2` returns HTTP 501 (`"This server does not support
+embeddings"`) from `/api/embed` regardless of flags, and a dedicated
+embedding model (`nomic-embed-text`, 274MB) pulled and ran without any
+special configuration. `OLLAMA_EMBED_MODEL=nomic-embed-text` is what
+actually powered semantic scoring for this run; see the corrected section
+of ADR-0003 for the full story. A live spot-check after the run (same rule
+corpus, same embeddings, `retrieval_strategy=hybrid`) confirms the
+mechanism genuinely engages hybrid mode with real semantic similarity
+(0.73 top score, retrieving `Array Bounds Check` for an array-bounds
+prompt) — not a lexical-only degradation dressed up as hybrid.
+
+**Complete run, 28 tasks × 3 arms = 84 pairs, 91.3 minutes:**
+
+| Arm | N | accuracy | precision | recall | F1 | abstention | avg latency | avg attempts |
+|---|---|---|---|---|---|---|---|---|
+| `no_kg` | 26 | 75.0% | 75.0% | 60.0% | 66.7% | 23.1% | 62.5s | 2.54 |
+| `legacy_kg` | 26 | 83.3% | 80.0% | 80.0% | 80.0% | 26.9% | 73.5s | 2.62 |
+| `hybrid_kg` | 28 | 63.2% | 100.0% | 12.5% | 22.2% | 17.9% | 62.0s | 2.11 |
+
+(N differs because 4/84 pairs hit a Z3 engine crash — see below — reducing
+`no_kg` and `legacy_kg` to 26 completed outcomes each; `hybrid_kg`
+completed all 28.)
+
+Reading this honestly, not selectively:
+
+- **Hybrid retrieval does not win this run — legacy_kg does, clearly.**
+  `legacy_kg`'s dumb fetch-all beats both `no_kg` and `hybrid_kg` on
+  accuracy, recall, and F1. `hybrid_kg` has the *worst* accuracy of the
+  three arms (63.2%, vs. legacy's 83.3%) and dramatically worse recall
+  (12.5% vs. legacy's 80.0%). If the working hypothesis going in was
+  "smarter retrieval beats fetch-all," this run says the opposite.
+- **`hybrid_kg`'s one clean win is precision (100%) — and it comes from
+  never committing, not from being sharp.** 100% precision with 12.5%
+  recall means: of the tasks that actually had a bug, `hybrid_kg` flagged
+  1 out of 8. Combined with its lowest average attempts (2.11 vs.
+  2.54/2.62) and its `pass` rate (19/28 = 67.9%, well above `no_kg`'s
+  38.5% and `legacy_kg`'s 30.8%), the picture is a model that converges
+  faster and passes more readily when semantically-ranked rule context is
+  injected — but that faster convergence is *not* earning its keep on
+  catching real bugs. This is the same *shape* of trade-off Real run #2
+  found for the retry loop itself (fewer abstentions, different precision/
+  recall balance, not a uniform win) — worth investigating together, not
+  as two unrelated findings. Flagged for Phase 1 (T2) of the next research
+  round rather than concluded here.
+- **A Z3 engine bug surfaced 4 times, and zero of them were in
+  `hybrid_kg`.** All 4 failures are the identical error, `"Value cannot be
+  converted into a Z3 Boolean value"`, spread across 3 tasks
+  (`correctness_022_negate_twice_identity` in `no_kg`;
+  `security_002_bounds_check` in `legacy_kg`;
+  `security_006_check_auth_before_action` in both `no_kg` and
+  `legacy_kg`). `hybrid_kg` completed all three of those tasks cleanly.
+  With n=1 per (task, arm) this is not evidence that hybrid context avoids
+  the bug — it's exactly the kind of pattern that looks meaningful with 3
+  data points and evaporates with 30. Documented as an open question, not
+  a claim: does KG-context shape (via the LLM's generated code) correlate
+  with which Z3 parse paths get hit, or is this coincidence? The
+  underlying bug (a boolean-coercion gap in the AST→SMT converter) is a
+  real defect regardless of the answer and should be fixed on its own
+  merits.
+- **A real methodological gap, disclosed rather than glossed over**:
+  `run_verityai_full_baseline` (`evaluation/baselines.py`) does not
+  persist `kg_context`/`retrieval.mode` per task — `BenchmarkOutcome` only
+  keeps `predicted_status`/`confidence`/`latency_seconds`/`attempts`. The
+  live spot-check above confirms the retrieval *mechanism* engaged hybrid
+  mode with real embeddings using the same corpus state as the run, but it
+  does **not** prove each of the 28 individual `hybrid_kg` calls used
+  semantic scoring rather than silently degrading to `lexical_only` for
+  that specific call (e.g. a transient `embed()` failure). Next A/B run
+  should thread `kg_context.retrieval.mode` into `BenchmarkOutcome` so
+  this is observed per-task, not inferred after the fact.
+- **This is one run, n=28, no repetition** — same caveat as Real runs #1
+  and #2. A single run where `hybrid_kg` loses this badly on recall is
+  reason to *not* flip `VERITYAI_RETRIEVAL_STRATEGY`'s default away from
+  `legacy` yet, not reason to conclude hybrid retrieval is a dead end.
+
+**What this does NOT show**: whether the recall collapse is specific to
+`llama3.2` at 3B parameters, specific to this particular rule corpus (50
+rules, unfiltered by task relevance beyond the retriever's own ranking),
+or a structural property of injecting ranked-but-untested context into a
+retry loop. It also does not show whether `legacy_kg`'s win here
+generalizes — fetch-all works when the corpus is small enough that "all
+the rules" is still a reasonable prompt payload; that stops being true as
+the corpus grows past a few hundred rules, which `hybrid_kg` was
+specifically built to handle. **Decision**: `VERITYAI_RETRIEVAL_STRATEGY`
+default stays `legacy` — the data available today does not justify
+flipping it, and `hybrid_kg`'s recall collapse is a specific, trackable
+problem (see the research roadmap's T2 and T4) rather than grounds to
+abandon the hybrid retriever entirely.
+
 ## Target threshold (confirmed before a real run, per the plan's hardened
 acceptance criterion)
 

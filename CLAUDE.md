@@ -57,6 +57,16 @@ ontology/ (no deps)
        └─ cli/
 ```
 
+**`kg/` must never import `neural/`.** `kg/retrieval.py`'s `HybridRetriever` needs
+an embedding function for semantic ranking, but getting one straightforwardly would
+mean constructing an `OllamaClient` — a `neural/` dependency — inside `kg/`. Instead
+it takes `embed_fn: Optional[Callable[[str], list[float]]]` as a constructor
+parameter; the `agent/` orchestration layer (which already legitimately depends on
+both `neural/` and `kg/`) is the one that wires `orchestrator.llm_client.embed` in
+as `embed_fn`. This keeps `kg/` fully testable with a plain Python callable standing
+in for the embedder — no Ollama mocking required — and preserves the dependency
+graph above without exception. See [ADR-0003](docs/adr/0003-hybrid-retrieval.md).
+
 ---
 
 ## Key Design Decisions

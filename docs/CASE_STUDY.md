@@ -92,9 +92,48 @@ using true division (`/`, never supported — only `//` is) inside a bare
 return and had been unknowingly relying on the same gap to report a
 false "consistent."
 
+## Finding 4 — the more sophisticated retrieval strategy lost, clearly
+
+Building a hybrid retriever (BM25 lexical ranking + cosine semantic
+similarity, fused with Reciprocal Rank Fusion) was the most architecturally
+involved piece of this phase: a new module, a degradation ladder for when
+embeddings aren't available, provenance tracking so every retrieved rule
+carries its ranking method and score, a real embedding model
+(`nomic-embed-text`) wired in after discovering `llama3.2` itself can't
+serve embeddings on the Ollama version available (`/api/embed` returns
+HTTP 501 for it, unconditionally — see `docs/adr/0003-hybrid-retrieval.md`
+for the corrected story). All of that shipped, tested, and — confirmed by
+a live spot-check — genuinely engages semantic scoring, not a silent
+lexical-only fallback dressed up as hybrid.
+
+Then the real three-arm A/B (`no_kg` vs. `legacy_kg` fetch-all vs.
+`hybrid_kg`, 28 tasks against live `llama3.2`) ran, and the dumb arm won.
+`legacy_kg` — no ranking, no embeddings, just "fetch every rule in two
+hardcoded categories" — beat `hybrid_kg` on accuracy (83.3% vs. 63.2%),
+recall (80.0% vs. 12.5%), and F1 (80.0% vs. 22.2%). `hybrid_kg`'s only win
+was precision (100%, vs. legacy's 80%) — and it earned that by barely ever
+committing to "this code has a bug" (1 correct flag out of 8 actual bugs),
+not by being more discerning. Full numbers and reading in
+`docs/PHASE_3_METHODOLOGY.md`'s "Real run #3".
+
+The instinct after seeing that result was to look for what went wrong in
+the *implementation* — a bug in the RRF fusion, a bad rule-corpus
+selection, something to fix so hybrid "should have won." Nothing like that
+turned up on inspection; the retrieval provenance for individual queries
+looks correct, the rankings look sensible. The honest reading is simpler
+and less comfortable: on this run, giving a 3B model more *semantically
+relevant* context made it converge faster and commit to "pass" more
+readily, without that confidence being earned on the cases that actually
+had bugs — the same shape of trade-off Real run #2 found in the retry loop
+itself (fewer abstentions, not obviously better). A more sophisticated
+mechanism producing a worse outcome isn't a contradiction to explain away;
+it's a real result, and it's now a tracked research question (not a
+shipped default — `VERITYAI_RETRIEVAL_STRATEGY` stays `legacy`) instead of
+an assumption.
+
 ## The pattern
 
-None of these three findings came from writing more tests against the
+None of these four findings came from writing more tests against the
 existing fakes — they came from running the actual thing and checking
 what happened, then fixing the root cause instead of the symptom. That's
 the habit this case study is meant to name: a comprehensive offline test
