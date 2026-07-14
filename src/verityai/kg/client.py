@@ -48,6 +48,7 @@ class KGClient:
                 name=record["r.name"],
                 description=record["r.description"],
                 category=record["r.category"],
+                condition=record["r.description"],
                 severity=record["r.severity"],
                 formal_spec=record["r.formal_spec"],
                 applies_to=record["r.applies_to"],
@@ -79,6 +80,7 @@ class KGClient:
                     name=record["r.name"],
                     description=record["r.description"],
                     category=category,
+                    condition=record["r.description"],
                     severity=record["r.severity"],
                     formal_spec=record["r.formal_spec"],
                     applies_to=record["r.applies_to"],
@@ -112,6 +114,7 @@ class KGClient:
                     name=record["r.name"],
                     description=record["r.description"],
                     category=record["r.category"],
+                    condition=record["r.description"],
                     severity=record["r.severity"],
                     formal_spec=record["r.formal_spec"],
                     applies_to=record["r.applies_to"],
@@ -146,6 +149,7 @@ class KGClient:
 
             return Algorithm(
                 name=record["a.name"],
+                description=record["a.description"],
                 code=record["a.code"],
                 language=record["a.language"],
                 complexity_time=record["a.complexity_time"],
@@ -176,6 +180,7 @@ class KGClient:
             for record in result:
                 algo = Algorithm(
                     name=record["a.name"],
+                    description=record["a.description"],
                     code=record["a.code"],
                     language=language,
                     complexity_time=record["a.complexity_time"],
@@ -186,6 +191,42 @@ class KGClient:
 
         logger.info(f"Fetched {len(algos)} algorithms for language={language}")
         return algos
+
+    def get_all_rules(self, language: str = "python") -> list[Rule]:
+        """Fetch all rules for a language, regardless of category.
+
+        Args:
+            language: Programming language
+
+        Returns:
+            List of Rule objects
+        """
+        query = """
+        MATCH (r:Rule)
+        WHERE $language IN r.applies_to
+        RETURN r.id, r.name, r.description, r.category, r.severity,
+               r.formal_spec, r.applies_to
+        ORDER BY r.name
+        """
+
+        rules = []
+        with self.driver.session() as session:
+            result = session.run(query, language=language)
+
+            for record in result:
+                rule = Rule(
+                    name=record["r.name"],
+                    description=record["r.description"],
+                    category=record["r.category"],
+                    condition=record["r.description"],
+                    severity=record["r.severity"],
+                    formal_spec=record["r.formal_spec"],
+                    applies_to=record["r.applies_to"],
+                )
+                rules.append(rule)
+
+        logger.info(f"Fetched {len(rules)} rules for language={language}")
+        return rules
 
     def get_rule_count(self) -> int:
         """Get total count of rules in KG.

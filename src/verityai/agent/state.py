@@ -84,6 +84,9 @@ class AgentState:
 
     def _summarize_failure(self, result: VerificationResult) -> str:
         """Build the short failure-reason string injected into the next retry's prompt."""
+        if result.metadata.get("blocked_reason") == "dangerous_code_pattern":
+            constructs = ", ".join(f["construct"] for f in result.metadata["security_findings"])
+            return f"Generated code was blocked as unsafe (contains: {constructs}). Do not use these constructs."
         if result.violations:
             violation = result.violations[0]
             return f"{violation.description} (counterexample: {violation.input_values})"

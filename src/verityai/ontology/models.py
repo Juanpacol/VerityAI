@@ -80,6 +80,7 @@ class Algorithm(BaseModel):
     language: str = "python"
     complexity_time: str  # Required for algorithms
     complexity_space: str  # Required for algorithms
+    verified: bool = True
     test_cases: list[dict[str, Any]] = Field(default_factory=list)
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -163,3 +164,44 @@ class GenerationResponse(BaseModel):
     confidence: float
     explanation: str  # Human-readable explanation
     status: str  # "success", "partial", "failed"
+
+
+class ComplianceReport(BaseModel):
+    """Compliance/audit-trail evidence for one generation request (Phase 4 Part B).
+
+    Built from a GenerationResponse's trace history — this is the
+    human-facing artifact (rules applied, verification proof, confidence)
+    an enterprise buyer's compliance/security reviewer consumes, distinct
+    from the developer-facing GenerationResponse itself. See
+    agent/compliance/report_generator.py for SARIF/PDF export.
+    """
+    id: UUID = Field(default_factory=uuid4)
+    trace_id: Optional[UUID] = None  # Final (accepted) trace this report covers
+    user_prompt: str
+    language: str
+    final_status: str  # "success", "partial", "failed"
+    confidence: float = Field(ge=0.0, le=1.0)
+    attempt_count: int
+    rules_applied: list[str] = Field(default_factory=list)  # Rule names from kg_context
+    patterns_reviewed: list[str] = Field(default_factory=list)
+    verification_status: str  # VerificationStatus value of the final attempt
+    verification_z3_result: Optional[str] = None
+    violations: list[Counterexample] = Field(default_factory=list)
+    code: str
+    generated_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class AuditLogEntry(BaseModel):
+    """Who did what, when, tied to a trace (Phase 4 Part B).
+
+    "actor" has no real auth system behind it yet (VerityAI is a
+    single-developer prototype) — it's a caller-supplied identifier
+    (a username, an API key label, or "system" for automated calls),
+    recorded as-is rather than validated against a user directory.
+    """
+    id: UUID = Field(default_factory=uuid4)
+    actor: str
+    action: str  # e.g. "generate", "accept", "reject", "report_exported"
+    trace_id: Optional[UUID] = None
+    details: dict[str, Any] = Field(default_factory=dict)
+    created_at: datetime = Field(default_factory=datetime.utcnow)

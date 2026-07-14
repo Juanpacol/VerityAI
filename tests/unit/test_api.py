@@ -1,0 +1,330 @@
+"""Unit tests for api/rest.py using FastAPI's TestClient.
+
+Overrides get_orchestrator/get_trace_store so no live Ollama or Postgres
+is needed -- the same offline-testable pattern (FakeLLMClient, in-memory
+sqlite) used throughout the rest of this codebase.
+"""
+
+from typing import Optional
+from uuid import uuid4
+
+import pytest
+from fastapi.testclient import TestClient
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
+
+from verityai.agent.orchestrator import Orchestrator
+from verityai.agent.trace import Base as TraceBase
+from verityai.agent.trace import TraceStore
+from verityai.api.rest import (
+    app,
+    get_audit_log_store,
+    get_kg_client,
+    get_orchestrator,
+    get_trace_store,
+)
+from verityai.api.rate_limit import reset_rate_limit_state
+from verityai.compliance.audit_log import AuditLogStore
+from verityai.compliance.audit_log import Base as AuditLogBase
+from verityai.kg.client import KGClient
+from verityai.neural.ollama_client import OllamaGenerationError
+
+
+@pytest.fixture(autouse=True)
+def _reset_rate_limit():
+    # All requests through TestClient share one pseudo client IP, so
+    # without this, request counts would accumulate across the whole test
+    # session and eventually trip 429s unrelated to what a test is
+    # actually checking.
+    reset_rate_limit_state()
+    yield
+
+
+class FakeLLMClient:
+    def __init__(self, responses: list[str]):
+        self.responses = responses
+        self.call_count = 0
+
+    def generate(self, prompt: str, system_prompt: Optional[str] = None) -> str:
+        if self.call_count >= len(self.responses):
+            raise OllamaGenerationError("No more scripted responses", attempts=1)
+        response = self.responses[self.call_count]
+        self.call_count += 1
+        return response
+
+
+class AlwaysFailingLLMClient:
+    def generate(self, prompt: str, system_prompt: Optional[str] = None) -> str:
+        raise OllamaGenerationError("Connection refused", attempts=3)
+
+
+def wrap_code(code: str) -> str:
+    return f"```python\n{code}\n```"
+
+
+def _override_orchestrator_with(llm_client) -> None:
+    app.dependency_overrides[get_orchestrator] = lambda: Orchestrator(llm_client=llm_client)
+
+
+@pytest.fixture
+def client():
+    # StaticPool: FastAPI runs sync endpoints in a worker thread, and a
+    # plain sqlite in-memory DB is otherwise per-connection -- without
+    # this, the endpoint's thread would see a fresh, table-less database.
+    engine = create_engine(
+        "sqlite:///:memory:", connect_args={"check_same_thread": False}, poolclass=StaticPool
+    )
+    TraceBase.metadata.create_all(engine)
+    AuditLogBase.metadata.create_all(engine)
+    session = sessionmaker(bind=engine)()
+
+    app.dependency_overrides[get_trace_store] = lambda: TraceStore(session)
+    app.dependency_overrides[get_audit_log_store] = lambda: AuditLogStore(session)
+    yield TestClient(app)
+
+    app.dependency_overrides.clear()
+    session.close()
+
+
+class TestHealthEndpoint:
+    def test_health_returns_ok(self, client):
+        response = client.get("/health")
+        assert response.status_code == 200
+        assert response.json() == {"status": "ok"}
+
+
+class TestGenerateEndpoint:
+    def test_successful_generation_returns_success_status(self, client):
+        _override_orchestrator_with(FakeLLMClient([wrap_code("x = 1\nassert x == 1")]))
+
+        response = client.post("/generate", json={"prompt": "assign 1 to x"})
+
+        assert response.status_code == 200
+        body = response.json()
+        assert body["status"] == "success"
+        assert "x = 1" in body["code"]
+        assert len(body["traces"]) == 1
+
+    def test_unreachable_llm_returns_200_with_failed_status(self, client):
+        """Business-logic failure (LLM down) is still a successfully-handled
+        request -- 200 with status="failed" in the body, not a 5xx."""
+        _override_orchestrator_with(AlwaysFailingLLMClient())
+
+        response = client.post("/generate", json={"prompt": "test"})
+
+        assert response.status_code == 200
+        assert response.json()["status"] == "failed"
+
+    def test_generated_traces_are_persisted_and_fetchable(self, client):
+        _override_orchestrator_with(FakeLLMClient([wrap_code("x = 1\nassert x == 1")]))
+
+        generate_response = client.post("/generate", json={"prompt": "assign 1 to x"})
+        trace_id = generate_response.json()["traces"][0]["id"]
+
+        trace_response = client.get(f"/trace/{trace_id}")
+
+        assert trace_response.status_code == 200
+        assert trace_response.json()["user_prompt"] == "assign 1 to x"
+
+    def test_missing_prompt_returns_422(self, client):
+        response = client.post("/generate", json={})
+        assert response.status_code == 422
+
+
+class TestTraceEndpoint:
+    def test_unknown_trace_id_returns_404(self, client):
+        response = client.get(f"/trace/{uuid4()}")
+        assert response.status_code == 404
+
+    def test_invalid_uuid_returns_422(self, client):
+        response = client.get("/trace/not-a-uuid")
+        assert response.status_code == 422
+
+
+class TestAuditLog:
+    def test_generate_records_an_audit_log_entry(self, client):
+        _override_orchestrator_with(FakeLLMClient([wrap_code("x = 1\nassert x == 1")]))
+
+        response = client.post(
+            "/generate", json={"prompt": "assign 1 to x"}, headers={"X-Actor": "alice"}
+        )
+        trace_id = response.json()["traces"][0]["id"]
+
+        session = app.dependency_overrides[get_audit_log_store]()
+        entries = session.for_trace(trace_id)
+
+        assert len(entries) == 1
+        assert entries[0].actor == "alice"
+        assert entries[0].action == "generate"
+
+    def test_missing_actor_header_defaults_to_api(self, client):
+        _override_orchestrator_with(FakeLLMClient([wrap_code("x = 1\nassert x == 1")]))
+
+        response = client.post("/generate", json={"prompt": "test"})
+        trace_id = response.json()["traces"][0]["id"]
+
+        entries = app.dependency_overrides[get_audit_log_store]().for_trace(trace_id)
+        assert entries[0].actor == "api"
+
+
+class TestComplianceReportEndpoints:
+    def test_json_report_reflects_the_generated_trace(self, client):
+        _override_orchestrator_with(FakeLLMClient([wrap_code("x = 1\nassert x == 1")]))
+        generate_response = client.post("/generate", json={"prompt": "assign 1 to x"})
+        trace_id = generate_response.json()["traces"][0]["id"]
+
+        response = client.get(f"/trace/{trace_id}/compliance-report")
+
+        assert response.status_code == 200
+        body = response.json()
+        assert body["final_status"] == "success"
+        assert body["user_prompt"] == "assign 1 to x"
+
+    def test_json_report_404_for_unknown_trace(self, client):
+        response = client.get(f"/trace/{uuid4()}/compliance-report")
+        assert response.status_code == 404
+
+    def test_sarif_report_has_expected_shape(self, client):
+        _override_orchestrator_with(FakeLLMClient([wrap_code("x = 1\nassert x == 1")]))
+        generate_response = client.post("/generate", json={"prompt": "assign 1 to x"})
+        trace_id = generate_response.json()["traces"][0]["id"]
+
+        response = client.get(f"/trace/{trace_id}/compliance-report.sarif")
+
+        assert response.status_code == 200
+        body = response.json()
+        assert body["version"] == "2.1.0"
+        assert "runs" in body
+
+    def test_pdf_report_returns_pdf_bytes(self, client):
+        _override_orchestrator_with(FakeLLMClient([wrap_code("x = 1\nassert x == 1")]))
+        generate_response = client.post("/generate", json={"prompt": "assign 1 to x"})
+        trace_id = generate_response.json()["traces"][0]["id"]
+
+        response = client.get(f"/trace/{trace_id}/compliance-report.pdf")
+
+        assert response.status_code == 200
+        assert response.headers["content-type"] == "application/pdf"
+        assert response.content.startswith(b"%PDF")
+
+    def test_pdf_report_404_for_unknown_trace(self, client):
+        response = client.get(f"/trace/{uuid4()}/compliance-report.pdf")
+        assert response.status_code == 404
+
+
+class TestVerifyEndpoint:
+    def test_verifies_passing_code(self, client):
+        response = client.post("/verify", json={"code": "x = 1\nassert x == 1"})
+        assert response.status_code == 200
+        assert response.json()["status"] == "pass"
+
+    def test_verifies_failing_code(self, client):
+        response = client.post("/verify", json={"code": "x = 1\nassert x == 999"})
+        assert response.status_code == 200
+        assert response.json()["status"] == "fail"
+
+    def test_missing_code_field_returns_422(self, client):
+        response = client.post("/verify", json={})
+        assert response.status_code == 422
+
+
+class FakeNeo4jResult:
+    def __init__(self, records):
+        self._records = records
+
+    def __iter__(self):
+        return iter(self._records)
+
+    def single(self):
+        return self._records[0] if self._records else None
+
+
+class FakeNeo4jSession:
+    def __init__(self, records):
+        self._records = records
+
+    def run(self, query, **params):
+        return FakeNeo4jResult(self._records)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc_info):
+        return False
+
+
+class FakeNeo4jDriver:
+    def __init__(self, records):
+        self._records = records
+
+    def session(self):
+        return FakeNeo4jSession(self._records)
+
+
+ALGORITHM_RECORD = {
+    "a.name": "binary_search",
+    "a.description": "Search for target in sorted array",
+    "a.code": "def binary_search(arr, target): ...",
+    "a.language": "python",
+    "a.complexity_time": "O(log n)",
+    "a.complexity_space": "O(1)",
+    "a.verified": True,
+}
+
+RULE_RECORD = {
+    "r.name": "no_null_deref",
+    "r.description": "Ensure no null pointer dereferences",
+    "r.category": "security",
+    "r.severity": "critical",
+    "r.formal_spec": None,
+    "r.applies_to": ["python"],
+}
+
+
+class TestKGEndpoints:
+    def test_list_algorithms_returns_kg_data(self, client):
+        app.dependency_overrides[get_kg_client] = lambda: KGClient(FakeNeo4jDriver([ALGORITHM_RECORD]))
+
+        response = client.get("/kg/algorithms?language=python")
+
+        assert response.status_code == 200
+        body = response.json()
+        assert len(body) == 1
+        assert body[0]["name"] == "binary_search"
+        assert body[0]["description"] == "Search for target in sorted array"
+
+    def test_list_rules_returns_kg_data(self, client):
+        app.dependency_overrides[get_kg_client] = lambda: KGClient(FakeNeo4jDriver([RULE_RECORD]))
+
+        response = client.get("/kg/rules?language=python")
+
+        assert response.status_code == 200
+        body = response.json()
+        assert len(body) == 1
+        assert body[0]["name"] == "no_null_deref"
+        assert body[0]["condition"] == "Ensure no null pointer dereferences"
+
+    def test_empty_kg_returns_empty_list(self, client):
+        app.dependency_overrides[get_kg_client] = lambda: KGClient(FakeNeo4jDriver([]))
+
+        response = client.get("/kg/algorithms")
+
+        assert response.status_code == 200
+        assert response.json() == []
+
+
+class TestDashboardRoute:
+    def test_dashboard_returns_html(self, client):
+        response = client.get("/dashboard")
+
+        assert response.status_code == 200
+        assert response.headers["content-type"].startswith("text/html")
+        assert "VerityAI Dashboard" in response.text
+
+    def test_dashboard_has_no_external_resources(self, client):
+        """Self-contained: no CDN scripts/stylesheets, no external fetches."""
+        response = client.get("/dashboard")
+        assert "http://" not in response.text
+        assert "https://" not in response.text
+        assert "<link" not in response.text
