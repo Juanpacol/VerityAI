@@ -5,7 +5,14 @@
     "category": "correctness",
     "bug_class": "wrong_assert_constant",
     "reference_solution": "def compute_max():\n    a = 3\n    b = 7\n    if a > b:\n        result = a\n    else:\n        result = b\n    assert result == 7\n    return result\n",
-    "known_buggy_variant": "def compute_max():\n    a = 3\n    b = 7\n    if a > b:\n        result = a\n    else:\n        result = b\n    assert result == 3\n    return result\n"
+    "known_buggy_variant": "def compute_max():\n    a = 3\n    b = 7\n    if a > b:\n        result = a\n    else:\n        result = b\n    assert result == 3\n    return result\n",
+    "function_name": "compute_max",
+    "test_cases": [
+      {
+        "args": [],
+        "expected": 7
+      }
+    ]
   },
   {
     "id": "correctness_002_min_via_ifelse",
@@ -13,7 +20,14 @@
     "category": "correctness",
     "bug_class": "wrong_comparison_operator",
     "reference_solution": "def compute_min():\n    a = 3\n    b = 7\n    if a < b:\n        result = a\n    else:\n        result = b\n    assert result == 3\n    return result\n",
-    "known_buggy_variant": "def compute_min():\n    a = 3\n    b = 7\n    if a > b:\n        result = a\n    else:\n        result = b\n    assert result == 3\n    return result\n"
+    "known_buggy_variant": "def compute_min():\n    a = 3\n    b = 7\n    if a > b:\n        result = a\n    else:\n        result = b\n    assert result == 3\n    return result\n",
+    "function_name": "compute_min",
+    "test_cases": [
+      {
+        "args": [],
+        "expected": 3
+      }
+    ]
   },
   {
     "id": "correctness_003_add_two",
@@ -21,7 +35,14 @@
     "category": "correctness",
     "bug_class": "wrong_arithmetic_operator",
     "reference_solution": "def add_two():\n    a = 3\n    b = 4\n    result = a + b\n    assert result == 7\n    return result\n",
-    "known_buggy_variant": "def add_two():\n    a = 3\n    b = 4\n    result = a - b\n    assert result == 7\n    return result\n"
+    "known_buggy_variant": "def add_two():\n    a = 3\n    b = 4\n    result = a - b\n    assert result == 7\n    return result\n",
+    "function_name": "add_two",
+    "test_cases": [
+      {
+        "args": [],
+        "expected": 7
+      }
+    ]
   },
   {
     "id": "correctness_004_abs_of_negative",
@@ -29,7 +50,14 @@
     "category": "correctness",
     "bug_class": "wrong_assert_constant",
     "reference_solution": "def abs_of_negative():\n    x = -5\n    result = abs(x)\n    assert result == 5\n    return result\n",
-    "known_buggy_variant": "def abs_of_negative():\n    x = -5\n    result = abs(x)\n    assert result == -5\n    return result\n"
+    "known_buggy_variant": "def abs_of_negative():\n    x = -5\n    result = abs(x)\n    assert result == -5\n    return result\n",
+    "function_name": "abs_of_negative",
+    "test_cases": [
+      {
+        "args": [],
+        "expected": 5
+      }
+    ]
   },
   {
     "id": "correctness_005_pick_min",
@@ -37,7 +65,14 @@
     "category": "correctness",
     "bug_class": "wrong_assert_constant",
     "reference_solution": "def pick_min():\n    a = 4\n    b = 9\n    result = min(a, b)\n    assert result == 4\n    return result\n",
-    "known_buggy_variant": "def pick_min():\n    a = 4\n    b = 9\n    result = min(a, b)\n    assert result == 9\n    return result\n"
+    "known_buggy_variant": "def pick_min():\n    a = 4\n    b = 9\n    result = min(a, b)\n    assert result == 9\n    return result\n",
+    "function_name": "pick_min",
+    "test_cases": [
+      {
+        "args": [],
+        "expected": 4
+      }
+    ]
   },
   {
     "id": "correctness_006_pick_max",
@@ -45,7 +80,14 @@
     "category": "correctness",
     "bug_class": "wrong_assert_constant",
     "reference_solution": "def pick_max():\n    a = 4\n    b = 9\n    result = max(a, b)\n    assert result == 9\n    return result\n",
-    "known_buggy_variant": "def pick_max():\n    a = 4\n    b = 9\n    result = max(a, b)\n    assert result == 4\n    return result\n"
+    "known_buggy_variant": "def pick_max():\n    a = 4\n    b = 9\n    result = max(a, b)\n    assert result == 4\n    return result\n",
+    "function_name": "pick_max",
+    "test_cases": [
+      {
+        "args": [],
+        "expected": 9
+      }
+    ]
   },
   {
     "id": "correctness_007_check_any_positive",
@@ -53,7 +95,14 @@
     "category": "correctness",
     "bug_class": "and_or_confusion",
     "reference_solution": "def check_any_positive():\n    x = 1\n    y = -1\n    assert (x > 0) or (y > 0)\n",
-    "known_buggy_variant": "def check_any_positive():\n    x = 1\n    y = -1\n    assert (x > 0) and (y > 0)\n"
+    "known_buggy_variant": "def check_any_positive():\n    x = 1\n    y = -1\n    assert (x > 0) and (y > 0)\n",
+    "function_name": "check_any_positive",
+    "test_cases": [
+      {
+        "args": [],
+        "expected": null
+      }
+    ]
   },
   {
     "id": "correctness_008_negate_value",
@@ -61,7 +110,14 @@
     "category": "correctness",
     "bug_class": "missing_negation",
     "reference_solution": "def negate_value():\n    x = 5\n    result = -x\n    assert result == -5\n    return result\n",
-    "known_buggy_variant": "def negate_value():\n    x = 5\n    result = x\n    assert result == -5\n    return result\n"
+    "known_buggy_variant": "def negate_value():\n    x = 5\n    result = x\n    assert result == -5\n    return result\n",
+    "function_name": "negate_value",
+    "test_cases": [
+      {
+        "args": [],
+        "expected": -5
+      }
+    ]
   },
   {
     "id": "correctness_009_check_equal",
@@ -69,7 +125,14 @@
     "category": "correctness",
     "bug_class": "wrong_equality_operator",
     "reference_solution": "def check_equal():\n    x = 5\n    y = 5\n    assert x == y\n",
-    "known_buggy_variant": "def check_equal():\n    x = 5\n    y = 5\n    assert x != y\n"
+    "known_buggy_variant": "def check_equal():\n    x = 5\n    y = 5\n    assert x != y\n",
+    "function_name": "check_equal",
+    "test_cases": [
+      {
+        "args": [],
+        "expected": null
+      }
+    ]
   },
   {
     "id": "correctness_010_check_even",
@@ -77,7 +140,14 @@
     "category": "correctness",
     "bug_class": "wrong_assert_constant",
     "reference_solution": "def check_even():\n    x = 4\n    remainder = x % 2\n    assert remainder == 0\n    return remainder\n",
-    "known_buggy_variant": "def check_even():\n    x = 4\n    remainder = x % 2\n    assert remainder == 1\n    return remainder\n"
+    "known_buggy_variant": "def check_even():\n    x = 4\n    remainder = x % 2\n    assert remainder == 1\n    return remainder\n",
+    "function_name": "check_even",
+    "test_cases": [
+      {
+        "args": [],
+        "expected": 0
+      }
+    ]
   },
   {
     "id": "correctness_011_integer_divide",
@@ -85,7 +155,14 @@
     "category": "correctness",
     "bug_class": "swapped_operands",
     "reference_solution": "def integer_divide():\n    a = 17\n    b = 5\n    result = a // b\n    assert result == 3\n    return result\n",
-    "known_buggy_variant": "def integer_divide():\n    a = 17\n    b = 5\n    result = b // a\n    assert result == 3\n    return result\n"
+    "known_buggy_variant": "def integer_divide():\n    a = 17\n    b = 5\n    result = b // a\n    assert result == 3\n    return result\n",
+    "function_name": "integer_divide",
+    "test_cases": [
+      {
+        "args": [],
+        "expected": 3
+      }
+    ]
   },
   {
     "id": "correctness_012_check_in_range",
@@ -93,7 +170,14 @@
     "category": "correctness",
     "bug_class": "off_by_one_boundary",
     "reference_solution": "def check_in_range():\n    x = 10\n    limit = 10\n    assert x <= limit\n",
-    "known_buggy_variant": "def check_in_range():\n    x = 10\n    limit = 10\n    assert x < limit\n"
+    "known_buggy_variant": "def check_in_range():\n    x = 10\n    limit = 10\n    assert x < limit\n",
+    "function_name": "check_in_range",
+    "test_cases": [
+      {
+        "args": [],
+        "expected": null
+      }
+    ]
   },
   {
     "id": "correctness_013_max_of_two_params",
@@ -101,7 +185,17 @@
     "category": "correctness",
     "bug_class": "wrong_comparison_direction",
     "reference_solution": "def max_of_two(a, b):\n    if a > b:\n        result = a\n    else:\n        result = b\n    assert result >= a\n    assert result >= b\n",
-    "known_buggy_variant": "def max_of_two(a, b):\n    if a < b:\n        result = a\n    else:\n        result = b\n    assert result >= a\n    assert result >= b\n"
+    "known_buggy_variant": "def max_of_two(a, b):\n    if a < b:\n        result = a\n    else:\n        result = b\n    assert result >= a\n    assert result >= b\n",
+    "function_name": "max_of_two",
+    "test_cases": [
+      {
+        "args": [
+          3,
+          7
+        ],
+        "expected": null
+      }
+    ]
   },
   {
     "id": "correctness_014_min_of_two_params",
@@ -109,7 +203,17 @@
     "category": "correctness",
     "bug_class": "wrong_comparison_direction",
     "reference_solution": "def min_of_two(a, b):\n    if a < b:\n        result = a\n    else:\n        result = b\n    assert result <= a\n    assert result <= b\n",
-    "known_buggy_variant": "def min_of_two(a, b):\n    if a > b:\n        result = a\n    else:\n        result = b\n    assert result <= a\n    assert result <= b\n"
+    "known_buggy_variant": "def min_of_two(a, b):\n    if a > b:\n        result = a\n    else:\n        result = b\n    assert result <= a\n    assert result <= b\n",
+    "function_name": "min_of_two",
+    "test_cases": [
+      {
+        "args": [
+          4,
+          9
+        ],
+        "expected": null
+      }
+    ]
   },
   {
     "id": "correctness_015_double_identity",
@@ -117,7 +221,16 @@
     "category": "correctness",
     "bug_class": "wrong_arithmetic_operator",
     "reference_solution": "def double_value(x):\n    result = x + x\n    assert result == 2 * x\n",
-    "known_buggy_variant": "def double_value(x):\n    result = x + 1\n    assert result == 2 * x\n"
+    "known_buggy_variant": "def double_value(x):\n    result = x + 1\n    assert result == 2 * x\n",
+    "function_name": "double_value",
+    "test_cases": [
+      {
+        "args": [
+          5
+        ],
+        "expected": null
+      }
+    ]
   },
   {
     "id": "correctness_016_triple_identity",
@@ -125,7 +238,16 @@
     "category": "correctness",
     "bug_class": "incomplete_accumulation",
     "reference_solution": "def triple_value(x):\n    result = x + x + x\n    assert result == 3 * x\n",
-    "known_buggy_variant": "def triple_value(x):\n    result = x + x\n    assert result == 3 * x\n"
+    "known_buggy_variant": "def triple_value(x):\n    result = x + x\n    assert result == 3 * x\n",
+    "function_name": "triple_value",
+    "test_cases": [
+      {
+        "args": [
+          4
+        ],
+        "expected": null
+      }
+    ]
   },
   {
     "id": "correctness_017_swap_bigger_smaller",
@@ -133,7 +255,17 @@
     "category": "correctness",
     "bug_class": "swapped_branch_assignment",
     "reference_solution": "def swap_check(a, b):\n    \"\"\"PRE: a != b\"\"\"\n    if a > b:\n        bigger = a\n        smaller = b\n    else:\n        bigger = b\n        smaller = a\n    assert bigger > smaller\n",
-    "known_buggy_variant": "def swap_check(a, b):\n    \"\"\"PRE: a != b\"\"\"\n    if a > b:\n        bigger = b\n        smaller = a\n    else:\n        bigger = a\n        smaller = b\n    assert bigger > smaller\n"
+    "known_buggy_variant": "def swap_check(a, b):\n    \"\"\"PRE: a != b\"\"\"\n    if a > b:\n        bigger = b\n        smaller = a\n    else:\n        bigger = a\n        smaller = b\n    assert bigger > smaller\n",
+    "function_name": "swap_check",
+    "test_cases": [
+      {
+        "args": [
+          7,
+          3
+        ],
+        "expected": null
+      }
+    ]
   },
   {
     "id": "correctness_018_parity_range",
@@ -141,7 +273,16 @@
     "category": "correctness",
     "bug_class": "wrong_assert_constant",
     "reference_solution": "def parity_check(n):\n    \"\"\"PRE: n >= 0\"\"\"\n    remainder = n % 2\n    assert remainder == 0 or remainder == 1\n",
-    "known_buggy_variant": "def parity_check(n):\n    \"\"\"PRE: n >= 0\"\"\"\n    remainder = n % 2\n    assert remainder == 2\n"
+    "known_buggy_variant": "def parity_check(n):\n    \"\"\"PRE: n >= 0\"\"\"\n    remainder = n % 2\n    assert remainder == 2\n",
+    "function_name": "parity_check",
+    "test_cases": [
+      {
+        "args": [
+          4
+        ],
+        "expected": null
+      }
+    ]
   },
   {
     "id": "correctness_019_abs_diff_nonneg",
@@ -149,7 +290,17 @@
     "category": "correctness",
     "bug_class": "missing_branch_distinction",
     "reference_solution": "def abs_diff(a, b):\n    if a > b:\n        result = a - b\n    else:\n        result = b - a\n    assert result >= 0\n",
-    "known_buggy_variant": "def abs_diff(a, b):\n    if a > b:\n        result = a - b\n    else:\n        result = a - b\n    assert result >= 0\n"
+    "known_buggy_variant": "def abs_diff(a, b):\n    if a > b:\n        result = a - b\n    else:\n        result = a - b\n    assert result >= 0\n",
+    "function_name": "abs_diff",
+    "test_cases": [
+      {
+        "args": [
+          4,
+          9
+        ],
+        "expected": null
+      }
+    ]
   },
   {
     "id": "correctness_020_clamp_lower_bound",
@@ -157,7 +308,16 @@
     "category": "correctness",
     "bug_class": "missing_clamp_logic",
     "reference_solution": "def clamp_positive(x):\n    if x < 0:\n        result = 0\n    else:\n        result = x\n    assert result >= 0\n",
-    "known_buggy_variant": "def clamp_positive(x):\n    if x < 0:\n        result = x\n    else:\n        result = x\n    assert result >= 0\n"
+    "known_buggy_variant": "def clamp_positive(x):\n    if x < 0:\n        result = x\n    else:\n        result = x\n    assert result >= 0\n",
+    "function_name": "clamp_positive",
+    "test_cases": [
+      {
+        "args": [
+          -3
+        ],
+        "expected": null
+      }
+    ]
   },
   {
     "id": "correctness_021_even_sum_is_even",
@@ -165,7 +325,17 @@
     "category": "correctness",
     "bug_class": "off_by_one_constant",
     "reference_solution": "def sum_of_two_evens(a, b):\n    \"\"\"PRE: a % 2 == 0 and b % 2 == 0\"\"\"\n    result = a + b\n    assert result % 2 == 0\n",
-    "known_buggy_variant": "def sum_of_two_evens(a, b):\n    \"\"\"PRE: a % 2 == 0 and b % 2 == 0\"\"\"\n    result = a + b + 1\n    assert result % 2 == 0\n"
+    "known_buggy_variant": "def sum_of_two_evens(a, b):\n    \"\"\"PRE: a % 2 == 0 and b % 2 == 0\"\"\"\n    result = a + b + 1\n    assert result % 2 == 0\n",
+    "function_name": "sum_of_two_evens",
+    "test_cases": [
+      {
+        "args": [
+          4,
+          6
+        ],
+        "expected": null
+      }
+    ]
   },
   {
     "id": "correctness_022_negate_twice_identity",
@@ -173,6 +343,15 @@
     "category": "correctness",
     "bug_class": "missing_negation",
     "reference_solution": "def double_negate(x):\n    result = -(-x)\n    assert result == x\n",
-    "known_buggy_variant": "def double_negate(x):\n    result = -x\n    assert result == x\n"
+    "known_buggy_variant": "def double_negate(x):\n    result = -x\n    assert result == x\n",
+    "function_name": "double_negate",
+    "test_cases": [
+      {
+        "args": [
+          5
+        ],
+        "expected": null
+      }
+    ]
   }
 ]

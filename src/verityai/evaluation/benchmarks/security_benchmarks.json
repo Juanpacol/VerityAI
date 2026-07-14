@@ -5,7 +5,14 @@
     "category": "security",
     "bug_class": "missing_division_guard",
     "reference_solution": "def safe_divide():\n    numerator = 10\n    denominator = 2\n    assert denominator != 0\n    result = numerator // denominator\n    return result\n",
-    "known_buggy_variant": "def safe_divide():\n    numerator = 10\n    denominator = 0\n    assert denominator != 0\n    result = numerator // denominator\n    return result\n"
+    "known_buggy_variant": "def safe_divide():\n    numerator = 10\n    denominator = 0\n    assert denominator != 0\n    result = numerator // denominator\n    return result\n",
+    "function_name": "safe_divide",
+    "test_cases": [
+      {
+        "args": [],
+        "expected": 5
+      }
+    ]
   },
   {
     "id": "security_002_bounds_check",
@@ -23,7 +30,14 @@
     "bug_class": "missing_concurrency_guard",
     "reference_solution": "def critical_section():\n    lock_held = 1\n    assert lock_held == 1\n",
     "known_buggy_variant": "def critical_section():\n    lock_held = 0\n    assert lock_held == 1\n",
-    "note": "This models a lock-flag precondition as an int assert, not real concurrency -- the AST->Z3 converter has no thread/scheduling model. A genuine race-condition check is out of scope for this benchmark; see docs/PHASE_3_METHODOLOGY.md."
+    "note": "This models a lock-flag precondition as an int assert, not real concurrency -- the AST->Z3 converter has no thread/scheduling model. A genuine race-condition check is out of scope for this benchmark; see docs/PHASE_3_METHODOLOGY.md.",
+    "function_name": "critical_section",
+    "test_cases": [
+      {
+        "args": [],
+        "expected": null
+      }
+    ]
   },
   {
     "id": "security_004_safe_divide_param",
@@ -32,7 +46,7 @@
     "bug_class": "missing_division_guard",
     "reference_solution": "def safe_divide(numerator, denominator):\n    \"\"\"PRE: denominator != 0\"\"\"\n    assert denominator != 0\n    result = numerator // denominator\n    return result\n",
     "known_buggy_variant": "def safe_divide(numerator, denominator):\n    assert denominator != 0\n    result = numerator // denominator\n    return result\n",
-    "note": "Uses a real parameterized signature (ADR-0002), unlike security_001's hardcoded-locals workaround. The buggy variant is the same code minus the PRE docstring -- an unconstrained parameter makes the guard unprovable, exactly the scenario ADR-0002 is meant to catch."
+    "note": "Uses a real parameterized signature (ADR-0002), unlike security_001's hardcoded-locals workaround. The buggy variant is the same code minus the PRE docstring -- an unconstrained parameter makes the guard unprovable, exactly the scenario ADR-0002 is meant to catch. No test_cases: this bug is only observable to the Z3 verifier (unprovable without PRE), not at runtime -- calling safe_divide(10, 2) succeeds identically whether or not the PRE docstring is present, so an execution oracle cannot distinguish reference from buggy here. Verified empirically before writing this note."
   },
   {
     "id": "security_005_bounds_check_param",
@@ -41,7 +55,17 @@
     "bug_class": "off_by_one_boundary",
     "reference_solution": "def check_index_bounds(idx, n):\n    \"\"\"PRE: idx >= 0 and idx < n\"\"\"\n    assert idx < n\n",
     "known_buggy_variant": "def check_index_bounds(idx, n):\n    \"\"\"PRE: idx >= 0 and idx < n\"\"\"\n    assert idx < n - 1\n",
-    "note": "Uses real idx/n parameters (ADR-0002), unlike security_002's len()-symbolic-only workaround. The buggy variant asserts a stricter bound than the stated precondition actually guarantees."
+    "note": "Uses real idx/n parameters (ADR-0002), unlike security_002's len()-symbolic-only workaround. The buggy variant asserts a stricter bound than the stated precondition actually guarantees.",
+    "function_name": "check_index_bounds",
+    "test_cases": [
+      {
+        "args": [
+          4,
+          5
+        ],
+        "expected": null
+      }
+    ]
   },
   {
     "id": "security_006_check_auth_before_action",
@@ -50,6 +74,6 @@
     "bug_class": "missing_authorization_guard",
     "reference_solution": "def perform_action(is_authenticated):\n    \"\"\"PRE: is_authenticated == 1\"\"\"\n    assert is_authenticated == 1\n",
     "known_buggy_variant": "def perform_action(is_authenticated):\n    assert is_authenticated == 1\n",
-    "note": "Models an authorization guard (distinct from security_003's concurrency-lock scenario) using a real parameter instead of a hardcoded local."
+    "note": "Models an authorization guard (distinct from security_003's concurrency-lock scenario) using a real parameter instead of a hardcoded local. No test_cases for the same reason as security_004: the missing-PRE bug is a verifiability gap, not a runtime behavior difference -- perform_action(1) succeeds identically either way."
   }
 ]
