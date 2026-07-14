@@ -76,7 +76,13 @@ class TestContinuousLearningHappyPath:
             # No function parameters: the AST->Z3 converter only binds
             # locally-assigned variables (see ast_to_smt.py), so a
             # verifiable test_code snippet must assign before asserting.
-            corrected_code="def divide():\n    a = 10\n    b = 5\n    assert b != 0\n    return a / b",
+            # `//` not `/`: the converter's BinOp handling only supports
+            # FloorDiv, not true division -- true division inside a
+            # `return` used to be silently invisible to non-verifiable
+            # tracking (a real bug, since fixed; see ast_to_smt.py's
+            # Return-handling comment) and this fixture's `/` was
+            # unknowingly relying on that gap to report CONSISTENT.
+            corrected_code="def divide():\n    a = 10\n    b = 5\n    assert b != 0\n    return a // b",
         )
 
         # 3. Derive a candidate rule from the feedback.

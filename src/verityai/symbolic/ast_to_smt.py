@@ -203,7 +203,20 @@ class ASTtoSMTConverter:
                     )
                     continue
                 elif isinstance(stmt, ast.Return):
-                    continue  # Return itself adds no constraint in this subset
+                    # The returned value contributes no constraint (there's
+                    # no target postcondition to check it against in this
+                    # subset) -- but it must still be *inspected*, or a
+                    # non-verifiable expression hidden inside `return expr`
+                    # (e.g. a call to a user-defined/recursive function)
+                    # would be silently invisible: never flagged, never
+                    # constrained, so a function whose only content is such
+                    # a return could wrongly report PASS instead of
+                    # NOT_VERIFIED. Found via manual testing, not by
+                    # inspection -- `return n * f(n-1)` (bare recursion, no
+                    # other assert) verified as PASS before this fix.
+                    if stmt.value is not None:
+                        self._convert_expr(stmt.value)
+                    continue
                 elif isinstance(stmt, ast.FunctionDef):
                     continue  # Nested defs: metadata already handled separately
                 elif isinstance(stmt, ast.Expr):

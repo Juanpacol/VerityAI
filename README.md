@@ -17,7 +17,7 @@ Enterprises don't trust AI-generated code because they can't see **why** it's co
 
 VerityAI addresses this with a neuro-symbolic pipeline:
 1. **Generate** — an LLM produces code, with Knowledge Graph rules/patterns injected into the prompt (no fine-tuning)
-2. **Verify** — Z3 Theorem Prover checks the code's own assertions for internal consistency, within a deliberately-scoped verifiable subset (see [ADR-0001](docs/adr/0001-verifiable-python-subset.md))
+2. **Verify** — Z3 Theorem Prover checks the code's own assertions for internal consistency, within a deliberately-scoped verifiable subset (see [`docs/VERIFICATION_SCOPE.md`](docs/VERIFICATION_SCOPE.md) for exactly what does/doesn't verify, with worked examples, and [ADR-0001](docs/adr/0001-verifiable-python-subset.md) for the original scope decision)
 3. **Retry** — up to 3 attempts, with the specific verification failure fed back into the next prompt
 4. **Explain** — a human-readable reasoning trace + weighted confidence score, exportable as a compliance report (PDF/SARIF)
 
@@ -192,7 +192,8 @@ docker compose -f docker/docker-compose.yml exec ollama ollama pull llama3.2
 ## References
 
 - Architecture: [`CLAUDE.md`](CLAUDE.md)
-- Verifiable subset scope: [`docs/adr/0001-verifiable-python-subset.md`](docs/adr/0001-verifiable-python-subset.md)
+- Verification scope reference (what verifies vs. not, with examples): [`docs/VERIFICATION_SCOPE.md`](docs/VERIFICATION_SCOPE.md)
+- Verifiable subset scope decision: [`docs/adr/0001-verifiable-python-subset.md`](docs/adr/0001-verifiable-python-subset.md)
 - Parameterized verification: [`docs/adr/0002-parameterized-verification.md`](docs/adr/0002-parameterized-verification.md)
 - Evaluation methodology + real-run findings: [`docs/PHASE_3_METHODOLOGY.md`](docs/PHASE_3_METHODOLOGY.md)
 - Phase-by-phase build record: `docs/PHASE_*.md`

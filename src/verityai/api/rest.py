@@ -5,11 +5,30 @@ Dependencies (Orchestrator, DB session) are constructed via FastAPI's
 fakes via `app.dependency_overrides` instead of needing a live Ollama
 instance or Postgres — the same offline-testable pattern used throughout
 the rest of this codebase (FakeLLMClient, in-memory sqlite for TraceStore).
+
+Concurrency model (read before assuming this scales): `/generate` is a
+sync `def` endpoint, so FastAPI/Starlette runs each call in a worker
+thread from anyio's default threadpool (40 threads unless configured --
+see `VERITYAI_THREADPOOL_SIZE` below), not a truly async request. A real
+run against llama3.2 measured ~65-125s per `/generate` call (see
+docs/PHASE_3_METHODOLOGY.md's "Real run #1") -- with 40 threads and calls
+that long, only ~40 concurrent `/generate` requests can be in flight at
+once; the 41st queues behind whichever finishes first. Making the
+threadpool bigger buys headroom, not a fix: `Orchestrator.run()` itself
+is CPU/IO-bound (LLM inference + Z3 solving), so more threads just means
+more concurrent inference calls competing for the same Ollama instance,
+not more real throughput. A genuine fix needs an async job queue
+(POST /generate returns a job_id immediately; GET /jobs/{id} polls status)
+so the API layer stops holding an HTTP connection open for the entire
+generation -- tracked as follow-up, not implemented here to avoid
+building a queueing/worker subsystem this project doesn't otherwise need.
 """
 
 import os
+from contextlib import asynccontextmanager
 from uuid import UUID
 
+import anyio
 from fastapi import Depends, FastAPI, Header, HTTPException, Response
 from fastapi.responses import HTMLResponse
 from neo4j import GraphDatabase
@@ -43,10 +62,26 @@ from verityai.ontology.models import (
 )
 from verityai.symbolic.verify import verify_python_snippet
 
+
+@asynccontextmanager
+async def _lifespan(app: FastAPI):
+    """Make the sync-endpoint threadpool size configurable (see module
+    docstring's concurrency model). `current_default_thread_limiter()` is
+    contextvar-based and only resolvable inside a running event loop --
+    it cannot be set at import time, hence a lifespan handler rather than
+    a module-level assignment.
+    """
+    threadpool_size = os.environ.get("VERITYAI_THREADPOOL_SIZE")
+    if threadpool_size:
+        anyio.to_thread.current_default_thread_limiter().total_tokens = int(threadpool_size)
+    yield
+
+
 app = FastAPI(
     title="VerityAI API",
     description="Neuro-symbolic code generation + formal verification",
     version="0.0.1",
+    lifespan=_lifespan,
 )
 app.add_middleware(
     RateLimitMiddleware,

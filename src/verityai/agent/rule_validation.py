@@ -106,6 +106,17 @@ class RuleApprovalQueue:
     rejected it. Auto-rejection can be overridden via approve() if a
     reviewer disagrees with Z3 (e.g. the test_code itself was wrong, not
     the rule).
+
+    **In-memory only, like `FeedbackStore`** (agent/continuous_learning.py)
+    — the queue is lost on process restart, and a multi-process deployment
+    would not share state across workers. Follow-up: back this with
+    Postgres via the same injected-`Session` pattern `TraceStore`
+    (agent/trace.py) already uses, once continuous learning moves past a
+    single-process prototype. Not done here because it would mean adding
+    ORM models + migrations for a queue whose shape (pending/approved/
+    rejected candidate rules) may still change as the approval workflow
+    itself evolves — premature persistence would just mean a schema
+    migration to undo later.
     """
 
     def __init__(self):

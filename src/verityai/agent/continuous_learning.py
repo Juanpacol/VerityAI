@@ -19,10 +19,13 @@ logger = logging.getLogger(__name__)
 class FeedbackStore:
     """In-memory capture of feedback events, keyed by the trace they respond to.
 
-    A production deployment would back this with Postgres the same way
-    `TraceStore` does; this stays in-memory because Week 3's scope is the
-    feedback schema and the candidate-rule derivation pipeline, not a new
-    persistence layer.
+    Lost on process restart; not shared across worker processes in a
+    multi-process deployment. Follow-up: back this with Postgres via the
+    same injected-`Session` pattern `TraceStore` (agent/trace.py) already
+    uses — deferred for the same reason `RuleApprovalQueue`
+    (agent/rule_validation.py) is: the feedback→candidate-rule pipeline's
+    shape may still evolve, and migrating a schema twice is worse than
+    migrating it once, later, when the shape has settled.
     """
 
     def __init__(self):
