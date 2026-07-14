@@ -269,3 +269,28 @@ class TestDashboardRoute:
         assert "http://" not in response.text
         assert "https://" not in response.text
         assert "<link" not in response.text
+
+
+class TestGetOrchestratorEnvWiring:
+    """get_orchestrator() previously never connected a kg_client at all --
+    these call the real (un-overridden) factory function directly and only
+    inspect the constructed Orchestrator's config, never triggering a live
+    Ollama/Neo4j network call (OllamaClient's constructor doesn't connect)."""
+
+    def test_defaults_to_no_kg_client_and_legacy_strategy(self, monkeypatch):
+        monkeypatch.delenv("VERITYAI_ENABLE_KG_CONTEXT", raising=False)
+        monkeypatch.delenv("VERITYAI_RETRIEVAL_STRATEGY", raising=False)
+
+        orchestrator = get_orchestrator()
+
+        assert orchestrator.kg_client is None
+        assert orchestrator.retrieval_strategy == "legacy"
+
+    def test_enable_kg_context_wires_a_kg_client(self, monkeypatch):
+        monkeypatch.setenv("VERITYAI_ENABLE_KG_CONTEXT", "1")
+        monkeypatch.setenv("VERITYAI_RETRIEVAL_STRATEGY", "hybrid")
+
+        orchestrator = get_orchestrator()
+
+        assert orchestrator.kg_client is not None
+        assert orchestrator.retrieval_strategy == "hybrid"

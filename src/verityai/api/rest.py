@@ -135,12 +135,25 @@ def get_orchestrator() -> Orchestrator:
     Overridden in tests (app.dependency_overrides[get_orchestrator]) with a
     FakeLLMClient-backed instance so the test suite never needs a live
     Ollama server.
+
+    KG context is opt-in via VERITYAI_ENABLE_KG_CONTEXT=1: previously
+    `/generate` never connected a kg_client at all (a real gap this fixes),
+    so opt-in avoids silently changing existing deployments' behavior the
+    moment this ships. VERITYAI_RETRIEVAL_STRATEGY defaults to "legacy"
+    until the retrieval A/B (docs/PHASE_3_METHODOLOGY.md "Real run #3")
+    justifies flipping it — see ADR-0003.
     """
     llm_client = OllamaClient(
         model=os.environ.get("OLLAMA_MODEL", "llama3.2"),
         base_url=os.environ.get("OLLAMA_HOST", "http://localhost:11434"),
+        embed_model=os.environ.get("OLLAMA_EMBED_MODEL"),
     )
-    return Orchestrator(llm_client=llm_client)
+    kg_client = get_kg_client() if os.environ.get("VERITYAI_ENABLE_KG_CONTEXT") == "1" else None
+    return Orchestrator(
+        llm_client=llm_client,
+        kg_client=kg_client,
+        retrieval_strategy=os.environ.get("VERITYAI_RETRIEVAL_STRATEGY", "legacy"),
+    )
 
 
 _neo4j_driver = None

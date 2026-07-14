@@ -2,7 +2,7 @@
 
 import pytest
 
-from verityai.agent.confidence import compute_confidence
+from verityai.agent.confidence import compute_confidence, explain_confidence
 from verityai.ontology.models import Counterexample, VerificationResult, VerificationStatus
 
 
@@ -168,3 +168,40 @@ class TestComputeConfidenceValidation:
             result, pattern_similarity=1.0, complexity_score=1.0, test_coverage=1.0
         )
         assert 0.0 <= confidence <= 1.0
+
+
+class TestExplainConfidence:
+    """Tests for the breakdown-returning sibling of compute_confidence."""
+
+    def test_total_matches_compute_confidence(self):
+        result = make_result(VerificationStatus.PASS, confidence=0.8)
+        kwargs = dict(pattern_similarity=0.6, complexity_score=0.4, test_coverage=0.2)
+
+        assert explain_confidence(result, **kwargs)["total"] == pytest.approx(
+            compute_confidence(result, **kwargs)
+        )
+
+    def test_total_matches_compute_confidence_for_fail(self):
+        result = make_result(VerificationStatus.FAIL, with_violation=True)
+
+        assert explain_confidence(result)["total"] == pytest.approx(compute_confidence(result))
+
+    def test_components_and_weights_present(self):
+        result = make_result(VerificationStatus.PASS, confidence=1.0)
+        breakdown = explain_confidence(
+            result, pattern_similarity=0.5, complexity_score=0.5, test_coverage=0.5
+        )
+
+        for key in ("verification", "pattern_similarity", "complexity", "test_coverage"):
+            assert key in breakdown["components"]
+            assert key in breakdown["weights"]
+
+    def test_weights_sum_to_one(self):
+        result = make_result(VerificationStatus.PASS, confidence=1.0)
+        breakdown = explain_confidence(result)
+        assert sum(breakdown["weights"].values()) == pytest.approx(1.0)
+
+    def test_rejects_out_of_range_inputs_same_as_compute_confidence(self):
+        result = make_result(VerificationStatus.PASS)
+        with pytest.raises(ValueError):
+            explain_confidence(result, pattern_similarity=1.5)

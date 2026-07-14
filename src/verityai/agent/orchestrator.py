@@ -17,6 +17,7 @@ from typing import Optional
 from verityai.agent.confidence import compute_confidence
 from verityai.agent.state import AgentState
 from verityai.kg.client import KGClient
+from verityai.kg.retrieval import HybridRetriever
 from verityai.neural.ollama_client import OllamaClient, OllamaGenerationError
 from verityai.neural.prompt_builder import PromptBuilder
 from verityai.neural.response_parsing import split_code_and_reasoning
@@ -41,6 +42,8 @@ class Orchestrator:
         kg_client: Optional[KGClient] = None,
         prompt_builder: Optional[PromptBuilder] = None,
         z3_timeout_seconds: float = 3.0,
+        retrieval_strategy: str = "legacy",
+        retrieval_top_k: int = 8,
     ):
         """Initialize orchestrator.
 
@@ -52,11 +55,19 @@ class Orchestrator:
             prompt_builder: Prompt construction with injection hardening.
                 Defaults to a new PromptBuilder(strict=False).
             z3_timeout_seconds: Per-query timeout for the verification engine
+            retrieval_strategy: "legacy" (fetch-all by hardcoded category,
+                today's behavior) or "hybrid" (kg.retrieval.HybridRetriever,
+                ranked by the actual prompt). Defaults to "legacy" until the
+                retrieval A/B (docs/PHASE_3_METHODOLOGY.md "Real run #3")
+                produces data justifying a flip — see ADR-0003.
+            retrieval_top_k: Max rules returned by hybrid retrieval
         """
         self.llm_client = llm_client
         self.kg_client = kg_client
         self.prompt_builder = prompt_builder or PromptBuilder()
         self.z3_timeout_seconds = z3_timeout_seconds
+        self.retrieval_strategy = retrieval_strategy
+        self.retrieval_top_k = retrieval_top_k
 
     def run(self, request: GenerationRequest) -> GenerationResponse:
         """Execute the full generate-verify-retry loop for one request.
@@ -75,6 +86,7 @@ class Orchestrator:
         )
 
         kg_context = self._fetch_kg_context(request)
+        pattern_similarity = self._extract_pattern_similarity(kg_context)
 
         while not state.is_exhausted:
             try:
@@ -88,7 +100,9 @@ class Orchestrator:
                 return self._build_error_response(state, str(e))
 
             verification_result = self.verify_code(code)
-            confidence = compute_confidence(verification_result)
+            confidence = compute_confidence(
+                verification_result, pattern_similarity=pattern_similarity
+            )
 
             state.record_attempt(
                 code=code,
@@ -111,21 +125,84 @@ class Orchestrator:
     def _fetch_kg_context(self, request: GenerationRequest) -> dict:
         """Fetch relevant rules from the KG for prompt injection.
 
-        Failures here are non-fatal: generation proceeds with empty context
-        rather than blocking the whole request on a KG outage.
+        Dispatches on `self.retrieval_strategy`. Failures here are
+        non-fatal: generation proceeds with empty context rather than
+        blocking the whole request on a KG outage.
         """
         if self.kg_client is None:
             return {}
         try:
-            rules = self.kg_client.get_rules_by_category("security", language=request.language)
-            rules += self.kg_client.get_rules_by_category("correctness", language=request.language)
-            return {
-                "rules": [{"name": r.name, "description": r.description} for r in rules],
-                "patterns": [],
-            }
+            if self.retrieval_strategy == "hybrid":
+                return self._fetch_kg_context_hybrid(request)
+            return self._fetch_kg_context_legacy(request)
         except Exception as e:
             logger.warning(f"Failed to fetch KG context, proceeding without it: {e}")
             return {}
+
+    def _fetch_kg_context_legacy(self, request: GenerationRequest) -> dict:
+        """Fetch-all-by-hardcoded-category, prompt-agnostic (today's default)."""
+        assert self.kg_client is not None  # guarded by caller
+        rules = self.kg_client.get_rules_by_category("security", language=request.language)
+        rules += self.kg_client.get_rules_by_category("correctness", language=request.language)
+        return {
+            "rules": [{"name": r.name, "description": r.description} for r in rules],
+            "patterns": [],
+        }
+
+    def _fetch_kg_context_hybrid(self, request: GenerationRequest) -> dict:
+        """Rank rules against the actual prompt via HybridRetriever, with provenance.
+
+        `embed_fn` is `getattr(self.llm_client, "embed", None)` rather than
+        a hard dependency: FakeLLMClient (used throughout the test suite)
+        has no `embed` method, so this transparently degrades to
+        lexical-only ranking in tests without any special-casing.
+        """
+        assert self.kg_client is not None  # guarded by caller
+        retriever = HybridRetriever(
+            self.kg_client, embed_fn=getattr(self.llm_client, "embed", None)
+        )
+        result = retriever.retrieve(
+            request.prompt, language=request.language, top_k=self.retrieval_top_k
+        )
+        return {
+            "rules": [
+                {
+                    "name": scored.rule.name,
+                    "description": scored.rule.description,
+                    "severity": scored.rule.severity,
+                    "category": scored.rule.category,
+                    "provenance": scored.provenance,
+                }
+                for scored in result.rules
+            ],
+            "patterns": [],
+            "retrieval": {
+                "strategy": "hybrid",
+                "mode": result.mode,
+                "query": request.prompt,
+                "top_k": self.retrieval_top_k,
+                "degraded_reason": result.degraded_reason,
+                "top_semantic_similarity": result.top_semantic_similarity,
+            },
+        }
+
+    @staticmethod
+    def _extract_pattern_similarity(kg_context: dict) -> float:
+        """Pull retrieval's top_semantic_similarity out as confidence input.
+
+        Clamped to [0.0, 1.0] (compute_confidence raises outside that
+        range) and defaults to 0.0 — honestly, since a legacy fetch or a
+        degraded-to-lexical hybrid fetch never measured any similarity at
+        all, 0.0 ("no pattern-similarity signal") is the correct value, not
+        a guess.
+        """
+        retrieval_meta = kg_context.get("retrieval")
+        if not isinstance(retrieval_meta, dict):
+            return 0.0
+        raw = retrieval_meta.get("top_semantic_similarity")
+        if not isinstance(raw, (int, float)):
+            return 0.0
+        return max(0.0, min(1.0, float(raw)))
 
     def generate_once(
         self,

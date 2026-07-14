@@ -6,7 +6,7 @@ offline and deterministically.
 
 from tests.fakes import AlwaysFailingLLMClient, FakeLLMClient, wrap_code
 from verityai.agent.orchestrator import Orchestrator
-from verityai.ontology.models import GenerationRequest, VerificationStatus
+from verityai.ontology.models import GenerationRequest, Rule, VerificationStatus
 
 
 class TestOrchestratorSuccessPath:
@@ -157,6 +157,97 @@ class TestOrchestratorKGContextOptional:
         result = orchestrator.run(GenerationRequest(prompt="test"))
 
         assert result.status == "success"
+
+
+def make_rule(**overrides) -> Rule:
+    defaults = dict(
+        name="division_safety",
+        description="check divide by zero",
+        category="security",
+        condition="check divide by zero",
+        severity="high",
+        applies_to=["python"],
+    )
+    defaults.update(overrides)
+    return Rule(**defaults)
+
+
+class TestOrchestratorRetrievalStrategy:
+    def test_default_strategy_is_legacy(self):
+        llm = FakeLLMClient([wrap_code("x = 1\nassert x == 1")])
+        orchestrator = Orchestrator(llm_client=llm)
+        assert orchestrator.retrieval_strategy == "legacy"
+
+    def test_legacy_context_has_no_retrieval_key(self):
+        class FakeCategoryKGClient:
+            def get_rules_by_category(self, category, language="python"):
+                return []
+
+        llm = FakeLLMClient([wrap_code("x = 1\nassert x == 1")])
+        orchestrator = Orchestrator(llm_client=llm, kg_client=FakeCategoryKGClient())
+
+        result = orchestrator.run(GenerationRequest(prompt="test"))
+
+        assert result.status == "success"
+        assert "retrieval" not in result.traces[0].kg_context
+
+    def test_hybrid_strategy_returns_relevant_rule_with_provenance(self):
+        rule = make_rule()
+
+        class FakeHybridKGClient:
+            def get_rules_with_embeddings(self, language="python"):
+                return [(rule, None)]
+
+        llm = FakeLLMClient([wrap_code("x = 1\nassert x == 1")])
+        orchestrator = Orchestrator(
+            llm_client=llm, kg_client=FakeHybridKGClient(), retrieval_strategy="hybrid"
+        )
+
+        result = orchestrator.run(GenerationRequest(prompt="divide by zero safety"))
+
+        kg_context = result.traces[0].kg_context
+        assert kg_context["rules"][0]["name"] == "division_safety"
+        assert "provenance" in kg_context["rules"][0]
+        assert kg_context["retrieval"]["strategy"] == "hybrid"
+        # FakeLLMClient has no embed() method -> degrades to lexical-only.
+        assert kg_context["retrieval"]["mode"] == "lexical_only"
+
+    def test_hybrid_kg_failure_degrades_to_empty_context(self):
+        class BrokenHybridKGClient:
+            def get_rules_with_embeddings(self, language="python"):
+                raise ConnectionError("Neo4j unreachable")
+
+        llm = FakeLLMClient([wrap_code("x = 1\nassert x == 1")])
+        orchestrator = Orchestrator(
+            llm_client=llm, kg_client=BrokenHybridKGClient(), retrieval_strategy="hybrid"
+        )
+
+        result = orchestrator.run(GenerationRequest(prompt="test"))
+
+        assert result.status == "success"
+        assert result.traces[0].kg_context == {}
+
+    def test_confidence_rises_with_matching_embed_fn(self):
+        rule = make_rule()
+
+        class FakeHybridKGClient:
+            def get_rules_with_embeddings(self, language="python"):
+                return [(rule, [1.0, 0.0])]
+
+        code = "x = 1\nassert x == 1"
+
+        llm_no_embed = FakeLLMClient([wrap_code(code)])
+        result_no_embed = Orchestrator(
+            llm_client=llm_no_embed, kg_client=FakeHybridKGClient(), retrieval_strategy="hybrid"
+        ).run(GenerationRequest(prompt="divide by zero"))
+
+        llm_with_embed = FakeLLMClient([wrap_code(code)])
+        llm_with_embed.embed = lambda text: [1.0, 0.0]  # identical vector -> cosine similarity 1.0
+        result_with_embed = Orchestrator(
+            llm_client=llm_with_embed, kg_client=FakeHybridKGClient(), retrieval_strategy="hybrid"
+        ).run(GenerationRequest(prompt="divide by zero"))
+
+        assert result_with_embed.confidence > result_no_embed.confidence
 
 
 class TestOrchestratorSplitCodeAndReasoning:
