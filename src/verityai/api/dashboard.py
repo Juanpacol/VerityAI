@@ -117,6 +117,7 @@ th { color: var(--text-muted); font-weight: 600; }
       <pre id="trace-reasoning"></pre>
       <p><strong>Generated Code:</strong></p>
       <pre id="trace-code"></pre>
+      <p><a id="trace-run-link" href="#" style="display:none;">View full reasoning trace &rarr;</a></p>
     </div>
   </div>
 
@@ -183,6 +184,15 @@ async function loadTrace() {
     document.getElementById("trace-prompt").textContent = trace.user_prompt;
     document.getElementById("trace-reasoning").textContent = trace.llm_reasoning || "(none)";
     document.getElementById("trace-code").textContent = trace.generated_code;
+
+    const runLink = document.getElementById("trace-run-link");
+    if (trace.request_id) {
+      runLink.href = `/runs/${encodeURIComponent(trace.request_id)}/view`;
+      runLink.style.display = "inline";
+    } else {
+      runLink.style.display = "none";
+    }
+
     resultEl.style.display = "block";
   } catch (e) {
     errorEl.textContent = `Request failed: ${e}`;

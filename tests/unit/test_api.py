@@ -13,6 +13,7 @@ from tests.fakes import AlwaysFailingLLMClient, FakeLLMClient, wrap_code
 from verityai.agent.orchestrator import Orchestrator
 from verityai.api.rest import app, get_audit_log_store, get_kg_client, get_orchestrator
 from verityai.kg.client import KGClient
+from verityai.ontology.models import Rule
 
 
 def _override_orchestrator_with(llm_client) -> None:
@@ -79,6 +80,93 @@ class TestTraceEndpoint:
     def test_invalid_uuid_returns_422(self, client):
         response = client.get("/trace/not-a-uuid")
         assert response.status_code == 422
+
+
+class TestRunsEndpoints:
+    def test_run_summary_json_shape(self, client):
+        _override_orchestrator_with(FakeLLMClient([wrap_code("x = 1\nassert x == 1")]))
+
+        generate_response = client.post("/generate", json={"prompt": "assign 1 to x"})
+        request_id = generate_response.json()["request_id"]
+
+        response = client.get(f"/runs/{request_id}")
+
+        assert response.status_code == 200
+        body = response.json()
+        assert body["request_id"] == request_id
+        assert body["status"] == "success"
+        assert body["attempt_count"] == 1
+        assert len(body["attempts"]) == 1
+        assert body["attempts"][0]["attempt_number"] == 1
+
+    def test_run_view_returns_html_with_attempt_info(self, client):
+        _override_orchestrator_with(FakeLLMClient([wrap_code("x = 1\nassert x == 1")]))
+
+        generate_response = client.post("/generate", json={"prompt": "assign 1 to x"})
+        request_id = generate_response.json()["request_id"]
+
+        response = client.get(f"/runs/{request_id}/view")
+
+        assert response.status_code == 200
+        assert response.headers["content-type"].startswith("text/html")
+        assert "Attempt 1" in response.text
+
+    def test_run_view_lists_retrieved_rule_names(self, client):
+        class FakeCategoryKGClient:
+            def get_rules_by_category(self, category, language="python"):
+                if category == "security":
+                    return [
+                        Rule(
+                            name="no_null_deref",
+                            description="Ensure no null pointer dereferences",
+                            category="security",
+                            condition="Ensure no null pointer dereferences",
+                            severity="high",
+                            applies_to=["python"],
+                        )
+                    ]
+                return []
+
+        app.dependency_overrides[get_orchestrator] = lambda: Orchestrator(
+            llm_client=FakeLLMClient([wrap_code("x = 1\nassert x == 1")]),
+            kg_client=FakeCategoryKGClient(),
+        )
+
+        generate_response = client.post("/generate", json={"prompt": "assign 1 to x"})
+        request_id = generate_response.json()["request_id"]
+
+        response = client.get(f"/runs/{request_id}/view")
+
+        assert "no_null_deref" in response.text
+
+    def test_run_view_is_self_contained(self, client):
+        _override_orchestrator_with(FakeLLMClient([wrap_code("x = 1\nassert x == 1")]))
+
+        generate_response = client.post("/generate", json={"prompt": "assign 1 to x"})
+        request_id = generate_response.json()["request_id"]
+
+        response = client.get(f"/runs/{request_id}/view")
+
+        # Generated code may legitimately contain literal "http://" text, so
+        # assert on concrete external-resource markers, not a bare substring.
+        assert "<script src" not in response.text
+        assert "<link" not in response.text
+        assert "url(" not in response.text
+
+    def test_unknown_request_id_returns_404(self, client):
+        assert client.get(f"/runs/{uuid4()}").status_code == 404
+        assert client.get(f"/runs/{uuid4()}/view").status_code == 404
+
+    def test_failed_attempt_renders_in_view(self, client):
+        _override_orchestrator_with(FakeLLMClient([wrap_code("x = 5\nassert x == 999")]))
+
+        generate_response = client.post("/generate", json={"prompt": "test", "max_attempts": 1})
+        request_id = generate_response.json()["request_id"]
+
+        response = client.get(f"/runs/{request_id}/view")
+
+        assert response.status_code == 200
+        assert "Failed" in response.text
 
 
 class TestAuditLog:

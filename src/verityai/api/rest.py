@@ -26,6 +26,7 @@ building a queueing/worker subsystem this project doesn't otherwise need.
 
 import os
 from contextlib import asynccontextmanager
+from typing import Optional
 from uuid import UUID
 
 import anyio
@@ -41,6 +42,7 @@ from verityai.agent.orchestrator import Orchestrator
 from verityai.agent.trace import TraceStore
 from verityai.api.dashboard import render_dashboard
 from verityai.api.rate_limit import RateLimitMiddleware
+from verityai.api.run_view import render_run_view
 from verityai.compliance.audit_log import AuditLogStore
 from verityai.compliance.report_generator import (
     build_compliance_report_from_trace,
@@ -60,6 +62,7 @@ from verityai.ontology.models import (
     ReasoningTrace,
     Rule,
     VerificationResult,
+    VerificationStatus,
 )
 from verityai.symbolic.verify import verify_python_snippet
 
@@ -196,6 +199,63 @@ class VerifyRequest(BaseModel):
     code: str
 
 
+class RunAttempt(BaseModel):
+    """API-layer view of one attempt within a request -- not an ontology
+    model, since it's a projection of ReasoningTrace shaped for the
+    /runs/{request_id} timeline rather than a first-class domain concept."""
+
+    attempt_number: int
+    trace_id: UUID
+    status: Optional[str] = None
+    confidence_score: float
+    generation_seconds: Optional[float] = None
+    failure_reason: Optional[str] = None
+
+
+class RunSummary(BaseModel):
+    """Full timeline for one Orchestrator.run() call, grouped by request_id."""
+
+    request_id: UUID
+    user_prompt: str
+    status: str  # "success" | "partial" | "failed", mirrors GenerationResponse.status
+    attempt_count: int
+    total_generation_seconds: float
+    attempts: list[RunAttempt]
+
+
+def _build_run_summary(request_id: UUID, traces: list[ReasoningTrace]) -> RunSummary:
+    """Derive a RunSummary from a request's attempt history (non-empty)."""
+    last = traces[-1]
+    if last.verification_result and last.verification_result.status == VerificationStatus.PASS:
+        status = "success"
+    elif (
+        last.verification_result
+        and last.verification_result.status == VerificationStatus.NOT_VERIFIED
+    ):
+        status = "partial"
+    else:
+        status = "failed"
+
+    return RunSummary(
+        request_id=request_id,
+        user_prompt=last.user_prompt,
+        status=status,
+        attempt_count=len(traces),
+        total_generation_seconds=sum(t.generation_seconds or 0.0 for t in traces),
+        attempts=[
+            RunAttempt(
+                attempt_number=t.attempt_number,
+                trace_id=t.id,
+                status=t.verification_result.status.value if t.verification_result else None,
+                confidence_score=t.confidence_score,
+                generation_seconds=t.generation_seconds,
+                failure_reason=t.failure_reason,
+            )
+            for t in traces
+        ],
+    )
+
+
 @app.get("/health")
 def health() -> dict:
     return {"status": "ok"}
@@ -296,6 +356,31 @@ def get_trace(trace_id: UUID, trace_store: TraceStore = Depends(get_trace_store)
     if trace is None:
         raise HTTPException(status_code=404, detail=f"Trace {trace_id} not found")
     return trace
+
+
+@app.get("/runs/{request_id}", response_model=RunSummary)
+def get_run(request_id: UUID, trace_store: TraceStore = Depends(get_trace_store)) -> RunSummary:
+    """JSON timeline of every attempt belonging to one generation request.
+
+    Traces persisted before request_id existed (Commit 5) have it as NULL
+    and will never match here -- 404, same as an unknown id, since there's
+    no way to distinguish the two cases from this data alone.
+    """
+    traces = trace_store.get_traces_by_request(request_id)
+    if not traces:
+        raise HTTPException(status_code=404, detail=f"Run {request_id} not found")
+    return _build_run_summary(request_id, traces)
+
+
+@app.get("/runs/{request_id}/view", response_class=HTMLResponse)
+def get_run_view(request_id: UUID, trace_store: TraceStore = Depends(get_trace_store)) -> str:
+    """Visual reasoning-trace view: pipeline, KG retrieval provenance, attempt
+    timeline, symbolic verification detail, and confidence factor breakdown.
+    """
+    traces = trace_store.get_traces_by_request(request_id)
+    if not traces:
+        raise HTTPException(status_code=404, detail=f"Run {request_id} not found")
+    return render_run_view(traces)
 
 
 @app.post("/verify", response_model=VerificationResult)
