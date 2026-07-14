@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+  <style>
+    .layer-box { stroke-width: 1.5; rx: 8; }
+    .layer-label { font-size: 15px; font-weight: 600; fill: #0b0b0b; }
+    .layer-desc { font-size: 12px; fill: #52514e; }
+    .flow-text { font-size: 12px; fill: #52514e; }
+    .flow-num { font-size: 12px; font-weight: 700; fill: #ffffff; }
+    .title { font-size: 20px; font-weight: 700; fill: #0b0b0b; }
+  </style>
+
+  <text x="20" y="30" class="title">VerityAI Architecture — 6 Layers</text>
+
+  <!-- Layer 6: Interface -->
+  <rect x="20" y="55" width="500" height="70" class="layer-box" fill="#cde2fb" stroke="#2a78d6"/>
+  <text x="36" y="82" class="layer-label">6. Interface</text>
+  <text x="36" y="102" class="layer-desc">CLI (Typer) · REST API (FastAPI) · Web Dashboard</text>
+
+  <!-- Layer 5: Orchestration -->
+  <rect x="20" y="135" width="500" height="70" class="layer-box" fill="#9ec5f4" stroke="#2a78d6"/>
+  <text x="36" y="162" class="layer-label">5. Orchestration</text>
+  <text x="36" y="182" class="layer-desc">Retry loop: generate → verify → retry (max 3 attempts)</text>
+
+  <!-- Layer 4: Verification -->
+  <rect x="20" y="215" width="500" height="70" class="layer-box" fill="#6da7ec" stroke="#184f95"/>
+  <text x="36" y="242" class="layer-label" fill="#ffffff">4. Verification</text>
+  <text x="36" y="262" class="layer-desc" fill="#e1e0d9">Confidence score + human-readable explanation</text>
+
+  <!-- Layer 3: Symbolic -->
+  <rect x="20" y="295" width="500" height="70" class="layer-box" fill="#3987e5" stroke="#184f95"/>
+  <text x="36" y="322" class="layer-label" fill="#ffffff">3. Symbolic</text>
+  <text x="36" y="342" class="layer-desc" fill="#e1e0d9">Z3 Theorem Prover · AST→SMT converter · rule engine · security scan</text>
+
+  <!-- Layer 2: Knowledge -->
+  <rect x="20" y="375" width="500" height="70" class="layer-box" fill="#256abf" stroke="#104281"/>
+  <text x="36" y="402" class="layer-label" fill="#ffffff">2. Knowledge</text>
+  <text x="36" y="422" class="layer-desc" fill="#e1e0d9">Neo4j — patterns, rules, verified examples</text>
+
+  <!-- Layer 1: Neural -->
+  <rect x="20" y="455" width="500" height="70" class="layer-box" fill="#104281" stroke="#0d366b"/>
+  <text x="36" y="482" class="layer-label" fill="#ffffff">1. Neural</text>
+  <text x="36" y="502" class="layer-desc" fill="#e1e0d9">Ollama client (model-agnostic) + dynamic prompt construction</text>
+
+  <!-- Dependency arrow (bottom to top) -->
+  <line x1="12" y1="520" x2="12" y2="60" stroke="#898781" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="-2" y="290" class="flow-text" transform="rotate(-90, -2, 290)" text-anchor="middle">depends on ↓</text>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="5" refY="8" orient="auto">
+      <path d="M0,0 L5,8 L10,0" fill="none" stroke="#898781" stroke-width="1.5"/>
+    </marker>
+  </defs>
+
+  <!-- Request flow panel -->
+  <rect x="555" y="55" width="325" height="470" rx="8" fill="#fcfcfb" stroke="#c3c2b7"/>
+  <text x="575" y="82" class="layer-label">Request Flow</text>
+
+  <circle cx="590" cy="110" r="11" fill="#2a78d6"/>
+  <text x="590" y="115" class="flow-num" text-anchor="middle">1</text>
+  <text x="610" y="106" class="flow-text">User prompt arrives via</text>
+  <text x="610" y="122" class="flow-text">CLI / API / Dashboard</text>
+
+  <circle cx="590" cy="155" r="11" fill="#2a78d6"/>
+  <text x="590" y="160" class="flow-num" text-anchor="middle">2</text>
+  <text x="610" y="151" class="flow-text">Agent queries the KG for</text>
+  <text x="610" y="167" class="flow-text">relevant rules + patterns</text>
+
+  <circle cx="590" cy="200" r="11" fill="#2a78d6"/>
+  <text x="590" y="205" class="flow-num" text-anchor="middle">3</text>
+  <text x="610" y="196" class="flow-text">LLM generates code, with that</text>
+  <text x="610" y="212" class="flow-text">context injected into the prompt</text>
+
+  <circle cx="590" cy="245" r="11" fill="#2a78d6"/>
+  <text x="590" y="250" class="flow-num" text-anchor="middle">4</text>
+  <text x="610" y="241" class="flow-text">Z3 verifies the code's own</text>
+  <text x="610" y="257" class="flow-text">assertions statically</text>
+
+  <circle cx="590" cy="290" r="11" fill="#ec835a"/>
+  <text x="590" y="295" class="flow-num" text-anchor="middle">5</text>
+  <text x="610" y="286" class="flow-text">If verification fails: retry with</text>
+  <text x="610" y="302" class="flow-text">the specific reason (max 3×)</text>
+
+  <circle cx="590" cy="335" r="11" fill="#0ca30c"/>
+  <text x="590" y="340" class="flow-num" text-anchor="middle">6</text>
+  <text x="610" y="331" class="flow-text">Return code + reasoning trace</text>
+  <text x="610" y="347" class="flow-text">+ confidence + compliance report</text>
+
+  <line x1="590" y1="121" x2="590" y2="144" stroke="#c3c2b7" stroke-width="2"/>
+  <line x1="590" y1="166" x2="590" y2="189" stroke="#c3c2b7" stroke-width="2"/>
+  <line x1="590" y1="211" x2="590" y2="234" stroke="#c3c2b7" stroke-width="2"/>
+  <line x1="590" y1="256" x2="590" y2="279" stroke="#c3c2b7" stroke-width="2"/>
+  <line x1="590" y1="301" x2="590" y2="324" stroke="#c3c2b7" stroke-width="2"/>
+
+  <text x="575" y="400" class="layer-desc" font-style="italic">ontology/ (Pydantic models) has zero</text>
+  <text x="575" y="416" class="layer-desc" font-style="italic">infrastructure deps -- it breaks what</text>
+  <text x="575" y="432" class="layer-desc" font-style="italic">would otherwise be a real circular</text>
+  <text x="575" y="448" class="layer-desc" font-style="italic">dependency between kg/ and symbolic/.</text>
+  <text x="575" y="464" class="layer-desc" font-style="italic">See CLAUDE.md for the full rationale.</text>
+</svg>

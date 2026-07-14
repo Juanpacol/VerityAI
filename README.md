@@ -85,6 +85,11 @@ make serve
 
 Six layers, each depending only on the ones below it (`ontology/` has zero infrastructure dependencies, breaking what would otherwise be a KG ↔ Symbolic circular dependency — see `CLAUDE.md` for the full rationale):
 
+<img src="docs/assets/architecture.svg" alt="VerityAI's 6-layer architecture (Interface, Orchestration, Verification, Symbolic, Knowledge, Neural) and its request flow: prompt in, KG context injected, code generated, Z3-verified, retried on failure, code + trace + confidence returned." width="820">
+
+<details>
+<summary>Plain-text fallback</summary>
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │ 6. INTERFACE      CLI · REST API · Web Dashboard     │
@@ -100,6 +105,8 @@ Six layers, each depending only on the ones below it (`ontology/` has zero infra
 │ 1. NEURAL         Ollama client + prompt builder     │
 └─────────────────────────────────────────────────────┘
 ```
+
+</details>
 
 **Request flow**: user prompt → Agent queries the KG for relevant rules/patterns → LLM generates code with that context injected → Z3 statically verifies the code's own assertions → on failure, the specific reason is fed back into a retry (max 3) → final code + full reasoning trace + confidence score, exportable as a compliance report.
 
@@ -196,6 +203,7 @@ docker compose -f docker/docker-compose.yml exec ollama ollama pull llama3.2
 - Verifiable subset scope decision: [`docs/adr/0001-verifiable-python-subset.md`](docs/adr/0001-verifiable-python-subset.md)
 - Parameterized verification: [`docs/adr/0002-parameterized-verification.md`](docs/adr/0002-parameterized-verification.md)
 - Evaluation methodology + real-run findings: [`docs/PHASE_3_METHODOLOGY.md`](docs/PHASE_3_METHODOLOGY.md)
+- What testing against a real model actually found: [`docs/CASE_STUDY.md`](docs/CASE_STUDY.md)
 - Phase-by-phase build record: `docs/PHASE_*.md`
 
 ## License
