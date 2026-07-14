@@ -6,7 +6,7 @@ import random
 import time
 from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import TimeoutError as FutureTimeoutError
-from typing import Optional
+from typing import Any, Optional
 
 import requests
 from langchain_community.llms import Ollama
@@ -21,6 +21,10 @@ class OllamaGenerationError(Exception):
         super().__init__(message)
         self.attempts = attempts
         self.last_error = last_error
+
+
+class OllamaEmbeddingError(Exception):
+    """Raised when an embedding request fails or returns an unusable response."""
 
 
 class OllamaClient:
@@ -49,6 +53,7 @@ class OllamaClient:
         max_retries: int = 3,
         backoff_base: float = 1.0,
         backoff_max: float = 30.0,
+        embed_model: Optional[str] = None,
     ):
         """Initialize Ollama client.
 
@@ -61,6 +66,7 @@ class OllamaClient:
             max_retries: Max number of attempts (including the first)
             backoff_base: Base delay (seconds) for exponential backoff
             backoff_max: Cap on backoff delay (seconds)
+            embed_model: Model used for embed(); defaults to `model` if unset
         """
         self.model_name = model
         self.base_url = base_url
@@ -70,6 +76,7 @@ class OllamaClient:
         self.max_retries = max_retries
         self.backoff_base = backoff_base
         self.backoff_max = backoff_max
+        self.embed_model = embed_model or model
 
         self.llm = Ollama(
             model=model,
@@ -178,6 +185,55 @@ class OllamaClient:
         except Exception:
             return False
 
+    def embed(self, text: str, model: Optional[str] = None) -> list[float]:
+        """Get an embedding vector for text via Ollama's modern embed endpoint.
+
+        Uses `POST /api/embed` (not the legacy, deprecated `/api/embeddings`
+        that langchain_community's OllamaEmbeddings targets) — the modern
+        endpoint returns `{"embeddings": [[...]]}` even for a single input.
+        No retry loop: callers are expected to degrade (e.g. to lexical-only
+        retrieval) rather than block on transient embedding failures.
+
+        Args:
+            text: Text to embed
+            model: Override for the embedding model (defaults to self.embed_model)
+
+        Returns:
+            Embedding vector as a list of floats
+
+        Raises:
+            OllamaEmbeddingError: On HTTP failure, malformed response, or empty vector
+        """
+        m = model or self.embed_model
+        try:
+            response = requests.post(
+                f"{self.base_url}/api/embed",
+                json={"model": m, "input": text},
+                timeout=15,
+            )
+        except requests.RequestException as e:
+            raise OllamaEmbeddingError(f"Request to Ollama embed endpoint failed: {e}") from e
+
+        if response.status_code != 200:
+            raise OllamaEmbeddingError(
+                f"Ollama embed endpoint returned HTTP {response.status_code}: {response.text}"
+            )
+
+        try:
+            data: dict[str, Any] = response.json()
+        except ValueError as e:
+            raise OllamaEmbeddingError(f"Ollama embed response was not valid JSON: {e}") from e
+
+        embeddings = data.get("embeddings")
+        if not embeddings or not isinstance(embeddings, list):
+            raise OllamaEmbeddingError(f"Ollama embed response missing 'embeddings': {data}")
+
+        vector = embeddings[0]
+        if not vector:
+            raise OllamaEmbeddingError("Ollama embed response contained an empty vector")
+
+        return list(vector)
+
     def health_check(self) -> dict:
         """Get client health/config summary.
 
@@ -190,6 +246,7 @@ class OllamaClient:
             "base_url": self.base_url,
             "timeout": self.timeout,
             "max_retries": self.max_retries,
+            "embed_model": self.embed_model,
         }
 
     def close(self) -> None:

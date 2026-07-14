@@ -5,7 +5,11 @@ from unittest.mock import MagicMock, patch
 import pytest
 import requests
 
-from verityai.neural.ollama_client import OllamaClient, OllamaGenerationError
+from verityai.neural.ollama_client import (
+    OllamaClient,
+    OllamaEmbeddingError,
+    OllamaGenerationError,
+)
 
 
 class TestOllamaClientConfig:
@@ -177,3 +181,154 @@ class TestOllamaClientHealthCheck:
 
         with patch("requests.get", return_value=mock_response):
             assert OllamaClient.is_available() is True
+
+    def test_health_check_includes_embed_model(self):
+        """Test health check reports the embed model."""
+        with patch("verityai.neural.ollama_client.Ollama"):
+            client = OllamaClient(model="llama3.2", embed_model="nomic-embed-text")
+
+            with patch.object(OllamaClient, "is_available", return_value=False):
+                health = client.health_check()
+
+            assert health["embed_model"] == "nomic-embed-text"
+            client.close()
+
+    def test_embed_model_defaults_to_generation_model(self):
+        """Test embed_model falls back to the generation model when unset."""
+        with patch("verityai.neural.ollama_client.Ollama"):
+            client = OllamaClient(model="llama3.2")
+
+            assert client.embed_model == "llama3.2"
+            client.close()
+
+
+class TestOllamaClientEmbed:
+    """Tests for the embed() method (modern /api/embed endpoint)."""
+
+    def test_embed_success(self):
+        """Test successful embedding request returns the vector."""
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {"embeddings": [[0.1, 0.2]]}
+
+        with patch("verityai.neural.ollama_client.Ollama"):
+            client = OllamaClient()
+            with patch("requests.post", return_value=mock_response) as mock_post:
+                vector = client.embed("some text")
+
+            assert vector == [0.1, 0.2]
+            call_kwargs = mock_post.call_args
+            assert call_kwargs[0][0] == "http://localhost:11434/api/embed"
+            assert call_kwargs[1]["json"] == {"model": "llama3.2", "input": "some text"}
+            assert call_kwargs[1]["timeout"] == 15
+            client.close()
+
+    def test_embed_uses_model_override(self):
+        """Test embed() uses the explicit model override over embed_model."""
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {"embeddings": [[0.5]]}
+
+        with patch("verityai.neural.ollama_client.Ollama"):
+            client = OllamaClient(embed_model="nomic-embed-text")
+            with patch("requests.post", return_value=mock_response) as mock_post:
+                client.embed("text", model="other-model")
+
+            assert mock_post.call_args[1]["json"]["model"] == "other-model"
+            client.close()
+
+    def test_embed_http_error(self):
+        """Test embed() raises OllamaEmbeddingError on non-200 response."""
+        mock_response = MagicMock()
+        mock_response.status_code = 404
+        mock_response.text = "model not found"
+
+        with patch("verityai.neural.ollama_client.Ollama"):
+            client = OllamaClient()
+            with (
+                patch("requests.post", return_value=mock_response),
+                pytest.raises(OllamaEmbeddingError, match="HTTP 404"),
+            ):
+                client.embed("text")
+            client.close()
+
+    def test_embed_missing_embeddings_key(self):
+        """Test embed() raises OllamaEmbeddingError when response is malformed."""
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {"unexpected": "shape"}
+
+        with patch("verityai.neural.ollama_client.Ollama"):
+            client = OllamaClient()
+            with (
+                patch("requests.post", return_value=mock_response),
+                pytest.raises(OllamaEmbeddingError, match="missing 'embeddings'"),
+            ):
+                client.embed("text")
+            client.close()
+
+    def test_embed_empty_vector(self):
+        """Test embed() raises OllamaEmbeddingError on an empty embedding vector."""
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {"embeddings": [[]]}
+
+        with patch("verityai.neural.ollama_client.Ollama"):
+            client = OllamaClient()
+            with (
+                patch("requests.post", return_value=mock_response),
+                pytest.raises(OllamaEmbeddingError, match="empty vector"),
+            ):
+                client.embed("text")
+            client.close()
+
+    def test_embed_connection_error(self):
+        """Test embed() wraps connection errors in OllamaEmbeddingError."""
+        with patch("verityai.neural.ollama_client.Ollama"):
+            client = OllamaClient()
+            with (
+                patch("requests.post", side_effect=requests.ConnectionError("refused")),
+                pytest.raises(OllamaEmbeddingError, match="Request to Ollama embed"),
+            ):
+                client.embed("text")
+            client.close()
+
+    def test_embed_timeout_propagates_as_embedding_error(self):
+        """Test embed() wraps a timeout in OllamaEmbeddingError, not raw Timeout."""
+        with patch("verityai.neural.ollama_client.Ollama"):
+            client = OllamaClient()
+            with (
+                patch("requests.post", side_effect=requests.Timeout("timed out")),
+                pytest.raises(OllamaEmbeddingError),
+            ):
+                client.embed("text")
+            client.close()
+
+    def test_embed_no_retry_on_failure(self):
+        """Test embed() does not retry — a single failed call raises immediately."""
+        with patch("verityai.neural.ollama_client.Ollama"):
+            client = OllamaClient()
+            with (
+                patch(
+                    "requests.post", side_effect=requests.ConnectionError("refused")
+                ) as mock_post,
+                pytest.raises(OllamaEmbeddingError),
+            ):
+                client.embed("text")
+            assert mock_post.call_count == 1
+            client.close()
+
+    def test_embed_malformed_json_body(self):
+        """Test embed() raises OllamaEmbeddingError when the response body isn't JSON."""
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.side_effect = ValueError("not json")
+
+        with patch("verityai.neural.ollama_client.Ollama"):
+            client = OllamaClient()
+            with (
+                patch("requests.post", return_value=mock_response),
+                pytest.raises(OllamaEmbeddingError, match="not valid JSON"),
+            ):
+                client.embed("text")
+            client.close()
