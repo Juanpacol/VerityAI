@@ -20,9 +20,19 @@ class SymbolicDebugger:
         """
         self.source_code = source_code
         self.lines = source_code.split("\n")
-        self.tree = ast.parse(source_code)
         self.line_to_node: dict[int, ast.AST] = {}
-        self._build_line_map()
+        try:
+            self.tree = ast.parse(source_code)
+            self._build_line_map()
+        except SyntaxError:
+            # Malformed LLM output reaches this constructor in the normal
+            # flow (Orchestrator._build_response always builds an
+            # explanation, even for a failed/unparseable attempt) -- it
+            # must degrade to "no line mapping available," not crash the
+            # whole request. verify_python_snippet already reports this
+            # snippet as FAIL with a syntax error in its metadata; this
+            # class only needs to not blow up alongside it.
+            self.tree = None
 
     def _build_line_map(self) -> None:
         """Build mapping from line numbers to AST nodes."""

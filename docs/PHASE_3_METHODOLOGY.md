@@ -83,23 +83,87 @@ This mirrors Phase 1's "walking skeleton then scale in lotes with
 regression testing" approach rather than writing all 100+100/50+ snippets
 before the harness that consumes them was proven to work.
 
-## No live Ollama/llama2:13b run yet
+## Real run #1 (2026-07-13, against llama3.2, not llama2:13b)
 
-Every baseline runner (`evaluation/baselines.py`) works against any object
-exposing `.generate(prompt) -> str` — a live `OllamaClient` included — so
-running this for real is a matter of pointing `llm_client_factory` at a
-shared `OllamaClient` instance and calling `run_all_baselines()`. But no
-live Ollama/llama2:13b instance is available in this session or in CI, so:
+A live Neo4j + Ollama stack was brought up (`docker compose up`, reusing
+containers from a prior session) and the full Lote 1+2 set (22
+correctness + 6 security = 28 tasks) was run for real against all 3
+baselines. **Model substitution**: `llama2:13b` was never pulled —
+the sandboxed environment has no outbound network access from within
+Docker's network namespace (DNS resolution to `registry.ollama.ai` fails),
+so the model can't be downloaded. `llama3.2` (3B parameters) was already
+present in the `ollama_data` volume from earlier host-side work and was
+used instead. Every number below is about `llama3.2`, not `llama2:13b` —
+treat this as a first real data point on the harness, not a claim about
+the model the plan named.
 
-- All current tests use scripted fakes (`FakeLLMClient`,
-  `SelfCorrectingFakeLLMClient`, `AlwaysBuggyFakeLLMClient`) with
-  *deterministic, known* behavior. They validate that the harness — task
-  loading, all 3 runners, metrics, report rendering — is wired correctly
-  end-to-end (`tests/integration/test_evaluation_e2e.py`).
-- **No real accuracy/precision/recall numbers for llama2:13b exist yet.**
-  Any number in this repo comes from a simulated LLM whose behavior was
-  scripted specifically to demonstrate the retry loop's recovery
-  mechanism — it is not a claim about llama2:13b's actual bug rate.
+Total wall time: 39.8 minutes for 28 × 3 = 84 generate/verify calls.
+
+**Finding 1 — the ground-truth mechanism doesn't work against a live model.**
+`classify_ground_truth` compares generated code *verbatim* against
+`reference_solution`/`known_buggy_variant`. Across all 84 calls, the
+result was `"novel"` **100% of the time** — a live model never reproduces
+either fixed string exactly (different variable choices, formatting,
+comments). This was anticipated in this doc's design section, but seeing
+it hit 100% rather than "most of the time" is worth stating plainly:
+**accuracy/precision/recall are computed over zero judged cases and are
+meaningless for this run.** `compute_classification_metrics` correctly
+reports 0% across the board rather than fabricating a number — that's
+working as designed, not a bug — but it means exact-string ground truth
+cannot evaluate a live model at all, only a scripted fake with known
+output. Fixing this needs an independent oracle (e.g. actually *executing*
+generated code against the task's test cases) — tracked as follow-up, not
+attempted in this session.
+
+**Finding 2 — the retry loop did not outperform single-shot in this run,
+and may have done worse.** Looking at verification status (not
+ground-truth) instead:
+
+| Baseline | pass | fail | not_verified | avg confidence | avg latency |
+|---|---|---|---|---|---|
+| Single-shot Z3 (no retry) | 7/28 (25.0%) | 8/28 (28.6%) | 13/28 (46.4%) | 0.42 | 6.7s |
+| VerityAI full retry loop | 4/27 (14.8%) | 7/27 (25.9%) | 16/27 (59.3%) | 0.21 | 70.2s |
+| (Raw LLM: always reports "pass" by construction — not a real signal) | | | | | |
+
+(27, not 28, for the retry loop — one task hit a real bug, see Finding 3,
+and is excluded from this table rather than silently miscounted.)
+
+The retry loop passed *fewer* attempts, not more, at 10× the latency cost.
+Plausible confounds, none confirmed: (a) the retry loop's prompt injects
+KG rule context that single-shot doesn't get, which may add noise a 3B
+model handles poorly; (b) the "previous attempt failed, here's why" retry
+prompt may confuse a smaller model rather than helping it, unlike the
+scripted `SelfCorrectingFakeLLMClient` tests assume; (c) n=28 on a single
+run with no repetition is a small, noisy sample. **This result should not
+be read as "the architecture doesn't work"** — it's a signal that the
+retry mechanism's value may depend on model capability in ways not yet
+isolated, worth a dedicated follow-up (compare retry-with-KG-context vs.
+retry-without, across model sizes) before drawing a real conclusion.
+
+**Finding 3 — a real crash bug, found and fixed in this session.** One
+task (`correctness_010_check_even`) crashed `Orchestrator.run()` entirely
+with `SyntaxError: expected an indented block` instead of returning a
+graceful `status="failed"` response. Root cause: `SymbolicDebugger.__init__`
+called `ast.parse()` with no exception handling, and
+`Orchestrator._build_response` always constructs a `SymbolicDebugger` for
+the explanation text — even for a failed attempt. A `FakeLLMClient` never
+generates syntactically invalid Python, so this path was never exercised
+before a real (smaller, less reliable) model actually produced malformed
+code. Fixed by catching `SyntaxError` in the constructor and degrading to
+"no line mapping available" rather than crashing (see
+`tests/unit/test_debugger.py`'s regression test). This is exactly the
+kind of gap a live run finds and a scripted-fake-only test suite cannot.
+
+**What this run does NOT tell us**: whether VerityAI meets the confirmed
+50% threshold. That metric is defined in terms of `buggy_accept_rate`,
+which depends on knowing whether output is actually buggy — which
+Finding 1 says this harness can't currently determine for live-model
+output. The threshold question remains open until the ground-truth gap
+is closed.
+
+Raw data: `real_run_results.json`, `real_run_report.md`,
+`real_run_dashboard.html` in the session scratchpad (not committed to the
+repo — this is one exploratory run, not a tracked benchmark result).
 
 ## Target threshold (confirmed before a real run, per the plan's hardened
 acceptance criterion)
@@ -150,17 +214,34 @@ print(render_comparison_report(results))
 
 ## Next steps
 
-1. Confirm the target threshold above (or set a different one) before the
-   first live run.
-2. Run the above against a real `llama2:13b` instance; record actual
-   numbers in a dated results file (not this methodology doc, which
-   should stay stable).
-3. Scale benchmarks to Lote 2/3 (50+ correctness, 20+ security) — now
-   unblocked by ADR-0002, using real parameterized function signatures
-   instead of the locally-assigned-variable workaround Lote 1 needed.
-4. Decide whether SQL injection / race-condition detection belongs in this
+Updated after Real run #1 (above) — steps 1-2 from the original plan are
+now done; what's left is harder and more important than just "run it":
+
+1. **Close the ground-truth gap (Finding 1).** Replace/augment
+   `classify_ground_truth`'s exact-string match with an independent
+   oracle — most plausibly, actually executing generated code against
+   per-task test cases (inputs → expected outputs) rather than comparing
+   source text. Without this, accuracy/precision/recall cannot be
+   computed for any live model, ever, regardless of which model is used.
+2. **Investigate the retry-loop underperformance (Finding 2)** before
+   trusting or dismissing it: rerun with retry-loop KG-context injection
+   disabled (isolate that variable), rerun with more repetitions per task
+   to see if it's noise, and if possible compare against a larger model
+   than llama3.2:3B once one is available.
+3. Get `llama2:13b` actually available — either restore outbound network
+   access to the Docker network so it can be pulled, or pull it host-side
+   first and mount/import it into the `ollama_data` volume some other way.
+   Until then, every number in this repo is about substitute models
+   (`llama3.2`), not the model the plan names.
+4. Scale benchmarks to Lote 3 (50+ correctness, 20+ security) — unblocked
+   by ADR-0002 for correctness; security additions still need the
+   ground-truth fix (step 1) to be worth adding, or they'll just add more
+   unjudgeable "novel" cases.
+5. Decide whether SQL injection / race-condition detection belongs in this
    evaluation framework at all, or whether it's better scoped as a
    separate `rule_engine`-based benchmark track (pattern matching, not Z3
    satisfiability).
-5. Draft actual research findings only after step 2 produces real numbers
-   — no fabricated or illustrative numbers belong in a findings write-up.
+6. Confirm or revise the 50% target threshold once step 1 makes it
+   computable at all — right now there's no way to check it either way.
+7. Draft actual research findings only after the above — a findings
+   write-up needs a working ground-truth oracle, not just "we ran it."

@@ -17,6 +17,26 @@ class TestSymbolicDebugger:
         assert debugger.source_code == source
         assert len(debugger.lines) == 2
 
+    def test_syntactically_invalid_code_does_not_crash(self):
+        """Regression test: found via a real live-Ollama run (llama3.2)
+        where a malformed generation ('expected an indented block') took
+        down the whole Orchestrator.run() call, since Orchestrator always
+        builds a SymbolicDebugger for the explanation -- even for a failed
+        attempt -- and the constructor called ast.parse() with no
+        exception handling."""
+        source = "def f(:\n"  # invalid syntax
+        debugger = SymbolicDebugger(source)
+
+        assert debugger.tree is None
+        assert debugger.line_to_node == {}
+
+        result = VerificationResult(
+            code_id="", status=VerificationStatus.FAIL, confidence=0.0,
+            metadata={"error": "Syntax error: expected an indented block"},
+        )
+        explanation = debugger.explain_failure(result)  # must not raise
+        assert "FAILED" in explanation
+
     def test_find_suspicious_line_array_access(self):
         """Test finding line with array access."""
         source = """def search(arr, idx):
