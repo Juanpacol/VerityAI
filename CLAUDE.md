@@ -3,7 +3,7 @@
 ## Overview
 
 VerityAI is a neuro-symbolic code verification system that:
-1. Generates code using Ollama (llama2:13b) with dynamic context from a Knowledge Graph
+1. Generates code using Ollama (model-agnostic; `llama3.2` is the local default, `llama2:13b` the original aspirational target — see README's "Model-agnostic by design") with dynamic context from a Knowledge Graph
 2. Verifies it formally using Z3 Theorem Prover + symbolic reasoning
 3. Retries up to 3 times if verification fails (injecting the failure reason into the prompt)
 4. Returns code + reasoning trace + confidence score
@@ -26,7 +26,7 @@ VerityAI is a neuro-symbolic code verification system that:
 ├─────────────────────────────────────────────────────┤
 │ 2. KNOWLEDGE   → Neo4j (patterns, rules, examples)   │
 ├─────────────────────────────────────────────────────┤
-│ 1. NEURAL      → Ollama (llama2:13b) + prompts       │
+│ 1. NEURAL      → Ollama (model-agnostic) + prompts   │
 └─────────────────────────────────────────────────────┘
 ```
 
@@ -184,8 +184,10 @@ cp .env.example .env
 # 3. Start services
 docker-compose -f docker/docker-compose.yml up -d
 
-# 4. Pull the model (takes ~5-10 min, ~7.4GB)
-docker-compose -f docker/docker-compose.yml exec ollama ollama pull llama2:13b
+# 4. Pull a model -- llama3.2 is small/fast and needs no special hardware;
+#    swap for llama2:13b or any other Ollama model (this project is
+#    model-agnostic, see README)
+docker-compose -f docker/docker-compose.yml exec ollama ollama pull llama3.2
 
 # 5. Verify services are healthy
 docker-compose -f docker/docker-compose.yml ps
@@ -231,7 +233,7 @@ pytest tests/
 
 ## Contact / Questions
 
-Juan Pablo Botero Espinosa  
+Juan Pablo Botero Espinosa
 juanpabloboteroespinosa@gmail.com
 
 Generated with Claude Code (Claude Fable + Sonnet for architecture review)

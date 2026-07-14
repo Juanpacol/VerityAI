@@ -7,33 +7,15 @@ otherwise it would try to reach a live Ollama server.
 """
 
 from pathlib import Path
-from typing import Optional
 
 from typer.testing import CliRunner
 
+from tests.fakes import AlwaysFailingLLMClient, FakeLLMClient, wrap_code
 from verityai.agent.orchestrator import Orchestrator
 from verityai.cli import verityai_cli
 from verityai.cli.verityai_cli import app
-from verityai.neural.ollama_client import OllamaGenerationError
 
 runner = CliRunner()
-
-
-class FakeLLMClient:
-    def __init__(self, responses: list[str]):
-        self.responses = responses
-        self.call_count = 0
-
-    def generate(self, prompt: str, system_prompt: Optional[str] = None) -> str:
-        if self.call_count >= len(self.responses):
-            raise OllamaGenerationError("No more scripted responses", attempts=1)
-        response = self.responses[self.call_count]
-        self.call_count += 1
-        return response
-
-
-def wrap_code(code: str) -> str:
-    return f"```python\n{code}\n```"
 
 
 class TestGenerateCommand:
@@ -66,10 +48,6 @@ class TestGenerateCommand:
         assert result.exit_code == 1
 
     def test_llm_unreachable_exits_nonzero_without_crashing(self, monkeypatch):
-        class AlwaysFailingLLMClient:
-            def generate(self, prompt, system_prompt=None):
-                raise OllamaGenerationError("Connection refused", attempts=3)
-
         monkeypatch.setattr(
             verityai_cli,
             "_build_orchestrator",

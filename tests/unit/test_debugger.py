@@ -1,7 +1,5 @@
 """Unit tests for symbolic debugger."""
 
-import pytest
-
 from verityai.ontology.models import Counterexample, VerificationResult, VerificationStatus
 from verityai.symbolic.debugger import SymbolicDebugger
 
@@ -31,7 +29,9 @@ class TestSymbolicDebugger:
         assert debugger.line_to_node == {}
 
         result = VerificationResult(
-            code_id="", status=VerificationStatus.FAIL, confidence=0.0,
+            code_id="",
+            status=VerificationStatus.FAIL,
+            confidence=0.0,
             metadata={"error": "Syntax error: expected an indented block"},
         )
         explanation = debugger.explain_failure(result)  # must not raise
@@ -159,7 +159,7 @@ class TestSymbolicDebugger:
         explanation = debugger.explain_failure(result)
 
         assert "Verification passed" in explanation
-        assert ("95" in explanation or "0.95" in explanation)
+        assert "95" in explanation or "0.95" in explanation
 
     def test_explain_failure_fail(self):
         """Test explaining a failed verification."""

@@ -2,9 +2,9 @@
 and the if/else phi-merge fix folded into the same change.
 """
 
+from verityai.ontology.models import VerificationStatus
 from verityai.symbolic.ast_to_smt import ASTtoSMTConverter
 from verityai.symbolic.verify import verify_python_snippet
-from verityai.ontology.models import VerificationStatus
 
 
 class TestParameterBinding:
@@ -68,11 +68,7 @@ class TestPreconditionWiring:
         assert result.status == VerificationStatus.FAIL
 
     def test_unparseable_pre_is_skipped_not_crashed(self):
-        code = (
-            "def f(x):\n"
-            '    """PRE: not valid python ((("""\n'
-            "    assert x == x\n"
-        )
+        code = 'def f(x):\n    """PRE: not valid python ((("""\n    assert x == x\n'
         result = verify_python_snippet(code)
         # Falls back to no PRE assumption; the tautology still passes on its own.
         assert result.status == VerificationStatus.PASS

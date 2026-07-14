@@ -1,8 +1,8 @@
 """Unit tests for evaluation/baselines.py."""
 
 from pathlib import Path
-from typing import Optional
 
+from tests.fakes import FakeLLMClient, wrap_code
 from verityai.evaluation.baselines import (
     BenchmarkTask,
     classify_ground_truth,
@@ -12,38 +12,23 @@ from verityai.evaluation.baselines import (
     run_single_shot_z3_baseline,
     run_verityai_full_baseline,
 )
-from verityai.neural.ollama_client import OllamaGenerationError
 from verityai.ontology.models import VerificationStatus
 
 BENCHMARKS_DIR = (
-    Path(__file__).parent.parent.parent
-    / "src" / "verityai" / "evaluation" / "benchmarks"
+    Path(__file__).parent.parent.parent / "src" / "verityai" / "evaluation" / "benchmarks"
 )
 
 REFERENCE = "def add_two():\n    a = 3\n    b = 4\n    result = a + b\n    assert result == 7\n    return result\n"
 BUGGY = "def add_two():\n    a = 3\n    b = 4\n    result = a - b\n    assert result == 7\n    return result\n"
 
 TASK = BenchmarkTask(
-    id="t1", prompt="add two numbers", category="correctness", bug_class="wrong_operator",
-    reference_solution=REFERENCE, known_buggy_variant=BUGGY,
+    id="t1",
+    prompt="add two numbers",
+    category="correctness",
+    bug_class="wrong_operator",
+    reference_solution=REFERENCE,
+    known_buggy_variant=BUGGY,
 )
-
-
-class FakeLLMClient:
-    def __init__(self, responses: list[str]):
-        self.responses = responses
-        self.call_count = 0
-
-    def generate(self, prompt: str, system_prompt: Optional[str] = None) -> str:
-        if self.call_count >= len(self.responses):
-            raise OllamaGenerationError("No more scripted responses", attempts=1)
-        response = self.responses[self.call_count]
-        self.call_count += 1
-        return response
-
-
-def wrap_code(code: str) -> str:
-    return f"Here is the code:\n\n```python\n{code}\n```"
 
 
 class TestClassifyGroundTruth:

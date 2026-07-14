@@ -165,6 +165,91 @@ Raw data: `real_run_results.json`, `real_run_report.md`,
 `real_run_dashboard.html` in the session scratchpad (not committed to the
 repo — this is one exploratory run, not a tracked benchmark result).
 
+## Real run #2 (2026-07-13, execution-oracle ground truth, cross-model)
+
+Real run #1's Finding 1 (exact-string ground truth reports 100% "novel"
+against any live model) was closed by replacing `classify_ground_truth`
+with an execution-based oracle (`evaluation/execution_oracle.py`): the
+candidate function is run against per-task `test_cases` in an isolated
+subprocess, and correctness is judged by *behavior*, not source text. This
+run is the first time that oracle was pointed at real models, and it was
+designed from the start as a **cross-model** run — `llama3.2` (3B) and
+`qwen3:8b` (8B), both already present locally, specifically to test
+whether the architecture's results generalize past one model rather than
+being tuned to it. Raw data: `docs/results/2026-07-13_cross_model_run.json`.
+
+**`llama3.2` — complete run, 28/28 tasks × 3 baselines, real numbers:**
+
+| Baseline | accuracy | precision | recall | novel_rate | abstention_rate | avg latency | avg attempts |
+|---|---|---|---|---|---|---|---|
+| `raw_llm` | 50.0% | 0.0% | 0.0% | 14.3% | 0.0% | 6.5s | 1.00 |
+| `single_shot_z3` | 66.7% | 25.0% | 100.0% | 17.9% | 50.0% | 5.7s | 1.00 |
+| `verityai_full` (retry loop) | 63.6% | 50.0% | 75.0% | 35.7% | 25.0% | 70.4s | 2.75 |
+
+Reading this honestly, not selectively:
+
+- **The ground-truth gap is closed.** `novel_rate` dropped from 100% (Real
+  run #1) to 14-36% depending on baseline — the oracle judges most output
+  by actual behavior now. The remaining novel cases are legitimate
+  (unparseable code, wrong function name, code the security scanner
+  refuses to execute), not a broken mechanism.
+- **`raw_llm`'s 0% precision/recall is expected, not a bug**: with no
+  verification, `raw_llm` never predicts "buggy" — it has nothing to
+  compare against, so precision/recall over the "buggy" class are
+  undefined-by-construction 0%. Its 50% accuracy is really "half of tasks'
+  reference implementations happened to be easy enough that llama3.2 wrote
+  correct code anyway," which says nothing about bug-catching.
+- **The retry loop trades accuracy for precision, and that trade is not
+  obviously a win.** `verityai_full` has *lower* raw accuracy than
+  `single_shot_z3` (63.6% vs 66.7%) but *higher* precision (50% vs 25%),
+  *lower* recall (75% vs 100%), and lower abstention (25% vs 50%). In
+  plain terms: `single_shot_z3` abstains
+  (`NOT_VERIFIED`) on half of all tasks and is right most of the time it
+  doesn't abstain; the retry loop commits to an answer more often
+  (abstains 25% instead of 50%) and is more likely to be correct when it
+  does commit (50% precision vs 25%), but its extra attempts sometimes
+  convert a would-be abstention into a wrong "pass," which is why overall
+  accuracy doesn't clearly improve. This replaces Real run #1's "the retry
+  loop did worse" with a more precise, and less alarming, finding: **the
+  retry loop shifts the error profile (fewer abstentions, better precision
+  when it commits) rather than uniformly outperforming single-shot** — at
+  ~12x the latency cost (70.4s vs 5.7s avg). Whether that trade is worth
+  it depends on whether a deployment prefers "commit more, be more precise
+  when committing" over "abstain more, be very reliable when not
+  abstaining" — a product decision, not a bug.
+- **This is one run, n=28, no repetition** — same caveat as Real run #1.
+  These numbers describe what happened this run, not a statistically
+  robust claim about `llama3.2` in general.
+
+**`qwen3:8b` — incomplete, and the incompleteness is itself the finding.**
+The run was killed after 3/28 tasks (raw_llm: 1/28, single_shot_z3: 0/28,
+verityai_full: 3/28) because it was failing, not just slow:
+
+- Every Ollama call used a 90s timeout with 3 retries; most `qwen3:8b`
+  calls exhausted all 3 attempts (`TimeoutError`), meaning several
+  *minutes* per single generation call that then still failed.
+- One call crashed the Ollama server outright: `"model runner has
+  unexpectedly stopped, this may be due to resource limitations or an
+  internal error"` (HTTP 500).
+- Per-task latency for the few `verityai_full` calls that did complete:
+  222-274 seconds (vs. `llama3.2`'s 70s average) — and those were failures
+  (`status=fail`), not passes.
+- At the observed rate, completing the full 28-task × 3-baseline set would
+  have taken multiple hours with a non-trivial chance of repeated server
+  crashes, for data quality already trending toward unusable (0% accuracy
+  on the 3 completed `verityai_full` tasks, all "novel").
+
+**Honest conclusion**: this is a real, reportable finding, not a null
+result to hide — **the architecture's model-agnostic design (any Ollama
+model works through the same `OllamaClient` interface) is real, but
+"works through the interface" and "runs reliably" are different claims.**
+`qwen3:8b` at 8B parameters was not reliably runnable on this machine's
+CPU under this workload; `llama3.2` at 3B was. A cross-model evaluation is
+only as informative as the hardware it runs on, and this is exactly the
+kind of constraint a synthetic/scripted benchmark would never surface.
+Documented here instead of quietly dropping `qwen3:8b` from the results
+with no explanation.
+
 ## Target threshold (confirmed before a real run, per the plan's hardened
 acceptance criterion)
 
@@ -214,34 +299,39 @@ print(render_comparison_report(results))
 
 ## Next steps
 
-Updated after Real run #1 (above) — steps 1-2 from the original plan are
-now done; what's left is harder and more important than just "run it":
+Updated after Real run #2 (above) — the ground-truth gap (Real run #1's
+Finding 1) is closed and a cross-model attempt has been made; what's left:
 
-1. **Close the ground-truth gap (Finding 1).** Replace/augment
-   `classify_ground_truth`'s exact-string match with an independent
-   oracle — most plausibly, actually executing generated code against
-   per-task test cases (inputs → expected outputs) rather than comparing
-   source text. Without this, accuracy/precision/recall cannot be
-   computed for any live model, ever, regardless of which model is used.
-2. **Investigate the retry-loop underperformance (Finding 2)** before
-   trusting or dismissing it: rerun with retry-loop KG-context injection
-   disabled (isolate that variable), rerun with more repetitions per task
-   to see if it's noise, and if possible compare against a larger model
-   than llama3.2:3B once one is available.
-3. Get `llama2:13b` actually available — either restore outbound network
-   access to the Docker network so it can be pulled, or pull it host-side
-   first and mount/import it into the `ollama_data` volume some other way.
-   Until then, every number in this repo is about substitute models
-   (`llama3.2`), not the model the plan names.
+1. ~~Close the ground-truth gap~~ **Done** — `execution_oracle.py`
+   replaced exact-string matching; Real run #2's `novel_rate` (14-36%)
+   vs. Real run #1's 100% confirms it works against a live model.
+2. **Investigate the retry-loop's shifted error profile (Real run #2)**:
+   it abstains less and is more precise when it commits, but doesn't
+   clearly beat single-shot on raw accuracy. Worth isolating whether KG
+   context injection specifically is the driver (rerun with it disabled)
+   before treating the current trade-off as inherent to retrying.
+3. **Get a second model actually running reliably.** `qwen3:8b` was not
+   viable on this machine (Real run #2) — either get access to hardware
+   that can run an 8B+ model without timing out/crashing, or explicitly
+   scope the portfolio narrative to "validated on `llama3.2`-class models;
+   architecture is model-agnostic by design but larger models are
+   untested on available hardware" rather than claiming cross-model
+   validation that didn't actually complete. `llama2:13b` remains
+   unavailable in this sandboxed environment (no outbound network access
+   to pull it) for the same underlying reason this was worth trying with
+   what was already local.
 4. Scale benchmarks to Lote 3 (50+ correctness, 20+ security) — unblocked
-   by ADR-0002 for correctness; security additions still need the
-   ground-truth fix (step 1) to be worth adding, or they'll just add more
-   unjudgeable "novel" cases.
+   by ADR-0002 for correctness, and now also unblocked by the working
+   ground-truth oracle for security tasks that were previously excluded.
 5. Decide whether SQL injection / race-condition detection belongs in this
    evaluation framework at all, or whether it's better scoped as a
    separate `rule_engine`-based benchmark track (pattern matching, not Z3
    satisfiability).
-6. Confirm or revise the 50% target threshold once step 1 makes it
-   computable at all — right now there's no way to check it either way.
-7. Draft actual research findings only after the above — a findings
-   write-up needs a working ground-truth oracle, not just "we ran it."
+6. Confirm or revise the 50% target threshold now that `buggy_accept_rate`
+   is actually computable — Real run #2 gives a first real data point
+   (`raw_llm` never predicts buggy, so its `buggy_accept_rate` baseline is
+   trivially bad; `verityai_full`'s improvement over it should be computed
+   explicitly as a dedicated follow-up, not read off the confusion-matrix
+   summary above).
+7. Repeat with n>1 per task before treating any of Real run #2's numbers
+   as more than a first data point — single-run stats on n=28 are noisy.

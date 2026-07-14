@@ -16,11 +16,9 @@ from typing import Optional
 from verityai.evaluation.baselines import load_benchmark_tasks, run_all_baselines
 from verityai.evaluation.metrics import compute_classification_metrics
 from verityai.evaluation.report import render_comparison_report
-from verityai.neural.ollama_client import OllamaGenerationError
 
 BENCHMARKS_DIR = (
-    Path(__file__).parent.parent.parent
-    / "src" / "verityai" / "evaluation" / "benchmarks"
+    Path(__file__).parent.parent.parent / "src" / "verityai" / "evaluation" / "benchmarks"
 )
 
 
@@ -57,7 +55,9 @@ class TestFullEvaluationHarness:
         def factory(task, baseline_name):
             if baseline_name == "verityai_full":
                 # Give the retry loop a chance to recover.
-                return SelfCorrectingFakeLLMClient(task.known_buggy_variant, task.reference_solution)
+                return SelfCorrectingFakeLLMClient(
+                    task.known_buggy_variant, task.reference_solution
+                )
             # raw_llm and single_shot_z3 only ever see the buggy first attempt.
             return AlwaysBuggyFakeLLMClient(task.known_buggy_variant)
 

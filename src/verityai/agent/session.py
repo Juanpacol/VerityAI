@@ -10,7 +10,6 @@ fresh Z3 check.
 
 import logging
 from dataclasses import dataclass, field
-from typing import Optional
 from uuid import UUID, uuid4
 
 from verityai.agent.confidence import compute_confidence
@@ -179,7 +178,9 @@ class ConversationSession:
         from verityai.ontology.models import VerificationResult
 
         error_result = VerificationResult(
-            code_id="", status=VerificationStatus.FAIL, confidence=0.0,
+            code_id="",
+            status=VerificationStatus.FAIL,
+            confidence=0.0,
             metadata={"error": error_message},
         )
         response = GenerationResponse(

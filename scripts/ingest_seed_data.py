@@ -56,7 +56,7 @@ def main():
     final_rule_count = ingestion.get_rule_count()
 
     print("\n" + "=" * 50)
-    print(f"Final state:")
+    print("Final state:")
     print(f"  Algorithms: {final_algo_count}")
     print(f"  Rules: {final_rule_count}")
     print("=" * 50)

@@ -20,10 +20,14 @@ def make_trace(status=VerificationStatus.PASS, violations=None, kg_context=None)
         user_prompt="write a divide function",
         generated_code="def divide():\n    a = 10\n    b = 2\n    assert b != 0\n    return a // b\n",
         attempt_number=1,
-        kg_context=kg_context or {"rules": [{"name": "no_div_by_zero", "description": "..."}], "patterns": []},
+        kg_context=kg_context
+        or {"rules": [{"name": "no_div_by_zero", "description": "..."}], "patterns": []},
         llm_reasoning="reasoning",
         verification_result=VerificationResult(
-            code_id="", status=status, confidence=0.9, violations=violations or [],
+            code_id="",
+            status=status,
+            confidence=0.9,
+            violations=violations or [],
             z3_result=status.value,
         ),
         confidence_score=0.9,
@@ -55,9 +59,15 @@ class TestBuildComplianceReport:
 
     def test_no_traces_yields_empty_prompt_and_no_trace_id(self):
         response = GenerationResponse(
-            code="", language="python", traces=[],
-            final_verification=VerificationResult(code_id="", status=VerificationStatus.FAIL, confidence=0.0),
-            confidence=0.0, explanation="LLM unreachable", status="failed",
+            code="",
+            language="python",
+            traces=[],
+            final_verification=VerificationResult(
+                code_id="", status=VerificationStatus.FAIL, confidence=0.0
+            ),
+            confidence=0.0,
+            explanation="LLM unreachable",
+            status="failed",
         )
         report = build_compliance_report(response)
 
@@ -149,7 +159,9 @@ class TestExportToPdf:
             attempt_number=1,
             kg_context={"rules": [{"name": "rule<with>special&chars"}]},
             llm_reasoning="",
-            verification_result=VerificationResult(code_id="", status=VerificationStatus.PASS, confidence=1.0),
+            verification_result=VerificationResult(
+                code_id="", status=VerificationStatus.PASS, confidence=1.0
+            ),
             confidence_score=1.0,
         )
         report = build_compliance_report_from_trace(trace)

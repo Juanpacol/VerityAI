@@ -105,7 +105,9 @@ def _render_metrics_chart(results: dict[str, list[BenchmarkOutcome]], baselines:
             f'text-anchor="end">{pct}%</text>'
         )
 
-    metrics_by_baseline = {name: compute_classification_metrics(results[name]) for name in baselines}
+    metrics_by_baseline = {
+        name: compute_classification_metrics(results[name]) for name in baselines
+    }
 
     for gi, (metric_key, metric_label) in enumerate(METRIC_LABELS):
         group_x = _MARGIN["left"] + gi * group_slot_w
@@ -158,8 +160,7 @@ def _render_latency_chart(results: dict[str, list[BenchmarkOutcome]], baselines:
         display = html.escape(BASELINE_DISPLAY_NAMES.get(name, name))
         path = _rounded_top_bar_path(bar_x, _BAR_W, bar_top, baseline_y)
         svg_parts.append(
-            f'<path d="{path}" class="bar bar-{name}">'
-            f"<title>{display}: {value:.3f}s</title></path>"
+            f'<path d="{path}" class="bar bar-{name}"><title>{display}: {value:.3f}s</title></path>'
         )
         # Direct label at the bar tip -- only 3 bars here, so labeling every
         # one stays legible (unlike the 12-bar metrics chart above).

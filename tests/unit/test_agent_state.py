@@ -1,7 +1,5 @@
 """Unit tests for AgentState (orchestration state machine)."""
 
-import pytest
-
 from verityai.agent.state import AgentState
 from verityai.ontology.models import Counterexample, VerificationResult, VerificationStatus
 

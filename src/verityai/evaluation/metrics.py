@@ -29,6 +29,7 @@ from verityai.ontology.models import VerificationStatus
 @dataclass
 class BenchmarkOutcome:
     """One baseline's result on one benchmark task."""
+
     task_id: str
     ground_truth: str  # "correct", "buggy", or "novel"
     predicted_status: VerificationStatus
@@ -54,10 +55,19 @@ def compute_classification_metrics(outcomes: list[BenchmarkOutcome]) -> dict:
     total = len(outcomes)
     if total == 0:
         return {
-            "accuracy": 0.0, "precision": 0.0, "recall": 0.0, "f1": 0.0,
-            "abstention_rate": 0.0, "novel_rate": 0.0,
-            "tp": 0, "fp": 0, "fn": 0, "tn": 0,
-            "abstained": 0, "novel": 0, "total": 0,
+            "accuracy": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "abstention_rate": 0.0,
+            "novel_rate": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "tn": 0,
+            "abstained": 0,
+            "novel": 0,
+            "total": 0,
         }
 
     tp = fp = fn = tn = abstained = novel = 0
@@ -91,8 +101,13 @@ def compute_classification_metrics(outcomes: list[BenchmarkOutcome]) -> dict:
         "f1": f1,
         "abstention_rate": abstained / total,
         "novel_rate": novel / total,
-        "tp": tp, "fp": fp, "fn": fn, "tn": tn,
-        "abstained": abstained, "novel": novel, "total": total,
+        "tp": tp,
+        "fp": fp,
+        "fn": fn,
+        "tn": tn,
+        "abstained": abstained,
+        "novel": novel,
+        "total": total,
     }
 
 
@@ -110,6 +125,8 @@ def latency_distribution(outcomes: list[BenchmarkOutcome]) -> dict:
         return {"min": 0.0, "max": 0.0, "mean": 0.0, "total": 0.0}
     values = [o.latency_seconds for o in outcomes]
     return {
-        "min": min(values), "max": max(values),
-        "mean": sum(values) / len(values), "total": sum(values),
+        "min": min(values),
+        "max": max(values),
+        "mean": sum(values) / len(values),
+        "total": sum(values),
     }

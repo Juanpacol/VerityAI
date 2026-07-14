@@ -6,19 +6,17 @@ session instead of a real Postgres instance.
 """
 
 import logging
-from typing import Optional
+from datetime import datetime
+from typing import Any, Optional
 from uuid import UUID
 
-from sqlalchemy import JSON, Column, DateTime, String, Text
-from sqlalchemy.orm import DeclarativeBase, Session
+from sqlalchemy import JSON, DateTime, String
+from sqlalchemy.orm import Mapped, Session, mapped_column
 
+from verityai.db.base import Base
 from verityai.ontology.models import AuditLogEntry
 
 logger = logging.getLogger(__name__)
-
-
-class Base(DeclarativeBase):
-    pass
 
 
 class AuditLogRecord(Base):
@@ -26,12 +24,12 @@ class AuditLogRecord(Base):
 
     __tablename__ = "audit_log"
 
-    id = Column(String(36), primary_key=True)
-    actor = Column(String(255), nullable=False)
-    action = Column(String(100), nullable=False)
-    trace_id = Column(String(36), nullable=True)
-    details = Column(JSON, nullable=False, default=dict)
-    created_at = Column(DateTime, nullable=False)
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    actor: Mapped[str] = mapped_column(String(255))
+    action: Mapped[str] = mapped_column(String(100))
+    trace_id: Mapped[Optional[str]] = mapped_column(String(36), nullable=True)
+    details: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    created_at: Mapped[datetime] = mapped_column(DateTime)
 
 
 class AuditLogStore:
@@ -57,7 +55,9 @@ class AuditLogStore:
         )
         self.session.add(record)
         self.session.commit()
-        logger.info(f"Audit log: actor={entry.actor} action={entry.action} trace_id={entry.trace_id}")
+        logger.info(
+            f"Audit log: actor={entry.actor} action={entry.action} trace_id={entry.trace_id}"
+        )
 
     def for_trace(self, trace_id: UUID) -> list[AuditLogEntry]:
         """All entries recorded against a given trace, oldest first."""

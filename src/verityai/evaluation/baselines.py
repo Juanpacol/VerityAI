@@ -19,15 +19,28 @@ actually output.
 
 import json
 import time
-from dataclasses import dataclass
-from pathlib import Path
-from typing import Any, Callable
+from dataclasses import dataclass, field
+from typing import Any, Callable, Optional
 
 from verityai.agent.orchestrator import Orchestrator
 from verityai.evaluation.metrics import BenchmarkOutcome
 from verityai.neural.response_parsing import split_code_and_reasoning
 from verityai.ontology.models import GenerationRequest, VerificationStatus
 from verityai.symbolic.verify import verify_python_snippet
+
+
+@dataclass
+class ExecutionTestCase:
+    """One (args, expected) pair for the execution oracle (see execution_oracle.py).
+
+    `expected` is optional -- some benchmark functions only assert
+    internally and return nothing, so "the call didn't raise" is the
+    entire signal for those.
+    """
+
+    args: list[Any] = field(default_factory=list)
+    expected: Optional[Any] = None
+    has_expected: bool = False  # True only when the JSON explicitly set "expected"
 
 
 @dataclass
@@ -38,6 +51,12 @@ class BenchmarkTask:
     bug_class: str
     reference_solution: str
     known_buggy_variant: str
+    # Both optional: a task with no function_name/test_cases falls back to
+    # classify_ground_truth's exact-string match (see security_004/006's
+    # JSON notes for *why* some tasks can never get test_cases -- their
+    # bug is a Z3-verifiability gap, not a runtime behavior difference).
+    function_name: Optional[str] = None
+    test_cases: list[ExecutionTestCase] = field(default_factory=list)
 
 
 def load_benchmark_tasks(json_path: str) -> list[BenchmarkTask]:
@@ -45,27 +64,59 @@ def load_benchmark_tasks(json_path: str) -> list[BenchmarkTask]:
     with open(json_path) as f:
         raw_tasks = json.load(f)
 
-    return [
-        BenchmarkTask(
-            id=t["id"],
-            prompt=t["prompt"],
-            category=t["category"],
-            bug_class=t["bug_class"],
-            reference_solution=t["reference_solution"],
-            known_buggy_variant=t["known_buggy_variant"],
+    tasks = []
+    for t in raw_tasks:
+        test_cases = [
+            ExecutionTestCase(
+                args=tc.get("args", []),
+                expected=tc.get("expected"),
+                has_expected="expected" in tc and tc["expected"] is not None,
+            )
+            for tc in t.get("test_cases", [])
+        ]
+        tasks.append(
+            BenchmarkTask(
+                id=t["id"],
+                prompt=t["prompt"],
+                category=t["category"],
+                bug_class=t["bug_class"],
+                reference_solution=t["reference_solution"],
+                known_buggy_variant=t["known_buggy_variant"],
+                function_name=t.get("function_name"),
+                test_cases=test_cases,
+            )
         )
-        for t in raw_tasks
-    ]
+    return tasks
 
 
 def classify_ground_truth(task: BenchmarkTask, code: str) -> str:
     """Classify generated code as "correct", "buggy", or "novel".
 
-    "novel" means the code matched neither known variant -- there's no
-    oracle for it, so it can't be scored as right or wrong (see
-    evaluation/metrics.py for how "novel" is excluded from the confusion
-    matrix rather than silently miscounted).
+    Two mechanisms, tried in order:
+
+    1. **Execution-based** (preferred): if `task.function_name` and
+       `task.test_cases` are set, actually run the generated code's
+       function against them (see execution_oracle.py) and classify by
+       behavior. Works against a live model's output, which almost never
+       matches a fixed string verbatim -- this is what closes the "100%
+       novel against a real model" gap documented in
+       docs/PHASE_3_METHODOLOGY.md's "Real run #1".
+    2. **Exact-string fallback**: for tasks with no test_cases (either not
+       yet added, or -- see security_004/006's JSON notes -- genuinely
+       unexecutable because the bug is a Z3-verifiability gap, not a
+       runtime behavior difference), fall back to comparing the generated
+       code verbatim against the two known strings. Against a live model
+       this will usually classify as "novel" (matches neither), which is
+       the honest answer for a task this mechanism can't judge.
     """
+    if task.function_name and task.test_cases:
+        # Local import: avoids importing subprocess/execution machinery
+        # for every baselines.py import when most callers don't need it.
+        from verityai.evaluation.execution_oracle import run_against_test_cases
+
+        result = run_against_test_cases(code, task.function_name, task.test_cases)
+        return result.status
+
     normalized = code.strip()
     if normalized == task.reference_solution.strip():
         return "correct"
@@ -165,9 +216,7 @@ def run_all_baselines(
     }
 
     for task in tasks:
-        results["raw_llm"].append(
-            run_raw_llm_baseline(llm_client_factory(task, "raw_llm"), task)
-        )
+        results["raw_llm"].append(run_raw_llm_baseline(llm_client_factory(task, "raw_llm"), task))
         results["single_shot_z3"].append(
             run_single_shot_z3_baseline(
                 llm_client_factory(task, "single_shot_z3"), task, timeout_seconds

@@ -1,6 +1,7 @@
 """Integration test for Phase 1 Week 2 — Rule Engine + Counterexample + KG Ingestion."""
 
-import pytest
+import contextlib
+
 from z3 import Int
 
 from verityai.ontology.models import Rule, VerificationStatus
@@ -15,7 +16,6 @@ class TestWeek2Integration:
     def test_binary_search_rule_application(self):
         """Test: verify binary search satisfies bounds check rule."""
         engine = Z3Engine()
-        x = Int("x")
         arr_len = Int("arr_len")
         mid = Int("mid")
 
@@ -149,10 +149,8 @@ class TestWeek2Integration:
         # Generate some queries (some will timeout)
         x = Int("x")
         for _ in range(3):
-            try:
+            with contextlib.suppress(Exception):
                 engine.check_satisfiable([x > 0])
-            except Exception:
-                pass
 
         health = engine.get_health_check()
 

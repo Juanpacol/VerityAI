@@ -1,10 +1,9 @@
 """Unit tests for symbolic layer (Z3 + AST converter)."""
 
-import pytest
-from z3 import And, Bool, Int, IntVal, Or
+from z3 import And, Int
 
 from verityai.ontology.models import VerificationStatus
-from verityai.symbolic import ASTtoSMTConverter, Z3Engine, VerifiableSubsetViolation
+from verityai.symbolic import ASTtoSMTConverter, Z3Engine
 
 
 class TestZ3Engine:
@@ -48,8 +47,7 @@ class TestZ3Engine:
         property_to_prove = x + 1 > x
 
         status, counterexample = engine.verify_property(
-            property_to_prove,
-            assumptions=preconditions
+            property_to_prove, assumptions=preconditions
         )
 
         assert status == VerificationStatus.PASS
@@ -65,8 +63,7 @@ class TestZ3Engine:
         property_to_prove = x > 10
 
         status, counterexample = engine.verify_property(
-            property_to_prove,
-            assumptions=preconditions
+            property_to_prove, assumptions=preconditions
         )
 
         assert status == VerificationStatus.FAIL
@@ -83,10 +80,7 @@ class TestZ3Engine:
         # Postcondition: x > 0
         postcondition = x > 0
 
-        result = engine.verify_code(
-            code_constraints,
-            postcondition
-        )
+        result = engine.verify_code(code_constraints, postcondition)
 
         assert result.status == VerificationStatus.PASS
         assert result.confidence > 0.5
@@ -203,26 +197,16 @@ class TestZ3EngineIntegration:
         left = Int("left")
         right = Int("right")
 
-        preconditions = [
-            arr_len > 0,
-            left >= 0,
-            right < arr_len,
-            left <= right
-        ]
+        preconditions = [arr_len > 0, left >= 0, right < arr_len, left <= right]
 
         # Invariant: bounds are always maintained
-        invariant = And(
-            left >= 0,
-            right < arr_len,
-            left <= right
-        )
+        invariant = And(left >= 0, right < arr_len, left <= right)
 
         # Postcondition: if we maintain bounds, invariant holds
         postcondition = invariant
 
         status, counterexample = engine.verify_property(
-            postcondition,
-            assumptions=preconditions + [invariant]
+            postcondition, assumptions=preconditions + [invariant]
         )
 
         # This should pass: the invariant is consistent with itself

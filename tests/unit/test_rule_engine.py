@@ -1,7 +1,5 @@
 """Unit tests for rule engine (deductive reasoning)."""
 
-import pytest
-
 from verityai.ontology.models import Rule, VerificationStatus
 from verityai.symbolic.rule_engine import RuleEngine
 

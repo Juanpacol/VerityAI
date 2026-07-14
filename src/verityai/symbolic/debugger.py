@@ -2,7 +2,7 @@
 
 import ast
 import logging
-from typing import Optional
+from typing import Any, Optional
 
 from verityai.ontology.models import Counterexample, VerificationResult, VerificationStatus
 
@@ -21,6 +21,7 @@ class SymbolicDebugger:
         self.source_code = source_code
         self.lines = source_code.split("\n")
         self.line_to_node: dict[int, ast.AST] = {}
+        self.tree: Optional[ast.Module] = None
         try:
             self.tree = ast.parse(source_code)
             self._build_line_map()
@@ -36,6 +37,7 @@ class SymbolicDebugger:
 
     def _build_line_map(self) -> None:
         """Build mapping from line numbers to AST nodes."""
+        assert self.tree is not None  # only called right after a successful ast.parse()
         for node in ast.walk(self.tree):
             if hasattr(node, "lineno"):
                 lineno = node.lineno
@@ -46,7 +48,7 @@ class SymbolicDebugger:
         self,
         verification_result: VerificationResult,
         rule_name: Optional[str] = None,
-    ) -> dict:
+    ) -> dict[str, Any]:
         """Generate debug info from verification result.
 
         Args:
@@ -56,7 +58,7 @@ class SymbolicDebugger:
         Returns:
             Dictionary with debug information
         """
-        debug_info = {
+        debug_info: dict[str, Any] = {
             "status": verification_result.status.value,
             "confidence": verification_result.confidence,
             "violations": [],
@@ -73,7 +75,7 @@ class SymbolicDebugger:
         self,
         counterexample: Counterexample,
         rule_name: Optional[str] = None,
-    ) -> dict:
+    ) -> dict[str, Any]:
         """Generate debug info for a single violation.
 
         Args:
@@ -86,7 +88,7 @@ class SymbolicDebugger:
         # Find suspicious line (heuristic: line with array access or comparison)
         suspicious_line = self._find_suspicious_line(counterexample)
 
-        debug_entry = {
+        debug_entry: dict[str, Any] = {
             "rule": rule_name or counterexample.rule_id,
             "description": counterexample.description,
             "counterexample_inputs": counterexample.input_values,
@@ -124,13 +126,13 @@ class SymbolicDebugger:
             # Array access pattern: arr[...] or arr[i]
             if "[" in line_lower and "]" in line_lower:
                 # Check if counterexample has array-related variables
-                for var_name in counterexample.input_values.keys():
+                for var_name in counterexample.input_values:
                     if var_name.lower() in line_lower or "idx" in var_name.lower():
                         return lineno
 
             # Comparison pattern: > < >= <=
             if any(op in line_lower for op in [" > ", " < ", " >= ", " <= "]):
-                for var_name in counterexample.input_values.keys():
+                for var_name in counterexample.input_values:
                     if var_name.lower() in line_lower:
                         return lineno
 
@@ -168,7 +170,7 @@ class SymbolicDebugger:
         context = []
         for i in range(start, end):
             marker = "→ " if (i + 1 == line_number) else "  "
-            context.append(f"{marker}{i+1:3d} | {self.lines[i]}")
+            context.append(f"{marker}{i + 1:3d} | {self.lines[i]}")
 
         return "\n".join(context)
 
@@ -238,9 +240,7 @@ class SymbolicDebugger:
         lines = []
 
         if verification_result.status == VerificationStatus.PASS:
-            return "✓ Verification passed with confidence {:.1%}".format(
-                verification_result.confidence
-            )
+            return f"✓ Verification passed with confidence {verification_result.confidence:.1%}"
 
         if verification_result.status == VerificationStatus.FAIL:
             lines.append("✗ Verification FAILED")
@@ -272,12 +272,16 @@ class SymbolicDebugger:
 
         lines.append("\nMetadata:")
         if verification_result.metadata:
-            lines.append(f"  Total Z3 queries: {verification_result.metadata.get('total_queries', 'N/A')}")
+            lines.append(
+                f"  Total Z3 queries: {verification_result.metadata.get('total_queries', 'N/A')}"
+            )
             lines.append(
                 f"  Unknown queries: {verification_result.metadata.get('unknown_queries', 'N/A')}"
             )
             success_rate = verification_result.metadata.get("success_rate")
-            success_rate_str = f"{success_rate:.1%}" if isinstance(success_rate, (int, float)) else "N/A"
+            success_rate_str = (
+                f"{success_rate:.1%}" if isinstance(success_rate, (int, float)) else "N/A"
+            )
             lines.append(f"  Success rate: {success_rate_str}")
 
         return "\n".join(lines)

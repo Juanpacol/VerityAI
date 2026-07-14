@@ -1,5 +1,6 @@
 """Wrapper around Ollama API for LLM inference with retry/timeout hardening."""
 
+import contextlib
 import logging
 import random
 import time
@@ -145,7 +146,7 @@ class OllamaClient:
             FutureTimeoutError: If generation exceeds self.timeout
         """
         future = self._executor.submit(self.llm.invoke, full_prompt)
-        return future.result(timeout=self.timeout)
+        return str(future.result(timeout=self.timeout))
 
     def _compute_backoff(self, attempt: int) -> float:
         """Compute exponential backoff delay with jitter.
@@ -158,7 +159,7 @@ class OllamaClient:
         """
         delay = min(self.backoff_base * (2 ** (attempt - 1)), self.backoff_max)
         jitter = random.uniform(0, delay * 0.1)
-        return delay + jitter
+        return float(delay + jitter)
 
     def stream_generate(
         self,
@@ -196,7 +197,5 @@ class OllamaClient:
         self._executor.shutdown(wait=False)
 
     def __del__(self):
-        try:
+        with contextlib.suppress(Exception):
             self.close()
-        except Exception:
-            pass

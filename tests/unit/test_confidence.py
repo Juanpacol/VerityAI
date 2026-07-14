@@ -6,7 +6,9 @@ from verityai.agent.confidence import compute_confidence
 from verityai.ontology.models import Counterexample, VerificationResult, VerificationStatus
 
 
-def make_result(status: VerificationStatus, confidence: float = 1.0, with_violation: bool = False) -> VerificationResult:
+def make_result(
+    status: VerificationStatus, confidence: float = 1.0, with_violation: bool = False
+) -> VerificationResult:
     violations = []
     if with_violation:
         violations = [
@@ -31,7 +33,12 @@ class TestConfidenceWeights:
             WEIGHT_VERIFICATION,
         )
 
-        total = WEIGHT_VERIFICATION + WEIGHT_PATTERN_SIMILARITY + WEIGHT_COMPLEXITY + WEIGHT_TEST_COVERAGE
+        total = (
+            WEIGHT_VERIFICATION
+            + WEIGHT_PATTERN_SIMILARITY
+            + WEIGHT_COMPLEXITY
+            + WEIGHT_TEST_COVERAGE
+        )
         assert abs(total - 1.0) < 1e-9
 
     def test_verification_is_dominant_weight(self):
@@ -53,7 +60,9 @@ class TestComputeConfidencePass:
     def test_pass_alone_gives_half_confidence(self):
         """With zero pattern/complexity/coverage signal, PASS alone should cap near 0.5 + baseline."""
         result = make_result(VerificationStatus.PASS, confidence=1.0)
-        confidence = compute_confidence(result, pattern_similarity=0.0, complexity_score=0.0, test_coverage=0.0)
+        confidence = compute_confidence(
+            result, pattern_similarity=0.0, complexity_score=0.0, test_coverage=0.0
+        )
         # Only WEIGHT_VERIFICATION (0.5) contributes
         assert confidence == pytest.approx(0.5)
 
@@ -84,10 +93,20 @@ class TestComputeConfidenceFail:
         fail_result = make_result(VerificationStatus.FAIL, with_violation=True)
         pass_result = make_result(VerificationStatus.PASS, confidence=0.1)
 
-        fail_confidence = compute_confidence(fail_result, pattern_similarity=1.0, complexity_score=1.0, test_coverage=1.0)
-        pass_confidence = compute_confidence(pass_result, pattern_similarity=0.0, complexity_score=0.0, test_coverage=0.0)
-
+        fail_confidence = compute_confidence(
+            fail_result, pattern_similarity=1.0, complexity_score=1.0, test_coverage=1.0
+        )
         assert fail_confidence <= 0.5
+
+        # Compare against a barely-confident PASS at the SAME other-factor
+        # levels (previously this used 0.0 for the pass side, which stacks
+        # the deck differently per side and doesn't actually test the
+        # docstring's claim -- the invariant only holds when both sides
+        # share the same pattern_similarity/complexity/test_coverage).
+        pass_confidence = compute_confidence(
+            pass_result, pattern_similarity=1.0, complexity_score=1.0, test_coverage=1.0
+        )
+        assert fail_confidence <= pass_confidence
 
 
 class TestComputeConfidenceUnknownTimeout:

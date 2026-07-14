@@ -2,8 +2,6 @@
 
 from uuid import uuid4
 
-import pytest
-
 from verityai.agent.continuous_learning import FeedbackStore, derive_candidate_rule
 from verityai.ontology.models import Feedback, FeedbackType, ReasoningTrace
 

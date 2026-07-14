@@ -250,3 +250,54 @@ result = external_function()
         assert len(non_verifiable) > 0  # Function call
         # Loop should still be processed
         assert len(constraints) > 0
+
+
+class TestASTConverterReturnValueInspection:
+    """Regression tests: a `return <expr>` used to skip its expression
+    entirely (Return statements were `continue`d past without ever
+    calling _convert_expr on node.value), so a non-verifiable construct
+    hidden inside a bare return -- most importantly a recursive call, or
+    true division (`/`, unsupported; only FloorDiv `//` is) -- was
+    invisible to non_verifiable tracking. A function whose only content
+    was such a return produced zero constraints and zero non_verifiable
+    entries, which verify_python_snippet's `not constraints` branch reads
+    as PASS -- the opposite of ADR-0001's "unverifiable code must degrade
+    to NOT_VERIFIED, never a silent PASS" guarantee. Found via manual
+    testing while writing docs/VERIFICATION_SCOPE.md, not via this test
+    suite -- which is exactly why it's pinned down here now.
+    """
+
+    def test_bare_recursive_return_is_marked_non_verifiable(self):
+        code = "def f(n):\n    if n <= 1:\n        return 1\n    return n * f(n - 1)\n"
+        converter = ASTtoSMTConverter(allow_partial=True)
+        _, non_verifiable = converter.convert_code(code)
+
+        assert len(non_verifiable) > 0
+
+    def test_recursive_function_verifies_as_not_verified_not_pass(self):
+        from verityai.ontology.models import VerificationStatus
+        from verityai.symbolic.verify import verify_python_snippet
+
+        code = "def f(n):\n    if n <= 1:\n        return 1\n    return n * f(n - 1)\n"
+        result = verify_python_snippet(code)
+
+        assert result.status == VerificationStatus.NOT_VERIFIED
+
+    def test_true_division_in_return_is_marked_non_verifiable(self):
+        """Only FloorDiv (`//`) is supported; true division (`/`) inside a
+        bare return must not be silently invisible."""
+        code = "def f():\n    a = 10\n    b = 5\n    return a / b\n"
+        converter = ASTtoSMTConverter(allow_partial=True)
+        _, non_verifiable = converter.convert_code(code)
+
+        assert len(non_verifiable) > 0
+
+    def test_verifiable_return_expression_still_works_normally(self):
+        """The fix must not affect the common case: a return of an
+        already-verifiable expression contributes no constraint (as
+        before) and is not marked non-verifiable."""
+        code = "def f():\n    a = 3\n    b = 4\n    return a + b\n"
+        converter = ASTtoSMTConverter(allow_partial=True)
+        _, non_verifiable = converter.convert_code(code)
+
+        assert non_verifiable == []

@@ -9,6 +9,7 @@ audit binder or a reviewer who never opens a terminal).
 """
 
 from io import BytesIO
+from typing import Optional
 from xml.sax.saxutils import escape
 
 from reportlab.lib import colors
@@ -50,7 +51,9 @@ def build_compliance_report(response: GenerationResponse) -> ComplianceReport:
     )
 
 
-def build_compliance_report_from_trace(trace: ReasoningTrace, language: str = "python") -> ComplianceReport:
+def build_compliance_report_from_trace(
+    trace: ReasoningTrace, language: str = "python"
+) -> ComplianceReport:
     """Build a ComplianceReport from a single persisted ReasoningTrace.
 
     Used when only a stored trace is available (e.g. the API's
@@ -93,13 +96,13 @@ def build_compliance_report_from_trace(trace: ReasoningTrace, language: str = "p
     )
 
 
-def _rule_names(trace: ReasoningTrace) -> list[str]:
+def _rule_names(trace: Optional[ReasoningTrace]) -> list[str]:
     if trace is None:
         return []
     return [r.get("name", "") for r in trace.kg_context.get("rules", [])]
 
 
-def _pattern_names(trace: ReasoningTrace) -> list[str]:
+def _pattern_names(trace: Optional[ReasoningTrace]) -> list[str]:
     if trace is None:
         return []
     return [p.get("name", "") for p in trace.kg_context.get("patterns", [])]
@@ -148,7 +151,9 @@ def export_to_sarif(report: ComplianceReport) -> dict:
                         f"(confidence {report.confidence:.1%})"
                     )
                 },
-                "locations": [{"physicalLocation": {"artifactLocation": {"uri": "generated_code.py"}}}],
+                "locations": [
+                    {"physicalLocation": {"artifactLocation": {"uri": "generated_code.py"}}}
+                ],
             }
         )
 

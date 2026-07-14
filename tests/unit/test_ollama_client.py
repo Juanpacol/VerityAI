@@ -1,6 +1,5 @@
 """Unit tests for hardened Ollama client (retry, backoff, timeout)."""
 
-from concurrent.futures import TimeoutError as FutureTimeoutError
 from unittest.mock import MagicMock, patch
 
 import pytest

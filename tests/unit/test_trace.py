@@ -8,7 +8,8 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from verityai.agent.trace import Base, TraceStore, serialize_trace, serialize_traces
+from verityai.agent.trace import TraceStore, serialize_trace, serialize_traces
+from verityai.db.base import Base
 from verityai.ontology.models import ReasoningTrace, VerificationResult, VerificationStatus
 
 
@@ -64,8 +65,12 @@ class TestTraceStoreSaveAndGet:
 
     def test_trace_without_verification_result_round_trips(self, store):
         trace = ReasoningTrace(
-            user_prompt="p", generated_code="x = 1", attempt_number=1,
-            kg_context={}, llm_reasoning="", verification_result=None,
+            user_prompt="p",
+            generated_code="x = 1",
+            attempt_number=1,
+            kg_context={},
+            llm_reasoning="",
+            verification_result=None,
             confidence_score=0.0,
         )
         store.save_trace(trace)

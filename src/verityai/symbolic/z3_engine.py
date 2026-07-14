@@ -1,18 +1,11 @@
 """Z3 Theorem Prover wrapper for symbolic verification."""
 
 import logging
-import signal
 import time
-from contextlib import contextmanager
 from typing import Any, Optional
 
 from z3 import (
-    And,
-    Bool,
-    Implies,
-    Int,
     Not,
-    Or,
     Solver,
     sat,
     unsat,
@@ -59,9 +52,12 @@ class Z3Engine:
         """
         if self.solver is None:
             self.reset()
+        assert self.solver is not None  # reset() always sets it
         self.solver.add(constraint)
 
-    def check_satisfiable(self, assertions: Optional[list[Any]] = None) -> tuple[VerificationStatus, Optional[Any]]:
+    def check_satisfiable(
+        self, assertions: Optional[list[Any]] = None
+    ) -> tuple[VerificationStatus, Optional[Any]]:
         """Check if assertions are satisfiable.
 
         Args:
@@ -72,6 +68,7 @@ class Z3Engine:
         """
         if self.solver is None:
             self.reset()
+        assert self.solver is not None  # reset() always sets it
 
         self.total_queries += 1
         start_time = time.time()
@@ -252,7 +249,9 @@ class Z3Engine:
             "unknown_queries": self.unknown_queries,
             "success_rate": 1.0 - (self.unknown_queries / max(1, self.total_queries)),
             "timeout_seconds": self.timeout_seconds,
-            "status": "healthy" if self.success_rate >= (1.0 - self.max_unknown_allowed) else "degraded",
+            "status": "healthy"
+            if self.success_rate >= (1.0 - self.max_unknown_allowed)
+            else "degraded",
         }
 
     @property

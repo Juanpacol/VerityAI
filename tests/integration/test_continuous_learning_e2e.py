@@ -13,9 +13,9 @@ Chain under test:
     -> KGIngestion.ingest_learned_rule()          [KG write, faked driver]
 """
 
-from typing import Optional
 from uuid import uuid4
 
+from tests.fakes import FakeLLMClient, wrap_code
 from verityai.agent.continuous_learning import derive_candidate_rule
 from verityai.agent.orchestrator import Orchestrator
 from verityai.agent.rule_validation import (
@@ -25,25 +25,7 @@ from verityai.agent.rule_validation import (
     validate_candidate_rule,
 )
 from verityai.kg.ingestion import KGIngestion
-from verityai.neural.ollama_client import OllamaGenerationError
 from verityai.ontology.models import Feedback, FeedbackType, GenerationRequest
-
-
-class FakeLLMClient:
-    def __init__(self, responses: list[str]):
-        self.responses = responses
-        self.call_count = 0
-
-    def generate(self, prompt: str, system_prompt: Optional[str] = None) -> str:
-        if self.call_count >= len(self.responses):
-            raise OllamaGenerationError("No more scripted responses", attempts=1)
-        response = self.responses[self.call_count]
-        self.call_count += 1
-        return response
-
-
-def wrap_code(code: str) -> str:
-    return f"Here is the code:\n\n```python\n{code}\n```"
 
 
 class FakeSession:
@@ -81,7 +63,9 @@ class TestContinuousLearningHappyPath:
         bad_code = "def divide(a, b):\n    return a / b"
         llm = FakeLLMClient([wrap_code(bad_code)])
         orchestrator = Orchestrator(llm_client=llm)
-        response = orchestrator.run(GenerationRequest(prompt="write a divide function", max_attempts=1))
+        response = orchestrator.run(
+            GenerationRequest(prompt="write a divide function", max_attempts=1)
+        )
         trace = response.traces[0]
 
         # 2. User rejects it with a reason and a corrected snippet.
@@ -92,7 +76,13 @@ class TestContinuousLearningHappyPath:
             # No function parameters: the AST->Z3 converter only binds
             # locally-assigned variables (see ast_to_smt.py), so a
             # verifiable test_code snippet must assign before asserting.
-            corrected_code="def divide():\n    a = 10\n    b = 5\n    assert b != 0\n    return a / b",
+            # `//` not `/`: the converter's BinOp handling only supports
+            # FloorDiv, not true division -- true division inside a
+            # `return` used to be silently invisible to non-verifiable
+            # tracking (a real bug, since fixed; see ast_to_smt.py's
+            # Return-handling comment) and this fixture's `/` was
+            # unknowingly relying on that gap to report CONSISTENT.
+            corrected_code="def divide():\n    a = 10\n    b = 5\n    assert b != 0\n    return a // b",
         )
 
         # 3. Derive a candidate rule from the feedback.
@@ -136,8 +126,13 @@ class TestContinuousLearningAutoRejectPath:
         from verityai.ontology.models import ReasoningTrace
 
         trace = ReasoningTrace(
-            id=trace_id, user_prompt="p", generated_code="x = 1", attempt_number=1,
-            kg_context={}, llm_reasoning="", confidence_score=0.0,
+            id=trace_id,
+            user_prompt="p",
+            generated_code="x = 1",
+            attempt_number=1,
+            kg_context={},
+            llm_reasoning="",
+            confidence_score=0.0,
         )
 
         candidate = derive_candidate_rule(feedback, trace)
