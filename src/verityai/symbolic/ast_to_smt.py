@@ -51,6 +51,16 @@ class ASTtoSMTConverter:
         self._variable_types: dict[str, str] = {}  # var name -> inferred type
         self.constraints: list[Any] = []
         self.non_verifiable_nodes: list[dict] = []
+        # ADR-0002: parameterized verification. `parameters` names the free
+        # (unconstrained) variables bound by _bind_parameters; when non-empty,
+        # verify_python_snippet checks each entry in `assert_properties` for
+        # VALIDITY (via Z3Engine.verify_property) instead of running a plain
+        # satisfiability check over `constraints`. `path_constraints` mirrors
+        # `constraints` but never includes assert-derived expressions, so
+        # proving one assert never assumes another assert is true.
+        self.parameters: list[str] = []
+        self.assert_properties: list[tuple[Any, list[Any]]] = []
+        self.path_constraints: list[Any] = []
 
     def convert_code(self, code_str: str) -> tuple[list[Any], list[dict]]:
         """Convert Python code string to Z3 constraints.
@@ -65,7 +75,11 @@ class ASTtoSMTConverter:
             code_str: Python code as string
 
         Returns:
-            (constraints, non_verifiable_nodes)
+            (constraints, non_verifiable_nodes). See ADR-0002 and the
+            `parameters`/`assert_properties`/`path_constraints` attributes
+            for the additional parameterized-verification data this also
+            populates (not part of the return tuple, to keep this method's
+            signature unchanged for existing callers).
         """
         tree = ast.parse(code_str)
         self.constraints = []
@@ -73,18 +87,61 @@ class ASTtoSMTConverter:
         self._variable_versions = {}
         self._variable_types = {}
         self.non_verifiable_nodes = []
+        self.parameters = []
+        self.assert_properties = []
+        self.path_constraints = []
 
         for node in tree.body:
             if isinstance(node, ast.FunctionDef):
+                self._bind_parameters(node)
                 self._process_function(node)
-                self._process_statements(node.body)
+                self._process_statements(self._body_without_docstring(node))
             else:
                 self._process_statements([node])
 
         return self.constraints, self.non_verifiable_nodes
 
+    def _body_without_docstring(self, node: ast.FunctionDef) -> list[ast.stmt]:
+        """Drop a leading docstring so it isn't processed as a (non-verifiable)
+        expression statement -- a bare string literal carries no constraint
+        either way, so marking it non-verifiable was pure noise, not a
+        meaningful degradation.
+        """
+        body = node.body
+        if (
+            body
+            and isinstance(body[0], ast.Expr)
+            and isinstance(body[0].value, ast.Constant)
+            and isinstance(body[0].value.value, str)
+        ):
+            return body[1:]
+        return body
+
+    def _bind_parameters(self, node: ast.FunctionDef) -> None:
+        """Bind each function parameter as a free (unconstrained) Z3 variable.
+
+        See ADR-0002. Unlike a local variable's SSA binding, a parameter
+        binding carries no equality constraint — its value is unknown,
+        which is exactly why an assert referencing it must be checked for
+        validity (does it hold for every value?) rather than satisfiability
+        of the whole conjunction. Only `node.args.args` (positional-or-
+        keyword parameters) are bound; *args/**kwargs/positional-only/
+        keyword-only parameters are left unbound (same "variable not
+        defined" degradation as before this existed).
+
+        Defaults every parameter to type "int" — no annotation-based type
+        inference yet, consistent with the rest of the converter's default.
+        """
+        for arg in node.args.args:
+            self._new_binding(arg.arg, "int")
+            self.parameters.append(arg.arg)
+
     def _process_statements(
-        self, stmts: list[ast.stmt], collector: Optional[list[Any]] = None
+        self,
+        stmts: list[ast.stmt],
+        collector: Optional[list[Any]] = None,
+        path_collector: Optional[list[Any]] = None,
+        branch_assumptions: Optional[list[Any]] = None,
     ) -> None:
         """Process a flat list of statements in lexical order.
 
@@ -95,23 +152,54 @@ class ASTtoSMTConverter:
                 constraints before wrapping them in an Implies, and threaded
                 through to nested for-loops so a loop inside an if-branch is
                 scoped correctly too.
+            path_collector: Parallel to `collector` but for assert-free path
+                facts only (ADR-0002) — mirrors `collector`'s scoping, feeds
+                self.path_constraints at the top level.
+            branch_assumptions: Z3 boolean expressions for the branch/loop
+                conditions active at this point (ADR-0002) — recorded
+                alongside each assert found here so a parameterized assert
+                nested in a branch can be checked against them.
         """
         target_list = collector if collector is not None else self.constraints
+        path_target_list = path_collector if path_collector is not None else self.path_constraints
+        branch_assumptions = branch_assumptions or []
 
         for stmt in stmts:
             try:
                 constraint: Optional[Any] = None
+                is_path_fact = True  # False for Assert: never a path fact (ADR-0002)
 
                 if isinstance(stmt, ast.Assign):
                     constraint = self._process_assignment(stmt)
                 elif isinstance(stmt, ast.AugAssign):
                     constraint = self._process_aug_assign(stmt)
                 elif isinstance(stmt, ast.Assert):
-                    constraint = self._process_assert(stmt)
+                    constraint = self._process_assert(stmt, branch_assumptions)
+                    is_path_fact = False
                 elif isinstance(stmt, ast.If):
-                    constraint = self._process_if(stmt)
+                    constraint, path_constraint, merge_constraints = self._process_if(
+                        stmt, branch_assumptions=branch_assumptions
+                    )
+                    if path_constraint is not None:
+                        path_target_list.append(path_constraint)
+                    if constraint is not None:
+                        target_list.append(constraint)
+                    # Phi-merge facts (a variable assigned in either/both
+                    # branches, unified via Z3 If()) are unconditionally
+                    # true by construction -- not branch-scoped, so they go
+                    # in both accumulators directly, unlike the Implies-
+                    # wrapped branch bodies above.
+                    for merge_constraint in merge_constraints:
+                        target_list.append(merge_constraint)
+                        path_target_list.append(merge_constraint)
+                    continue
                 elif isinstance(stmt, ast.For):
-                    self._process_for(stmt, collector=collector)
+                    self._process_for(
+                        stmt,
+                        collector=collector,
+                        path_collector=path_collector,
+                        branch_assumptions=branch_assumptions,
+                    )
                     continue
                 elif isinstance(stmt, ast.Return):
                     continue  # Return itself adds no constraint in this subset
@@ -133,6 +221,8 @@ class ASTtoSMTConverter:
 
                 if constraint is not None:
                     target_list.append(constraint)
+                    if is_path_fact:
+                        path_target_list.append(constraint)
 
             except VerifiableSubsetViolation as e:
                 if not self.allow_partial:
@@ -142,14 +232,33 @@ class ASTtoSMTConverter:
     def _process_function(self, node: ast.FunctionDef) -> None:
         """Extract PRE/POST/INV annotations from a function's docstring.
 
-        Note: these are parsed but not yet wired into constraint generation
-        (tracked as Phase 2 work) — this only records them for now.
+        PRE is wired in (ADR-0002): parsed as a Python expression and added
+        to path_constraints as an assumption, since almost every realistic
+        guard assert (e.g. `assert denominator != 0`) is not a tautology
+        and would otherwise report FAIL against a totally unconstrained
+        parameter -- PRE lets generated code state the contract its guards
+        are meant to enforce. POST/INV are still only recorded, not wired:
+        a return-value postcondition needs a way to name "the return
+        value" in the expression grammar, tracked as separate follow-up.
         """
         docstring = ast.get_docstring(node)
         if not docstring:
             return
 
-        self._extract_docstring_spec(docstring, "PRE")
+        pre_spec = self._extract_docstring_spec(docstring, "PRE")
+        if pre_spec:
+            try:
+                pre_ast = ast.parse(pre_spec, mode="eval").body
+                pre_z3 = self._convert_expr(pre_ast)
+                self.path_constraints.append(pre_z3)
+                self.constraints.append(pre_z3)
+            except (SyntaxError, VerifiableSubsetViolation):
+                # Best-effort: an unparseable/non-verifiable PRE spec is
+                # skipped rather than crashing -- fails conservatively
+                # toward "prove more" (asserts stay unassisted), never
+                # toward silently accepting less. See ADR-0002 scope limits.
+                pass
+
         self._extract_docstring_spec(docstring, "POST")
         self._extract_docstring_spec(docstring, "INV")
 
@@ -233,25 +342,124 @@ class ASTtoSMTConverter:
 
         return new_var == computed
 
-    def _process_assert(self, node: ast.Assert) -> Optional[Any]:
-        """Convert assert statement to Z3 constraint."""
-        return self._convert_expr(node.test)
+    def _process_assert(self, node: ast.Assert, branch_assumptions: list[Any]) -> Optional[Any]:
+        """Convert assert statement to a Z3 constraint (unchanged return value,
+        for the existing satisfiability-based path) AND record it as a
+        property to prove (ADR-0002), paired with the branch/loop conditions
+        active at this point -- used by verify_python_snippet's parameterized
+        check, which proves each property given path_constraints +
+        branch_assumptions rather than treating it as a plain conjunct.
+        """
+        property_expr = self._convert_expr(node.test)
+        self.assert_properties.append((property_expr, list(branch_assumptions)))
+        return property_expr
 
-    def _process_if(self, node: ast.If) -> Optional[Any]:
-        """Convert if statement to Z3 constraints.
+    def _process_if(
+        self, node: ast.If, branch_assumptions: Optional[list[Any]] = None
+    ) -> tuple[Optional[Any], Optional[Any], list[Any]]:
+        """Convert if statement to Z3 constraints, with proper phi-merging.
 
         Body/orelse statements are processed into isolated constraint lists
         (not self.constraints directly), then wrapped in Implies so they only
         hold conditionally on the branch actually being taken.
+
+        Phi-merging: `self.variables` is snapshotted before each branch and
+        restored afterward, so the two branches never see each other's
+        assignments (previously, whichever branch was processed *last* would
+        silently overwrite `self.variables[name]` for any name assigned in
+        both branches, orphaning the other branch's binding with no real
+        constraint linking it to anything downstream -- a latent soundness
+        bug affecting any assert *after* an if/else that assigns the same
+        variable both ways). Any name touched by either branch gets a fresh
+        merged binding `new_var == If(test, then_value, else_value)`,
+        returned as `merge_constraints` -- true unconditionally, not scoped
+        to either branch.
+
+        Returns (constraint, path_constraint, merge_constraints): the first
+        two are the same Implies-wrapped result computed twice in parallel
+        -- once over everything (existing self.constraints/satisfiability
+        path) and once over only the assert-free path facts (ADR-0002, for
+        path_constraints). Nested asserts see the branch's test (or its
+        negation) added to their branch_assumptions.
         """
+        branch_assumptions = branch_assumptions or []
         test = self._convert_expr(node.test)
+        pre_if_variables = dict(self.variables)
 
         body_constraints: list[Any] = []
-        self._process_statements(node.body, collector=body_constraints)
+        path_body_constraints: list[Any] = []
+        self._process_statements(
+            node.body,
+            collector=body_constraints,
+            path_collector=path_body_constraints,
+            branch_assumptions=branch_assumptions + [test],
+        )
+        body_end_variables = dict(self.variables)
+        self.variables = dict(pre_if_variables)
 
         else_constraints: list[Any] = []
-        self._process_statements(node.orelse, collector=else_constraints)
+        path_else_constraints: list[Any] = []
+        self._process_statements(
+            node.orelse,
+            collector=else_constraints,
+            path_collector=path_else_constraints,
+            branch_assumptions=branch_assumptions + [Not(test)],
+        )
+        else_end_variables = dict(self.variables)
+        self.variables = dict(pre_if_variables)
 
+        merge_constraints = self._merge_branch_variables(
+            test, pre_if_variables, body_end_variables, else_end_variables
+        )
+
+        result = self._wrap_branches_in_implies(test, body_constraints, else_constraints)
+        path_result = self._wrap_branches_in_implies(test, path_body_constraints, path_else_constraints)
+        return result, path_result, merge_constraints
+
+    def _merge_branch_variables(
+        self,
+        test: Any,
+        pre_if_variables: dict[str, Any],
+        body_end_variables: dict[str, Any],
+        else_end_variables: dict[str, Any],
+    ) -> list[Any]:
+        """Build phi-merge constraints for every variable touched by either branch.
+
+        Mutates self.variables in place (via _new_binding) to point each
+        touched name at its new merged version, so code after the if/else
+        refers to the right value regardless of which branch actually ran.
+        """
+        touched_names = {
+            name
+            for name in set(body_end_variables) | set(else_end_variables)
+            if body_end_variables.get(name) is not else_end_variables.get(name)
+        }
+
+        merge_constraints: list[Any] = []
+        for name in touched_names:
+            then_val = body_end_variables.get(name, pre_if_variables.get(name))
+            else_val = else_end_variables.get(name, pre_if_variables.get(name))
+
+            if then_val is None or else_val is None:
+                # Assigned in exactly one branch with no prior binding --
+                # no sound merge value exists for the path that never
+                # defines it. Best effort: keep whichever binding exists,
+                # same degraded (but not crashing) behavior as before this
+                # fix for this specific edge case.
+                self.variables[name] = then_val if then_val is not None else else_val
+                continue
+
+            var_type = self._variable_types.get(name, "int")
+            merged_var = self._new_binding(name, var_type)
+            merge_constraints.append(merged_var == If(test, then_val, else_val))
+
+        return merge_constraints
+
+    def _wrap_branches_in_implies(
+        self, test: Any, body_constraints: list[Any], else_constraints: list[Any]
+    ) -> Optional[Any]:
+        """Shared Implies-wrapping logic for _process_if's two parallel
+        (full and path-only) constraint accumulations."""
         if not body_constraints and not else_constraints:
             return None
 
@@ -267,7 +475,13 @@ class ASTtoSMTConverter:
 
         return result
 
-    def _process_for(self, node: ast.For, collector: Optional[list[Any]] = None) -> None:
+    def _process_for(
+        self,
+        node: ast.For,
+        collector: Optional[list[Any]] = None,
+        path_collector: Optional[list[Any]] = None,
+        branch_assumptions: Optional[list[Any]] = None,
+    ) -> None:
         """Process a for loop with range-bounded iteration.
 
         This does not perform loop induction (Z3 can't do that automatically —
@@ -280,8 +494,13 @@ class ASTtoSMTConverter:
             collector: Passed through so a loop nested inside an if-branch is
                 scoped to that branch's constraint list instead of leaking
                 into the unconditional global constraint set.
+            path_collector: Parallel to `collector` for path_constraints (ADR-0002).
+            branch_assumptions: Active branch/loop conditions so far (ADR-0002);
+                the loop's own bounds are added for the body's asserts.
         """
         target_list = collector if collector is not None else self.constraints
+        path_target_list = path_collector if path_collector is not None else self.path_constraints
+        branch_assumptions = branch_assumptions or []
 
         if not isinstance(node.target, ast.Name):
             self._mark_non_verifiable(node, "Non-simple loop target")
@@ -310,8 +529,14 @@ class ASTtoSMTConverter:
         loop_var = self._new_binding(target_var, "int")
         loop_bounds = And(loop_var >= lower, loop_var < upper)
         target_list.append(loop_bounds)
+        path_target_list.append(loop_bounds)
 
-        self._process_statements(node.body, collector=collector)
+        self._process_statements(
+            node.body,
+            collector=collector,
+            path_collector=path_collector,
+            branch_assumptions=branch_assumptions + [loop_bounds],
+        )
 
         logger.debug(f"Processed for loop with bounds: {lower} <= {target_var} < {upper}")
 

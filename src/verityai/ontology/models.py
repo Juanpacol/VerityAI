@@ -27,6 +27,7 @@ class Rule(BaseModel):
     severity: str  # "critical", "high", "medium", "low", "info"
     applies_to: list[str] = Field(default_factory=list)  # Programming languages
     formal_spec: Optional[str] = None  # Z3 SMT-LIB2 or similar
+    test_code: Optional[str] = None  # Executable Python snippet demonstrating the rule
     examples: dict[str, Any] = Field(default_factory=dict)
     created_at: datetime = Field(default_factory=datetime.utcnow)
 

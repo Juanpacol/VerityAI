@@ -7,6 +7,8 @@ from typing import Any, Optional
 
 from neo4j import Driver
 
+from verityai.ontology.models import Rule
+
 logger = logging.getLogger(__name__)
 
 
@@ -152,6 +154,47 @@ class KGIngestion:
             applies_to=rule_data["applies_to"],
             test_code=rule_data.get("test_code", ""),
         )
+
+    def ingest_learned_rule(self, rule: Rule) -> None:
+        """Write a human-approved candidate rule (continuous learning loop) to the KG.
+
+        Unlike ingest_rules() (bulk seed loading from JSON, CREATE-only),
+        this MERGEs by id: a rule approved via RuleApprovalQueue may be
+        ingested more than once if the approval pipeline is re-run, and
+        that must not create duplicate nodes.
+
+        Args:
+            rule: An approved Rule (see agent/rule_validation.py). Callers
+                are responsible for the Z3 + human approval gate — this
+                method does not re-check either.
+        """
+        query = """
+        MERGE (r:Rule {id: $id})
+        SET r.name = $name,
+            r.description = $description,
+            r.category = $category,
+            r.severity = $severity,
+            r.condition = $condition,
+            r.formal_spec = $formal_spec,
+            r.applies_to = $applies_to,
+            r.test_code = $test_code
+        RETURN r
+        """
+
+        with self.driver.session() as session:
+            session.run(
+                query,
+                id=str(rule.id),
+                name=rule.name,
+                description=rule.description,
+                category=rule.category,
+                severity=rule.severity,
+                condition=rule.condition,
+                formal_spec=rule.formal_spec,
+                applies_to=rule.applies_to,
+                test_code=rule.test_code or "",
+            )
+        logger.info(f"Ingested learned rule '{rule.name}' (id={rule.id}) into KG")
 
     def clear_all(self) -> None:
         """Delete all nodes from database (be careful!)."""

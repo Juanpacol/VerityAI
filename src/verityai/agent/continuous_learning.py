@@ -71,6 +71,11 @@ def derive_candidate_rule(feedback: Feedback, original_trace: ReasoningTrace) ->
         condition=feedback.reason,
         severity="medium",
         applies_to=["python"],
+        # corrected_code, when present, IS the executable snippet
+        # demonstrating the fix -- this is what rule_validation.py runs
+        # through Z3 to screen out self-contradictory candidates before
+        # a human ever has to look at them.
+        test_code=feedback.corrected_code,
         examples={
             "trace_id": str(original_trace.id),
             "rejected_code": original_trace.generated_code,

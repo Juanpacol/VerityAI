@@ -25,9 +25,9 @@ from verityai.ontology.models import (
     VerificationResult,
     VerificationStatus,
 )
-from verityai.symbolic.ast_to_smt import ASTtoSMTConverter
+from verityai.neural.response_parsing import split_code_and_reasoning
 from verityai.symbolic.debugger import SymbolicDebugger
-from verityai.symbolic.z3_engine import Z3Engine
+from verityai.symbolic.verify import verify_python_snippet
 
 logger = logging.getLogger(__name__)
 
@@ -149,24 +149,13 @@ class Orchestrator:
         return self._split_code_and_reasoning(raw_response)
 
     def _split_code_and_reasoning(self, raw_response: str) -> tuple[str, str]:
-        """Split an LLM response into (code, reasoning) using its first fenced code block.
+        """Thin wrapper over neural.response_parsing.split_code_and_reasoning.
 
-        Args:
-            raw_response: Full LLM response, expected to contain reasoning
-                text plus a ```python ... ``` or ``` ... ``` fenced block
-
-        Returns:
-            (code, reasoning) — if no fenced block is found, the entire
-            response is treated as code with empty reasoning
+        Kept as an instance method for existing test/call-site compatibility;
+        evaluation/baselines.py calls the module-level function directly so
+        it doesn't need an Orchestrator instance just to parse text.
         """
-        for fence in ("```python", "```"):
-            if fence in raw_response:
-                before, _, rest = raw_response.partition(fence)
-                code_block, has_close, after = rest.partition("```")
-                if has_close:
-                    return code_block.strip(), (before + after).strip()
-
-        return raw_response.strip(), ""
+        return split_code_and_reasoning(raw_response)
 
     def verify_code(self, code: str) -> VerificationResult:
         """Run the code through the AST converter + Z3 satisfiability check.
@@ -175,55 +164,7 @@ class Orchestrator:
         without a target postcondition. Public so IncrementalVerifier
         (refinement.py) can call it per-function across conversation turns.
         """
-        converter = ASTtoSMTConverter(allow_partial=True)
-
-        try:
-            constraints, non_verifiable = converter.convert_code(code)
-        except SyntaxError as e:
-            return VerificationResult(
-                code_id="",
-                status=VerificationStatus.FAIL,
-                confidence=0.0,
-                violations=[],
-                z3_result=None,
-                metadata={"error": f"Syntax error: {e}"},
-            )
-
-        if not constraints:
-            status = VerificationStatus.NOT_VERIFIED if non_verifiable else VerificationStatus.PASS
-            return VerificationResult(
-                code_id="",
-                status=status,
-                confidence=0.3 if non_verifiable else 0.5,
-                violations=[],
-                z3_result=None,
-                metadata={"non_verifiable_nodes": non_verifiable},
-            )
-
-        engine = Z3Engine(timeout_seconds=self.z3_timeout_seconds)
-        sat_status, _ = engine.check_satisfiable(constraints)
-
-        if sat_status == VerificationStatus.FAIL:
-            result_status = VerificationStatus.FAIL
-            confidence = 0.0
-        elif non_verifiable:
-            result_status = VerificationStatus.NOT_VERIFIED
-            confidence = engine.success_rate * 0.6
-        else:
-            result_status = sat_status  # PASS, UNKNOWN, or TIMEOUT
-            confidence = engine.success_rate
-
-        return VerificationResult(
-            code_id="",
-            status=result_status,
-            confidence=confidence,
-            violations=[],
-            z3_result=sat_status.value,
-            metadata={
-                "non_verifiable_nodes": non_verifiable,
-                "total_queries": engine.total_queries,
-            },
-        )
+        return verify_python_snippet(code, timeout_seconds=self.z3_timeout_seconds)
 
     def _build_response(self, state: AgentState) -> GenerationResponse:
         """Convert final AgentState into the API-facing GenerationResponse."""
