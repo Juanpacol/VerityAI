@@ -1,0 +1,78 @@
+{
+  "topics": [
+    {
+      "topic": "T1",
+      "record_count": 3,
+      "sources": [
+        "arxiv"
+      ],
+      "validation_pass_rate": 1.0,
+      "median_age_days": 0,
+      "llm_classified_rate": 1.0,
+      "reviewed_rate": 0.0
+    },
+    {
+      "topic": "T2",
+      "record_count": 7,
+      "sources": [
+        "arxiv",
+        "github_issues"
+      ],
+      "validation_pass_rate": 1.0,
+      "median_age_days": 0,
+      "llm_classified_rate": 0.2857142857142857,
+      "reviewed_rate": 0.0
+    },
+    {
+      "topic": "T3",
+      "record_count": 1138,
+      "sources": [
+        "humaneval",
+        "mbpp"
+      ],
+      "validation_pass_rate": 1.0,
+      "median_age_days": 0.0,
+      "llm_classified_rate": 0.0,
+      "reviewed_rate": 0.0
+    },
+    {
+      "topic": "T4",
+      "record_count": 6,
+      "sources": [
+        "github_issues",
+        "semgrep"
+      ],
+      "validation_pass_rate": 1.0,
+      "median_age_days": 0.0,
+      "llm_classified_rate": 0.0,
+      "reviewed_rate": 0.0
+    },
+    {
+      "topic": "T5",
+      "record_count": 7,
+      "sources": [
+        "arxiv",
+        "github_issues"
+      ],
+      "validation_pass_rate": 1.0,
+      "median_age_days": 0,
+      "llm_classified_rate": 0.2857142857142857,
+      "reviewed_rate": 0.0
+    },
+    {
+      "topic": "T6",
+      "record_count": 18,
+      "sources": [
+        "arxiv",
+        "github_issues",
+        "z3_docs"
+      ],
+      "validation_pass_rate": 1.0,
+      "median_age_days": 0.0,
+      "llm_classified_rate": 0.05555555555555555,
+      "reviewed_rate": 0.0
+    }
+  ],
+  "total_records": 1168,
+  "generated_at": "2026-07-15T04:39:36.830769+00:00"
+}
