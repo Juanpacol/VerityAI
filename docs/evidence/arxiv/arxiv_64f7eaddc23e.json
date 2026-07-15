@@ -35,5 +35,22 @@
     "status": "valid",
     "reasons": []
   },
-  "classification": null
+  "classification": {
+    "classified_by": "llama3.2",
+    "relevance": {
+      "T1": 0.0,
+      "T2": 0.8,
+      "T3": 0.5,
+      "T4": 0.3,
+      "T5": 0.0,
+      "T6": 0.0
+    },
+    "extracted_claims": [
+      "WizardCoder surpasses all other open-source Code LLMs by a substantial margin",
+      "Our model even outperforms the largest closed LLMs on HumanEval and HumanEval+"
+    ],
+    "confidence": 0.9,
+    "classification_reviewed": false,
+    "degraded_reason": null
+  }
 }

@@ -26,5 +26,22 @@
     "status": "valid",
     "reasons": []
   },
-  "classification": null
+  "classification": {
+    "classified_by": "llama3.2",
+    "relevance": {
+      "T1": 0.0,
+      "T2": 0.08,
+      "T3": 0.0,
+      "T4": 0.0,
+      "T5": 0.0,
+      "T6": 0.0
+    },
+    "extracted_claims": [
+      "claim 1",
+      "RNNs have been successfully used in several domains"
+    ],
+    "confidence": 0.33,
+    "classification_reviewed": false,
+    "degraded_reason": null
+  }
 }

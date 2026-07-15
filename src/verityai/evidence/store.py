@@ -41,26 +41,30 @@ class EvidenceStore:
         return self.root / source / f"{record_id}.json"
 
     def save(self, record: EvidenceRecord) -> bool:
-        """Persist `record`. Returns True if content changed, False if it was already current.
+        """Persist `record`. Returns True if anything changed, False if it was already current.
 
-        The "already current" short-circuit also checks the backing file
-        actually exists on disk -- not just that the manifest says so.
-        Without that check, a record file deleted out-of-band (while the
-        manifest survives) would be silently treated as "still saved" and
-        never rewritten, leaving a manifest entry that points at nothing.
+        The "already current" check compares the record's full serialized
+        JSON against whatever is already on disk -- not just
+        `content_hash` (a hash of the `content` field alone, used
+        elsewhere for cross-record duplicate detection). A save that only
+        changes `classification` or `validation` -- e.g. running the LLM
+        classifier over an already-fetched record -- leaves `content`
+        (and therefore `content_hash`) untouched; comparing hashes alone
+        would have wrongly treated that as "nothing changed" and silently
+        discarded the classification. Comparing the actual serialized
+        record also subsumes the earlier fix for a file deleted
+        out-of-band while the manifest survived (path.exists() is
+        implied: a missing file never matches a serialized string).
         """
-        manifest = self._load_manifest()
-        existing = manifest.get(record.id)
         path = self._record_path(record.source, record.id)
-        if (
-            existing is not None
-            and existing.get("content_hash") == record.content_hash
-            and path.exists()
-        ):
+        new_json = record.model_dump_json(indent=2)
+        if path.exists() and path.read_text() == new_json:
             return False
 
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(record.model_dump_json(indent=2))
+        path.write_text(new_json)
+
+        manifest = self._load_manifest()
 
         manifest[record.id] = {
             "source": record.source,

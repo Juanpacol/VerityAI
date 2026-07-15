@@ -28,5 +28,22 @@
     "status": "valid",
     "reasons": []
   },
-  "classification": null
+  "classification": {
+    "classified_by": "llama3.2",
+    "relevance": {
+      "T1": 0.0,
+      "T2": 0.8,
+      "T3": 0.6,
+      "T4": 0.0,
+      "T5": 0.9,
+      "T6": 0.0
+    },
+    "extracted_claims": [
+      "JaCoText achieves new state-of-the-art results in automatic code generation",
+      "The proposed model leverages advantages of both natural language and code generation models"
+    ],
+    "confidence": 0.7,
+    "classification_reviewed": false,
+    "degraded_reason": null
+  }
 }

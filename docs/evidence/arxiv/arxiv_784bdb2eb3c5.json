@@ -26,5 +26,21 @@
     "status": "valid",
     "reasons": []
   },
-  "classification": null
+  "classification": {
+    "classified_by": "llama3.2",
+    "relevance": {
+      "T1": 0.0,
+      "T2": 0.33,
+      "T3": 0.0,
+      "T4": 0.0,
+      "T5": 0.67,
+      "T6": 0.0
+    },
+    "extracted_claims": [
+      "GPT-4 has accelerated the deployment of artificial intelligence across critical domains including law, healthcare, and finance"
+    ],
+    "confidence": 0.8,
+    "classification_reviewed": false,
+    "degraded_reason": null
+  }
 }

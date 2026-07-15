@@ -30,5 +30,21 @@
     "status": "valid",
     "reasons": []
   },
-  "classification": null
+  "classification": {
+    "classified_by": "llama3.2",
+    "relevance": {
+      "T1": 0.0,
+      "T2": 0.0,
+      "T3": 0.0,
+      "T4": 0.0,
+      "T5": 0.0,
+      "T6": 0.0
+    },
+    "extracted_claims": [
+      "AI systems shift from single-query tools into autonomous agents"
+    ],
+    "confidence": 0.3,
+    "classification_reviewed": false,
+    "degraded_reason": null
+  }
 }

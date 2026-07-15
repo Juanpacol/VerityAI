@@ -81,6 +81,25 @@ class TestIdempotentSave:
         assert changed is True
         assert store.load(record.id) == record
 
+    def test_resave_after_classification_added_rewrites(self, tmp_path):
+        """Regression: adding a Classification to an already-saved record
+        must persist, even though `content` (and therefore `content_hash`)
+        never changes -- classifying a record is exactly this shape of
+        update. A hash-only "did anything change" check would have missed
+        it, since content_hash reflects `content` alone.
+        """
+        from verityai.evidence.models import Classification
+
+        store = EvidenceStore(tmp_path)
+        record = make_record()
+        store.save(record)
+
+        record.classification = Classification(classified_by="llama3.2", confidence=0.8)
+        changed = store.save(record)
+
+        assert changed is True
+        assert store.load(record.id).classification.classified_by == "llama3.2"
+
     def test_resaving_changed_content_hash_rewrites(self, tmp_path):
         store = EvidenceStore(tmp_path)
         record = make_record()
