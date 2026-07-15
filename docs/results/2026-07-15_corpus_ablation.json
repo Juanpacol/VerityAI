@@ -1,0 +1,697 @@
+{
+  "model": "llama3.2",
+  "sizes": [
+    10,
+    30,
+    50
+  ],
+  "seed": 42,
+  "actual_rule_counts": {
+    "10": 10,
+    "30": 30,
+    "50": 48
+  },
+  "total_tasks": 28,
+  "results": {
+    "10": [
+      {
+        "task_id": "correctness_001_max_via_ifelse",
+        "ground_truth": "correct",
+        "status": "not_verified",
+        "confidence": 0.22499999999999998,
+        "latency_seconds": 51.922283625,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_002_min_via_ifelse",
+        "ground_truth": "correct",
+        "status": "pass",
+        "confidence": 0.575,
+        "latency_seconds": 28.291140667000008,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_003_add_two",
+        "ground_truth": "correct",
+        "status": "not_verified",
+        "confidence": 0.22499999999999998,
+        "latency_seconds": 50.029790875,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_004_abs_of_negative",
+        "ground_truth": "novel",
+        "status": "fail",
+        "confidence": 0.075,
+        "latency_seconds": 60.438111375000005,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_005_pick_min",
+        "ground_truth": "buggy",
+        "status": "not_verified",
+        "confidence": 0.22499999999999998,
+        "latency_seconds": 46.689378042000016,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_006_pick_max",
+        "ground_truth": "buggy",
+        "status": "pass",
+        "confidence": 0.575,
+        "latency_seconds": 42.22105862499998,
+        "attempts": 2
+      },
+      {
+        "task_id": "correctness_007_check_any_positive",
+        "ground_truth": "novel",
+        "status": "fail",
+        "confidence": 0.0,
+        "latency_seconds": 203.255293,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_008_negate_value",
+        "ground_truth": "buggy",
+        "status": "fail",
+        "confidence": 0.075,
+        "latency_seconds": 155.010365542,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_009_check_equal",
+        "ground_truth": "buggy",
+        "status": "not_verified",
+        "confidence": 0.22499999999999998,
+        "latency_seconds": 59.97709795800006,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_010_check_even",
+        "ground_truth": "novel",
+        "status": "fail",
+        "confidence": 0.075,
+        "latency_seconds": 74.49568783299992,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_011_integer_divide",
+        "ground_truth": "buggy",
+        "status": "pass",
+        "confidence": 0.575,
+        "latency_seconds": 16.695051292000016,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_012_check_in_range",
+        "ground_truth": "buggy",
+        "status": "fail",
+        "confidence": 0.075,
+        "latency_seconds": 74.86977183299996,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_013_max_of_two_params",
+        "ground_truth": "correct",
+        "status": "pass",
+        "confidence": 0.575,
+        "latency_seconds": 100.91033029199991,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_014_min_of_two_params",
+        "ground_truth": "correct",
+        "status": "pass",
+        "confidence": 0.575,
+        "latency_seconds": 25.67633187499996,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_015_double_identity",
+        "ground_truth": "correct",
+        "status": "pass",
+        "confidence": 0.575,
+        "latency_seconds": 25.05148379100001,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_016_triple_identity",
+        "ground_truth": "novel",
+        "status": "fail",
+        "confidence": 0.075,
+        "latency_seconds": 103.26039687499997,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_017_swap_bigger_smaller",
+        "ground_truth": "correct",
+        "status": "fail",
+        "confidence": 0.075,
+        "latency_seconds": 81.11234262500011,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_018_parity_range",
+        "ground_truth": "correct",
+        "status": "pass",
+        "confidence": 0.325,
+        "latency_seconds": 29.07079883399979,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_019_abs_diff_nonneg",
+        "ground_truth": "correct",
+        "status": "pass",
+        "confidence": 0.575,
+        "latency_seconds": 66.13497666700005,
+        "attempts": 2
+      },
+      {
+        "task_id": "correctness_020_clamp_lower_bound",
+        "ground_truth": "correct",
+        "status": "pass",
+        "confidence": 0.325,
+        "latency_seconds": 35.79759316700006,
+        "attempts": 2
+      },
+      {
+        "task_id": "correctness_021_even_sum_is_even",
+        "ground_truth": "novel",
+        "status": "pass",
+        "confidence": 0.325,
+        "latency_seconds": 93.88597087500011,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_022_negate_twice_identity",
+        "ground_truth": "correct",
+        "status": "pass",
+        "confidence": 0.325,
+        "latency_seconds": 22.029618207999874,
+        "attempts": 1
+      },
+      {
+        "task_id": "security_001_safe_divide",
+        "ground_truth": "buggy",
+        "status": "not_verified",
+        "confidence": 0.22499999999999998,
+        "latency_seconds": 102.26529441699995,
+        "attempts": 3
+      },
+      {
+        "task_id": "security_002_bounds_check",
+        "ground_truth": "novel",
+        "status": "pass",
+        "confidence": 0.325,
+        "latency_seconds": 36.10386633400003,
+        "attempts": 1
+      },
+      {
+        "task_id": "security_003_lock_guard",
+        "ground_truth": "novel",
+        "status": "not_verified",
+        "confidence": 0.22499999999999998,
+        "latency_seconds": 88.38303724999992,
+        "attempts": 3
+      },
+      {
+        "task_id": "security_004_safe_divide_param",
+        "ground_truth": "novel",
+        "status": "fail",
+        "confidence": 0.075,
+        "latency_seconds": 64.86591887500003,
+        "attempts": 3
+      },
+      {
+        "task_id": "security_005_bounds_check_param",
+        "ground_truth": "correct",
+        "status": "fail",
+        "confidence": 0.075,
+        "latency_seconds": 54.599100000000135,
+        "attempts": 3
+      },
+      {
+        "task_id": "security_006_check_auth_before_action",
+        "ground_truth": "novel",
+        "status": "pass",
+        "confidence": 0.575,
+        "latency_seconds": 94.943869541,
+        "attempts": 3
+      }
+    ],
+    "30": [
+      {
+        "task_id": "correctness_001_max_via_ifelse",
+        "ground_truth": "correct",
+        "status": "not_verified",
+        "confidence": 0.22499999999999998,
+        "latency_seconds": 89.92916124999999,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_002_min_via_ifelse",
+        "ground_truth": "correct",
+        "status": "pass",
+        "confidence": 0.575,
+        "latency_seconds": 27.591314083000015,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_003_add_two",
+        "ground_truth": "buggy",
+        "status": "pass",
+        "confidence": 0.575,
+        "latency_seconds": 34.45219725000001,
+        "attempts": 2
+      },
+      {
+        "task_id": "correctness_004_abs_of_negative",
+        "ground_truth": "buggy",
+        "status": "fail",
+        "confidence": 0.075,
+        "latency_seconds": 84.59128216699997,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_005_pick_min",
+        "ground_truth": "buggy",
+        "status": "not_verified",
+        "confidence": 0.22499999999999998,
+        "latency_seconds": 72.942742291,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_006_pick_max",
+        "ground_truth": "buggy",
+        "status": "fail",
+        "confidence": 0.075,
+        "latency_seconds": 112.795999833,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_007_check_any_positive",
+        "ground_truth": "buggy",
+        "status": "pass",
+        "confidence": 0.325,
+        "latency_seconds": 18.485781249999945,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_008_negate_value",
+        "ground_truth": "buggy",
+        "status": "pass",
+        "confidence": 0.325,
+        "latency_seconds": 73.34145558399996,
+        "attempts": 2
+      },
+      {
+        "task_id": "correctness_009_check_equal",
+        "ground_truth": "buggy",
+        "status": "not_verified",
+        "confidence": 0.22499999999999998,
+        "latency_seconds": 87.11003700000003,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_010_check_even",
+        "ground_truth": "buggy",
+        "status": "not_verified",
+        "confidence": 0.22499999999999998,
+        "latency_seconds": 83.68139595799994,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_011_integer_divide",
+        "ground_truth": "buggy",
+        "status": "not_verified",
+        "confidence": 0.22499999999999998,
+        "latency_seconds": 58.32075495799995,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_012_check_in_range",
+        "ground_truth": "buggy",
+        "status": "pass",
+        "confidence": 0.325,
+        "latency_seconds": 54.632713124999896,
+        "attempts": 2
+      },
+      {
+        "task_id": "correctness_013_max_of_two_params",
+        "ground_truth": "correct",
+        "status": "pass",
+        "confidence": 0.575,
+        "latency_seconds": 157.34806133299992,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_014_min_of_two_params",
+        "ground_truth": "correct",
+        "status": "not_verified",
+        "confidence": 0.22499999999999998,
+        "latency_seconds": 53.90050474999998,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_015_double_identity",
+        "ground_truth": "correct",
+        "status": "pass",
+        "confidence": 0.575,
+        "latency_seconds": 14.502953375000061,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_016_triple_identity",
+        "ground_truth": "correct",
+        "status": "pass",
+        "confidence": 0.575,
+        "latency_seconds": 22.059868457999983,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_017_swap_bigger_smaller",
+        "ground_truth": "correct",
+        "status": "not_verified",
+        "confidence": 0.22499999999999998,
+        "latency_seconds": 81.38225412500014,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_018_parity_range",
+        "ground_truth": "correct",
+        "status": "fail",
+        "confidence": 0.075,
+        "latency_seconds": 82.01839333399994,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_019_abs_diff_nonneg",
+        "ground_truth": "correct",
+        "status": "pass",
+        "confidence": 0.575,
+        "latency_seconds": 23.144121750000068,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_020_clamp_lower_bound",
+        "ground_truth": "novel",
+        "status": "pass",
+        "confidence": 0.575,
+        "latency_seconds": 16.583797500000173,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_021_even_sum_is_even",
+        "ground_truth": "correct",
+        "status": "fail",
+        "confidence": 0.075,
+        "latency_seconds": 60.79699670900004,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_022_negate_twice_identity",
+        "ground_truth": "correct",
+        "status": "not_verified",
+        "confidence": 0.22499999999999998,
+        "latency_seconds": 59.74301312500006,
+        "attempts": 3
+      },
+      {
+        "task_id": "security_001_safe_divide",
+        "ground_truth": "buggy",
+        "status": "fail",
+        "confidence": 0.075,
+        "latency_seconds": 54.830959166999946,
+        "attempts": 3
+      },
+      {
+        "task_id": "security_002_bounds_check",
+        "ground_truth": "novel",
+        "status": "not_verified",
+        "confidence": 0.22499999999999998,
+        "latency_seconds": 71.63087145899999,
+        "attempts": 3
+      },
+      {
+        "task_id": "security_003_lock_guard",
+        "ground_truth": "correct",
+        "status": "pass",
+        "confidence": 0.575,
+        "latency_seconds": 25.30031199999985,
+        "attempts": 1
+      },
+      {
+        "task_id": "security_004_safe_divide_param",
+        "ground_truth": "novel",
+        "status": "fail",
+        "confidence": 0.075,
+        "latency_seconds": 65.44063129100005,
+        "attempts": 3
+      },
+      {
+        "task_id": "security_005_bounds_check_param",
+        "ground_truth": "correct",
+        "status": "pass",
+        "confidence": 0.575,
+        "latency_seconds": 73.33979141600003,
+        "attempts": 3
+      },
+      {
+        "task_id": "security_006_check_auth_before_action",
+        "ground_truth": "novel",
+        "status": "fail",
+        "confidence": 0.075,
+        "latency_seconds": 79.0509228750002,
+        "attempts": 3
+      }
+    ],
+    "50": [
+      {
+        "task_id": "correctness_001_max_via_ifelse",
+        "ground_truth": "correct",
+        "status": "pass",
+        "confidence": 0.325,
+        "latency_seconds": 21.907287166,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_002_min_via_ifelse",
+        "ground_truth": "correct",
+        "status": "pass",
+        "confidence": 0.575,
+        "latency_seconds": 100.251219333,
+        "attempts": 2
+      },
+      {
+        "task_id": "correctness_003_add_two",
+        "ground_truth": "correct",
+        "status": "pass",
+        "confidence": 0.575,
+        "latency_seconds": 25.724585999999988,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_004_abs_of_negative",
+        "ground_truth": "buggy",
+        "status": "not_verified",
+        "confidence": 0.22499999999999998,
+        "latency_seconds": 105.21962712500002,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_005_pick_min",
+        "ground_truth": "buggy",
+        "status": "pass",
+        "confidence": 0.575,
+        "latency_seconds": 56.339858917000015,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_006_pick_max",
+        "ground_truth": "buggy",
+        "status": "fail",
+        "confidence": 0.075,
+        "latency_seconds": 209.383728625,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_007_check_any_positive",
+        "ground_truth": "buggy",
+        "status": "fail",
+        "confidence": 0.075,
+        "latency_seconds": 87.2877890420001,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_008_negate_value",
+        "ground_truth": "buggy",
+        "status": "not_verified",
+        "confidence": 0.22499999999999998,
+        "latency_seconds": 71.01316383400001,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_009_check_equal",
+        "ground_truth": "buggy",
+        "status": "not_verified",
+        "confidence": 0.22499999999999998,
+        "latency_seconds": 64.17082662500002,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_010_check_even",
+        "ground_truth": "buggy",
+        "status": "pass",
+        "confidence": 0.325,
+        "latency_seconds": 39.58487204100004,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_011_integer_divide",
+        "ground_truth": "buggy",
+        "status": "not_verified",
+        "confidence": 0.22499999999999998,
+        "latency_seconds": 60.301087083000084,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_012_check_in_range",
+        "ground_truth": "novel",
+        "status": "fail",
+        "confidence": 0.075,
+        "latency_seconds": 76.409267,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_013_max_of_two_params",
+        "ground_truth": "correct",
+        "status": "pass",
+        "confidence": 0.575,
+        "latency_seconds": 21.78527245800001,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_014_min_of_two_params",
+        "ground_truth": "correct",
+        "status": "not_verified",
+        "confidence": 0.22499999999999998,
+        "latency_seconds": 97.61722562499995,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_015_double_identity",
+        "ground_truth": "correct",
+        "status": "pass",
+        "confidence": 0.575,
+        "latency_seconds": 23.810362583999904,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_016_triple_identity",
+        "ground_truth": "novel",
+        "status": "pass",
+        "confidence": 0.575,
+        "latency_seconds": 23.239926250000053,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_017_swap_bigger_smaller",
+        "ground_truth": "correct",
+        "status": "not_verified",
+        "confidence": 0.22499999999999998,
+        "latency_seconds": 78.79272366700002,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_018_parity_range",
+        "ground_truth": "correct",
+        "status": "not_verified",
+        "confidence": 0.22499999999999998,
+        "latency_seconds": 82.07321416700006,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_019_abs_diff_nonneg",
+        "ground_truth": "correct",
+        "status": "pass",
+        "confidence": 0.575,
+        "latency_seconds": 42.67407391699999,
+        "attempts": 2
+      },
+      {
+        "task_id": "correctness_020_clamp_lower_bound",
+        "ground_truth": "novel",
+        "status": "fail",
+        "confidence": 0.075,
+        "latency_seconds": 71.31411420900008,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_021_even_sum_is_even",
+        "ground_truth": "novel",
+        "status": "pass",
+        "confidence": 0.325,
+        "latency_seconds": 29.27339912499997,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_022_negate_twice_identity",
+        "ground_truth": "correct",
+        "status": "pass",
+        "confidence": 0.325,
+        "latency_seconds": 125.56244979200005,
+        "attempts": 3
+      },
+      {
+        "task_id": "security_001_safe_divide",
+        "ground_truth": "buggy",
+        "status": "pass",
+        "confidence": 0.325,
+        "latency_seconds": 54.86173633299995,
+        "attempts": 2
+      },
+      {
+        "task_id": "security_002_bounds_check",
+        "ground_truth": "novel",
+        "status": "fail",
+        "confidence": 0.075,
+        "latency_seconds": 68.89276120800014,
+        "attempts": 3
+      },
+      {
+        "task_id": "security_003_lock_guard",
+        "ground_truth": "buggy",
+        "status": "not_verified",
+        "confidence": 0.22499999999999998,
+        "latency_seconds": 67.23734575000003,
+        "attempts": 3
+      },
+      {
+        "task_id": "security_004_safe_divide_param",
+        "ground_truth": "novel",
+        "status": "pass",
+        "confidence": 0.325,
+        "latency_seconds": 83.08997166600011,
+        "attempts": 3
+      },
+      {
+        "task_id": "security_005_bounds_check_param",
+        "ground_truth": "correct",
+        "status": "fail",
+        "confidence": 0.075,
+        "latency_seconds": 65.73194962499997,
+        "attempts": 3
+      },
+      {
+        "task_id": "security_006_check_auth_before_action",
+        "ground_truth": "novel",
+        "status": "fail",
+        "confidence": 0.075,
+        "latency_seconds": 83.89721166599998,
+        "attempts": 3
+      }
+    ]
+  },
+  "errors": [],
+  "generated_at": "2026-07-15T06:55:30.665309+00:00"
+}

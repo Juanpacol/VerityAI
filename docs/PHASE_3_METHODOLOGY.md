@@ -447,6 +447,60 @@ mechanism, not just to the LLM's sampling variance. A single run's
 confusion matrix is not enough to separate the two, and this analysis is
 the first time that's been checked directly rather than assumed away.
 
+## Real run #4 (2026-07-15, rule-corpus size ablation: 10 vs 30 vs 48/50 rules)
+
+Fase 3 of the research roadmap (T4): does hybrid-retrieval accuracy
+improve as the KG rule corpus grows, or does it plateau well before the
+current ~50-rule corpus? `scripts/run_rule_corpus_ablation.py` runs the
+same 28 tasks with `retrieval_strategy=hybrid` against three corpus
+sizes, filtering `HybridRetriever`'s rule pool via a fixed-seed random
+subsample (`SubsampledKGClient`, in-memory only -- the real Neo4j corpus
+was never mutated, so there was nothing to restore afterward). llama3.2,
+same task set as every other real run in this document. Raw data:
+`docs/results/2026-07-15_corpus_ablation.json`.
+
+| Corpus size | accuracy | precision | recall | F1 | abstention | novel |
+|---|---|---|---|---|---|---|
+| 10 rules | 71.4% | 50.0% | 50.0% | 0.500 | 17.9% | 32.1% |
+| 30 rules | 62.5% | 60.0% | 42.9% | 0.500 | 28.6% | 14.3% |
+| 48 rules (~all) | 69.2% | 66.7% | 40.0% | 0.500 | 28.6% | 25.0% |
+
+**F1 is identical (0.500) at all three corpus sizes.** Precision drifts
+up (50%→60%→67%) as recall drifts down (50%→43%→40%) while corpus grows,
+but those two trends cancel out in F1, and accuracy bounces around
+62-71% with no clear direction.
+
+Applying this document's own new standing rule (see the Analysis section
+above) before reading anything into that: is the size-to-size difference
+here bigger than ordinary sampling noise, or consistent with it? Since a
+same-configuration repeat wasn't run for this ablation specifically, the
+proxy used is the same ground-truth-agreement check — comparing it
+against the ~69-71% noise floor already established from the retry-loop
+analysis:
+
+| Pair | Ground-truth agreement |
+|---|---|
+| 10 vs 30 rules | 71.4% |
+| 10 vs 48 rules | 78.6% |
+| 30 vs 48 rules | 82.1% |
+
+All three are **at or above** the established noise floor (contrast this
+with the KG-context pairwise comparisons in the Analysis section, which
+came in *below* the noise floor and were read as a real effect). Rule
+corpus size does not appear to shift what code gets generated any more
+than day-to-day sampling variance already does. **Honest conclusion**:
+this run found no detectable ROI from growing the rule corpus past 10
+rules — consistent with (though not proof of) an early plateau, exactly
+the hypothesis Fase 3 set out to test. This is a single run per size,
+n=28 each; it should not be read as "10 rules is definitively enough,"
+only as "this run gave no evidence that more rules helped, and the
+ground-truth-agreement check argues the sizes behaved statistically like
+noise-level variants of each other, not like meaningfully different
+configurations." Growing the corpus toward the "low hundreds" scale
+CLAUDE.md anticipates may behave differently — this ablation only covers
+10-48 rules, not the order-of-magnitude jump a real production corpus
+would represent.
+
 ## Target threshold (confirmed before a real run, per the plan's hardened
 acceptance criterion)
 
