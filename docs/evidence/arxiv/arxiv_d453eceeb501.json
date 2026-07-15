@@ -1,0 +1,59 @@
+{
+  "id": "arxiv_d453eceeb501",
+  "source": "arxiv",
+  "source_url": "http://arxiv.org/abs/2308.07921v1",
+  "license": null,
+  "retrieved_at": "2026-07-15T14:46:44.552253+00:00",
+  "retrieval_method": "requests",
+  "content": {
+    "arxiv_id": "2308.07921v1",
+    "title": "Solving Challenging Math Word Problems Using GPT-4 Code Interpreter with Code-based Self-Verification",
+    "abstract": "Recent progress in large language models (LLMs) like GPT-4 and PaLM-2 has brought significant advancements in addressing math reasoning problems. In particular, OpenAI's latest version of GPT-4, known as GPT-4 Code Interpreter, shows remarkable performance on challenging math datasets. In this paper, we explore the effect of code on enhancing LLMs' reasoning capability by introducing different constraints on the \\textit{Code Usage Frequency} of GPT-4 Code Interpreter. We found that its success can be largely attributed to its powerful skills in generating and executing code, evaluating the output of code execution, and rectifying its solution when receiving unreasonable outputs. Based on this insight, we propose a novel and effective prompting method, explicit \\uline{c}ode-based \\uline{s}elf-\\uline{v}erification~(CSV), to further boost the mathematical reasoning potential of GPT-4 Code Interpreter. This method employs a zero-shot prompt on GPT-4 Code Interpreter to encourage it to use code to self-verify its answers. In instances where the verification state registers as ``False'', the model shall automatically amend its solution, analogous to our approach of rectifying errors during a mathematics examination. Furthermore, we recognize that the states of the verification result indicate the confidence of a solution, which can improve the effectiveness of majority voting. With GPT-4 Code Interpreter and CSV, we achieve an impressive zero-shot accuracy on MATH dataset \\textbf{(53.9\\% $\\to$ 84.3\\%)}.",
+    "authors": [
+      "Aojun Zhou",
+      "Ke Wang",
+      "Zimu Lu",
+      "Weikang Shi",
+      "Sichun Luo",
+      "Zipeng Qin",
+      "Shaoqing Lu",
+      "Anya Jia",
+      "Linqi Song",
+      "Mingjie Zhan",
+      "Hongsheng Li"
+    ],
+    "categories": [
+      "cs.CL",
+      "cs.AI",
+      "cs.CV"
+    ],
+    "published": "2023-08-15T17:58:45Z"
+  },
+  "content_hash": "d453eceeb5010923c80654b195ac8453405b366d1fd6182f9a0c9c53c3e2fc05",
+  "feeds_topics": [
+    "T1",
+    "T5"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": {
+    "classified_by": "llama3.2",
+    "relevance": {
+      "T1": 0.0,
+      "T2": 0.8,
+      "T3": 0.0,
+      "T4": 0.0,
+      "T5": 0.6,
+      "T6": 0.7
+    },
+    "extracted_claims": [
+      "GPT-4 Code Interpreter shows remarkable performance on challenging math datasets",
+      "the model employs a zero-shot prompt on GPT-4 Code Interpreter to encourage it to use code to self-verify its answers"
+    ],
+    "confidence": 0.8,
+    "classification_reviewed": false,
+    "degraded_reason": null
+  }
+}

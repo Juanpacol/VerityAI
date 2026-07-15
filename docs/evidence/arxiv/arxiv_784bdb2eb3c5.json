@@ -3,7 +3,7 @@
   "source": "arxiv",
   "source_url": "http://arxiv.org/abs/2510.15769v1",
   "license": null,
-  "retrieved_at": "2026-07-15T03:37:29.629539+00:00",
+  "retrieved_at": "2026-07-15T14:46:41.708407+00:00",
   "retrieval_method": "requests",
   "content": {
     "arxiv_id": "2510.15769v1",
@@ -30,16 +30,16 @@
     "classified_by": "llama3.2",
     "relevance": {
       "T1": 0.0,
-      "T2": 0.33,
+      "T2": 0.0,
       "T3": 0.0,
       "T4": 0.0,
-      "T5": 0.67,
+      "T5": 0.255,
       "T6": 0.0
     },
     "extracted_claims": [
-      "GPT-4 has accelerated the deployment of artificial intelligence across critical domains including law, healthcare, and finance"
+      "Explainability and user trust in AI systems are investigated"
     ],
-    "confidence": 0.8,
+    "confidence": 0.85,
     "classification_reviewed": false,
     "degraded_reason": null
   }

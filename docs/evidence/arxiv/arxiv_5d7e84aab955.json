@@ -1,0 +1,49 @@
+{
+  "id": "arxiv_5d7e84aab955",
+  "source": "arxiv",
+  "source_url": "http://arxiv.org/abs/2204.13480v1",
+  "license": null,
+  "retrieved_at": "2026-07-15T14:46:41.708354+00:00",
+  "retrieval_method": "requests",
+  "content": {
+    "arxiv_id": "2204.13480v1",
+    "title": "The Value of Measuring Trust in AI - A Socio-Technical System Perspective",
+    "abstract": "Building trust in AI-based systems is deemed critical for their adoption and appropriate use. Recent research has thus attempted to evaluate how various attributes of these systems affect user trust. However, limitations regarding the definition and measurement of trust in AI have hampered progress in the field, leading to results that are inconsistent or difficult to compare. In this work, we provide an overview of the main limitations in defining and measuring trust in AI. We focus on the attempt of giving trust in AI a numerical value and its utility in informing the design of real-world human-AI interactions. Taking a socio-technical system perspective on AI, we explore two distinct approaches to tackle these challenges. We provide actionable recommendations on how these approaches can be implemented in practice and inform the design of human-AI interactions. We thereby aim to provide a starting point for researchers and designers to re-evaluate the current focus on trust in AI, improving the alignment between what empirical research paradigms may offer and the expectations of real-world human-AI interactions.",
+    "authors": [
+      "Michaela Benk",
+      "Suzanne Tolmeijer",
+      "Florian von Wangenheim",
+      "Andrea Ferrario"
+    ],
+    "categories": [
+      "cs.HC"
+    ],
+    "published": "2022-04-28T13:13:48Z"
+  },
+  "content_hash": "5d7e84aab955bc866fcb9136028c5c6ceb4aa6992930fa703ef7e184116aae74",
+  "feeds_topics": [
+    "T5"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": {
+    "classified_by": "llama3.2",
+    "relevance": {
+      "T1": 0.0,
+      "T2": 0.3333333333333333,
+      "T3": 0.0,
+      "T4": 0.0,
+      "T5": 0.6666666666666666,
+      "T6": 0.0
+    },
+    "extracted_claims": [
+      "Building trust in AI-based systems is deemed critical for their adoption and appropriate use.",
+      "Trust in AI has limitations regarding its definition and measurement"
+    ],
+    "confidence": 0.8,
+    "classification_reviewed": false,
+    "degraded_reason": null
+  }
+}

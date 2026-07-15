@@ -1,0 +1,50 @@
+{
+  "id": "arxiv_bf7be3b368b0",
+  "source": "arxiv",
+  "source_url": "http://arxiv.org/abs/2603.09157v1",
+  "license": null,
+  "retrieved_at": "2026-07-15T14:46:44.552229+00:00",
+  "retrieval_method": "requests",
+  "content": {
+    "arxiv_id": "2603.09157v1",
+    "title": "Real-Time Trust Verification for Safe Agentic Actions using TrustBench",
+    "abstract": "As large language models evolve from conversational assistants to autonomous agents, ensuring trustworthiness requires a fundamental shift from post-hoc evaluation to real-time action verification. Current frameworks like AgentBench evaluate task completion, while TrustLLM and HELM assess output quality after generation. However, none of these prevent harmful actions during agent execution. We present TrustBench, a dual-mode framework that (1) benchmarks trust across multiple dimensions using both traditional metrics and LLM-as-a-Judge evaluations, and (2) provides a toolkit agents invoke before taking actions to verify safety and reliability. Unlike existing approaches, TrustBench intervenes at the critical decision point: after an agent formulates an action but before execution. Domain-specific plugins encode specialized safety requirements for healthcare, finance, and technical domains. Across multiple agentic tasks, TrustBench reduced harmful actions by 87%. Domain-specific plugins outperformed generic verification, achieving 35% greater harm reduction. With sub-200ms latency, TrustBench enables practical real-time trust verification for autonomous agents.",
+    "authors": [
+      "Tavishi Sharma",
+      "Vinayak Sharma",
+      "Pragya Sharma"
+    ],
+    "categories": [
+      "cs.AI"
+    ],
+    "published": "2026-03-10T03:46:22Z"
+  },
+  "content_hash": "bf7be3b368b0e058ad19f2e4c71ede04e35f1303e99325df8c70ff1227630a0b",
+  "feeds_topics": [
+    "T1",
+    "T5"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": {
+    "classified_by": "llama3.2",
+    "relevance": {
+      "T1": 0.0,
+      "T2": 0.85,
+      "T3": 0.0,
+      "T4": 0.0,
+      "T5": 0.7,
+      "T6": 0.0
+    },
+    "extracted_claims": [
+      "TrustBench enables practical real-time trust verification for autonomous agents.",
+      "Domain-specific plugins outperformed generic verification, achieving 35% greater harm reduction.",
+      "TrustBench reduced harmful actions by 87% across multiple agentic tasks."
+    ],
+    "confidence": 0.8,
+    "classification_reviewed": false,
+    "degraded_reason": null
+  }
+}

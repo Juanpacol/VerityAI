@@ -1,0 +1,48 @@
+{
+  "id": "arxiv_fa66ae167cf0",
+  "source": "arxiv",
+  "source_url": "http://arxiv.org/abs/2202.04977v3",
+  "license": null,
+  "retrieved_at": "2026-07-15T14:46:47.623941+00:00",
+  "retrieval_method": "requests",
+  "content": {
+    "arxiv_id": "2202.04977v3",
+    "title": "Needs-aware Artificial Intelligence: AI that 'serves [human] needs'",
+    "abstract": "By defining the current limits (and thereby the frontiers), many boundaries are shaping, and will continue to shape, the future of Artificial Intelligence (AI). We push on these boundaries in order to make further progress into what were yesterday's frontiers. They are both pliable and resilient - always creating new boundaries of what AI can (or should) achieve. Among these are technical boundaries (such as processing capacity), psychological boundaries (such as human trust in AI systems), ethical boundaries (such as with AI weapons), and conceptual boundaries (such as the AI people can imagine). It is within this final category while it can play a fundamental role in all other boundaries} that we find the construct of needs and the limitations that our current concept of need places on the future AI.",
+    "authors": [
+      "Ryan Watkins",
+      "Soheil Human"
+    ],
+    "categories": [
+      "cs.AI"
+    ],
+    "published": "2022-02-10T12:19:48Z"
+  },
+  "content_hash": "fa66ae167cf0e7bb9503302962a9181ac5d9c3129adb4454e35daeed6bf35b5d",
+  "feeds_topics": [
+    "T1",
+    "T5"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": {
+    "classified_by": "llama3.2",
+    "relevance": {
+      "T1": 0.0,
+      "T2": 0.0,
+      "T3": 0.0,
+      "T4": 0.0,
+      "T5": 0.0,
+      "T6": 0.0
+    },
+    "extracted_claims": [
+      "claim 1",
+      "claim 2"
+    ],
+    "confidence": 0.0,
+    "classification_reviewed": false,
+    "degraded_reason": null
+  }
+}

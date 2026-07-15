@@ -1,0 +1,46 @@
+{
+  "id": "arxiv_81f98fc1c2b8",
+  "source": "arxiv",
+  "source_url": "http://arxiv.org/abs/2209.09724v1",
+  "license": null,
+  "retrieved_at": "2026-07-15T14:46:47.624008+00:00",
+  "retrieval_method": "requests",
+  "content": {
+    "arxiv_id": "2209.09724v1",
+    "title": "Advanced Data Protection Control (ADPC): An Interdisciplinary Overview",
+    "abstract": "The Advanced Data Protection Control (ADPC) is a technical specification - and a set of sociotechnical mechanisms surrounding it - that can change the current practice of Internet-based personal data protection and consenting by providing novel and standardized means for the communication of privacy and consenting data, meta-data, information, requests, preferences, and decisions. The ADPC supports humans in practicing their rights to privacy and agency by giving them more human-centric control over the processing of their personal data and consent. It helps the data controllers to improve their users' experiences and provides them with easy-to-adopt means to comply with the relevant legal and ethical requirements and expectations.",
+    "authors": [
+      "Soheil Human"
+    ],
+    "categories": [
+      "cs.NI",
+      "cs.CY",
+      "cs.HC"
+    ],
+    "published": "2022-09-20T13:57:49Z"
+  },
+  "content_hash": "81f98fc1c2b83393a92de8cb7c975d8ce481ce1d770bbf7e10b71d3a48dc7b3d",
+  "feeds_topics": [
+    "T1",
+    "T5"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": {
+    "classified_by": "llama3.2",
+    "relevance": {
+      "T1": 0.0,
+      "T2": 0.0,
+      "T3": 0.0,
+      "T4": 0.0,
+      "T5": 0.0,
+      "T6": 0.0
+    },
+    "extracted_claims": [],
+    "confidence": 0.0,
+    "classification_reviewed": false,
+    "degraded_reason": null
+  }
+}

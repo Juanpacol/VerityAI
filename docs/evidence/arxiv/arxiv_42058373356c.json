@@ -1,0 +1,88 @@
+{
+  "id": "arxiv_42058373356c",
+  "source": "arxiv",
+  "source_url": "http://arxiv.org/abs/1307.2029v1",
+  "license": null,
+  "retrieved_at": "2026-07-15T14:46:44.552281+00:00",
+  "retrieval_method": "requests",
+  "content": {
+    "arxiv_id": "1307.2029v1",
+    "title": "In-flight calibration and verification of the Planck-LFI instrument",
+    "abstract": "In this paper we discuss the Planck-LFI in-flight calibration campaign. After a brief overview of the ground test campaigns, we describe in detail the calibration and performance verification (CPV) phase, carried out in space during and just after the cool-down of LFI. We discuss in detail the functionality verification, the tuning of the front-end and warm electronics, the preliminary performance assessment and the thermal susceptibility tests. The logic, sequence, goals and results of the in-flight tests are discussed. All the calibration activities were successfully carried out and the instrument response was comparable to the one observed on ground. For some channels the in-flight tuning activity allowed us to improve significantly the noise performance.",
+    "authors": [
+      "Anna Gregorio",
+      "Francesco Cuttaia",
+      "Aniello Mennella",
+      "Marco Bersanelli",
+      "Michele Maris",
+      "Peter Meinhold",
+      "Maura Sandri",
+      "Luca Terenzi",
+      "Maurizio Tomasi",
+      "Fabrizio Villa",
+      "Marco Frailis",
+      "Gianluca Morgante",
+      "Dave Pearson",
+      "Andrea Zacchei",
+      "Paola Battaglia",
+      "Reginald Christophe Butler",
+      "Richard Davis",
+      "Cristian Franceschet",
+      "Enrico Franceschi",
+      "Samuele Galeotta",
+      "Rodrigo Leonardi",
+      "Steve Lowe",
+      "Nazzareno Mandolesi",
+      "Frederick Melot",
+      "Luis Mendes",
+      "Patrick Stassi",
+      "Luca Stringhetti",
+      "Daniele Tavagnacco",
+      "Andrea Zonca",
+      "Althea Wilkinson",
+      "Philip Wilson",
+      "Maryse Charra",
+      "Thierry Maciaszek",
+      "Steve Foley",
+      "Christopher J. Watson",
+      "Mauro Casale",
+      "René Laureijs",
+      "Jan Tauber",
+      "Damien Texier",
+      "Michelle Baker",
+      "Leticia Perez Cuevas",
+      "Mike Krassenburg",
+      "Patrick Rihet"
+    ],
+    "categories": [
+      "astro-ph.IM"
+    ],
+    "published": "2013-07-08T10:52:52Z"
+  },
+  "content_hash": "42058373356cfa08fc0b0e70b16f9337ac350b6c585e82162042df842d6131c9",
+  "feeds_topics": [
+    "T1",
+    "T5"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": {
+    "classified_by": "llama3.2",
+    "relevance": {
+      "T1": 0.0,
+      "T2": 0.0,
+      "T3": 0.0,
+      "T4": 0.0,
+      "T5": 0.0,
+      "T6": 0.0
+    },
+    "extracted_claims": [
+      "No claims directly related to the topics T1-T6"
+    ],
+    "confidence": 0.0,
+    "classification_reviewed": false,
+    "degraded_reason": null
+  }
+}

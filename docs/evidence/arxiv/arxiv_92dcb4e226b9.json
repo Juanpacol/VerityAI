@@ -1,0 +1,49 @@
+{
+  "id": "arxiv_92dcb4e226b9",
+  "source": "arxiv",
+  "source_url": "http://arxiv.org/abs/2503.08946v1",
+  "license": null,
+  "retrieved_at": "2026-07-15T14:46:44.552203+00:00",
+  "retrieval_method": "requests",
+  "content": {
+    "arxiv_id": "2503.08946v1",
+    "title": "SIMT/GPU Data Race Verification using ISCC and Intermediary Code Representations: A Case Study",
+    "abstract": "It is often difficult to write code that you can ensure will be executed in the right order when programing for parallel compute tasks. Due to the way that today's parallel compute hardware, primarily Graphical Processing Units (GPUs), allows you to write code. It is easy to write code that may result in one thread reading or modifying data before it should, thus resulting in a data race. It would be useful to have a tool that could verify that the code will execute as expected. However, most static analysis done at the language level has to be completely retooled to work on a different languages. Therefore, it would be of great use to be able to perform verification and analysis on the Memory Model of a parallel compute code, in a lower level intermediary representations that most languages pass through on their way to something that the GPU hardware can understand. This body of work aims to deal with the question of if there is still enough of the information in the intermediary representations to be able to perform memory model verification to check for data races. To determine this we plan to analyze as a case study the GeSpMM Sparse Matrix Multiplication Algorithm, implemented in CUDA C++ with the LLVM compiler and Julia with CUDA.jl.",
+    "authors": [
+      "Andrew Osterhout",
+      "Ganesh Gopalakrishnan"
+    ],
+    "categories": [
+      "cs.DC"
+    ],
+    "published": "2025-03-11T22:50:49Z"
+  },
+  "content_hash": "92dcb4e226b910903974eaf378a790924bd3dbbea44c2d270c2fcaae36b2745d",
+  "feeds_topics": [
+    "T1",
+    "T5"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": {
+    "classified_by": "llama3.2",
+    "relevance": {
+      "T1": 0.0,
+      "T2": 0.8,
+      "T3": 0.4,
+      "T4": 0.0,
+      "T5": 0.6,
+      "T6": 0.2
+    },
+    "extracted_claims": [
+      "GeSpMM Sparse Matrix Multiplication Algorithm is vulnerable to data races due to the way parallel compute hardware executes code",
+      "The use of intermediary representations for memory model verification on GPU code is feasible",
+      "Most static analysis tools need to be retooled to work on different languages"
+    ],
+    "confidence": 0.7,
+    "classification_reviewed": false,
+    "degraded_reason": null
+  }
+}

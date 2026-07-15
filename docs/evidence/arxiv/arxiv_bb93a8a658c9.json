@@ -1,0 +1,51 @@
+{
+  "id": "arxiv_bb93a8a658c9",
+  "source": "arxiv",
+  "source_url": "http://arxiv.org/abs/2506.16345v1",
+  "license": null,
+  "retrieved_at": "2026-07-15T14:46:47.623964+00:00",
+  "retrieval_method": "requests",
+  "content": {
+    "arxiv_id": "2506.16345v1",
+    "title": "Can GPT-4o Evaluate Usability Like Human Experts? A Comparative Study on Issue Identification in Heuristic Evaluation",
+    "abstract": "Heuristic evaluation is a widely used method in Human-Computer Interaction (HCI) to inspect interfaces and identify issues based on heuristics. Recently, Large Language Models (LLMs), such as GPT-4o, have been applied in HCI to assist in persona creation, the ideation process, and the analysis of semi-structured interviews. However, considering the need to understand heuristics and the high degree of abstraction required to evaluate them, LLMs may have difficulty conducting heuristic evaluation. However, prior research has not investigated GPT-4o's performance in heuristic evaluation compared to HCI experts in web-based systems. In this context, this study aims to compare the results of a heuristic evaluation performed by GPT-4o and human experts. To this end, we selected a set of screenshots from a web system and asked GPT-4o to perform a heuristic evaluation based on Nielsen's Heuristics from a literature-grounded prompt. Our results indicate that only 21.2% of the issues identified by human experts were also identified by GPT-4o, despite it found 27 new issues. We also found that GPT-4o performed better for heuristics related to aesthetic and minimalist design and match between system and real world, whereas it has difficulty identifying issues in heuristics related to flexibility, control, and user efficiency. Additionally, we noticed that GPT-4o generated several false positives due to hallucinations and attempts to predict issues. Finally, we highlight five takeaways for the conscious use of GPT-4o in heuristic evaluations.",
+    "authors": [
+      "Guilherme Guerino",
+      "Luiz Rodrigues",
+      "Bruna Capeleti",
+      "Rafael Ferreira Mello",
+      "André Freire",
+      "Luciana Zaina"
+    ],
+    "categories": [
+      "cs.HC"
+    ],
+    "published": "2025-06-19T14:22:44Z"
+  },
+  "content_hash": "bb93a8a658c93de7880248deab84706046f9e8129e3279be90a7881e8b1b6c01",
+  "feeds_topics": [
+    "T1",
+    "T5"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": {
+    "classified_by": "llama3.2",
+    "relevance": {
+      "T1": 0.0,
+      "T2": 0.8,
+      "T3": 0.0,
+      "T4": 0.0,
+      "T5": 0.0,
+      "T6": 0.0
+    },
+    "extracted_claims": [
+      "GPT-4o performed better for heuristics related to aesthetic and minimalist design"
+    ],
+    "confidence": 0.7,
+    "classification_reviewed": false,
+    "degraded_reason": null
+  }
+}

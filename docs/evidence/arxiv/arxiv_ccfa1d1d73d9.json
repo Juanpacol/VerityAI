@@ -1,0 +1,49 @@
+{
+  "id": "arxiv_ccfa1d1d73d9",
+  "source": "arxiv",
+  "source_url": "http://arxiv.org/abs/2308.13507v2",
+  "license": null,
+  "retrieved_at": "2026-07-15T14:46:47.624095+00:00",
+  "retrieval_method": "requests",
+  "content": {
+    "arxiv_id": "2308.13507v2",
+    "title": "Large Language Models Should Ask Clarifying Questions to Increase Confidence in Generated Code",
+    "abstract": "Large language models (LLMs) have significantly improved the ability to perform tasks in the field of code generation. However, there is still a gap between LLMs being capable coders and being top-tier software engineers. Based on the observation that toplevel software engineers often ask clarifying questions to reduce ambiguity in both requirements and coding solutions, I argue that the same should be applied to LLMs for code generation tasks. By asking probing questions in various topics before generating the final code, the challenges of programming with LLMs, such as unclear intent specification, lack of computational thinking, and undesired code quality, may be alleviated. This, in turn, increases confidence in the generated code. In this work, I explore how to leverage better communication skills to achieve greater confidence in generated code. I propose a communication-centered process that uses an LLM-generated communicator to identify issues with high ambiguity or low confidence in problem descriptions and generated code. I then ask clarifying questions to obtain responses from users for refining the code.",
+    "authors": [
+      "Jie JW Wu"
+    ],
+    "categories": [
+      "cs.SE",
+      "cs.AI",
+      "cs.LG"
+    ],
+    "published": "2023-08-25T17:33:05Z"
+  },
+  "content_hash": "ccfa1d1d73d9723b1ce46fb630af3e719abb6f8cc341a23dab1ae1899c62de9a",
+  "feeds_topics": [
+    "T1",
+    "T5"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": {
+    "classified_by": "llama3.2",
+    "relevance": {
+      "T1": 0.4,
+      "T2": 0.6,
+      "T3": 0.0,
+      "T4": 0.0,
+      "T5": 0.8,
+      "T6": 0.0
+    },
+    "extracted_claims": [
+      "LLMs rely on user input to generate code",
+      "Effective communication is key to increase confidence in generated code"
+    ],
+    "confidence": 0.7,
+    "classification_reviewed": false,
+    "degraded_reason": null
+  }
+}

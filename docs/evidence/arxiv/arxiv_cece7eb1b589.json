@@ -1,0 +1,62 @@
+{
+  "id": "arxiv_cece7eb1b589",
+  "source": "arxiv",
+  "source_url": "http://arxiv.org/abs/2508.10108v1",
+  "license": null,
+  "retrieved_at": "2026-07-15T14:46:41.708614+00:00",
+  "retrieval_method": "requests",
+  "content": {
+    "arxiv_id": "2508.10108v1",
+    "title": "Amazon Nova AI Challenge -- Trusted AI: Advancing secure, AI-assisted software development",
+    "abstract": "AI systems for software development are rapidly gaining prominence, yet significant challenges remain in ensuring their safety. To address this, Amazon launched the Trusted AI track of the Amazon Nova AI Challenge, a global competition among 10 university teams to drive advances in secure AI. In the challenge, five teams focus on developing automated red teaming bots, while the other five create safe AI assistants. This challenge provides teams with a unique platform to evaluate automated red-teaming and safety alignment methods through head-to-head adversarial tournaments where red teams have multi-turn conversations with the competing AI coding assistants to test their safety alignment. Along with this, the challenge provides teams with a feed of high quality annotated data to fuel iterative improvement. Throughout the challenge, teams developed state-of-the-art techniques, introducing novel approaches in reasoning-based safety alignment, robust model guardrails, multi-turn jail-breaking, and efficient probing of large language models (LLMs). To support these efforts, the Amazon Nova AI Challenge team made substantial scientific and engineering investments, including building a custom baseline coding specialist model for the challenge from scratch, developing a tournament orchestration service, and creating an evaluation harness. This paper outlines the advancements made by university teams and the Amazon Nova AI Challenge team in addressing the safety challenges of AI for software development, highlighting this collaborative effort to raise the bar for AI safety.",
+    "authors": [
+      "Sattvik Sahai",
+      "Prasoon Goyal",
+      "Michael Johnston",
+      "Anna Gottardi",
+      "Yao Lu",
+      "Lucy Hu",
+      "Luke Dai",
+      "Shaohua Liu",
+      "Samyuth Sagi",
+      "Hangjie Shi",
+      "Desheng Zhang",
+      "Lavina Vaz",
+      "Leslie Ball",
+      "Maureen Murray",
+      "Rahul Gupta",
+      "Shankar Ananthakrishna"
+    ],
+    "categories": [
+      "cs.AI",
+      "cs.CL"
+    ],
+    "published": "2025-08-13T18:04:01Z"
+  },
+  "content_hash": "cece7eb1b5894f434ce8934bdf2af7c2769100b3bcf3513fbd42c83b97dd30d7",
+  "feeds_topics": [
+    "T5"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": {
+    "classified_by": "llama3.2",
+    "relevance": {
+      "T1": 0.0,
+      "T2": 0.4,
+      "T3": 0.7,
+      "T4": 0.0,
+      "T5": 0.6,
+      "T6": 0.8
+    },
+    "extracted_claims": [
+      "Automated red teaming bots and safe AI assistants are being developed for secure software development",
+      "State-of-the-art techniques have been introduced in reasoning-based safety alignment"
+    ],
+    "confidence": 0.9,
+    "classification_reviewed": false,
+    "degraded_reason": null
+  }
+}

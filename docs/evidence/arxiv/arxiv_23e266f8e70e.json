@@ -1,0 +1,52 @@
+{
+  "id": "arxiv_23e266f8e70e",
+  "source": "arxiv",
+  "source_url": "http://arxiv.org/abs/1904.03285v4",
+  "license": null,
+  "retrieved_at": "2026-07-15T14:46:47.623989+00:00",
+  "retrieval_method": "requests",
+  "content": {
+    "arxiv_id": "1904.03285v4",
+    "title": "Can You Explain That? Lucid Explanations Help Human-AI Collaborative Image Retrieval",
+    "abstract": "While there have been many proposals on making AI algorithms explainable, few have attempted to evaluate the impact of AI-generated explanations on human performance in conducting human-AI collaborative tasks. To bridge the gap, we propose a Twenty-Questions style collaborative image retrieval game, Explanation-assisted Guess Which (ExAG), as a method of evaluating the efficacy of explanations (visual evidence or textual justification) in the context of Visual Question Answering (VQA). In our proposed ExAG, a human user needs to guess a secret image picked by the VQA agent by asking natural language questions to it. We show that overall, when AI explains its answers, users succeed more often in guessing the secret image correctly. Notably, a few correct explanations can readily improve human performance when VQA answers are mostly incorrect as compared to no-explanation games. Furthermore, we also show that while explanations rated as \"helpful\" significantly improve human performance, \"incorrect\" and \"unhelpful\" explanations can degrade performance as compared to no-explanation games. Our experiments, therefore, demonstrate that ExAG is an effective means to evaluate the efficacy of AI-generated explanations on a human-AI collaborative task.",
+    "authors": [
+      "Arijit Ray",
+      "Yi Yao",
+      "Rakesh Kumar",
+      "Ajay Divakaran",
+      "Giedrius Burachas"
+    ],
+    "categories": [
+      "cs.CY",
+      "cs.CV",
+      "cs.HC"
+    ],
+    "published": "2019-04-05T21:26:39Z"
+  },
+  "content_hash": "23e266f8e70e5c0145d9c272d854ba156495d392360e5be01eb9d01291ea90c7",
+  "feeds_topics": [
+    "T1",
+    "T5"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": {
+    "classified_by": "llama3.2",
+    "relevance": {
+      "T1": 0.0,
+      "T2": 0.0,
+      "T3": 0.0,
+      "T4": 0.0,
+      "T5": 0.0,
+      "T6": 0.0
+    },
+    "extracted_claims": [
+      "ExAG demonstrates the efficacy of AI-generated explanations in human-AI collaborative tasks"
+    ],
+    "confidence": 0.1,
+    "classification_reviewed": false,
+    "degraded_reason": null
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "id": "arxiv_de81ba5a334d",
+  "source": "arxiv",
+  "source_url": "http://arxiv.org/abs/2105.09222v1",
+  "license": null,
+  "retrieved_at": "2026-07-15T14:46:41.708549+00:00",
+  "retrieval_method": "requests",
+  "content": {
+    "arxiv_id": "2105.09222v1",
+    "title": "More Similar Values, More Trust? -- the Effect of Value Similarity on Trust in Human-Agent Interaction",
+    "abstract": "As AI systems are increasingly involved in decision making, it also becomes important that they elicit appropriate levels of trust from their users. To achieve this, it is first important to understand which factors influence trust in AI. We identify that a research gap exists regarding the role of personal values in trust in AI. Therefore, this paper studies how human and agent Value Similarity (VS) influences a human's trust in that agent. To explore this, 89 participants teamed up with five different agents, which were designed with varying levels of value similarity to that of the participants. In a within-subjects, scenario-based experiment, agents gave suggestions on what to do when entering the building to save a hostage. We analyzed the agent's scores on subjective value similarity, trust and qualitative data from open-ended questions. Our results show that agents rated as having more similar values also scored higher on trust, indicating a positive effect between the two. With this result, we add to the existing understanding of human-agent trust by providing insight into the role of value-similarity.",
+    "authors": [
+      "Siddharth Mehrotra",
+      "Catholijn M. Jonker",
+      "Myrthe L. Tielman"
+    ],
+    "categories": [
+      "cs.AI",
+      "cs.HC"
+    ],
+    "published": "2021-05-19T16:06:46Z"
+  },
+  "content_hash": "de81ba5a334d65fcaae4de99f300419dee479295a4bc5d1a4c51d44d72bb4eb7",
+  "feeds_topics": [
+    "T5"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": {
+    "classified_by": "llama3.2",
+    "relevance": {
+      "T1": 0.0,
+      "T2": 0.0,
+      "T3": 0.0,
+      "T4": 0.0,
+      "T5": 0.8,
+      "T6": 0.0
+    },
+    "extracted_claims": [
+      "trust in AI systems is influenced by value similarity"
+    ],
+    "confidence": 0.8,
+    "classification_reviewed": false,
+    "degraded_reason": null
+  }
+}

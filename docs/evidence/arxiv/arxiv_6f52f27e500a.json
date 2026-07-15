@@ -1,0 +1,48 @@
+{
+  "id": "arxiv_6f52f27e500a",
+  "source": "arxiv",
+  "source_url": "http://arxiv.org/abs/2504.14689v1",
+  "license": null,
+  "retrieved_at": "2026-07-15T14:46:47.624072+00:00",
+  "retrieval_method": "requests",
+  "content": {
+    "arxiv_id": "2504.14689v1",
+    "title": "Designing AI Systems that Augment Human Performed vs. Demonstrated Critical Thinking",
+    "abstract": "The recent rapid advancement of LLM-based AI systems has accelerated our search and production of information. While the advantages brought by these systems seemingly improve the performance or efficiency of human activities, they do not necessarily enhance human capabilities. Recent research has started to examine the impact of generative AI on individuals' cognitive abilities, especially critical thinking. Based on definitions of critical thinking across psychology and education, this position paper proposes the distinction between demonstrated and performed critical thinking in the era of generative AI and discusses the implication of this distinction in research and development of AI systems that aim to augment human critical thinking.",
+    "authors": [
+      "Katelyn Xiaoying Mei",
+      "Nic Weber"
+    ],
+    "categories": [
+      "cs.HC"
+    ],
+    "published": "2025-04-20T17:40:28Z"
+  },
+  "content_hash": "6f52f27e500a526710ba5ed3285e381b811b5a35c456650d98ef37dbbec47cbc",
+  "feeds_topics": [
+    "T1",
+    "T5"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": {
+    "classified_by": "llama3.2",
+    "relevance": {
+      "T1": 0.0,
+      "T2": 0.08,
+      "T3": 0.0,
+      "T4": 0.0,
+      "T5": 0.09,
+      "T6": 0.03
+    },
+    "extracted_claims": [
+      "LLM-based AI systems do not necessarily enhance human capabilities",
+      "Generative AI affects individuals' cognitive abilities, especially critical thinking"
+    ],
+    "confidence": 0.7,
+    "classification_reviewed": false,
+    "degraded_reason": null
+  }
+}

@@ -3,7 +3,7 @@
   "source": "arxiv",
   "source_url": "http://arxiv.org/abs/2604.00187v2",
   "license": null,
-  "retrieved_at": "2026-07-15T03:37:29.629405+00:00",
+  "retrieved_at": "2026-07-15T14:46:41.708568+00:00",
   "retrieval_method": "requests",
   "content": {
     "arxiv_id": "2604.00187v2",
@@ -37,13 +37,14 @@
       "T2": 0.0,
       "T3": 0.0,
       "T4": 0.0,
-      "T5": 0.0,
+      "T5": 0.6,
       "T6": 0.0
     },
     "extracted_claims": [
-      "AI systems shift from single-query tools into autonomous agents"
+      "AI failures can lead to self-blame among blind and low-vision users",
+      "Conversational explanations are highly valued by BLV users"
     ],
-    "confidence": 0.3,
+    "confidence": 0.8,
     "classification_reviewed": false,
     "degraded_reason": null
   }

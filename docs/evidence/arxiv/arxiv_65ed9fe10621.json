@@ -1,0 +1,54 @@
+{
+  "id": "arxiv_65ed9fe10621",
+  "source": "arxiv",
+  "source_url": "http://arxiv.org/abs/2106.16106v1",
+  "license": null,
+  "retrieved_at": "2026-07-15T14:46:44.552068+00:00",
+  "retrieval_method": "requests",
+  "content": {
+    "arxiv_id": "2106.16106v1",
+    "title": "How can design help enhance trust calibration in public autonomous vehicles?",
+    "abstract": "Trust is a multilayered concept with critical relevance when it comes to introducing new technologies. Understanding how humans will interact with complex vehicle systems and preparing for the functional, societal and psychological aspects of autonomous vehicles' entry into our cities is a pressing concern. Design tools can help calibrate the adequate and affordable level of trust needed for a safe and positive experience. This study focuses on passenger interactions capable of enhancing the system trustworthiness and data accuracy in future shared public transportation.",
+    "authors": [
+      "Yuri Klebanov",
+      "Romi Mikulinsky",
+      "Tom Reznikov",
+      "Miles Pennington",
+      "Yoshihiro Suda",
+      "Toshihiro Hiraoka",
+      "Shoichi Kanzaki"
+    ],
+    "categories": [
+      "cs.HC"
+    ],
+    "published": "2021-06-30T14:54:25Z"
+  },
+  "content_hash": "65ed9fe10621e31a02e88e12da67324a5dfdf0446765e1733d1d772b1e9e50ef",
+  "feeds_topics": [
+    "T1",
+    "T5"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": {
+    "classified_by": "llama3.2",
+    "relevance": {
+      "T1": 0.8,
+      "T2": 0.9,
+      "T3": 0.0,
+      "T4": 0.0,
+      "T5": 0.6,
+      "T6": 0.0
+    },
+    "extracted_claims": [
+      "public autonomous vehicles",
+      "system trustworthiness",
+      "data accuracy"
+    ],
+    "confidence": 0.9,
+    "classification_reviewed": false,
+    "degraded_reason": null
+  }
+}

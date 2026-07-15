@@ -1,0 +1,49 @@
+{
+  "id": "arxiv_b0dcf7cf8639",
+  "source": "arxiv",
+  "source_url": "http://arxiv.org/abs/1809.00626v1",
+  "license": null,
+  "retrieved_at": "2026-07-15T14:46:44.552173+00:00",
+  "retrieval_method": "requests",
+  "content": {
+    "arxiv_id": "1809.00626v1",
+    "title": "Deductive Verification of Unmodified Linux Kernel Library Functions",
+    "abstract": "This paper presents results from the development and evaluation of a deductive verification benchmark consisting of 26 unmodified Linux kernel library functions implementing conventional memory and string operations. The formal contract of the functions was extracted from their source code and was represented in the form of preconditions and postconditions. The correctness of 23 functions was completely proved using AstraVer toolset, although success for 11 functions was achieved using 2 new specification language constructs. Another 2 functions were proved after a minor modification of their source code, while the final one cannot be completely proved using the existing memory model. The benchmark can be used for the testing and evaluation of deductive verification tools and as a starting point for verifying other parts of the Linux kernel.",
+    "authors": [
+      "Denis Efremov",
+      "Mikhail Mandrykin",
+      "Alexey Khoroshilov"
+    ],
+    "categories": [
+      "cs.SE"
+    ],
+    "published": "2018-09-03T15:19:46Z"
+  },
+  "content_hash": "b0dcf7cf8639612236f21b5f2a8438e99bd26b272ef411789adee428a7871d15",
+  "feeds_topics": [
+    "T1",
+    "T5"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": {
+    "classified_by": "llama3.2",
+    "relevance": {
+      "T1": 0.0,
+      "T2": 0.166666666666667,
+      "T3": 0.5,
+      "T4": 0.0,
+      "T5": 0.0,
+      "T6": 0.0
+    },
+    "extracted_claims": [
+      "Formal contract of the functions was extracted from their source code and represented in the form of preconditions and postconditions.",
+      "The correctness of 23 functions was completely proved using AstraVer toolset"
+    ],
+    "confidence": 0.8,
+    "classification_reviewed": false,
+    "degraded_reason": null
+  }
+}

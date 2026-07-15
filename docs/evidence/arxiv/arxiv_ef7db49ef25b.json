@@ -1,0 +1,51 @@
+{
+  "id": "arxiv_ef7db49ef25b",
+  "source": "arxiv",
+  "source_url": "http://arxiv.org/abs/2412.01978v1",
+  "license": null,
+  "retrieved_at": "2026-07-15T14:46:47.624051+00:00",
+  "retrieval_method": "requests",
+  "content": {
+    "arxiv_id": "2412.01978v1",
+    "title": "Human-centred test and evaluation of military AI",
+    "abstract": "The REAIM 2024 Blueprint for Action states that AI applications in the military domain should be ethical and human-centric and that humans must remain responsible and accountable for their use and effects. Developing rigorous test and evaluation, verification and validation (TEVV) frameworks will contribute to robust oversight mechanisms. TEVV in the development and deployment of AI systems needs to involve human users throughout the lifecycle. Traditional human-centred test and evaluation methods from human factors need to be adapted for deployed AI systems that require ongoing monitoring and evaluation. The language around AI-enabled systems should be shifted to inclusion of the human(s) as a component of the system. Standards and requirements supporting this adjusted definition are needed, as are metrics and means to evaluate them. The need for dialogue between technologists and policymakers on human-centred TEVV will be evergreen, but dialogue needs to be initiated with an objective in mind for it to be productive. Development of TEVV throughout system lifecycle is critical to support this evolution including the issue of human scalability and impact on scale of achievable testing. Communication between technical and non technical communities must be improved to ensure operators and policy-makers understand risk assumed by system use and to better inform research and development. Test and evaluation in support of responsible AI deployment must include the effect of the human to reflect operationally realised system performance. Means of communicating the results of TEVV to those using and making decisions regarding the use of AI based systems will be key in informing risk based decisions regarding use.",
+    "authors": [
+      "David Helmer",
+      "Michael Boardman",
+      "S. Kate Conroy",
+      "Adam J. Hepworth",
+      "Manoj Harjani"
+    ],
+    "categories": [
+      "cs.HC",
+      "cs.AI"
+    ],
+    "published": "2024-12-02T21:14:55Z"
+  },
+  "content_hash": "ef7db49ef25bb52d179a45fd8568b17535b134ee980d9bc75038dd7919ed3c4c",
+  "feeds_topics": [
+    "T1",
+    "T5"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": {
+    "classified_by": "llama3.2",
+    "relevance": {
+      "T1": 0.0,
+      "T2": 0.0,
+      "T3": 0.0,
+      "T4": 0.0,
+      "T5": 0.0,
+      "T6": 0.0
+    },
+    "extracted_claims": [
+      "human oversight is crucial in AI deployment"
+    ],
+    "confidence": 0.2,
+    "classification_reviewed": false,
+    "degraded_reason": null
+  }
+}

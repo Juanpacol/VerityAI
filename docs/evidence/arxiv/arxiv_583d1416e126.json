@@ -1,0 +1,53 @@
+{
+  "id": "arxiv_583d1416e126",
+  "source": "arxiv",
+  "source_url": "http://arxiv.org/abs/2509.11402v1",
+  "license": null,
+  "retrieved_at": "2026-07-15T14:46:44.552340+00:00",
+  "retrieval_method": "requests",
+  "content": {
+    "arxiv_id": "2509.11402v1",
+    "title": "TRUST 2025: SCRITA and RTSS @ RO-MAN 2025",
+    "abstract": "The TRUST workshop is the result of a collaboration between two established workshops in the field of Human-Robot Interaction: SCRITA (Trust, Acceptance and Social Cues in Human-Robot Interaction) and RTSS (Robot Trust for Symbiotic Societies). This joint initiative brings together the complementary goals of these workshops to advance research on trust from both the human and robot perspectives. Website: https://scrita.herts.ac.uk/2025/",
+    "authors": [
+      "Alessandra Rossi",
+      "Patrick Holthaus",
+      "Gabriella Lakatos",
+      "Sílvia Moros",
+      "Ali Fallahi",
+      "Murat Kirtay",
+      "Marie Postma",
+      "Erhan Oztop"
+    ],
+    "categories": [
+      "cs.RO"
+    ],
+    "published": "2025-09-14T19:32:37Z"
+  },
+  "content_hash": "583d1416e1265a7a75e8413b1d69babd540f13b8783993482032b2585e5e6608",
+  "feeds_topics": [
+    "T1",
+    "T5"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": {
+    "classified_by": "llama3.2",
+    "relevance": {
+      "T1": 0.0,
+      "T2": 0.6,
+      "T3": 0.9,
+      "T4": 0.0,
+      "T5": 0.0,
+      "T6": 0.0
+    },
+    "extracted_claims": [
+      "LLMs are still prone to SQL injection and race conditions due to the complexity of their internal workings"
+    ],
+    "confidence": 0.8,
+    "classification_reviewed": false,
+    "degraded_reason": null
+  }
+}

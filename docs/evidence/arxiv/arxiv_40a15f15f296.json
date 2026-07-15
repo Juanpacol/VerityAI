@@ -1,0 +1,51 @@
+{
+  "id": "arxiv_40a15f15f296",
+  "source": "arxiv",
+  "source_url": "http://arxiv.org/abs/2603.12895v1",
+  "license": null,
+  "retrieved_at": "2026-07-15T14:46:47.623845+00:00",
+  "retrieval_method": "requests",
+  "content": {
+    "arxiv_id": "2603.12895v1",
+    "title": "Human-Centered Evaluation of an LLM-Based Process Modeling Copilot: A Mixed-Methods Study with Domain Experts",
+    "abstract": "Integrating Large Language Models (LLMs) into business process management tools promises to democratize Business Process Model and Notation (BPMN) modeling for non-experts. While automated frameworks assess syntactic and semantic quality, they miss human factors like trust, usability, and professional alignment. We conducted a mixed-methods evaluation of our proposed solution, an LLM-powered BPMN copilot, with five process modeling experts using focus groups and standardized questionnaires. Our findings reveal a critical tension between acceptable perceived usability (mean CUQ score: 67.2/100) and notably lower trust (mean score: 48.8\\%), with reliability rated as the most critical concern (M=1.8/5). Furthermore, we identified output-quality issues, prompting difficulties, and a need for the LLM to ask more in-depth clarifying questions about the process. We envision five use cases ranging from domain-expert support to enterprise quality assurance. We demonstrate the necessity of human-centered evaluation complementing automated benchmarking for LLM modeling agents.",
+    "authors": [
+      "Chantale Lauer",
+      "Peter Pfeiffer",
+      "Nijat Mehdiyev"
+    ],
+    "categories": [
+      "cs.HC",
+      "cs.AI",
+      "cs.SE"
+    ],
+    "published": "2026-03-13T10:59:23Z"
+  },
+  "content_hash": "40a15f15f2965eb4adde22fba74e2d1c85d6ac91da182db6db23bf6b08a67ce4",
+  "feeds_topics": [
+    "T1",
+    "T5"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": {
+    "classified_by": "llama3.2",
+    "relevance": {
+      "T1": 0.0,
+      "T2": 0.33,
+      "T3": 0.0,
+      "T4": 0.0,
+      "T5": 0.42,
+      "T6": 0.25
+    },
+    "extracted_claims": [
+      "LLMs miss human factors like trust, usability, and professional alignment",
+      "reliability rated as the most critical concern"
+    ],
+    "confidence": 0.8,
+    "classification_reviewed": false,
+    "degraded_reason": null
+  }
+}

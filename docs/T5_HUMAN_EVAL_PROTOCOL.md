@@ -28,6 +28,36 @@ retrieved, or something else entirely? If the number doesn't calibrate
 but the *proof panel* still builds justified trust, that's a very
 different product story than if neither does.
 
+## Related work (real evidence, fetched not assumed)
+
+Before finalizing this protocol, the evidence pipeline
+(`scripts/fetch_evidence.py --source arxiv` with T5-targeted queries, then
+`scripts/classify_evidence.py` for relevance scoring) pulled real papers
+on trust/explainability. Two directly shaped this protocol:
+
+- **"Trust and Reliance in XAI — Distinguishing Between Attitudinal and
+  Behavioral Measures"** — the single most load-bearing finding from this
+  literature pass: *stated* trust ("do I trust this?") and *behavioral*
+  reliance (would I actually act on it — merge it, ship it, skip review?)
+  are measured as **different constructs** in the XAI literature, and
+  conflating them is a known methodological gap. The original draft of
+  this protocol only asked the attitudinal question. **Fixed below** by
+  adding a behavioral-intent question to the closing questions.
+- **"Large Language Models Should Ask Clarifying Questions to Increase
+  Confidence in Generated Code"** — directly on this project's topic
+  (confidence in LLM-generated code specifically, not AI in general);
+  worth reading in full before writing up any real T5 results, as a
+  comparison point for whatever this study finds.
+
+Full records (title, abstract, LLM-scored relevance to T5, extracted
+claims — several more touch trust/explainability more generally, lower
+relevance but present for completeness): `docs/evidence/arxiv/`, tagged
+`T5` in `docs/evidence/manifest.json`. This is prior published literature
+providing context, **not a substitute for running this project's own
+study** — none of it measures trust in *this specific system's* specific
+panels (Z3 counterexamples, KG retrieval provenance), which is exactly
+what real interviews are still needed for.
+
 ## Materials (real, not simulated)
 
 `scripts/generate_human_eval_materials.py` ran 6 real prompts through the
@@ -109,6 +139,16 @@ actually load-bearing for trust, versus decorative.
   or that you didn't understand?"
 - "How does this compare to how you currently decide whether to trust
   AI-generated code (Copilot, ChatGPT, etc.) today?"
+- **Behavioral-intent question (added after the literature pass above)**:
+  "Would you actually merge this code as-is, merge it with a quick
+  read-through, or insist on a full review before merging — for the
+  sample(s) you said you 'trusted'?" Ask this *separately* from the
+  attitudinal "do you trust this" question and record both — the XAI
+  literature's attitudinal/behavioral distinction is exactly the gap this
+  closes. A participant who says "I trust it" but would still insist on
+  full review is a materially different finding than one who'd merge it
+  blind, and the original protocol draft would have coded both as simply
+  "trusted."
 
 ## What to measure / how to analyze
 
@@ -133,6 +173,14 @@ analyzable:
    across conditions is load-bearing.
 4. **The "remove everything but one" closing question** is the most
    direct signal — tabulate what people kept.
+5. **Attitudinal/behavioral gap**: for each participant, compare their
+   stated trust (attitudinal) against their behavioral-intent answer
+   (would they merge blind, skim, or insist on full review). A
+   participant whose two answers disagree (says "trust" but wants full
+   review) is evidence that the confidence panel builds *stated*
+   confidence without building *actual* reliance — a materially
+   different, and more damning, finding than low trust alone. Report the
+   gap rate, not just the raw trust rate.
 
 ## Honest constraints on this design, stated up front
 

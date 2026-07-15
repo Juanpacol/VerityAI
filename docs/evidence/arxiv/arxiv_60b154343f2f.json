@@ -3,7 +3,7 @@
   "source": "arxiv",
   "source_url": "http://arxiv.org/abs/2303.12869v1",
   "license": null,
-  "retrieved_at": "2026-07-15T03:37:26.852407+00:00",
+  "retrieved_at": "2026-07-15T14:46:47.623919+00:00",
   "retrieval_method": "requests",
   "content": {
     "arxiv_id": "2303.12869v1",
@@ -22,7 +22,8 @@
   },
   "content_hash": "60b154343f2fa9c968f79f3ae356bd6f8a352706b16846e9d0a3974f3f4c9540",
   "feeds_topics": [
-    "T2"
+    "T1",
+    "T5"
   ],
   "validation": {
     "status": "valid",
@@ -30,20 +31,12 @@
   },
   "classification": {
     "classified_by": "llama3.2",
-    "relevance": {
-      "T1": 0.0,
-      "T2": 0.8,
-      "T3": 0.6,
-      "T4": 0.0,
-      "T5": 0.9,
-      "T6": 0.0
-    },
+    "relevance": {},
     "extracted_claims": [
-      "JaCoText achieves new state-of-the-art results in automatic code generation",
-      "The proposed model leverages advantages of both natural language and code generation models"
+      "{\"relevance\": {\"T1\": 0.0, \"T2\": 0.5, \"T3\": 0.0, \"T4\": 0.0, \"T5\": 0.0, \"T6\": 0.0}, \"extracted_claims\": [\"JaCoText achieves new state-of-the-art results on CONCODE dataset\"], \"confidence\": 0.8}}"
     ],
-    "confidence": 0.7,
+    "confidence": 0.0,
     "classification_reviewed": false,
-    "degraded_reason": null
+    "degraded_reason": "unparseable_llm_response"
   }
 }
