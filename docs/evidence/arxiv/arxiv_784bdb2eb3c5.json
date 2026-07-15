@@ -1,0 +1,30 @@
+{
+  "id": "arxiv_784bdb2eb3c5",
+  "source": "arxiv",
+  "source_url": "http://arxiv.org/abs/2510.15769v1",
+  "license": null,
+  "retrieved_at": "2026-07-15T03:37:29.629539+00:00",
+  "retrieval_method": "requests",
+  "content": {
+    "arxiv_id": "2510.15769v1",
+    "title": "Preliminary Quantitative Study on Explainability and Trust in AI Systems",
+    "abstract": "Large-scale AI models such as GPT-4 have accelerated the deployment of artificial intelligence across critical domains including law, healthcare, and finance, raising urgent questions about trust and transparency. This study investigates the relationship between explainability and user trust in AI systems through a quantitative experimental design. Using an interactive, web-based loan approval simulation, we compare how different types of explanations, ranging from basic feature importance to interactive counterfactuals influence perceived trust. Results suggest that interactivity enhances both user engagement and confidence, and that the clarity and relevance of explanations are key determinants of trust. These findings contribute empirical evidence to the growing field of human-centered explainable AI, highlighting measurable effects of explainability design on user perception",
+    "authors": [
+      "Allen Daniel Sunny"
+    ],
+    "categories": [
+      "cs.AI",
+      "cs.HC"
+    ],
+    "published": "2025-10-17T15:59:28Z"
+  },
+  "content_hash": "784bdb2eb3c5f979ab53c994f110022a3b1453741755f322513f5b5d88d4b124",
+  "feeds_topics": [
+    "T5"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

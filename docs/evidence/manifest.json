@@ -1,0 +1,59 @@
+{
+  "arxiv_080cfcd2da04": {
+    "content_hash": "080cfcd2da048670dc2a5e404f23ed8def24fa5c2ff439d89109e22fa0327241",
+    "feeds_topics": [
+      "T1"
+    ],
+    "retrieved_at": "2026-07-15T03:37:23.884209+00:00",
+    "source": "arxiv"
+  },
+  "arxiv_31be846e6e52": {
+    "content_hash": "31be846e6e5223b6a71d8aab6364b881611b666bc9de29ae338cb22ae523e46f",
+    "feeds_topics": [
+      "T1"
+    ],
+    "retrieved_at": "2026-07-15T03:37:23.884339+00:00",
+    "source": "arxiv"
+  },
+  "arxiv_60b154343f2f": {
+    "content_hash": "60b154343f2fa9c968f79f3ae356bd6f8a352706b16846e9d0a3974f3f4c9540",
+    "feeds_topics": [
+      "T2"
+    ],
+    "retrieved_at": "2026-07-15T03:37:26.852407+00:00",
+    "source": "arxiv"
+  },
+  "arxiv_64f7eaddc23e": {
+    "content_hash": "64f7eaddc23edacd44d6ad195520860e547fc8eb97f42ee674cfb2a13a806b5e",
+    "feeds_topics": [
+      "T2"
+    ],
+    "retrieved_at": "2026-07-15T03:37:26.852328+00:00",
+    "source": "arxiv"
+  },
+  "arxiv_6e32a2df7295": {
+    "content_hash": "6e32a2df7295f045131f3860b46de14cee7ca530d597b6bec89dbf5459ffa011",
+    "feeds_topics": [
+      "T1",
+      "T6"
+    ],
+    "retrieved_at": "2026-07-15T03:37:33.013551+00:00",
+    "source": "arxiv"
+  },
+  "arxiv_784bdb2eb3c5": {
+    "content_hash": "784bdb2eb3c5f979ab53c994f110022a3b1453741755f322513f5b5d88d4b124",
+    "feeds_topics": [
+      "T5"
+    ],
+    "retrieved_at": "2026-07-15T03:37:29.629539+00:00",
+    "source": "arxiv"
+  },
+  "arxiv_a2a0a1693082": {
+    "content_hash": "a2a0a169308261737b26cb5666892d6fec69da10094f1999fab27a4bbd9f0533",
+    "feeds_topics": [
+      "T5"
+    ],
+    "retrieved_at": "2026-07-15T03:37:29.629405+00:00",
+    "source": "arxiv"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "id": "arxiv_6e32a2df7295",
+  "source": "arxiv",
+  "source_url": "http://arxiv.org/abs/2406.09757v2",
+  "license": null,
+  "retrieved_at": "2026-07-15T03:37:33.013551+00:00",
+  "retrieval_method": "requests",
+  "content": {
+    "arxiv_id": "2406.09757v2",
+    "title": "Evaluating LLM-driven User-Intent Formalization for Verification-Aware Languages",
+    "abstract": "Verification-aware programming languages such as Dafny and F* provide means to formally specify and prove properties of a program. Although the problem of checking an implementation against a specification can be defined mechanically, there is no algorithmic way of ensuring the correctness of the {\\it user-intent formalization for programs}, expressed as a formal specification. This is because intent or requirement is expressed {\\it informally} in natural language and the specification is a formal artefact. Despite, the advent of large language models (LLMs) has made tremendous strides bridging the gap between informal intent and formal program implementations recently, driven in large parts by benchmarks and automated metrics for evaluation. Recent work has proposed a framework for evaluating the {\\it user-intent formalization} problem for mainstream programming languages~\\cite{endres-fse24}. However, such an approach does not readily extend to verification-aware languages that support rich specifications (using quantifiers and ghost variables) that cannot be evaluated through dynamic execution. Previous work also required generating program mutants using LLMs to create the benchmark. We advocate an alternate, perhaps simpler approach of {\\it symbolically testing specifications} to provide an intuitive metric for evaluating the quality of specifications for verification-aware languages. We demonstrate that our automated metric agrees closely on a human-labeled dataset of Dafny specifications for the popular MBPP code-generation benchmark, yet demonstrates cases where the human labeling is not perfect. We also outline formal verification challenges that need to be addressed to apply the technique more widely. We believe our work provides a stepping stone to enable the establishment of a benchmark and research agenda for the problem of user-intent formalization for programs.",
+    "authors": [
+      "Shuvendu K. Lahiri"
+    ],
+    "categories": [
+      "cs.PL",
+      "cs.LG",
+      "cs.SE"
+    ],
+    "published": "2024-06-14T06:52:08Z"
+  },
+  "content_hash": "6e32a2df7295f045131f3860b46de14cee7ca530d597b6bec89dbf5459ffa011",
+  "feeds_topics": [
+    "T1",
+    "T6"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

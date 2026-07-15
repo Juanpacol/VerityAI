@@ -1,0 +1,39 @@
+{
+  "id": "arxiv_64f7eaddc23e",
+  "source": "arxiv",
+  "source_url": "http://arxiv.org/abs/2306.08568v2",
+  "license": null,
+  "retrieved_at": "2026-07-15T03:37:26.852328+00:00",
+  "retrieval_method": "requests",
+  "content": {
+    "arxiv_id": "2306.08568v2",
+    "title": "WizardCoder: Empowering Code Large Language Models with Evol-Instruct",
+    "abstract": "Code Large Language Models (Code LLMs), such as StarCoder, have demonstrated exceptional performance in code-related tasks. However, most existing models are solely pre-trained on extensive raw code data without instruction fine-tuning. In this paper, we introduce WizardCoder, which empowers Code LLMs with complex instruction fine-tuning, by adapting the Evol-Instruct method to the domain of code. Through comprehensive experiments on four prominent code generation benchmarks, namely HumanEval, HumanEval+, MBPP, and DS-1000, we unveil the exceptional capabilities of our model. It surpasses all other open-source Code LLMs by a substantial margin. Moreover, our model even outperforms the largest closed LLMs, Anthropic's Claude and Google's Bard, on HumanEval and HumanEval+. Our code, model weights, and data are public at https://github.com/nlpxucan/WizardLM",
+    "authors": [
+      "Ziyang Luo",
+      "Can Xu",
+      "Pu Zhao",
+      "Qingfeng Sun",
+      "Xiubo Geng",
+      "Wenxiang Hu",
+      "Chongyang Tao",
+      "Jing Ma",
+      "Qingwei Lin",
+      "Daxin Jiang"
+    ],
+    "categories": [
+      "cs.CL",
+      "cs.AI"
+    ],
+    "published": "2023-06-14T15:18:48Z"
+  },
+  "content_hash": "64f7eaddc23edacd44d6ad195520860e547fc8eb97f42ee674cfb2a13a806b5e",
+  "feeds_topics": [
+    "T2"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

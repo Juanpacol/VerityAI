@@ -1,0 +1,34 @@
+{
+  "id": "arxiv_a2a0a1693082",
+  "source": "arxiv",
+  "source_url": "http://arxiv.org/abs/2604.00187v2",
+  "license": null,
+  "retrieved_at": "2026-07-15T03:37:29.629405+00:00",
+  "retrieval_method": "requests",
+  "content": {
+    "arxiv_id": "2604.00187v2",
+    "title": "Explainable AI for Blind and Low-Vision Users: Navigating Trust, Modality, and Interpretability in the Agentic Era",
+    "abstract": "Explainable Artificial Intelligence (XAI) is critical for ensuring trust and accountability, yet its development remains predominantly visual. For blind and low-vision (BLV) users, the lack of accessible explanations creates a fundamental barrier to the independent use of AI-driven assistive technologies. This problem intensifies as AI systems shift from single-query tools into autonomous agents that take multi-step actions and make consequential decisions across extended task horizons, where a single undetected error can propagate irreversibly before any feedback is available. This paper investigates the unique XAI requirements of the BLV community through a comprehensive analysis of user interviews and contemporary research. By examining usage patterns across environmental perception and decision support, we identify a significant modality gap. Empirical evidence suggests that while BLV users highly value conversational explanations, they frequently experience \"self-blame\" for AI failures. The paper concludes with a research agenda for accessible Explainable AI in agentic systems, advocating for multimodal interfaces, blame-aware explanation design, and participatory development.",
+    "authors": [
+      "Abu Noman Md Sakib",
+      "Protik Dey",
+      "Zijie Zhang",
+      "Taslima Akter"
+    ],
+    "categories": [
+      "cs.HC",
+      "cs.AI",
+      "cs.ET"
+    ],
+    "published": "2026-03-31T19:39:52Z"
+  },
+  "content_hash": "a2a0a169308261737b26cb5666892d6fec69da10094f1999fab27a4bbd9f0533",
+  "feeds_topics": [
+    "T5"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}
