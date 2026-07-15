@@ -56,6 +56,176 @@
     "retrieved_at": "2026-07-15T03:37:29.629405+00:00",
     "source": "arxiv"
   },
+  "github_issues_196cf0be6668": {
+    "content_hash": "196cf0be666847259e9efc1f4d206b965d689751337214f39658922b548afa02",
+    "feeds_topics": [
+      "T2",
+      "T5"
+    ],
+    "retrieved_at": "2026-07-15T04:16:49.118860+00:00",
+    "source": "github_issues"
+  },
+  "github_issues_1d033908a475": {
+    "content_hash": "1d033908a475de5097dcee9072d9075a3e3375bc799129fc9c0cbc4ab4e509ae",
+    "feeds_topics": [
+      "T4",
+      "T6"
+    ],
+    "retrieved_at": "2026-07-15T04:16:48.213290+00:00",
+    "source": "github_issues"
+  },
+  "github_issues_25713e07df7c": {
+    "content_hash": "25713e07df7ce8d0626949f94a7c1a36c35c3a1cb05028a404aef4a1b058346e",
+    "feeds_topics": [
+      "T6"
+    ],
+    "retrieved_at": "2026-07-15T04:16:53.884777+00:00",
+    "source": "github_issues"
+  },
+  "github_issues_2831c438cc34": {
+    "content_hash": "2831c438cc34784dd7d0f3273fb93549d5cd34a9b39396b4c40d55445b19e0e0",
+    "feeds_topics": [
+      "T6"
+    ],
+    "retrieved_at": "2026-07-15T04:16:50.125599+00:00",
+    "source": "github_issues"
+  },
+  "github_issues_39fb507d36b5": {
+    "content_hash": "39fb507d36b580dd5052a4df0ac0c80fbc58b2157166c7a305806fbd36537340",
+    "feeds_topics": [
+      "T6"
+    ],
+    "retrieved_at": "2026-07-15T04:16:50.125626+00:00",
+    "source": "github_issues"
+  },
+  "github_issues_427becea107b": {
+    "content_hash": "427becea107b0f99f11fe1b4d5f1ade072944bf8233f67dec9f90d768a9743ed",
+    "feeds_topics": [
+      "T6"
+    ],
+    "retrieved_at": "2026-07-15T04:16:53.884754+00:00",
+    "source": "github_issues"
+  },
+  "github_issues_49f5f455052c": {
+    "content_hash": "49f5f455052cc89f91aeb43d9e1b3f964dbd7a1746aac9bb6fda250d2d9f18d7",
+    "feeds_topics": [
+      "T4",
+      "T6"
+    ],
+    "retrieved_at": "2026-07-15T04:16:48.213313+00:00",
+    "source": "github_issues"
+  },
+  "github_issues_5277b10293cc": {
+    "content_hash": "5277b10293ccf6f55cee9c0e1d6b327ac68419a8d64612386ca4f48e053885c6",
+    "feeds_topics": [
+      "T4",
+      "T6"
+    ],
+    "retrieved_at": "2026-07-15T04:16:48.213263+00:00",
+    "source": "github_issues"
+  },
+  "github_issues_5a9a91cf3ef2": {
+    "content_hash": "5a9a91cf3ef20a77d69a69eeef2fefa7e43b20e36bd80520a6842e76c2e8ed50",
+    "feeds_topics": [
+      "T2",
+      "T5"
+    ],
+    "retrieved_at": "2026-07-15T04:16:49.119153+00:00",
+    "source": "github_issues"
+  },
+  "github_issues_60f4ace15b14": {
+    "content_hash": "60f4ace15b14cc4dbc547996157a7e80f432f2706863b10e7a7f76556cb9a7c8",
+    "feeds_topics": [
+      "T4",
+      "T6"
+    ],
+    "retrieved_at": "2026-07-15T04:16:48.213335+00:00",
+    "source": "github_issues"
+  },
+  "github_issues_61797d7f8497": {
+    "content_hash": "61797d7f849758687528bea32a4651d6efdd2d52fad53105f993f6ae0cb84160",
+    "feeds_topics": [
+      "T2",
+      "T5"
+    ],
+    "retrieved_at": "2026-07-15T04:16:49.119109+00:00",
+    "source": "github_issues"
+  },
+  "github_issues_6219fb15f656": {
+    "content_hash": "6219fb15f656283a7eb48422f3ca1f266d12e6ed07516cbbbf96f5a127ac0ff0",
+    "feeds_topics": [
+      "T2",
+      "T5"
+    ],
+    "retrieved_at": "2026-07-15T04:16:49.119046+00:00",
+    "source": "github_issues"
+  },
+  "github_issues_68c3dc5686be": {
+    "content_hash": "68c3dc5686be1705301a856df5f231bf0297ce30455d838a04333799a16c1262",
+    "feeds_topics": [
+      "T6"
+    ],
+    "retrieved_at": "2026-07-15T04:16:53.884805+00:00",
+    "source": "github_issues"
+  },
+  "github_issues_8c7123ad18ef": {
+    "content_hash": "8c7123ad18ef2f4aff8fd10cbb27fdfd1735a7640906d361be8ad28502a95000",
+    "feeds_topics": [
+      "T4",
+      "T6"
+    ],
+    "retrieved_at": "2026-07-15T04:16:48.210646+00:00",
+    "source": "github_issues"
+  },
+  "github_issues_93e95aedc4d4": {
+    "content_hash": "93e95aedc4d44a897c70b85fef468ea50f3a89cde37e1759ae5cd7fd74a06be3",
+    "feeds_topics": [
+      "T6"
+    ],
+    "retrieved_at": "2026-07-15T04:16:50.125455+00:00",
+    "source": "github_issues"
+  },
+  "github_issues_a10b1e98582f": {
+    "content_hash": "a10b1e98582f5ba22738b77324a0d09e3d515e1c351fd0c35a149875a85831b0",
+    "feeds_topics": [
+      "T2",
+      "T5"
+    ],
+    "retrieved_at": "2026-07-15T04:16:49.119082+00:00",
+    "source": "github_issues"
+  },
+  "github_issues_a7656d351a63": {
+    "content_hash": "a7656d351a63cb44e5187949f173422ac61d2a22c6c5378906dbc09f70849aaf",
+    "feeds_topics": [
+      "T6"
+    ],
+    "retrieved_at": "2026-07-15T04:16:50.125669+00:00",
+    "source": "github_issues"
+  },
+  "github_issues_c340a3f5f4b9": {
+    "content_hash": "c340a3f5f4b9baecf9a408923eab6f5a08c550efdfda863374c3256cf2baa8ec",
+    "feeds_topics": [
+      "T6"
+    ],
+    "retrieved_at": "2026-07-15T04:16:53.884721+00:00",
+    "source": "github_issues"
+  },
+  "github_issues_eaea7341f140": {
+    "content_hash": "eaea7341f1400c35e8401697c887c9f21d7774f96343466ba5ae56fdbd40c1ee",
+    "feeds_topics": [
+      "T6"
+    ],
+    "retrieved_at": "2026-07-15T04:16:53.884565+00:00",
+    "source": "github_issues"
+  },
+  "github_issues_fd7dd1e1efdb": {
+    "content_hash": "fd7dd1e1efdb803e77b268b87044222e293b7f10ea02f17eaba11d452a83162d",
+    "feeds_topics": [
+      "T6"
+    ],
+    "retrieved_at": "2026-07-15T04:16:50.125649+00:00",
+    "source": "github_issues"
+  },
   "humaneval_0238d88bea5e": {
     "content_hash": "0238d88bea5e86e51fc6d53ebbe8a5e766bbd6d8cca5ec2e22f28f49938a486c",
     "feeds_topics": [
@@ -9159,5 +9329,29 @@
     ],
     "retrieved_at": "2026-07-15T03:49:07.186691+00:00",
     "source": "mbpp"
+  },
+  "semgrep_21e567227153": {
+    "content_hash": "21e5672271537e3bfe0e4807d4d6613c6a68a7741f2c04ebff857758afb8f975",
+    "feeds_topics": [
+      "T4"
+    ],
+    "retrieved_at": "2026-07-15T04:15:36.585579+00:00",
+    "source": "semgrep"
+  },
+  "z3_docs_4f49763b794d": {
+    "content_hash": "4f49763b794d58f2b7903acbface61a4649251b538ee22b0f42a29ad65fa4f03",
+    "feeds_topics": [
+      "T6"
+    ],
+    "retrieved_at": "2026-07-15T04:15:38.001023+00:00",
+    "source": "z3_docs"
+  },
+  "z3_docs_d192712d2ab1": {
+    "content_hash": "d192712d2ab162d0af629a9d7c10da06cef7b075f11d609edcb978f30c26ce06",
+    "feeds_topics": [
+      "T6"
+    ],
+    "retrieved_at": "2026-07-15T04:15:37.747960+00:00",
+    "source": "z3_docs"
   }
 }

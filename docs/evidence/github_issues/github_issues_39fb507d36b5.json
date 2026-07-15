@@ -1,0 +1,27 @@
+{
+  "id": "github_issues_39fb507d36b5",
+  "source": "github_issues",
+  "source_url": "https://github.com/Z3Prover/z3/issues/8185",
+  "license": null,
+  "retrieved_at": "2026-07-15T04:16:50.125626+00:00",
+  "retrieval_method": "gh_cli",
+  "content": {
+    "query": "string theory",
+    "repo": "Z3Prover/z3",
+    "title": "Incorrect model in mixed FP/Real logic triggered by extra string constraint",
+    "state": "closed",
+    "labels": [
+      "Floats"
+    ],
+    "excerpt": "Z3 reports sat but generates an invalid model `(fails model_validate=true)`.\n\nCrucially, this behavior is triggered by the inclusion of a seemingly irrelevant String constraint: `(assert (and x (= (str.from_int 0) \"0\")))`. If I remove this constraint or remove `(set-option :produce-proofs true)`, Z3 returns unknown instead of producing the incorrect model.\n\nInput:\n```smt2\n(set-option :produce-proofs true)\n(declare-const x8 Int)\n(declare-const x Bool)\n(declare-fun s (Real) Real)\n(assert (> \n    ("
+  },
+  "content_hash": "39fb507d36b580dd5052a4df0ac0c80fbc58b2157166c7a305806fbd36537340",
+  "feeds_topics": [
+    "T6"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

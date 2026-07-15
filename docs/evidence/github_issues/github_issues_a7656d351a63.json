@@ -1,0 +1,27 @@
+{
+  "id": "github_issues_a7656d351a63",
+  "source": "github_issues",
+  "source_url": "https://github.com/Z3Prover/z3/issues/6144",
+  "license": null,
+  "retrieved_at": "2026-07-15T04:16:50.125669+00:00",
+  "retrieval_method": "gh_cli",
+  "content": {
+    "query": "string theory",
+    "repo": "Z3Prover/z3",
+    "title": "[consolidate] (smt.string_solver=z3str3) Refutation Soundness issue on String Theory",
+    "state": "closed",
+    "labels": [
+      "z3str3"
+    ],
+    "excerpt": "Hi,\r\nFor following formula, z3str3 9d9414c1110bc65108202cdcc473c703d12b54f1 returns unsat but z3 returns sat.\r\nI confirm this formula is satisfiable and z3 is correct.\r\nI seems this bug is caused by z3str3 with str.replace, str.++.\r\n```\r\n$ z3 smt.string_solver=z3str3 small.smt2\r\nunsat\r\n$ z3 small.smt2\r\nsat\r\n$ cat small.smt2\r\n(set-logic QF_S)\r\n(declare-const x Bool)\r\n(declare-fun T () String)\r\n(declare-fun T1 () String)\r\n(declare-fun T3 () String)\r\n(declare-fun T5 () String)\r\n(declare-fun v () St"
+  },
+  "content_hash": "a7656d351a63cb44e5187949f173422ac61d2a22c6c5378906dbc09f70849aaf",
+  "feeds_topics": [
+    "T6"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

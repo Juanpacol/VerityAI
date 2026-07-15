@@ -1,0 +1,28 @@
+{
+  "id": "github_issues_a10b1e98582f",
+  "source": "github_issues",
+  "source_url": "https://github.com/jagijagijag1/Article-Paper-Summary/issues/36",
+  "license": null,
+  "retrieved_at": "2026-07-15T04:16:49.119082+00:00",
+  "retrieval_method": "gh_cli",
+  "content": {
+    "query": "LLM hallucination",
+    "repo": null,
+    "title": "Zero-source LLM Hallucination Detection with Human-like Criteria Probing",
+    "state": "open",
+    "labels": [
+      "paper"
+    ],
+    "excerpt": "https://arxiv.org/abs/2606.12900v1\n\nG: 外部知識・モデル内部情報なしで、LLM回答の幻覚を説明付きで検出する。\n\nP: 既存の幻覚検出は検索、参照文書、logit、hidden state、静的heuristicに依存しやすく、black-box実運用では使いにくい。\n\nS: LLM agentに評価基準・重み・証拠・部分スコアを生成させ、BLEURTなどの意味的一貫性proxyを弱教師としてGRPOでalignし、推論時にmulti-samplingでスコアを安定化する。\n\nR: TriviaQA、SciQ、NQ Open、CoQAと複数target modelで既存ベースラインを上回ると報告し、ICML 2026採択記載もあるが、評価は主にsemantic consistency proxyに基づくため、人間fact-checkの完全代替とは言えない。"
+  },
+  "content_hash": "a10b1e98582f5ba22738b77324a0d09e3d515e1c351fd0c35a149875a85831b0",
+  "feeds_topics": [
+    "T2",
+    "T5"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

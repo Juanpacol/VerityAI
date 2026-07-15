@@ -1,0 +1,26 @@
+{
+  "id": "github_issues_196cf0be6668",
+  "source": "github_issues",
+  "source_url": "https://github.com/ayushsharma-devs/application-engine/issues/17",
+  "license": null,
+  "retrieved_at": "2026-07-15T04:16:49.118860+00:00",
+  "retrieval_method": "gh_cli",
+  "content": {
+    "query": "LLM hallucination",
+    "repo": null,
+    "title": "LLM Hallucination",
+    "state": "open",
+    "labels": [],
+    "excerpt": "The LLM hallucinates on questions that are deterministic and related to user's personal info like number of internships or which laptop do they use.\nAlso in case of MCQ type questions sometimes it would pick sub-optimal choices"
+  },
+  "content_hash": "196cf0be666847259e9efc1f4d206b965d689751337214f39658922b548afa02",
+  "feeds_topics": [
+    "T2",
+    "T5"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

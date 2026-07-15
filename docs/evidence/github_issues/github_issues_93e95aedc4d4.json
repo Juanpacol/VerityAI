@@ -1,0 +1,25 @@
+{
+  "id": "github_issues_93e95aedc4d4",
+  "source": "github_issues",
+  "source_url": "https://github.com/Z3Prover/z3/issues/8194",
+  "license": null,
+  "retrieved_at": "2026-07-15T04:16:50.125455+00:00",
+  "retrieval_method": "gh_cli",
+  "content": {
+    "query": "string theory",
+    "repo": "Z3Prover/z3",
+    "title": "Incorrect model with `:produce-proofs true` involving String Theory and UF",
+    "state": "open",
+    "labels": [],
+    "excerpt": "Z3 reports sat but generates an invalid model.\n\nThe issue seems strictly related to proof generation. If I remove `(set-option :produce-proofs true)`, Z3 successfully produces a valid model.\n\nInput:\n```smt2\n(set-logic ALL)\n(set-option :produce-proofs true)\n(declare-const x Int)\n(declare-fun n (String String) Int)\n(declare-const e String)\n(declare-const d String)\n(assert (= d (str.++ e \"@\")))\n(assert (= 0 (n e \"@\")))\n(assert (= 1 (n (ite (= 0 (str.len (str.substr d 0 1))) \"\" (str.substr e x 1)) \""
+  },
+  "content_hash": "93e95aedc4d44a897c70b85fef468ea50f3a89cde37e1759ae5cd7fd74a06be3",
+  "feeds_topics": [
+    "T6"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

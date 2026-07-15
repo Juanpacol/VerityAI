@@ -1,0 +1,53 @@
+{
+  "id": "semgrep_21e567227153",
+  "source": "semgrep",
+  "source_url": "https://github.com/semgrep/semgrep-rules",
+  "license": "LGPL-2.1 + Commons Clause",
+  "retrieved_at": "2026-07-15T04:15:36.585579+00:00",
+  "retrieval_method": "gh_cli",
+  "content": {
+    "total_rule_files": 2173,
+    "counts_by_category": {
+      "terraform": 364,
+      "python": 337,
+      "generic": 257,
+      "yaml": 185,
+      "javascript": 173,
+      "ai": 126,
+      "java": 126,
+      "ruby": 95,
+      "go": 78,
+      "php": 65,
+      "csharp": 52,
+      "solidity": 50,
+      "dockerfile": 37,
+      "problem-based-packs": 37,
+      "typescript": 30,
+      "scala": 27,
+      "ocaml": 24,
+      "apex": 18,
+      "c": 16,
+      "package_managers": 16,
+      "kotlin": 14,
+      "rust": 10,
+      "elixir": 7,
+      "bash": 6,
+      "html": 6,
+      "clojure": 5,
+      "json": 4,
+      "swift": 4,
+      "stats": 3,
+      "template.yaml": 1
+    },
+    "tree_truncated": false
+  },
+  "content_hash": "21e5672271537e3bfe0e4807d4d6613c6a68a7741f2c04ebff857758afb8f975",
+  "feeds_topics": [
+    "T4"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,30 @@
+{
+  "id": "github_issues_68c3dc5686be",
+  "source": "github_issues",
+  "source_url": "https://github.com/Z3Prover/z3/issues/9806",
+  "license": null,
+  "retrieved_at": "2026-07-15T04:16:53.884805+00:00",
+  "retrieval_method": "gh_cli",
+  "content": {
+    "query": "recursion",
+    "repo": "Z3Prover/z3",
+    "title": "[code-simplifier] simplify seq_subset: remove dead code, delete gmon.out",
+    "state": "closed",
+    "labels": [
+      "code-quality",
+      "agentic-workflows",
+      "refactoring",
+      "automation"
+    ],
+    "excerpt": "## Code Simplification - 2026-06-10\n\nThis PR simplifies code from the last 24 hours (PRs #9777, #9782) to improve clarity and remove dead/redundant checks, while preserving all functionality.\n\n### Files Changed\n\n- `src/ast/rewriter/seq_subset.cpp` — Remove two dead-code checks and trailing whitespace\n- `.gitignore` — Add `gmon.out` to prevent future accidental commits\n- `gmon.out` — **Delete** accidentally committed profiling output file (from #9777)\n\n### Improvements Made\n\n#### 1. Removed dead "
+  },
+  "content_hash": "68c3dc5686be1705301a856df5f231bf0297ce30455d838a04333799a16c1262",
+  "feeds_topics": [
+    "T6"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,27 @@
+{
+  "id": "github_issues_fd7dd1e1efdb",
+  "source": "github_issues",
+  "source_url": "https://github.com/Z3Prover/z3/issues/8096",
+  "license": null,
+  "retrieved_at": "2026-07-15T04:16:50.125649+00:00",
+  "retrieval_method": "gh_cli",
+  "content": {
+    "query": "string theory",
+    "repo": "Z3Prover/z3",
+    "title": "Performance degradation in Z3 on QF_SLIA instances with fixed-length strings and prefix/suffix constraints",
+    "state": "closed",
+    "labels": [
+      "string"
+    ],
+    "excerpt": "The following instance is a QF_SLIA formula consisting of fixed-length constraints on three string variables together with a prefix/suffix/containment constraint:\n\n```smt2\n(set-logic QF_SLIA)\n(declare-const s0 String)\n(declare-const s1 String)\n(declare-const s2 String)\n(assert (= (str.len s0) x))\n(assert (= (str.len s1) x))\n(assert (= (str.len s2) x))\n(assert (or\n  (and\n    (str.prefixof \"JJJJJ\" s0)\n    (str.suffixof \"JJJJJ\" s2)\n  )\n  (str.contains s1 \"JJJJJ\")\n))\n(check-sat)\n(get-model)\n(exit)\n`"
+  },
+  "content_hash": "fd7dd1e1efdb803e77b268b87044222e293b7f10ea02f17eaba11d452a83162d",
+  "feeds_topics": [
+    "T6"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

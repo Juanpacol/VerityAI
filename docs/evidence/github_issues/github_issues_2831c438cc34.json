@@ -1,0 +1,25 @@
+{
+  "id": "github_issues_2831c438cc34",
+  "source": "github_issues",
+  "source_url": "https://github.com/Z3Prover/z3/issues/7223",
+  "license": null,
+  "retrieved_at": "2026-07-15T04:16:50.125599+00:00",
+  "retrieval_method": "gh_cli",
+  "content": {
+    "query": "string theory",
+    "repo": "Z3Prover/z3",
+    "title": "Invalid model issue on String theory ",
+    "state": "closed",
+    "labels": [],
+    "excerpt": "Greetings,\r\nFor this instance, an invalid bug occurred.\r\nWe tried to make this instance as small as possible. We sincerely hope that our report will be helpful for the z3 team.\r\n```\r\n$ ./z3 ./small.smt2 model_validate=true\r\nsat\r\n(error \"line 17 column 10: an invalid model was generated\")\r\n \r\n$ cat ./small.smt2\r\n(set-logic ALL)\r\n(declare-fun T1_20 () String)\r\n(declare-fun T1_9 () String)\r\n(declare-fun T2_20 () String)\r\n(declare-fun T2_9 () String)\r\n(declare-fun T_1 () String)\r\n(declare-fun T_2 ()"
+  },
+  "content_hash": "2831c438cc34784dd7d0f3273fb93549d5cd34a9b39396b4c40d55445b19e0e0",
+  "feeds_topics": [
+    "T6"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

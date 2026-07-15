@@ -1,0 +1,12 @@
+{
+  "done": [
+    "global::AI generated code bug security vulnerability",
+    "global::LLM hallucination code review false positive",
+    "Z3Prover/z3::string theory limitation invalid model",
+    "Z3Prover/z3::recursion unsupported not verifiable",
+    "global::AI generated code bug",
+    "global::LLM hallucination",
+    "Z3Prover/z3::string theory",
+    "Z3Prover/z3::recursion"
+  ]
+}

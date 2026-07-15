@@ -22,6 +22,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from verityai.evidence.fetchers.arxiv import fetch_arxiv  # noqa: E402
 from verityai.evidence.fetchers.base import Checkpoint  # noqa: E402
+from verityai.evidence.fetchers.github_issues import fetch_github_issues  # noqa: E402
+from verityai.evidence.fetchers.semgrep import fetch_semgrep_rule_counts  # noqa: E402
+from verityai.evidence.fetchers.z3_docs import fetch_z3_docs  # noqa: E402
 from verityai.evidence.store import EvidenceStore  # noqa: E402
 from verityai.evidence.validation import validate_record  # noqa: E402
 
@@ -29,6 +32,11 @@ FETCHERS = {
     "arxiv": lambda limit, checkpoint: fetch_arxiv(
         max_results_per_query=limit, checkpoint=checkpoint
     ),
+    "github_issues": lambda limit, checkpoint: fetch_github_issues(
+        limit_per_query=limit, checkpoint=checkpoint
+    ),
+    "semgrep": lambda limit, checkpoint: fetch_semgrep_rule_counts(),
+    "z3_docs": lambda limit, checkpoint: fetch_z3_docs(),
 }
 
 

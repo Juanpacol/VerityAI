@@ -1,0 +1,25 @@
+{
+  "id": "github_issues_c340a3f5f4b9",
+  "source": "github_issues",
+  "source_url": "https://github.com/Z3Prover/z3/issues/10065",
+  "license": null,
+  "retrieved_at": "2026-07-15T04:16:53.884721+00:00",
+  "retrieval_method": "gh_cli",
+  "content": {
+    "query": "recursion",
+    "repo": "Z3Prover/z3",
+    "title": "Regression in 4.15.5: E-matching over a fuel-recursive floating-point axiom times out on a trivial goal (unsat in 4.15.4)",
+    "state": "open",
+    "labels": [],
+    "excerpt": "# Regression in 4.15.5: E-matching over a fuel-recursive FP axiom times out on a trivial goal\n\n**Summary.** A `check-sat` that returns `unsat` in milliseconds on **4.15.4** times out (default settings, no rlimit) on **4.15.5, 4.15.6, 4.15.7, 4.15.8, and 4.16.0**. The goal is trivial; the regression is specific to a quantified axiom whose body contains floating-point operations. The integer analogue is unaffected on every version.\n\n**Repro** (29 lines, self-contained):\n\n```smt2\n(set-logic ALL)\n(d"
+  },
+  "content_hash": "c340a3f5f4b9baecf9a408923eab6f5a08c550efdfda863374c3256cf2baa8ec",
+  "feeds_topics": [
+    "T6"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

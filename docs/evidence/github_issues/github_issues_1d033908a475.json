@@ -1,0 +1,26 @@
+{
+  "id": "github_issues_1d033908a475",
+  "source": "github_issues",
+  "source_url": "https://github.com/oliver-kriska/claude-elixir-phoenix/issues/69",
+  "license": null,
+  "retrieved_at": "2026-07-15T04:16:48.213290+00:00",
+  "retrieval_method": "gh_cli",
+  "content": {
+    "query": "AI generated code bug",
+    "repo": null,
+    "title": "[AINAScan] 2 security/quality issues detected",
+    "state": "closed",
+    "labels": [],
+    "excerpt": "## 🔍 AINAScan Automated Security Report\n\n> This report was generated automatically by [AINAScan](https://pleasing-transformation-production-90c2.up.railway.app) — a deterministic AST-based scanner for AI-generated code bugs.\n> Feel free to close this issue if not applicable.\n\n**Repository:** `oliver-kriska/claude-elixir-phoenix`  \n**Scan date:** 2026-06-25  \n**Issues found:** 2 BLOCK-level  \n\n---\n\n## Issues\n\n### 1. `PATH_TRAVERSAL` — `lab/eval/agent_scorer.py` (line 43)\n**🧠 98% confidence · L3×4"
+  },
+  "content_hash": "1d033908a475de5097dcee9072d9075a3e3375bc799129fc9c0cbc4ab4e509ae",
+  "feeds_topics": [
+    "T4",
+    "T6"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

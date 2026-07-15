@@ -1,0 +1,29 @@
+{
+  "id": "github_issues_25713e07df7c",
+  "source": "github_issues",
+  "source_url": "https://github.com/Z3Prover/z3/issues/9848",
+  "license": null,
+  "retrieved_at": "2026-07-15T04:16:53.884777+00:00",
+  "retrieval_method": "gh_cli",
+  "content": {
+    "query": "recursion",
+    "repo": "Z3Prover/z3",
+    "title": "[zipt-review] ZIPT Code Review: Three correctness/completeness improvements for euf_snode and euf_seq_plugin",
+    "state": "closed",
+    "labels": [
+      "code-quality",
+      "automated",
+      "string-solver"
+    ],
+    "excerpt": "## ZIPT Code Review: Improvements from Reference Implementation\n\n**Date**: 2026-06-13  \n**Files Reviewed** (branch `copilot/copilotcopilotfix-euf-snode-support`):\n- `src/ast/euf/euf_snode.h`\n- `src/ast/euf/euf_sgraph.h`\n- `src/ast/euf/euf_sgraph.cpp`\n- `src/ast/euf/euf_seq_plugin.h`\n- `src/ast/euf/euf_seq_plugin.cpp`\n\n**ZIPT Reference**: https://github.com/CEisenhofer/ZIPT/tree/parikh/ZIPT  \n**ZIPT Files Compared**: `ZIPT/Strings/Chunks/Str.cs`, `TupleStr.cs`, `SingletonStr.cs`, `ZIPT/Constraint"
+  },
+  "content_hash": "25713e07df7ce8d0626949f94a7c1a36c35c3a1cb05028a404aef4a1b058346e",
+  "feeds_topics": [
+    "T6"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

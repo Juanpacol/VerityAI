@@ -1,0 +1,27 @@
+{
+  "id": "github_issues_427becea107b",
+  "source": "github_issues",
+  "source_url": "https://github.com/Z3Prover/z3/issues/5920",
+  "license": null,
+  "retrieved_at": "2026-07-15T04:16:53.884754+00:00",
+  "retrieval_method": "gh_cli",
+  "content": {
+    "query": "recursion",
+    "repo": "Z3Prover/z3",
+    "title": "Issues with models of Horn clauses",
+    "state": "open",
+    "labels": [
+      "Horn"
+    ],
+    "excerpt": "This issue collects several separate filings. They are all or mostly related to rule in-lining and model transformation.\r\n\r\nThere are comments associated with closed issues that can give more information.\r\nThe work required to close these issues is beyond basic bug fixing and will require planning.\r\nAt this point it seems more productive to spend efforts developing the appropriate theory for fixing this.\r\n\r\nThe high level:\r\n\r\nPreprocessing transformations add and delete Horn clauses. The (additi"
+  },
+  "content_hash": "427becea107b0f99f11fe1b4d5f1ade072944bf8233f67dec9f90d768a9743ed",
+  "feeds_topics": [
+    "T6"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

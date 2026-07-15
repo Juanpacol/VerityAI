@@ -1,0 +1,28 @@
+{
+  "id": "github_issues_6219fb15f656",
+  "source": "github_issues",
+  "source_url": "https://github.com/HKUDS/nanobot/issues/4279",
+  "license": null,
+  "retrieved_at": "2026-07-15T04:16:49.119046+00:00",
+  "retrieval_method": "gh_cli",
+  "content": {
+    "query": "LLM hallucination",
+    "repo": null,
+    "title": "Support aggregated notifications for subagents to prevent LLM hallucinations",
+    "state": "open",
+    "labels": [
+      "enhancement"
+    ],
+    "excerpt": "### Problem / Motivation\n\n### Description\nCurrently, `SubagentManager` delivers subagent execution results to the main agent in real-time via `_announce_result()` as soon as each individual subagent finishes. While this provides low latency, it introduces a significant risk of LLM hallucination when a single session spawns multiple subagents.\n\nWhen the first subagent completes and injects its result into the chat history, the main LLM is re-triggered mid-turn. Depending on the model's capability"
+  },
+  "content_hash": "6219fb15f656283a7eb48422f3ca1f266d12e6ed07516cbbbf96f5a127ac0ff0",
+  "feeds_topics": [
+    "T2",
+    "T5"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

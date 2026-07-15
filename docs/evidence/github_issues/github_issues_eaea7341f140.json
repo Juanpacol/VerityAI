@@ -1,0 +1,25 @@
+{
+  "id": "github_issues_eaea7341f140",
+  "source": "github_issues",
+  "source_url": "https://github.com/Z3Prover/z3/issues/7475",
+  "license": null,
+  "retrieved_at": "2026-07-15T04:16:53.884565+00:00",
+  "retrieval_method": "gh_cli",
+  "content": {
+    "query": "recursion",
+    "repo": "Z3Prover/z3",
+    "title": "Unsatisfiable recursion equations",
+    "state": "open",
+    "labels": [],
+    "excerpt": "SMT-Lib recursive function definitions are given semantics via quantified formulas for the defining equations. Hence, I'd expect:\r\n\r\n```\r\n(set-logic ALL)\r\n\r\n(define-fun-rec f ((x Int)) Int (+ 1 (f x)))\r\n\r\n(declare-fun y () Int)\r\n(assert (distinct (f y) (+ 1 (f y))))\r\n\r\n(check-sat)\r\n(get-model)\r\n(get-value (f))\r\n```\r\n\r\nto produce `unsat` since `f` is not satisfiable by any function `Int -> Int`.  Indeed `cvc5` produces `unsat` for this query. But z3 says:\r\n\r\n```\r\nsat\r\n(\r\n  (define-fun y () Int\r\n "
+  },
+  "content_hash": "eaea7341f1400c35e8401697c887c9f21d7774f96343466ba5ae56fdbd40c1ee",
+  "feeds_topics": [
+    "T6"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

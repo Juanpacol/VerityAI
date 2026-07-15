@@ -1,0 +1,26 @@
+{
+  "id": "github_issues_61797d7f8497",
+  "source": "github_issues",
+  "source_url": "https://github.com/swankpiie/cognitive-os/issues/1",
+  "license": null,
+  "retrieved_at": "2026-07-15T04:16:49.119109+00:00",
+  "retrieval_method": "gh_cli",
+  "content": {
+    "query": "LLM hallucination",
+    "repo": null,
+    "title": "[BUG] LLM Hallucination of Non-Existent Node IDs in Edge Generation",
+    "state": "open",
+    "labels": [],
+    "excerpt": "### Description\nThe neural subsystem (`call_llm_policy`) is responsible for proposing structural updates to the graph. While the symbolic engine strictly handles validation, under complex situational inputs, the LLM occasionally hallucinates `source` or `target` identifiers inside the `add_edges` payload that do not exist in the current active graph state.\n\n### Impact\nWhen a node ID is hallucinated, the `add_edge()` strict guardrail catches it and quietly drops the edge:\n```python\nif edge.get(\"s"
+  },
+  "content_hash": "61797d7f849758687528bea32a4651d6efdd2d52fad53105f993f6ae0cb84160",
+  "feeds_topics": [
+    "T2",
+    "T5"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}
