@@ -131,14 +131,58 @@ it's a real result, and it's now a tracked research question (not a
 shipped default — `VERITYAI_RETRIEVAL_STRATEGY` stays `legacy`) instead of
 an assumption.
 
+## Finding 5 — a claim we'd already published turned out to be noise
+
+Real run #2 reported, with a fairly confident tone, that the full
+generate-verify-retry loop "shifts the error profile" relative to
+single-shot verification — fewer abstentions, higher precision, lower
+recall, lower accuracy. That framing survived unquestioned until a later
+analysis pass (Fase 1 of a research roadmap, done purely by re-reading
+already-collected JSON, no new generation) asked a sharper question: two
+baselines each independently re-generate code at `temperature=0.7`, so
+`ground_truth` is a property of *what got generated*, not a fixed label
+per task. A task where two baselines happen to land on the same ground
+truth isolates what the retry mechanism actually did with equivalently-
+good-or-bad code from noise in what code got written in the first place.
+
+That check surfaced a same-configuration control nobody had run before:
+`verityai_full` from Real run #2 and `no_kg` from Real run #3 are the
+*literal same configuration* — full retry loop, zero KG context — just
+run on two different days. If the retry loop's effect were real and the
+runs were reasonably stable, two runs of the same config should mostly
+agree. They didn't: task-level status disagreement between the two
+same-config runs (50%, ground-truth-controlled) was statistically
+indistinguishable from the disagreement between single-shot and full-
+retry (55%). The "trade-off" Real run #2 described with confidence
+cannot currently be told apart from ordinary sampling variance across
+independent runs — at n=28 with zero repetition, which is exactly what
+was run.
+
+This is a stronger case-study point than fixing a crash or a ground-truth
+bug: those were mechanical defects with a definite fix. This is a
+*conclusion*, already committed to a methodology doc, that was more
+confident than the evidence behind it — and the fix isn't a code change,
+it's a documented retraction plus a standing rule (also added to
+`docs/PHASE_3_METHODOLOGY.md`): no future A/B or cross-model comparison
+in this project attributes an accuracy/precision/recall difference to a
+mechanism without first checking it against a same-configuration repeat.
+Interestingly, the same method found one piece of the original story that
+*does* survive: pairwise divergence between the three retrieval arms
+(`no_kg`/`legacy_kg`/`hybrid_kg`, same day) is consistently *lower* than
+the cross-day noise floor — meaning the KG-context effect, unlike the
+retry-loop trade-off, is not just noise. Both the retraction and the
+survival came from applying the identical check; neither was assumed.
+
 ## The pattern
 
-None of these four findings came from writing more tests against the
-existing fakes — they came from running the actual thing and checking
-what happened, then fixing the root cause instead of the symptom. That's
-the habit this case study is meant to name: a comprehensive offline test
-suite is a floor, not a ceiling. It proves the system does what the
-scripts told it to expect. It cannot prove the system does the right
-thing when something *unscripted* happens — and something unscripted is
-exactly what a real model, a real database, or a real user will always
-eventually do.
+None of these five findings came from writing more tests against the
+existing fakes — they came from running the actual thing (or, in Finding
+5's case, re-checking a real run's own numbers harder) and dealing
+honestly with what happened, including retracting a prior claim, instead
+of defending it. That's the habit this case study is meant to name: a
+comprehensive offline test suite is a floor, not a ceiling. It proves the
+system does what the scripts told it to expect. It cannot prove the
+system does the right thing when something *unscripted* happens — and
+something unscripted is exactly what a real model, a real database, or a
+real user (or a second run of the same experiment) will always eventually
+do.

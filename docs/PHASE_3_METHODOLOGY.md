@@ -356,6 +356,97 @@ flipping it, and `hybrid_kg`'s recall collapse is a specific, trackable
 problem (see the research roadmap's T2 and T4) rather than grounds to
 abandon the hybrid retriever entirely.
 
+## Analysis: confidence calibration and the retry-loop noise floor (2026-07-15)
+
+No new generation happened for this section — it's pure analysis over the
+already-persisted outcomes from Real run #2 and Real run #3
+(`scripts/analyze_confidence_calibration.py`, output:
+`docs/results/2026-07-15_t1_t2_analysis.json`). This answers Fase 1 of the
+T1-T6 research roadmap (T1 confidence calibration, T2/T7 the retry-loop
+trade-off), and the second finding below is significant enough to qualify
+how every prior "Real run" result in this document should be read.
+
+**T1 — confidence does not calibrate monotonically, and the miscalibration
+is sometimes inverted, not just imprecise.** Binning every outcome by its
+own confidence score and computing the empirical fraction of
+`ground_truth == "correct"` per bin (a reliability diagram) gives an
+Expected Calibration Error (ECE) per baseline/arm:
+
+| Baseline/arm | ECE | Notable pattern |
+|---|---|---|
+| `raw_llm` | 0.500 | Always emits confidence 1.0 (never verifies); empirical accuracy is 50% — the "null model," included as a contrast, not a real baseline |
+| `single_shot_z3` | 0.252 | The `[0.0, 0.2)` bin (confidence≈0, i.e. `FAIL`) has 75% empirical accuracy — code flagged as buggy with near-zero confidence was usually actually *correct*. The `[0.2, 0.4)` bin (`NOT_VERIFIED`, fixed 0.3 baseline) has only 12.5% empirical accuracy — abstained cases were usually actually *buggy*. Backwards from what a useful confidence signal should show. |
+| `verityai_full` | 0.381 | Directionally monotonic (0.5 → 0.6 → 1.0 as confidence rises) but systematically underconfident at the top |
+| `no_kg` | 0.236 | Monotonic (0.25 → 0.375 → 1.0), also underconfident at the top |
+| `legacy_kg` | 0.304 | Monotonic (0.2 → 0.6 → 1.0) |
+| `hybrid_kg` | 0.136 | **Lowest ECE of any real config** — but not monotonic (0.8 → 0.5 → 0.8) |
+
+Reading this honestly: no configuration is well-calibrated in the strict
+sense, `single_shot_z3` shows a genuinely *inverted* signal in its two
+lowest bins (not just noisy — backwards), and `hybrid_kg` has the best ECE
+of the bunch despite having the worst recall in Real run #3 — calibration
+quality and detection quality are not the same claim and shouldn't be
+conflated. **The load-bearing caveat**: bins here hold as few as 2-6
+outcomes each (n=28 total split five ways), so these numbers describe what
+this run showed, not a statistically robust calibration claim — a single
+flipped verdict moves a bin's empirical accuracy by 12-25 percentage
+points. This is a first look that shows enough signal to say "don't trust
+the current confidence formula as calibrated," not enough n to pin down
+by how much or confirm the inversions survive repetition.
+
+**T2/T7 — the retry-loop "trade-off" is statistically indistinguishable
+from run-to-run noise, and this is the more important finding of the
+two.** Since `ground_truth` is decided per-outcome (each baseline
+independently re-generates code at `temperature=0.7`, so it isn't a fixed
+per-task label), a task where two baselines' outputs land on the *same*
+ground truth isolates what the verification/retry mechanism did with
+equivalently-good-or-bad code, separate from noise in what code got
+generated in the first place:
+
+- `single_shot_z3` vs `verityai_full` (Real run #2, same day): ground
+  truth agrees on 71.4% of tasks (20/28); of those, the verifier's
+  **status still differs 55% of the time** (11/20) — on code of
+  equivalent actual quality, the retry mechanism reaches a different
+  verdict about half the time.
+- **The noise floor**: `verityai_full` (Real run #2) and `no_kg` (Real
+  run #3) are the *same configuration* — full retry loop, zero KG
+  context — run on two different days. Ground truth agrees on 69.2% of
+  tasks (18/26); status still differs on **50%** of those (9/18) —
+  essentially identical to the single-shot-vs-full-retry numbers above
+  (71.4%/55% vs. 69.2%/50%).
+
+That similarity is the finding: **two runs of the literal same
+configuration disagree on verdicts to almost the same degree as
+single-shot and full-retry disagree with each other.** The accuracy/
+precision/recall differences reported in Real run #2 cannot currently be
+confidently attributed to the retry mechanism itself — they are
+statistically indistinguishable, at this sample size, from ordinary
+`temperature=0.7` sampling noise across independent runs. This doesn't
+mean the retry loop has no real effect; it means Real run #2's framing
+("the retry loop shifts the error profile") was stated with more
+confidence than n=28-with-no-repetition actually supports, and that
+should have been flagged there rather than only surfacing now.
+
+**A secondary, more encouraging signal from the same method**: pairwise
+ground-truth agreement across the three retrieval arms (all real-run-#3
+configurations, same day) is *lower* than the cross-day noise floor —
+`no_kg` vs `legacy_kg` agree on only 48.0% of tasks, `no_kg` vs
+`hybrid_kg` on 57.7%, `legacy_kg` vs `hybrid_kg` on 61.5% (vs. ~69-71%
+for two same-config runs). Lower-than-noise-floor agreement suggests the
+KG context genuinely does shift what code gets generated — with
+`legacy_kg`'s unranked fetch-all producing the biggest divergence from
+no-context, more than `hybrid_kg`'s narrower ranked context does. Unlike
+the retry-loop trade-off, this part of the signal *exceeds* the noise
+floor rather than sitting inside it, so it's on firmer ground — though
+still n=25-26 pairs, still one run each, still not repeated.
+
+**What this changes going forward**: any future A/B or cross-model run in
+this project should budget for **repeated runs of the same configuration**
+before attributing an accuracy/precision/recall difference to a
+mechanism, not just to the LLM's sampling variance. A single run's
+confusion matrix is not enough to separate the two, and this analysis is
+the first time that's been checked directly rather than assumed away.
+
 ## Target threshold (confirmed before a real run, per the plan's hardened
 acceptance criterion)
 

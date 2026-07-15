@@ -1,0 +1,271 @@
+{
+  "t1_calibration": {
+    "cross_model/llama3.2/raw_llm": {
+      "bins": [
+        {
+          "range": "[0.0, 0.2]",
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_accuracy": null
+        },
+        {
+          "range": "[0.2, 0.4]",
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_accuracy": null
+        },
+        {
+          "range": "[0.4, 0.6]",
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_accuracy": null
+        },
+        {
+          "range": "[0.6, 0.8]",
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_accuracy": null
+        },
+        {
+          "range": "[0.8, 1.0]",
+          "count": 24,
+          "mean_confidence": 1.0,
+          "empirical_accuracy": 0.5
+        }
+      ],
+      "ece": 0.5,
+      "n_scored": 24,
+      "n_excluded_novel": 4
+    },
+    "cross_model/llama3.2/single_shot_z3": {
+      "bins": [
+        {
+          "range": "[0.0, 0.2]",
+          "count": 4,
+          "mean_confidence": 0.0,
+          "empirical_accuracy": 0.75
+        },
+        {
+          "range": "[0.2, 0.4]",
+          "count": 8,
+          "mean_confidence": 0.3,
+          "empirical_accuracy": 0.125
+        },
+        {
+          "range": "[0.4, 0.6]",
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_accuracy": null
+        },
+        {
+          "range": "[0.6, 0.8]",
+          "count": 6,
+          "mean_confidence": 0.6,
+          "empirical_accuracy": 0.833
+        },
+        {
+          "range": "[0.8, 1.0]",
+          "count": 5,
+          "mean_confidence": 1.0,
+          "empirical_accuracy": 1.0
+        }
+      ],
+      "ece": 0.2522,
+      "n_scored": 23,
+      "n_excluded_novel": 5
+    },
+    "cross_model/llama3.2/verityai_full": {
+      "bins": [
+        {
+          "range": "[0.0, 0.2]",
+          "count": 6,
+          "mean_confidence": 0.075,
+          "empirical_accuracy": 0.5
+        },
+        {
+          "range": "[0.2, 0.4]",
+          "count": 10,
+          "mean_confidence": 0.255,
+          "empirical_accuracy": 0.6
+        },
+        {
+          "range": "[0.4, 0.6]",
+          "count": 2,
+          "mean_confidence": 0.575,
+          "empirical_accuracy": 1.0
+        },
+        {
+          "range": "[0.6, 0.8]",
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_accuracy": null
+        },
+        {
+          "range": "[0.8, 1.0]",
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_accuracy": null
+        }
+      ],
+      "ece": 0.3806,
+      "n_scored": 18,
+      "n_excluded_novel": 10
+    },
+    "retrieval_ab/no_kg": {
+      "bins": [
+        {
+          "range": "[0.0, 0.2]",
+          "count": 4,
+          "mean_confidence": 0.075,
+          "empirical_accuracy": 0.25
+        },
+        {
+          "range": "[0.2, 0.4]",
+          "count": 8,
+          "mean_confidence": 0.25,
+          "empirical_accuracy": 0.375
+        },
+        {
+          "range": "[0.4, 0.6]",
+          "count": 6,
+          "mean_confidence": 0.575,
+          "empirical_accuracy": 1.0
+        },
+        {
+          "range": "[0.6, 0.8]",
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_accuracy": null
+        },
+        {
+          "range": "[0.8, 1.0]",
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_accuracy": null
+        }
+      ],
+      "ece": 0.2361,
+      "n_scored": 18,
+      "n_excluded_novel": 8
+    },
+    "retrieval_ab/legacy_kg": {
+      "bins": [
+        {
+          "range": "[0.0, 0.2]",
+          "count": 5,
+          "mean_confidence": 0.075,
+          "empirical_accuracy": 0.2
+        },
+        {
+          "range": "[0.2, 0.4]",
+          "count": 10,
+          "mean_confidence": 0.255,
+          "empirical_accuracy": 0.6
+        },
+        {
+          "range": "[0.4, 0.6]",
+          "count": 4,
+          "mean_confidence": 0.575,
+          "empirical_accuracy": 1.0
+        },
+        {
+          "range": "[0.6, 0.8]",
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_accuracy": null
+        },
+        {
+          "range": "[0.8, 1.0]",
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_accuracy": null
+        }
+      ],
+      "ece": 0.3039,
+      "n_scored": 19,
+      "n_excluded_novel": 7
+    },
+    "retrieval_ab/hybrid_kg": {
+      "bins": [
+        {
+          "range": "[0.0, 0.2]",
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_accuracy": null
+        },
+        {
+          "range": "[0.2, 0.4]",
+          "count": 5,
+          "mean_confidence": 0.338,
+          "empirical_accuracy": 0.8
+        },
+        {
+          "range": "[0.4, 0.6]",
+          "count": 14,
+          "mean_confidence": 0.464,
+          "empirical_accuracy": 0.5
+        },
+        {
+          "range": "[0.6, 0.8]",
+          "count": 5,
+          "mean_confidence": 0.713,
+          "empirical_accuracy": 0.8
+        },
+        {
+          "range": "[0.8, 1.0]",
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_accuracy": null
+        }
+      ],
+      "ece": 0.1356,
+      "n_scored": 24,
+      "n_excluded_novel": 4
+    }
+  },
+  "t2_retry_tradeoff": {
+    "single_shot_vs_full_retry": {
+      "n_common_tasks": 28,
+      "ground_truth_agreement_rate": 0.714,
+      "status_diff_given_gt_agrees": 11,
+      "status_diff_given_gt_agrees_rate": 0.55,
+      "status_diff_total": 19,
+      "status_agreement_rate": 0.321
+    },
+    "same_config_cross_run_noise_floor": {
+      "description": "cross_model_run's verityai_full and retrieval_ab's no_kg are the SAME configuration (full retry loop, zero KG context) run on different days -- this estimates how much task-level disagreement to expect from LLM sampling variance ALONE (temperature=0.7), with zero mechanism difference between them.",
+      "n_common_tasks": 26,
+      "ground_truth_agreement_rate": 0.692,
+      "status_diff_given_gt_agrees": 9,
+      "status_diff_given_gt_agrees_rate": 0.5,
+      "status_diff_total": 14,
+      "status_agreement_rate": 0.462
+    },
+    "kg_context_pairwise": {
+      "no_kg_vs_legacy_kg": {
+        "n_common_tasks": 25,
+        "ground_truth_agreement_rate": 0.48,
+        "status_diff_given_gt_agrees": 5,
+        "status_diff_given_gt_agrees_rate": 0.417,
+        "status_diff_total": 14,
+        "status_agreement_rate": 0.44
+      },
+      "no_kg_vs_hybrid_kg": {
+        "n_common_tasks": 26,
+        "ground_truth_agreement_rate": 0.577,
+        "status_diff_given_gt_agrees": 7,
+        "status_diff_given_gt_agrees_rate": 0.467,
+        "status_diff_total": 16,
+        "status_agreement_rate": 0.385
+      },
+      "legacy_kg_vs_hybrid_kg": {
+        "n_common_tasks": 26,
+        "ground_truth_agreement_rate": 0.615,
+        "status_diff_given_gt_agrees": 9,
+        "status_diff_given_gt_agrees_rate": 0.562,
+        "status_diff_total": 18,
+        "status_agreement_rate": 0.308
+      }
+    }
+  }
+}
