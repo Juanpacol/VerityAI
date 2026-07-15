@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VerityAI Run a553b89f-2361-405c-8f7a-33d48fb26a41</title>
+<style>
+
+:root {
+  --surface-1: #fcfcfb;
+  --page-plane: #f9f9f7;
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #898781;
+  --gridline: #e1e0d9;
+  --good: #0ca30c;
+  --warning: #fab219;
+  --serious: #ec835a;
+  --critical: #d03b3b;
+  --series-aqua: #1baf7a;
+  --series-blue: #2a78d6;
+  --series-yellow: #eda100;
+  --series-magenta: #e87ba4;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface-1: #1a1a19;
+    --page-plane: #0d0d0d;
+    --text-primary: #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted: #898781;
+    --gridline: #2c2c2a;
+    --good: #0ca30c;
+    --warning: #fab219;
+    --serious: #ec835a;
+    --critical: #d03b3b;
+    --series-aqua: #199e70;
+    --series-blue: #3987e5;
+    --series-yellow: #c98500;
+    --series-magenta: #d55181;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--page-plane);
+  color: var(--text-primary);
+  margin: 0;
+  padding: 24px;
+}
+.wrap { max-width: 960px; margin: 0 auto; }
+h1 { font-size: 1.5rem; margin-bottom: 4px; }
+h2 { font-size: 1.05rem; color: var(--text-secondary); margin-top: 32px; }
+.card {
+  background: var(--surface-1);
+  border: 1px solid var(--gridline);
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 12px;
+}
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.muted { color: var(--text-muted); font-size: 0.85rem; }
+.error { color: var(--critical); font-size: 0.85rem; }
+pre {
+  background: var(--page-plane);
+  border: 1px solid var(--gridline);
+  border-radius: 6px;
+  padding: 12px;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+}
+table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 0.85rem; }
+th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--gridline); }
+th { color: var(--text-muted); font-weight: 600; }
+.pill {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+}
+.pill-good { background: var(--good); }
+.pill-warning { background: var(--warning); color: #1a1a19; }
+.pill-serious { background: var(--serious); }
+.pill-critical { background: var(--critical); }
+.badge {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  border: 1px solid var(--gridline);
+  color: var(--text-secondary);
+}
+.badge-hybrid { border-color: var(--series-blue); color: var(--series-blue); }
+.badge-semantic { border-color: var(--series-aqua); color: var(--series-aqua); }
+.badge-lexical { border-color: var(--text-muted); }
+.meter-track {
+  width: 100%;
+  height: 14px;
+  border-radius: 7px;
+  background: var(--gridline);
+  overflow: hidden;
+  margin-top: 4px;
+}
+.meter-fill { height: 100%; border-radius: 7px 0 0 7px; }
+.meter-label { font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px; }
+.bar-track {
+  display: flex;
+  width: 100%;
+  height: 18px;
+  border-radius: 4px;
+  background: var(--gridline);
+  overflow: hidden;
+  margin-top: 6px;
+  gap: 2px;
+}
+.bar-segment { height: 100%; }
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.stepper { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.step {
+  border: 1px solid var(--gridline);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.8rem;
+  text-align: center;
+}
+.step.retry { border-style: dashed; }
+.arrow { color: var(--text-muted); }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Reasoning Trace</h1>
+  <p class="muted">write a function that returns whether a number is even, using bitwise operations</p>
+
+  <div class="card">
+    <span class="pill pill-serious">Not verified</span>
+    <div class="meter-label">Confidence: 36.4%</div>
+    <div class="meter-track">
+      <div class="meter-fill" style="width:36.4%; background: var(--serious);"></div>
+    </div>
+  </div>
+
+  <h2>Pipeline</h2>
+  <div class="card"><div class="stepper"><div class="step">Prompt</div><span class="arrow">&rarr;</span><div class="step">Retrieval (hybrid)</div><span class="arrow">&rarr;</span><div class="step">Attempt 1 (20.3s)<br><span class="pill pill-serious">Not verified</span></div><span class="arrow">&rarr;</span><div class="step retry">Attempt 2 (25.7s)<br><span class="pill pill-serious">Not verified</span></div><span class="arrow">&rarr;</span><div class="step retry">Attempt 3 (17.0s)<br><span class="pill pill-serious">Not verified</span></div><span class="arrow">&rarr;</span><div class="step">Verdict<br><span class="pill pill-serious">Not verified</span></div></div></div>
+
+  <h2>Knowledge Graph Retrieval</h2>
+  <div class="card"><p><strong>Strategy:</strong> hybrid &middot; <strong>Mode:</strong> hybrid</p><table><tr><th>Rule</th><th>Method</th><th>Lexical rank</th><th>Semantic rank</th><th>Fused score</th></tr><tr><td>Consistent Return Types</td><td><span class="badge badge-hybrid">Hybrid (fused)</span></td><td>1</td><td>3</td><td>0.032</td></tr><tr><td>Division by Zero Prevention</td><td><span class="badge badge-hybrid">Hybrid (fused)</span></td><td>13</td><td>2</td><td>0.030</td></tr><tr><td>Bounded Function Length</td><td><span class="badge badge-hybrid">Hybrid (fused)</span></td><td>5</td><td>12</td><td>0.029</td></tr><tr><td>Single Responsibility per Function</td><td><span class="badge badge-hybrid">Hybrid (fused)</span></td><td>3</td><td>15</td><td>0.029</td></tr><tr><td>Avoid Unnecessary Quadratic Nested Loops</td><td><span class="badge badge-hybrid">Hybrid (fused)</span></td><td>17</td><td>4</td><td>0.029</td></tr><tr><td>Public Function Docstring Present</td><td><span class="badge badge-hybrid">Hybrid (fused)</span></td><td>7</td><td>14</td><td>0.028</td></tr><tr><td>Early Loop Termination When Possible</td><td><span class="badge badge-hybrid">Hybrid (fused)</span></td><td>16</td><td>7</td><td>0.028</td></tr><tr><td>No Direct Float Equality</td><td><span class="badge badge-hybrid">Hybrid (fused)</span></td><td>15</td><td>9</td><td>0.028</td></tr></table></div>
+
+  <h2>Attempts</h2>
+  <div class="card"><div class="row"><strong>Attempt 1</strong><span class="pill pill-serious">Not verified</span><span class="muted">20.33s &middot; confidence 36%</span></div><pre>def is_even(n: int) -&gt; bool:
+    &quot;&quot;&quot;
+    Returns True if n is even, False otherwise.
+    
+    This function uses bitwise operations to check if a number is even.
+    
+    Parameters:
+    n (int): The number to be checked for being even.
+    
+    Returns:
+    bool: Whether the number is even or not.
+    &quot;&quot;&quot;
+
+    # Check if divisor is non-zero before division
+    # In this case, we&#x27;re using bitwise AND operation, so no division needed
+    
+    # Perform a bitwise AND operation with 1
+    # If n is even, this will result in 0
+    return (n &amp; 1) == 0
+
+# Test the function
+print(is_even(10))  # Expected output: True
+print(is_even(11))  # Expected output: False</pre></div><div class="card"><div class="row"><strong>Attempt 2</strong><span class="pill pill-serious">Not verified</span><span class="muted">25.67s &middot; confidence 36%</span></div><p class="muted">Retry context (previous failure): Verification status: not_verified</p><pre>def is_even(n):
+    &quot;&quot;&quot;
+    Returns True if n is even, False otherwise.
+    
+    Args:
+        n (int): The number to check for evenness.
+        
+    Returns:
+        bool: Whether n is even or not.
+    &quot;&quot;&quot;
+    # Check if n is 0 (even)
+    if n == 0:
+        return True
+    
+    # Use bitwise AND operation (&amp;) to check the least significant bit
+    # If the result is 0, then the number is even in binary representation
+    return (n &amp; 1) == 0</pre></div><div class="card"><div class="row"><strong>Attempt 3</strong><span class="pill pill-serious">Not verified</span><span class="muted">16.98s &middot; confidence 36%</span></div><p class="muted">Retry context (previous failure): Verification status: not_verified</p><pre>def is_even(n):
+    &quot;&quot;&quot;
+    Checks if a number is even using bitwise operations.
+    
+    Args:
+        n (int): The input integer.
+    
+    Returns:
+        bool: True if the number is even, False otherwise.
+    &quot;&quot;&quot;
+    return not (n &amp; 1)</pre></div>
+
+  <h2>Symbolic Verification</h2>
+  <div class="card"><p><strong>Status:</strong> not_verified &middot; <strong>Solver confidence:</strong> 30%</p><p class="muted">No counterexamples.</p></div>
+
+  <h2>Confidence Breakdown</h2>
+  <div class="card"><div class="meter-label">Total: 36.4%</div><div class="bar-track"><div class="bar-segment" style="width:15.0%; background: var(--series-aqua);" title="Verification: 30% of factor &times; 50% weight"></div><div class="bar-segment" style="width:13.9%; background: var(--series-blue);" title="Pattern similarity: 56% of factor &times; 25% weight"></div><div class="bar-segment" style="width:7.5%; background: var(--series-yellow);" title="Complexity: 50% of factor &times; 15% weight"></div></div><div class="legend"><div class="legend-item"><span class="swatch" style="background: var(--series-aqua);"></span>Verification: 30% (weight 50%)</div><div class="legend-item"><span class="swatch" style="background: var(--series-blue);"></span>Pattern similarity: 56% (weight 25%)</div><div class="legend-item"><span class="swatch" style="background: var(--series-yellow);"></span>Complexity: 50% (weight 15%)</div><div class="legend-item"><span class="swatch" style="background: var(--series-magenta);"></span>Test coverage: 0% (weight 10%)</div></div></div>
+</div>
+</body>
+</html>

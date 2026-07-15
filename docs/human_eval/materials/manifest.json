@@ -1,0 +1,66 @@
+{
+  "model": "llama3.2",
+  "generated_at": "2026-07-15T13:41:07.893744+00:00",
+  "samples": [
+    {
+      "index": 1,
+      "prompt": "write a function that returns the maximum of two integers",
+      "request_id": "102b91a7-94ad-42c8-be2f-f8e4adab3382",
+      "status": "success",
+      "final_verification_status": "pass",
+      "confidence": 0.4547945013597496,
+      "attempts": 1,
+      "file": "sample_01.html"
+    },
+    {
+      "index": 2,
+      "prompt": "write a function that safely divides two integers, returning None if the denominator is zero",
+      "request_id": "61fd5b87-33b4-4376-8405-32917ba281fd",
+      "status": "partial",
+      "final_verification_status": "not_verified",
+      "confidence": 0.3983112871170516,
+      "attempts": 3,
+      "file": "sample_02.html"
+    },
+    {
+      "index": 3,
+      "prompt": "write a function that checks if a list of numbers contains any negative values",
+      "request_id": "0c60b789-9520-42ac-a662-6c11eed4ac07",
+      "status": "partial",
+      "final_verification_status": "not_verified",
+      "confidence": 0.357284318654762,
+      "attempts": 3,
+      "file": "sample_03.html"
+    },
+    {
+      "index": 4,
+      "prompt": "write a function that checks array bounds before indexing into an array",
+      "request_id": "f0ed30b6-327b-44a9-814c-229425efd2b3",
+      "status": "success",
+      "final_verification_status": "pass",
+      "confidence": 0.511790198604506,
+      "attempts": 1,
+      "file": "sample_04.html"
+    },
+    {
+      "index": 5,
+      "prompt": "write a function that reverses a string",
+      "request_id": "8b8bf799-148c-4f59-81d8-1a88b6a069b1",
+      "status": "partial",
+      "final_verification_status": "not_verified",
+      "confidence": 0.3527219152444166,
+      "attempts": 3,
+      "file": "sample_05.html"
+    },
+    {
+      "index": 6,
+      "prompt": "write a function that returns whether a number is even, using bitwise operations",
+      "request_id": "a553b89f-2361-405c-8f7a-33d48fb26a41",
+      "status": "partial",
+      "final_verification_status": "not_verified",
+      "confidence": 0.3643882766137659,
+      "attempts": 3,
+      "file": "sample_06.html"
+    }
+  ]
+}

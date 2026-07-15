@@ -235,6 +235,7 @@ docker compose -f docker/docker-compose.yml exec ollama ollama pull llama3.2
 - Hybrid KG retrieval decision: [`docs/adr/0003-hybrid-retrieval.md`](docs/adr/0003-hybrid-retrieval.md)
 - Evaluation methodology + real-run findings: [`docs/PHASE_3_METHODOLOGY.md`](docs/PHASE_3_METHODOLOGY.md)
 - What testing against a real model actually found: [`docs/CASE_STUDY.md`](docs/CASE_STUDY.md)
+- T1-T6 research synthesis (what to say / not say about this project right now): [`docs/RESEARCH_FINDINGS.md`](docs/RESEARCH_FINDINGS.md)
 - Phase-by-phase build record: `docs/PHASE_*.md`
 
 ## License
