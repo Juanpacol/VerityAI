@@ -220,3 +220,94 @@ class TestRuleEngine:
         assert len(trace) > 0
         assert trace[0]["rule"] == "test_rule"
         assert trace[0]["derived"] == "B"
+
+
+def _violation_rule() -> Rule:
+    return Rule(
+        name="No Check-Then-Act Race",
+        description="Flags an unguarded check-then-act on shared state",
+        category="concurrency",
+        condition="Shared state mutated without a lock",
+        severity="high",
+        formal_spec="PRE: check_then_act_on_shared_resource; POST: check_and_act_combined_atomically",
+        applies_to=["python"],
+    )
+
+
+class TestCheckForViolation:
+    """T6's fix for a real design gap found while prototyping SQLi/race-
+    condition pattern matching: `apply_rule_to_code` can only ever return
+    PASS or UNKNOWN (there is no code path in it that returns FAIL), so it
+    reports a false PASS when fed a vulnerable snippet's own facts against
+    a rule whose PRE names the dangerous pattern. `check_for_violation` is
+    the new, additive method with the inverse (correct, for this use case)
+    framing.
+    """
+
+    def test_apply_rule_to_code_regression_documents_the_bug(self):
+        """Not a bug to fix here -- `apply_rule_to_code`'s derivation
+        semantics are correct for the IBM NSTK forward-chaining use case
+        it was built for. This test documents, rather than asserts away,
+        the surprising consequence of reusing it for violation-flagging:
+        precondition met -> PASS, even though the precondition IS the
+        dangerous pattern.
+        """
+        engine = RuleEngine()
+        rule = _violation_rule()
+        vulnerable_facts = {"check_then_act_on_shared_resource": True}
+
+        status, _ = engine.apply_rule_to_code(rule, vulnerable_facts)
+
+        assert status == VerificationStatus.PASS  # misleading -- see check_for_violation
+
+    def test_violation_present_and_unmitigated_is_fail(self):
+        engine = RuleEngine()
+        rule = _violation_rule()
+        vulnerable_facts = {"check_then_act_on_shared_resource": True}
+
+        status, explanation = engine.check_for_violation(rule, vulnerable_facts)
+
+        assert status == VerificationStatus.FAIL
+        assert "violated" in explanation
+
+    def test_violation_present_but_mitigated_is_pass(self):
+        engine = RuleEngine()
+        rule = _violation_rule()
+        mitigated_facts = {
+            "check_then_act_on_shared_resource": True,
+            "check_and_act_combined_atomically": True,
+        }
+
+        status, explanation = engine.check_for_violation(rule, mitigated_facts)
+
+        assert status == VerificationStatus.PASS
+        assert "mitigated" in explanation
+
+    def test_precondition_absent_is_unknown_not_a_false_pass(self):
+        """Clean code with no trigger for this specific pattern reports
+        UNKNOWN, never an affirmative PASS -- check_for_violation only ever
+        claims "a violation was found," never "this code is proven safe."
+        """
+        engine = RuleEngine()
+        rule = _violation_rule()
+
+        status, explanation = engine.check_for_violation(rule, {})
+
+        assert status == VerificationStatus.UNKNOWN
+        assert "not present" in explanation
+
+    def test_rule_without_formal_spec_is_unknown(self):
+        engine = RuleEngine()
+        rule = Rule(
+            name="no_spec_rule",
+            description="No formal spec",
+            category="test",
+            condition="n/a",
+            severity="low",
+            applies_to=["python"],
+        )
+
+        status, explanation = engine.check_for_violation(rule, {"anything": True})
+
+        assert status == VerificationStatus.UNKNOWN
+        assert "no PRE/POST formal_spec" in explanation

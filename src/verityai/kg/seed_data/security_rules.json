@@ -33,7 +33,7 @@
     "description": "Verify that SQL queries use parameterized queries, not string concatenation",
     "category": "security",
     "severity": "critical",
-    "formal_spec": "PRE: user_input is untrusted; POST: query uses parameterized statement",
+    "formal_spec": "PRE: sql_query_built_dynamically; POST: uses_parameterized_query",
     "applies_to": [
       "python",
       "java",

@@ -501,6 +501,104 @@ CLAUDE.md anticipates may behave differently — this ablation only covers
 10-48 rules, not the order-of-magnitude jump a real production corpus
 would represent.
 
+## T6 — can pattern-matching close the SQLi/race-condition gap? (2026-07-15)
+
+Fase 5 of the research roadmap: `docs/CASE_STUDY.md` and this document
+already note SQL injection and race-condition detection as explicitly out
+of Z3's scope (arbitrary string/heap reasoning isn't something an SMT
+solver decides). The KG seed data
+(`kg/seed_data/security_rules.json`) has carried a `SQL Injection
+Prevention` rule and a `No Check-Then-Act Race` rule since the project's
+earliest seed data was written -- both with `PRE`/`POST` formal specs --
+but neither had ever been wired to anything that extracts those
+preconditions from real code. They were prompt guidance only: injected
+into the LLM's context via retrieval, never independently checked.
+
+**What was built**: `symbolic/security_facts.py`, two narrow AST-based
+fact extractors -- `extract_sql_injection_facts` (flags a query string
+built via concatenation/f-string/%-format/`.format()` and passed to an
+`execute`/`executemany`/`executescript`-named call, one hop through a
+local variable; recognizes the parameterized-query safe idiom) and
+`extract_race_condition_facts` (flags an `if key in container:` /
+`container.get(key)` check followed by a subscript assignment to the same
+container, anywhere in a function, with no enclosing lock-named `with`
+block). Both are deliberately narrow and say so in their own docstrings
+-- e.g. no cross-function data-flow, no ORM query builders, direct
+self-recursion-style syntactic matching only. Z3 genuinely cannot help
+here: the real evidence fetched in the evidence pipeline
+(`docs/evidence/z3_docs/z3_docs_d192712d2ab1.json`, microsoft/z3guide's
+own Strings theory page) states its string solver is "an incomplete
+heuristic solver" and the combined theory "is not decidable anyway" --
+this isn't a workaround for a temporary VerityAI limitation, it's the
+actual state of the art.
+
+**A real design gap found while wiring this up, not by inspection**:
+feeding the vulnerable-race sample's own extracted fact
+(`check_then_act_on_shared_resource`, which IS the KG rule's own PRE
+condition, verbatim) into the pre-existing `RuleEngine.apply_rule_to_code`
+returned `PASS`. Tracing why: that method is a positive-derivation
+checker built for the IBM NSTK forward-chaining pattern ("precondition
+met -> derive postcondition -> report PASS") -- it has no code path that
+returns `FAIL`, for any input, ever. Fed a rule whose PRE names a
+*dangerous* pattern, meeting that PRE derives the POST and reports PASS
+-- an actively misleading verdict on genuinely vulnerable code, not
+merely a missing feature. Separately, the SQL Injection Prevention rule's
+`formal_spec` (`PRE: user_input is untrusted; POST: query uses
+parameterized statement`) was prose, not fact-string syntax, so it didn't
+even reach that bug -- it just silently never fired (`UNKNOWN`,
+precondition text matching nothing).
+
+**Fixed, minimally, in this session**: added `RuleEngine.check_for_violation`
+as a new, additive method (nothing else in the codebase calls
+`apply_rule_to_code`, so its existing behavior for legitimate forward-
+chaining callers was left untouched) with the inverse framing -- PRE is
+the trigger condition, POST is the required mitigating fact: `FAIL` if
+the precondition holds and the postcondition fact is absent, `PASS` if
+the postcondition fact is present (mitigated), `UNKNOWN` if the
+precondition doesn't apply at all. Also corrected the SQL Injection
+Prevention rule's `formal_spec` to real fact-string syntax (`PRE:
+sql_query_built_dynamically; POST: uses_parameterized_query`), matching
+the vocabulary `extract_sql_injection_facts` actually produces --
+`No Check-Then-Act Race`'s spec already happened to be written that way.
+
+**Verified end-to-end against hand-written fixtures** (neither
+`correctness_benchmarks.json` nor `security_benchmarks.json` contains a
+real SQLi or race-condition sample -- confirmed by inspection; the
+existing security tasks are divide-by-zero, bounds-checks, and a
+lock-flag proxy, all Z3-reducible):
+
+| Sample | Extracted facts | `check_for_violation` |
+|---|---|---|
+| Vulnerable SQL (string concat into `execute`) | `sql_query_built_dynamically`, `sql_query_built_via_concatenation` | **FAIL** — violated, unmitigated |
+| Safe SQL (`?` placeholder + params tuple) | `uses_parameterized_query` | UNKNOWN — trigger absent (never a false PASS) |
+| Vulnerable race (unguarded check-then-act) | `check_then_act_on_shared_resource` | **FAIL** — violated, unmitigated |
+| Safe race (same pattern inside `with lock:`) | `check_and_act_combined_atomically` | UNKNOWN — trigger absent |
+
+No false positives on the two existing security-benchmark shapes tested
+(`security_003`'s lock-flag proxy, `security_005`'s bounds-check) --
+neither extractor fires on int-only assertion code, as expected.
+
+**Honest scope of the answer**: pattern-matching genuinely can close part
+of this gap -- for the textbook shape of each vulnerability, with the
+caveats documented in each extractor's own docstring (no cross-function
+tracking, no ORM builders, ~one-hop variable resolution for SQL). It
+cannot certify absence of a vulnerability (`check_for_violation` never
+returns an affirmative "no injection risk exists" -- only "found a
+violation" or "found nothing to check"), and race conditions in
+particular remain much shakier ground than SQL injection: the check-then-
+act shape covers exactly one classic pattern, not the much larger space
+of real concurrency bugs (cross-thread interleavings, async races,
+missing memory barriers). **Recommendation**: worth extending
+`security_facts.py` with a handful more OWASP-shaped extractors
+(path traversal, command injection via string-built shell commands --
+`security_scan.py`'s blocklist already covers the `os.system`/`subprocess`
+call surface, so this would be extending pattern coverage of *arguments*
+to already-flagged calls, not new call surface) before wiring any of this
+into the live orchestrator's retry loop as an actual verification gate;
+today it's a prototype demonstrating the fact-extraction approach works
+and the existing `RuleEngine` had a real, fixable gap, not a
+production-ready scanner.
+
 ## Target threshold (confirmed before a real run, per the plan's hardened
 acceptance criterion)
 

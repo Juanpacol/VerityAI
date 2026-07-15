@@ -173,6 +173,58 @@ class RuleEngine:
 
         return VerificationStatus.UNKNOWN, f"No consequence derived from {rule.name}"
 
+    def check_for_violation(
+        self, rule: Rule, code_facts: dict[str, Any]
+    ) -> tuple[VerificationStatus, Optional[str]]:
+        """Checks whether `code_facts` indicates a VIOLATION of `rule`, not
+        whether the rule's derivation fires -- the opposite framing from
+        `apply_rule_to_code`.
+
+        `apply_rule_to_code` is a positive-derivation checker: "precondition
+        met -> derive postcondition -> PASS." It can structurally only ever
+        return PASS or UNKNOWN -- there is no code path in it that returns
+        FAIL, for any input. That's correct for the forward-chaining
+        derivation this class was built for (IBM NSTK pattern), but it means
+        it cannot express "this code violates a security rule" at all: fed
+        a rule whose PRE names a *dangerous* pattern (e.g. `No Check-Then-
+        Act Race`'s `PRE: check_then_act_on_shared_resource`), a vulnerable
+        snippet's own extracted facts satisfy that PRE, `apply_rule_to_code`
+        derives the POST and reports PASS -- an inverted, actively
+        misleading verdict on genuinely vulnerable code. Found via T6's
+        real prototype (`symbolic/security_facts.py`), not by inspection.
+
+        This method treats PRE as "the trigger condition to check for" and
+        POST as "the required mitigating fact" instead: FAIL if the
+        precondition holds and the postcondition fact is absent from
+        `code_facts`, PASS if the postcondition fact IS present (the danger
+        was mitigated), UNKNOWN if the precondition doesn't apply here at
+        all. Added as a new method rather than changing
+        `apply_rule_to_code`'s behavior, since nothing else in this
+        codebase calls it and there was no need to risk its existing
+        semantics for callers that legitimately want plain derivation.
+        """
+        if not rule.formal_spec or "PRE:" not in rule.formal_spec:
+            return VerificationStatus.UNKNOWN, f"Rule {rule.name} has no PRE/POST formal_spec"
+
+        fact_strings = set(code_facts.keys())
+        self.reset()
+        self.facts = fact_strings
+
+        if not self._preconditions_met(rule):
+            return VerificationStatus.UNKNOWN, f"Rule {rule.name} precondition not present"
+
+        consequence = self._derive_consequence(rule)
+        if consequence and consequence in self.facts:
+            return (
+                VerificationStatus.PASS,
+                f"Rule {rule.name}: mitigated ('{consequence}' present)",
+            )
+
+        return (
+            VerificationStatus.FAIL,
+            f"Rule {rule.name} violated: precondition present, '{consequence}' not confirmed",
+        )
+
     def get_applicable_rules(
         self, code_facts: dict[str, Any], language: str = "python"
     ) -> list[Rule]:
