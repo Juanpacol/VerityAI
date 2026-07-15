@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_9f3b61b1a023",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.187908+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 91,
+    "text": "Write a function to check if a substring is present in a given list of string values.",
+    "code": "def find_substring(str1, sub_str):\r\n   if any(sub_str in s for s in str1):\r\n       return True\r\n   return False"
+  },
+  "content_hash": "9f3b61b1a023479abad60a3a60032116ca8a5c0b40729ee8e885aa577f0c3f77",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

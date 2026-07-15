@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_4b851fbf283f",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.898175+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/79",
+    "prompt": "\ndef decimal_to_binary(decimal):\n    \"\"\"You will be given a number in decimal form and your task is to convert it to\n    binary format. The function should return a string, with each character representing a binary\n    number. Each character in the string will be '0' or '1'.\n\n    There will be an extra couple of characters 'db' at the beginning and at the end of the string.\n    The extra characters are there to help with the format.\n\n    Examples:\n    decimal_to_binary(15)   # returns \"db1111db\"\n    decimal_to_binary(32)   # returns \"db100000db\"\n    \"\"\"\n",
+    "canonical_solution": "    return \"db\" + bin(decimal)[2:] + \"db\"\n",
+    "entry_point": "decimal_to_binary"
+  },
+  "content_hash": "4b851fbf283fd7d1ee66da66bddacb6314a6916090719ff22638b066eddbe2d9",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

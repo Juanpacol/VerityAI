@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_d2e32e6262ae",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.195501+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 161,
+    "text": "Write a function to remove all elements from a given list present in another list.",
+    "code": "def remove_elements(list1, list2):\r\n    result = [x for x in list1 if x not in list2]\r\n    return result"
+  },
+  "content_hash": "d2e32e6262ae67103825f39b24c66775512c9206555eb4549c5566f4d5215ce1",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

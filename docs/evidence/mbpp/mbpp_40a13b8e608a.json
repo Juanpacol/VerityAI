@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_40a13b8e608a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.190908+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 120,
+    "text": "Write a function to find the maximum product from the pairs of tuples within a given list.",
+    "code": "def max_product_tuple(list1):\r\n    result_max = max([abs(x * y) for x, y in list1] )\r\n    return result_max"
+  },
+  "content_hash": "40a13b8e608a22bc82b27162c2af0826b1289c907e54238417466c2932691bdb",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

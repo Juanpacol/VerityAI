@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_10c87e3d17c8",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.340394+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 909,
+    "text": "Write a function to find the previous palindrome of a specified number.",
+    "code": "def previous_palindrome(num):\r\n    for x in range(num-1,0,-1):\r\n        if str(x) == str(x)[::-1]:\r\n            return x"
+  },
+  "content_hash": "10c87e3d17c8596f5af428d0e401e02c31c0be19e92e71769f4d0a01a0dd273e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

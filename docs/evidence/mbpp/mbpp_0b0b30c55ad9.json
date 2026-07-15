@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_0b0b30c55ad9",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.260143+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 512,
+    "text": "Write a function to count the element frequency in the mixed nested tuple.",
+    "code": "def flatten(test_tuple): \r\n\tfor tup in test_tuple: \r\n\t\tif isinstance(tup, tuple): \r\n\t\t\tyield from flatten(tup) \r\n\t\telse: \r\n\t\t\tyield tup \r\ndef count_element_freq(test_tuple):\r\n  res = {}\r\n  for ele in flatten(test_tuple):\r\n    if ele not in res:\r\n      res[ele] = 0\r\n    res[ele] += 1\r\n  return (res) "
+  },
+  "content_hash": "0b0b30c55ad97274c9c54a6dc1cf5439c1b7ef7ea106c35e9eab1bce27ad9e16",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

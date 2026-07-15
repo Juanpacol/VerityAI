@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7af29af9f7ce",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.261375+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 519,
+    "text": "Write a function to calculate volume of a tetrahedron.",
+    "code": "import math\r\ndef volume_tetrahedron(num):\r\n\tvolume = (num ** 3 / (6 * math.sqrt(2)))\t\r\n\treturn round(volume, 2)"
+  },
+  "content_hash": "7af29af9f7cec9e8f4d5058848aff05d5e7250541fe7317cb2e7d14a8dfde5c5",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

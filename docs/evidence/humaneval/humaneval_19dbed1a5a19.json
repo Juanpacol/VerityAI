@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_19dbed1a5a19",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.902843+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/121",
+    "prompt": "\ndef solution(lst):\n    \"\"\"Given a non-empty list of integers, return the sum of all of the odd elements that are in even positions.\n    \n\n    Examples\n    solution([5, 8, 7, 1]) ==> 12\n    solution([3, 3, 3, 3, 3]) ==> 9\n    solution([30, 13, 24, 321]) ==>0\n    \"\"\"\n",
+    "canonical_solution": "    return sum([x for idx, x in enumerate(lst) if idx%2==0 and x%2==1])\n",
+    "entry_point": "solution"
+  },
+  "content_hash": "19dbed1a5a1916932c6f4d59393ce21c815f61ed51c1417f96b17e2b9e7bf0a6",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

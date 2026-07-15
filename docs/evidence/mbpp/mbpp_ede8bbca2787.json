@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_ede8bbca2787",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.316531+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 806,
+    "text": "Write a function to find maximum run of uppercase characters in the given string.",
+    "code": "def max_run_uppercase(test_str):\r\n  cnt = 0\r\n  res = 0\r\n  for idx in range(0, len(test_str)):\r\n    if test_str[idx].isupper():\r\n      cnt += 1\r\n    else:\r\n      res = cnt\r\n      cnt = 0\r\n  if test_str[len(test_str) - 1].isupper():\r\n    res = cnt\r\n  return (res)"
+  },
+  "content_hash": "ede8bbca278760ce9a77cf1b06bfcf15e17e03cca06c4dd0727378971465a407",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

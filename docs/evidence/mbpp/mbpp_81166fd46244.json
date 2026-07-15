@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_81166fd46244",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.279348+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 622,
+    "text": "Write a function to find the median of two sorted arrays of same size.",
+    "code": "def get_median(arr1, arr2, n):\r\n  i = 0\r\n  j = 0\r\n  m1 = -1\r\n  m2 = -1\r\n  count = 0\r\n  while count < n + 1:\r\n    count += 1\r\n    if i == n:\r\n      m1 = m2\r\n      m2 = arr2[0]\r\n      break\r\n    elif j == n:\r\n      m1 = m2\r\n      m2 = arr1[0]\r\n      break\r\n    if arr1[i] <= arr2[j]:\r\n      m1 = m2\r\n      m2 = arr1[i]\r\n      i += 1\r\n    else:\r\n      m1 = m2\r\n      m2 = arr2[j]\r\n      j += 1\r\n  return (m1 + m2)/2"
+  },
+  "content_hash": "81166fd46244a02d481779ec196040dfff189ce6d7824e96d8948a24c318449a",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_d9c280c89086",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.247061+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 428,
+    "text": "Write a function to sort the given array by using shell sort.",
+    "code": "def shell_sort(my_list):\r\n    gap = len(my_list) // 2\r\n    while gap > 0:\r\n        for i in range(gap, len(my_list)):\r\n            current_item = my_list[i]\r\n            j = i\r\n            while j >= gap and my_list[j - gap] > current_item:\r\n                my_list[j] = my_list[j - gap]\r\n                j -= gap\r\n            my_list[j] = current_item\r\n        gap //= 2\r\n\r\n    return my_list"
+  },
+  "content_hash": "d9c280c89086f47479954d3fd49e8293a13796db24348fcaa9e07501ad7db800",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

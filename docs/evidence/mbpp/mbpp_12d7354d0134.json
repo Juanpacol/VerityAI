@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_12d7354d0134",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.317927+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 812,
+    "text": "Write a function to abbreviate 'road' as 'rd.' in a given string.",
+    "code": "import re\r\ndef road_rd(street):\r\n  return (re.sub('Road$', 'Rd.', street))"
+  },
+  "content_hash": "12d7354d0134dd7fe7e5472792b3b6417e77bab5076e98e57aea20b7569f11e7",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

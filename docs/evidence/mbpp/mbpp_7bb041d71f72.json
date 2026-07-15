@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7bb041d71f72",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.268949+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 564,
+    "text": "Write a python function to count unequal element pairs from the given array.",
+    "code": "def count_Pairs(arr,n): \r\n    cnt = 0; \r\n    for i in range(n): \r\n        for j in range(i + 1,n): \r\n            if (arr[i] != arr[j]): \r\n                cnt += 1; \r\n    return cnt; "
+  },
+  "content_hash": "7bb041d71f7219c41ee85a24730de9d0bcfbf61361a26b89540ad80c3d1f8d20",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

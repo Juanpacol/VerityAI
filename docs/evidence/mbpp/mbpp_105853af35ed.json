@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_105853af35ed",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.297278+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 720,
+    "text": "Write a function to add a dictionary to the tuple.",
+    "code": "def add_dict_to_tuple(test_tup, test_dict):\r\n  test_tup = list(test_tup)\r\n  test_tup.append(test_dict)\r\n  test_tup = tuple(test_tup)\r\n  return (test_tup) "
+  },
+  "content_hash": "105853af35ed550bbbad2cf9dce88f108d408b1527be72e35daf07535c8b6f44",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

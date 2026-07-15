@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_df79e96f2eb0",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.235619+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 350,
+    "text": "Write a python function to minimize the length of the string by removing occurrence of only one character.",
+    "code": "def minimum_Length(s) : \r\n    maxOcc = 0\r\n    n = len(s) \r\n    arr = [0]*26\r\n    for i in range(n) : \r\n        arr[ord(s[i]) -ord('a')] += 1\r\n    for i in range(26) : \r\n        if arr[i] > maxOcc : \r\n            maxOcc = arr[i] \r\n    return n - maxOcc "
+  },
+  "content_hash": "df79e96f2eb071d198ace4e3ffb03a997008abefc9851af8f3a0c6685d7bbaea",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

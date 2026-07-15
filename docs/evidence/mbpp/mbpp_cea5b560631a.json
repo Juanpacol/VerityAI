@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_cea5b560631a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.195047+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 157,
+    "text": "Write a function to reflect the run-length encoding from a list.",
+    "code": "from itertools import groupby\r\ndef encode_list(list1):\r\n    return [[len(list(group)), key] for key, group in groupby(list1)]"
+  },
+  "content_hash": "cea5b560631a01fc2da58e27816c37ffd8a7882b50454e521f437508e93ddad4",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_059109f20018",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.259657+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 509,
+    "text": "Write a python function to find the average of odd numbers till a given odd number.",
+    "code": "def average_Odd(n) : \r\n    if (n%2==0) : \r\n        return (\"Invalid Input\") \r\n        return -1 \r\n    sm =0\r\n    count =0\r\n    while (n>=1) : \r\n        count=count+1\r\n        sm = sm + n \r\n        n = n-2\r\n    return sm//count "
+  },
+  "content_hash": "059109f20018b074663aef5c30a7870e269157a2d0ad876d8523a628f5a958ec",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_6a4bdc584f6f",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.258228+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 500,
+    "text": "Write a function to concatenate all elements of the given list into a string.",
+    "code": "def concatenate_elements(list):\r\n  ans = ' '\r\n  for i in list:\r\n    ans = ans+ ' '+i\r\n  return (ans) "
+  },
+  "content_hash": "6a4bdc584f6f9f2ef1cd5501704d79aa1fba02e4eb3ac517dfd5af7f7c0561ea",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f7e760248ef6",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.198677+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 189,
+    "text": "Write a python function to find the first missing positive number.",
+    "code": "def first_Missing_Positive(arr,n): \r\n    ptr = 0\r\n    for i in range(n):\r\n        if arr[i] == 1:\r\n            ptr = 1\r\n            break\r\n    if ptr == 0:\r\n        return(1)\r\n    for i in range(n):\r\n        if arr[i] <= 0 or arr[i] > n:\r\n            arr[i] = 1\r\n    for i in range(n):\r\n        arr[(arr[i] - 1) % n] += n\r\n    for i in range(n):\r\n        if arr[i] <= n:\r\n            return(i + 1)\r\n    return(n + 1)"
+  },
+  "content_hash": "f7e760248ef68f59c6d0936a6042785dcf817031dc9f86f0fa2666e75bc236af",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

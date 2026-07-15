@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_35a9f33c7a2c",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.228326+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 320,
+    "text": "Write a function to calculate the difference between the squared sum of first n natural numbers and the sum of squared first n natural numbers.",
+    "code": "def sum_difference(n):\r\n    sumofsquares = 0\r\n    squareofsum = 0\r\n    for num in range(1, n+1):\r\n        sumofsquares += num * num\r\n        squareofsum += num\r\n    squareofsum = squareofsum ** 2\r\n    return squareofsum - sumofsquares"
+  },
+  "content_hash": "35a9f33c7a2cfdd558b27066900baccf0f29b99003e7249a258fd73307702fb5",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

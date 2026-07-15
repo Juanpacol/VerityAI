@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_916541be327d",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.274532+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 596,
+    "text": "Write a function to find the size of the given tuple.",
+    "code": "import sys \r\ndef tuple_size(tuple_list):\r\n  return (sys.getsizeof(tuple_list)) "
+  },
+  "content_hash": "916541be327d9f848d6da064e9e64e0e8aefea7bc5789b19a599512fd15d54f9",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

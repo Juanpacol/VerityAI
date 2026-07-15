@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_38bd0ff29223",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.292933+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 697,
+    "text": "Write a function to find number of even elements in the given list using lambda function.",
+    "code": "def count_even(array_nums):\r\n   count_even = len(list(filter(lambda x: (x%2 == 0) , array_nums)))\r\n   return count_even"
+  },
+  "content_hash": "38bd0ff292232a0addc5ae72fad015bab0303159636204556f3a97b43ae8f6a6",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_5fcd43acdc00",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.184734+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 60,
+    "text": "Write a function to find the maximum length of the subsequence with difference between adjacent elements for the given array.",
+    "code": "def max_len_sub( arr, n): \r\n\tmls=[] \r\n\tmax = 0\r\n\tfor i in range(n): \r\n\t\tmls.append(1) \r\n\tfor i in range(n): \r\n\t\tfor j in range(i): \r\n\t\t\tif (abs(arr[i] - arr[j]) <= 1 and mls[i] < mls[j] + 1): \r\n\t\t\t\tmls[i] = mls[j] + 1\r\n\tfor i in range(n): \r\n\t\tif (max < mls[i]): \r\n\t\t\tmax = mls[i] \r\n\treturn max"
+  },
+  "content_hash": "5fcd43acdc00e146e8c56f8f92f269d66952cb99fd992abf8429622ae837dcd1",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e9a9a0979c94",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.243707+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 406,
+    "text": "Write a python function to find the parity of a given number.",
+    "code": "def find_Parity(x): \r\n    y = x ^ (x >> 1); \r\n    y = y ^ (y >> 2); \r\n    y = y ^ (y >> 4); \r\n    y = y ^ (y >> 8); \r\n    y = y ^ (y >> 16); \r\n    if (y & 1): \r\n        return (\"Odd Parity\"); \r\n    return (\"Even Parity\"); "
+  },
+  "content_hash": "e9a9a0979c94a2e6140256810b8806c7668d97154ed7ecf7d4cc0e768e040f6a",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

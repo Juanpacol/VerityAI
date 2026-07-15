@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_16f373d5bd15",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.201469+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 213,
+    "text": "Write a function to perform the concatenation of two string tuples.",
+    "code": "def concatenate_strings(test_tup1, test_tup2):\r\n  res = tuple(ele1 + ele2 for ele1, ele2 in zip(test_tup1, test_tup2))\r\n  return (res) "
+  },
+  "content_hash": "16f373d5bd15a4c16c294ae662d338f7599bb5d76f5f99f32b3c8cb9c2d50522",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

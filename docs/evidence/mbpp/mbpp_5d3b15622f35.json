@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_5d3b15622f35",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.188105+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 93,
+    "text": "Write a function to calculate the value of 'a' to the power 'b'.",
+    "code": "def power(a,b):\r\n\tif b==0:\r\n\t\treturn 1\r\n\telif a==0:\r\n\t\treturn 0\r\n\telif b==1:\r\n\t\treturn a\r\n\telse:\r\n\t\treturn a*power(a,b-1)"
+  },
+  "content_hash": "5d3b15622f3543e2cc3fd2564825d60feeceb194921e2cace5b9dda186bfd1bd",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

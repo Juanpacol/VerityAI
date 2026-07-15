@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_11984ea7fe30",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.347434+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 938,
+    "text": "Write a function to find three closest elements from three sorted arrays.",
+    "code": "import sys \r\n\r\ndef find_closet(A, B, C, p, q, r): \r\n\tdiff = sys.maxsize \r\n\tres_i = 0\r\n\tres_j = 0\r\n\tres_k = 0\r\n\ti = 0\r\n\tj = 0\r\n\tk = 0\r\n\twhile(i < p and j < q and k < r): \r\n\t\tminimum = min(A[i], min(B[j], C[k])) \r\n\t\tmaximum = max(A[i], max(B[j], C[k])); \r\n\t\tif maximum-minimum < diff: \r\n\t\t\tres_i = i \r\n\t\t\tres_j = j \r\n\t\t\tres_k = k \r\n\t\t\tdiff = maximum - minimum; \r\n\t\tif diff == 0: \r\n\t\t\tbreak\r\n\t\tif A[i] == minimum: \r\n\t\t\ti = i+1\r\n\t\telif B[j] == minimum: \r\n\t\t\tj = j+1\r\n\t\telse: \r\n\t\t\tk = k+1\r\n\treturn A[res_i],B[res_j],C[res_k]"
+  },
+  "content_hash": "11984ea7fe3050232c70672705b5dc9ff85d68547cd83ba413e1bf3d4ac53908",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

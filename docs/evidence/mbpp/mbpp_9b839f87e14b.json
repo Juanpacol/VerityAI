@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_9b839f87e14b",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.324690+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 842,
+    "text": "Write a function to find the number which occurs for odd number of times in the given array.",
+    "code": "def get_odd_occurence(arr, arr_size):\r\n  for i in range(0, arr_size):\r\n    count = 0\r\n    for j in range(0, arr_size):\r\n      if arr[i] == arr[j]:\r\n        count += 1\r\n    if (count % 2 != 0):\r\n      return arr[i]\r\n  return -1"
+  },
+  "content_hash": "9b839f87e14b67e708f228ebed9eb322e3004d5bc3d8ee6d48acaadf3e9f96a3",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

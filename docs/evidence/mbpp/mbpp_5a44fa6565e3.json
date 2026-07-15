@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_5a44fa6565e3",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.353926+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 964,
+    "text": "Write a python function to check whether the length of the word is even or not.",
+    "code": "def word_len(s): \r\n    s = s.split(' ')   \r\n    for word in s:    \r\n        if len(word)%2==0: \r\n            return True  \r\n        else:\r\n          return False"
+  },
+  "content_hash": "5a44fa6565e3503477f9819988eee910d6f6b45b7095d57bb2cfb5014f1792ae",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_4f6b5ad1c0f3",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.338434+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 901,
+    "text": "Write a function to find the smallest multiple of the first n numbers.",
+    "code": "def smallest_multiple(n):\r\n    if (n<=2):\r\n      return n\r\n    i = n * 2\r\n    factors = [number  for number in range(n, 1, -1) if number * 2 > n]\r\n    while True:\r\n        for a in factors:\r\n            if i % a != 0:\r\n                i += n\r\n                break\r\n            if (a == factors[-1] and i % a == 0):\r\n                return i"
+  },
+  "content_hash": "4f6b5ad1c0f31b032d8fcb58b231a2fa763b52ce4b513850839772f69c0614b5",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

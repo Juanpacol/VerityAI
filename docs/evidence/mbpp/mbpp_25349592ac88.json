@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_25349592ac88",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.339429+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 905,
+    "text": "Write a python function to find the sum of squares of binomial co-efficients.",
+    "code": "def factorial(start,end): \r\n    res = 1 \r\n    for i in range(start,end + 1): \r\n        res *= i      \r\n    return res \r\ndef sum_of_square(n): \r\n   return int(factorial(n + 1, 2 * n)  /factorial(1, n)) "
+  },
+  "content_hash": "25349592ac88fa3b656fc55b6a4a63b042af115c2409dbfd674787565aef1c9d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

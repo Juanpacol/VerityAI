@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_bc574f9707a2",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.302601+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 746,
+    "text": "Write a function to find area of a sector.",
+    "code": "def sector_area(r,a):\r\n    pi=22/7\r\n    if a >= 360:\r\n        return None\r\n    sectorarea = (pi*r**2) * (a/360)\r\n    return sectorarea"
+  },
+  "content_hash": "bc574f9707a2119d3d07117b090ee0253972327133d068d56d349b0f747293d8",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_289886194722",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.254502+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 477,
+    "text": "Write a python function to convert the given string to lower case.",
+    "code": "def is_lower(string):\r\n  return (string.lower())"
+  },
+  "content_hash": "28988619472231f1b2d22f27393a182f714e015ad3be4f312050fa5bd31545c6",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

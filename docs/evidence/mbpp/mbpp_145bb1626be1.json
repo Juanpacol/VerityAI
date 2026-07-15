@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_145bb1626be1",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.253738+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 472,
+    "text": "Write a python function to check whether the given list contains consecutive numbers or not.",
+    "code": "def check_Consecutive(l): \r\n    return sorted(l) == list(range(min(l),max(l)+1)) "
+  },
+  "content_hash": "145bb1626be1077bd1bfa2dac0380acce88ea561aa0360c475fd34673c3dd21f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

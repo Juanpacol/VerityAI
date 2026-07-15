@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_4719267890d9",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.347936+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 940,
+    "text": "Write a function to sort the given array by using heap sort.",
+    "code": "def heap_sort(arr):\r\n    heapify(arr)  \r\n    end = len(arr) - 1\r\n    while end > 0:\r\n        arr[end], arr[0] = arr[0], arr[end]\r\n        shift_down(arr, 0, end - 1)\r\n        end -= 1\r\n    return arr\r\n\r\ndef heapify(arr):\r\n    start = len(arr) // 2\r\n    while start >= 0:\r\n        shift_down(arr, start, len(arr) - 1)\r\n        start -= 1\r\ndef shift_down(arr, start, end):\r\n    root = start\r\n    while root * 2 + 1 <= end:\r\n        child = root * 2 + 1\r\n        if child + 1 <= end and arr[child] < arr[child + 1]:\r\n            child += 1\r\n        if child <= end and arr[root] < arr[child]:\r\n            arr[root], arr[child] = arr[child], arr[root]\r\n            root = child\r\n        else:\r\n            return\r\n"
+  },
+  "content_hash": "4719267890d9d6ef6a87f790617820f0083c94e33652fff6b5299e33beee7bbe",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_1c76eeec228b",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.198101+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 184,
+    "text": "Write a function to find all the values in a list that are greater than a specified number.",
+    "code": "def greater_specificnum(list,num):\r\n greater_specificnum=all(x >= num for x in list)\r\n return greater_specificnum"
+  },
+  "content_hash": "1c76eeec228b68fb6b9098b75b5ea19c548354c18aac91ffebd5e10f784601f3",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

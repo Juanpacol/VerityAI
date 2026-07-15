@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_6e868a3775b3",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.193761+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 147,
+    "text": "Write a function to find the maximum total path sum in the given triangle.",
+    "code": "def max_path_sum(tri, m, n): \r\n\tfor i in range(m-1, -1, -1): \r\n\t\tfor j in range(i+1): \r\n\t\t\tif (tri[i+1][j] > tri[i+1][j+1]): \r\n\t\t\t\ttri[i][j] += tri[i+1][j] \r\n\t\t\telse: \r\n\t\t\t\ttri[i][j] += tri[i+1][j+1] \r\n\treturn tri[0][0]"
+  },
+  "content_hash": "6e868a3775b34d891ee3b995de13a71129e72e42978141f41793e9f06ff22196",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

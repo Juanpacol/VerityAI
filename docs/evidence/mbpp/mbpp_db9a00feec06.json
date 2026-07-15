@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_db9a00feec06",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.329722+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 864,
+    "text": "Write a function to find palindromes in a given list of strings using lambda function.",
+    "code": "def palindrome_lambda(texts):\r\n  result = list(filter(lambda x: (x == \"\".join(reversed(x))), texts))\r\n  return result"
+  },
+  "content_hash": "db9a00feec0679a71c9adfc8aada0f5fba654686629b1a434535793721d5cbed",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

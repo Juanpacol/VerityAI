@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a5db8cee3b84",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.180523+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 15,
+    "text": "Write a function to split a string at lowercase letters.",
+    "code": "import re\r\ndef split_lowerstring(text):\r\n return (re.findall('[a-z][^a-z]*', text))"
+  },
+  "content_hash": "a5db8cee3b84d568a2398acb1d4a20a8e43debdb273cdbb8e3723c186b462638",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

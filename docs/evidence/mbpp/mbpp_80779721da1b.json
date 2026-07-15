@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_80779721da1b",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.187509+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 87,
+    "text": "Write a function to merge three dictionaries into a single expression.",
+    "code": "import collections as ct\r\ndef merge_dictionaries_three(dict1,dict2, dict3):\r\n    merged_dict = dict(ct.ChainMap({},dict1,dict2,dict3))\r\n    return merged_dict"
+  },
+  "content_hash": "80779721da1bc7b067529d483b63d75a2cf1f0259a1b4a7ab547cb4f9f389533",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

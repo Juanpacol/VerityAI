@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_4989d5751d2d",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.311876+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 786,
+    "text": "Write a function to locate the right insertion point for a specified value in sorted order.",
+    "code": "import bisect\r\ndef right_insertion(a, x):\r\n    i = bisect.bisect_right(a, x)\r\n    return i"
+  },
+  "content_hash": "4989d5751d2defdd009822c00174744aa0c80426e192f626973ab284f220606e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

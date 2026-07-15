@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_4d94111719b4",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.240039+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 381,
+    "text": "Write a function to sort a list of lists by a given index of the inner list.",
+    "code": "from operator import itemgetter\r\ndef index_on_inner_list(list_data, index_no):\r\n    result = sorted(list_data, key=itemgetter(index_no))\r\n    return result"
+  },
+  "content_hash": "4d94111719b4cbb72f569860edba91d28044f2f18b0341939d54896cb5f7e9dd",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

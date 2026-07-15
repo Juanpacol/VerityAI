@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_13271c70fb0c",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.238171+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 368,
+    "text": "Write a function to repeat the given tuple n times.",
+    "code": "def repeat_tuples(test_tup, N):\r\n  res = ((test_tup, ) * N)\r\n  return (res) "
+  },
+  "content_hash": "13271c70fb0c1baf68277cf37636a35f862905e4d92d5886ec756e4ab1f90330",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

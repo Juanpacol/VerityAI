@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_d805f9f91abe",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.334139+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 883,
+    "text": "Write a function to find numbers divisible by m and n from a list of numbers using lambda function.",
+    "code": "def div_of_nums(nums,m,n):\r\n result = list(filter(lambda x: (x % m == 0 and x % n == 0), nums)) \r\n return result"
+  },
+  "content_hash": "d805f9f91abe50122a9757a76ffa4163d9f25a4be22a85ef0cc7ca97a83d38d9",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

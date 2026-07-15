@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_044702241867",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.179318+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 5,
+    "text": "Write a function to find the number of ways to fill it with 2 x 1 dominoes for the given 3 x n board.",
+    "code": "def count_ways(n): \r\n\tA = [0] * (n + 1) \r\n\tB = [0] * (n + 1) \r\n\tA[0] = 1\r\n\tA[1] = 0\r\n\tB[0] = 0\r\n\tB[1] = 1\r\n\tfor i in range(2, n+1): \r\n\t\tA[i] = A[i - 2] + 2 * B[i - 1] \r\n\t\tB[i] = A[i - 1] + B[i - 2] \r\n\treturn A[n] "
+  },
+  "content_hash": "044702241867db2343ce27453ca74bfade008e93318c59183404a6594abc4acf",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

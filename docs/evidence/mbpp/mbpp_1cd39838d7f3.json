@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_1cd39838d7f3",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.248263+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 436,
+    "text": "Write a python function to print negative numbers in a list.",
+    "code": "def neg_nos(list1):\r\n  for num in list1: \r\n    if num < 0: \r\n       return num "
+  },
+  "content_hash": "1cd39838d7f3a0ee95a53c16041f2812caceee3da1324eefaecf260f6217468b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

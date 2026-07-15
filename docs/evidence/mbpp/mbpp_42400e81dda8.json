@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_42400e81dda8",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.324024+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 839,
+    "text": "Write a function to sort the tuples alphabetically by the first item of each tuple.",
+    "code": "def sort_tuple(tup): \r\n\tn = len(tup) \r\n\tfor i in range(n): \r\n\t\tfor j in range(n-i-1): \r\n\t\t\tif tup[j][0] > tup[j + 1][0]: \r\n\t\t\t\ttup[j], tup[j + 1] = tup[j + 1], tup[j] \r\n\treturn tup"
+  },
+  "content_hash": "42400e81dda898a2000a88fc45ce4b129693d835829056393e7bdaa6df0a614f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_9d438a6522ab",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.207784+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 265,
+    "text": "Write a function to split a list for every nth element.",
+    "code": "def list_split(S, step):\r\n    return [S[i::step] for i in range(step)]"
+  },
+  "content_hash": "9d438a6522ab8ed782c1836b675902c6a403f1fc3b6b15ec37a6f53575c7b4b9",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

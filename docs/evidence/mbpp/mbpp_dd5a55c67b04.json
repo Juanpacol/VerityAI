@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_dd5a55c67b04",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.313974+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 795,
+    "text": "Write a function to find the n - cheap price items from a given dataset using heap queue algorithm.",
+    "code": "import heapq\r\ndef cheap_items(items,n):\r\n  cheap_items = heapq.nsmallest(n, items, key=lambda s: s['price'])\r\n  return cheap_items"
+  },
+  "content_hash": "dd5a55c67b0418f11d21ca343315eacddb9db45aeaacd51948f5b03a8a41d892",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

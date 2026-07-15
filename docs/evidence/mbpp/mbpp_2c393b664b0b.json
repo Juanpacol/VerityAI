@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_2c393b664b0b",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.262838+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 528,
+    "text": "Write a function to find the list of lists with minimum length.",
+    "code": "def min_length(list1):\r\n   min_length = min(len(x) for x in  list1 )  \r\n   min_list = min((x) for x in   list1)\r\n   return(min_length, min_list)     "
+  },
+  "content_hash": "2c393b664b0b94c0931a8e698df46d74e8e683722735d7cf7e69f5a18df56ea4",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

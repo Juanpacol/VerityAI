@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_82df648a4751",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.284425+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 651,
+    "text": "Write a function to check if one tuple is a subset of another tuple.",
+    "code": "def check_subset(test_tup1, test_tup2):\r\n  res = set(test_tup2).issubset(test_tup1)\r\n  return (res) "
+  },
+  "content_hash": "82df648a4751543a89a74b31085b5746d57ab3dc32e4b56b48a96f7447b8f4cc",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

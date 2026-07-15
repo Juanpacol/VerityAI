@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_719c3af9453e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.189041+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 102,
+    "text": "Write a function to convert snake case string to camel case string.",
+    "code": "def snake_to_camel(word):\r\n        import re\r\n        return ''.join(x.capitalize() or '_' for x in word.split('_'))"
+  },
+  "content_hash": "719c3af9453e5dd6e6ef54d4481af52315df74b3669dbfbbd5dee0a17dba1a22",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

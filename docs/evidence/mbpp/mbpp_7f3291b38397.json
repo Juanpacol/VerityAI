@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7f3291b38397",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.307578+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 768,
+    "text": "Write a python function to check for odd parity of a given number.",
+    "code": "def check_Odd_Parity(x): \r\n    parity = 0\r\n    while (x != 0): \r\n        x = x & (x - 1) \r\n        parity += 1\r\n    if (parity % 2 == 1): \r\n        return True\r\n    else: \r\n        return False"
+  },
+  "content_hash": "7f3291b38397fab89c58fb496a24b6bcc34b2708e5160b08762781901a62c3fe",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

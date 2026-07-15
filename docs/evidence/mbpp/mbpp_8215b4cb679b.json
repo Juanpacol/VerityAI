@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_8215b4cb679b",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.257255+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 494,
+    "text": "Write a function to convert the given binary tuple to integer.",
+    "code": "def binary_to_integer(test_tup):\r\n  res = int(\"\".join(str(ele) for ele in test_tup), 2)\r\n  return (str(res)) "
+  },
+  "content_hash": "8215b4cb679b5c375d388012bfc743e9f4e0c16503a50276fa02f0b404ef061d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

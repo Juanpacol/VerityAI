@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_18d97f78afa6",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.897598+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/74",
+    "prompt": "\ndef total_match(lst1, lst2):\n    '''\n    Write a function that accepts two lists of strings and returns the list that has \n    total number of chars in the all strings of the list less than the other list.\n\n    if the two lists have the same number of chars, return the first list.\n\n    Examples\n    total_match([], []) ➞ []\n    total_match(['hi', 'admin'], ['hI', 'Hi']) ➞ ['hI', 'Hi']\n    total_match(['hi', 'admin'], ['hi', 'hi', 'admin', 'project']) ➞ ['hi', 'admin']\n    total_match(['hi', 'admin'], ['hI', 'hi', 'hi']) ➞ ['hI', 'hi', 'hi']\n    total_match(['4'], ['1', '2', '3', '4', '5']) ➞ ['4']\n    '''\n",
+    "canonical_solution": "    l1 = 0\n    for st in lst1:\n        l1 += len(st)\n    \n    l2 = 0\n    for st in lst2:\n        l2 += len(st)\n    \n    if l1 <= l2:\n        return lst1\n    else:\n        return lst2\n",
+    "entry_point": "total_match"
+  },
+  "content_hash": "18d97f78afa6a368f84ab1aff6771086afdc12244fa838f59c19219952202fbf",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

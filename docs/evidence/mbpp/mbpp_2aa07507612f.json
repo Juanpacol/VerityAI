@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_2aa07507612f",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.291616+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 690,
+    "text": "Write a function to multiply consecutive numbers of a given list.",
+    "code": "def mul_consecutive_nums(nums):\r\n    result = [b*a for a, b in zip(nums[:-1], nums[1:])]\r\n    return result"
+  },
+  "content_hash": "2aa07507612f07c9d003f1ce5263928ab6ca3f9312a70104807c4a2d90b84504",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

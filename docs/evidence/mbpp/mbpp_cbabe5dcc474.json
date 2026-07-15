@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_cbabe5dcc474",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.192808+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 138,
+    "text": "Write a python function to check whether the given number can be represented as sum of non-zero powers of 2 or not.",
+    "code": "def is_Sum_Of_Powers_Of_Two(n): \r\n    if (n % 2 == 1): \r\n        return False\r\n    else: \r\n        return True"
+  },
+  "content_hash": "cbabe5dcc47452fd42d203ee261cdef9359af93b4219b5bfe18cb8e0918f00c3",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

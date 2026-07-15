@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_337ba9d914e7",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.226832+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 309,
+    "text": "Write a python function to find the maximum of two numbers.",
+    "code": "def maximum(a,b):   \r\n    if a >= b: \r\n        return a \r\n    else: \r\n        return b "
+  },
+  "content_hash": "337ba9d914e7057b1a1005edab1ecbb058b2f2e482cf355a8c2195a9a95595a4",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

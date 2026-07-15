@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_5085e176e4e9",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.192470+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 135,
+    "text": "Write a function to find the nth hexagonal number.",
+    "code": "def hexagonal_num(n): \r\n\treturn n*(2*n - 1) "
+  },
+  "content_hash": "5085e176e4e91435d42bf16321d3d56fdf9c745b0028cbee2937ce789c791959",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

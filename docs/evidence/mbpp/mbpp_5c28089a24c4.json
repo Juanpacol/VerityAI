@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_5c28089a24c4",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.260301+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 513,
+    "text": "Write a function to convert tuple into list by adding the given string after every element.",
+    "code": "def add_str(test_tup, K):\r\n  res = [ele for sub in test_tup for ele in (sub, K)]\r\n  return (res) "
+  },
+  "content_hash": "5c28089a24c49ef8d8f9650800424cd9679a879cb7fcb5b388a392fa72c16f5d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

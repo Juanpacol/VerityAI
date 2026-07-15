@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_26da17240fc6",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.187702+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 89,
+    "text": "Write a function to find the closest smaller number than n.",
+    "code": "def closest_num(N):\r\n  return (N - 1)"
+  },
+  "content_hash": "26da17240fc6fbcd31ab5ab10efddf6c3f6c0ba1462024aa5eb78e6578144998",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

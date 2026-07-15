@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f8ead029ad1a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.285298+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 656,
+    "text": "Write a python function to find the minimum sum of absolute differences of two arrays.",
+    "code": "def find_Min_Sum(a,b,n): \r\n    a.sort() \r\n    b.sort() \r\n    sum = 0  \r\n    for i in range(n): \r\n        sum = sum + abs(a[i] - b[i]) \r\n    return sum"
+  },
+  "content_hash": "f8ead029ad1ae8b7278fef962c736c526fce82727afe7e9d05bbb42b9f98a1e7",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

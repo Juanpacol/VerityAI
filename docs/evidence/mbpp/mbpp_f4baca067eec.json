@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f4baca067eec",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.313019+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 791,
+    "text": "Write a function to remove the nested record from the given tuple.",
+    "code": "def remove_nested(test_tup):\r\n  res = tuple()\r\n  for count, ele in enumerate(test_tup):\r\n    if not isinstance(ele, tuple):\r\n      res = res + (ele, )\r\n  return (res) "
+  },
+  "content_hash": "f4baca067eec6c9652b246dc67cf614e95716ef060a3f87b7ab702ead9e1d630",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

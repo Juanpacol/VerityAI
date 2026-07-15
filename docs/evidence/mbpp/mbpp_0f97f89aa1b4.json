@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_0f97f89aa1b4",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.193336+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 143,
+    "text": "Write a function to find number of lists present in the given tuple.",
+    "code": "def find_lists(Input): \r\n\tif isinstance(Input, list): \r\n\t\treturn 1\r\n\telse: \r\n\t\treturn len(Input) "
+  },
+  "content_hash": "0f97f89aa1b44efec3a6e370d9560f936e53408321db3b1489ad49cb0d69e38e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

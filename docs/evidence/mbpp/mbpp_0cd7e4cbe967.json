@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_0cd7e4cbe967",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.191636+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 127,
+    "text": "Write a function to multiply two integers without using the * operator in python.",
+    "code": "def multiply_int(x, y):\r\n    if y < 0:\r\n        return -multiply_int(x, -y)\r\n    elif y == 0:\r\n        return 0\r\n    elif y == 1:\r\n        return x\r\n    else:\r\n        return x + multiply_int(x, y - 1)"
+  },
+  "content_hash": "0cd7e4cbe96735640246ba2100c4b67f4432314a11dd746875e587857b25412d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

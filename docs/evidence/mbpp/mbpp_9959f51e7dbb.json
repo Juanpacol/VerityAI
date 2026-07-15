@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_9959f51e7dbb",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.229988+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 332,
+    "text": "Write a function to count character frequency of a given string.",
+    "code": "def char_frequency(str1):\r\n    dict = {}\r\n    for n in str1:\r\n        keys = dict.keys()\r\n        if n in keys:\r\n            dict[n] += 1\r\n        else:\r\n            dict[n] = 1\r\n    return dict"
+  },
+  "content_hash": "9959f51e7dbb5fbfb03a046b5dc187a54c2b4e2657dcf303ddd718c4a914e520",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

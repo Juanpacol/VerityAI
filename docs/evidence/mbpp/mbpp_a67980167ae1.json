@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a67980167ae1",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.266732+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 551,
+    "text": "Write a function to extract a specified column from a given nested list.",
+    "code": "def extract_column(list1, n):\r\n   result = [i.pop(n) for i in list1]\r\n   return result "
+  },
+  "content_hash": "a67980167ae186ea02ace1469042980349245c659aaba01bdaa459851d24de72",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

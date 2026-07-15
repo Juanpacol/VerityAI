@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_5d0d8d7a9939",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.269461+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 567,
+    "text": "Write a function to check whether a specified list is sorted or not.",
+    "code": "def issort_list(list1):\r\n    result = all(list1[i] <= list1[i+1] for i in range(len(list1)-1))\r\n    return result"
+  },
+  "content_hash": "5d0d8d7a9939816b28d14aca06489eb0ea596b1b357729c879fb61a06d177c88",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

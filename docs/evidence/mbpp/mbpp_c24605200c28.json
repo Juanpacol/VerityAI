@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c24605200c28",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.188509+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 97,
+    "text": "Write a function to find frequency count of list of lists.",
+    "code": "def frequency_lists(list1):\r\n    list1 = [item for sublist in list1 for item in sublist]\r\n    dic_data = {}\r\n    for num in list1:\r\n        if num in dic_data.keys():\r\n            dic_data[num] += 1\r\n        else:\r\n            key = num\r\n            value = 1\r\n            dic_data[key] = value\r\n    return dic_data\r\n"
+  },
+  "content_hash": "c24605200c28e282235e2fb2c8e801b9f23ad628fae9d2dfea7f96bb125f6b25",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

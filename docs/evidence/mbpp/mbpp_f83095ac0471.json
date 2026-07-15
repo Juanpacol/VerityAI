@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f83095ac0471",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.193126+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 141,
+    "text": "Write a function to sort a list of elements using pancake sort.",
+    "code": "def pancake_sort(nums):\r\n    arr_len = len(nums)\r\n    while arr_len > 1:\r\n        mi = nums.index(max(nums[0:arr_len]))\r\n        nums = nums[mi::-1] + nums[mi+1:len(nums)]\r\n        nums = nums[arr_len-1::-1] + nums[arr_len:len(nums)]\r\n        arr_len -= 1\r\n    return nums"
+  },
+  "content_hash": "f83095ac04714d6acc3fe90499bd42af706975dd387cd01a3af232b5e00b0d11",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

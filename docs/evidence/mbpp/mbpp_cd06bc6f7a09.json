@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_cd06bc6f7a09",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.190065+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 112,
+    "text": "Write a python function to find the perimeter of a cylinder.",
+    "code": "def perimeter(diameter,height) : \r\n    return 2*(diameter+height)  "
+  },
+  "content_hash": "cd06bc6f7a0909131f679cd902929c4239c367ba9a0962276ad239dfc0e161c9",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

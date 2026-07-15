@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_646685889275",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.338675+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 902,
+    "text": "Write a function to combine two dictionaries by adding values for common keys.",
+    "code": "from collections import Counter\r\ndef add_dict(d1,d2):\r\n   add_dict = Counter(d1) + Counter(d2)\r\n   return add_dict"
+  },
+  "content_hash": "646685889275ff51ee27c5b0d65455973b8d018b26c8bc8a1a980226f9ab45d3",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

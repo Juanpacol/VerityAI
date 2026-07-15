@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_bd86980fc529",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.336969+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 895,
+    "text": "Write a function to find the maximum sum of subsequences of given array with no adjacent elements.",
+    "code": "def max_sum_subseq(A):\r\n    n = len(A)\r\n    if n == 1:\r\n        return A[0]\r\n    look_up = [None] * n\r\n    look_up[0] = A[0]\r\n    look_up[1] = max(A[0], A[1])\r\n    for i in range(2, n):\r\n        look_up[i] = max(look_up[i - 1], look_up[i - 2] + A[i])\r\n        look_up[i] = max(look_up[i], A[i])\r\n    return look_up[n - 1]"
+  },
+  "content_hash": "bd86980fc529e36ce02cba42f46c70431b38e141595e2b2a7187d78bce8f7283",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

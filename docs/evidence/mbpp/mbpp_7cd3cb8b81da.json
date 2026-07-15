@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7cd3cb8b81da",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.280216+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 627,
+    "text": "Write a python function to find the smallest missing number from the given array.",
+    "code": "def find_First_Missing(array,start,end): \r\n    if (start > end): \r\n        return end + 1\r\n    if (start != array[start]): \r\n        return start; \r\n    mid = int((start + end) / 2) \r\n    if (array[mid] == mid): \r\n        return find_First_Missing(array,mid+1,end) \r\n    return find_First_Missing(array,start,mid) "
+  },
+  "content_hash": "7cd3cb8b81dac1de732fdfc5e92c02c140105c5189da6b15f410d9335ee53a92",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

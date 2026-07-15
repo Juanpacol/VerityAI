@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_9abaa5f4a13d",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.308368+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 771,
+    "text": "Write a function to check if the given expression is balanced or not.",
+    "code": "from collections import deque\r\ndef check_expression(exp):\r\n    if len(exp) & 1:\r\n        return False\r\n    stack = deque()\r\n    for ch in exp:\r\n        if ch == '(' or ch == '{' or ch == '[':\r\n            stack.append(ch)\r\n        if ch == ')' or ch == '}' or ch == ']':\r\n            if not stack:\r\n                return False\r\n            top = stack.pop()\r\n            if (top == '(' and ch != ')') or (top == '{' and ch != '}' or (top == '[' and ch != ']')):\r\n                return False\r\n    return not stack"
+  },
+  "content_hash": "9abaa5f4a13de7ac4a409ac4c0ac95ee72e721eb0c5dfc2ea6c20f516b88b435",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

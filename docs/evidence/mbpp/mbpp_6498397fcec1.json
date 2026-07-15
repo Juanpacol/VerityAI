@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_6498397fcec1",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.309579+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 776,
+    "text": "Write a function to count those characters which have vowels as their neighbors in the given string.",
+    "code": "def count_vowels(test_str):\r\n  res = 0\r\n  vow_list = ['a', 'e', 'i', 'o', 'u']\r\n  for idx in range(1, len(test_str) - 1):\r\n    if test_str[idx] not in vow_list and (test_str[idx - 1] in vow_list or test_str[idx + 1] in vow_list):\r\n      res += 1\r\n  if test_str[0] not in vow_list and test_str[1] in vow_list:\r\n    res += 1\r\n  if test_str[-1] not in vow_list and test_str[-2] in vow_list:\r\n    res += 1\r\n  return (res) "
+  },
+  "content_hash": "6498397fcec15740920a0538196cd75139434b99954b1e5070d9544f381d21a8",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

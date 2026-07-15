@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_5f5139cb64e4",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.208648+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 272,
+    "text": "Write a function to perfom the rear element extraction from list of tuples records.",
+    "code": "def rear_extract(test_list):\r\n  res = [lis[-1] for lis in test_list]\r\n  return (res) "
+  },
+  "content_hash": "5f5139cb64e48bfdbe7e6eea1506d38ace9faca1ff11845a00a4bdf5d7381412",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

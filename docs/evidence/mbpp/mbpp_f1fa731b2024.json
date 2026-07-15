@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f1fa731b2024",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.193440+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 144,
+    "text": "Write a python function to find the sum of absolute differences in all pairs of the given array.",
+    "code": "def sum_Pairs(arr,n): \r\n    sum = 0\r\n    for i in range(n - 1,-1,-1): \r\n        sum += i*arr[i] - (n-1-i) * arr[i] \r\n    return sum"
+  },
+  "content_hash": "f1fa731b20247fba2ee982ebee08f5ca86e0c5973cc4854d3c34c8dfef65c636",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

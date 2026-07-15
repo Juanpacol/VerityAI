@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_035b1cba0359",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.229849+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 331,
+    "text": "Write a python function to count unset bits of a given number.",
+    "code": "def count_unset_bits(n): \r\n    count = 0\r\n    x = 1\r\n    while(x < n + 1): \r\n        if ((x & n) == 0): \r\n            count += 1\r\n        x = x << 1\r\n    return count  "
+  },
+  "content_hash": "035b1cba0359273ba1f9308eed21fde1a5800dd1edfa7212ab250cd3e9f67c38",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

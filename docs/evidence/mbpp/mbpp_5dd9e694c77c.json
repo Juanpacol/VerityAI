@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_5dd9e694c77c",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.270693+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 574,
+    "text": "Write a function to find the surface area of a cylinder.",
+    "code": "def surfacearea_cylinder(r,h):\r\n  surfacearea=((2*3.1415*r*r) +(2*3.1415*r*h))\r\n  return surfacearea"
+  },
+  "content_hash": "5dd9e694c77cda9a30f33eac1c218aa7de81da94befee2c15298cf336273e2d3",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

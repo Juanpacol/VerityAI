@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a4ee71d91492",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.187315+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 85,
+    "text": "Write a function to find the surface area of a sphere.",
+    "code": "import math\r\ndef surfacearea_sphere(r):\r\n  surfacearea=4*math.pi*r*r\r\n  return surfacearea"
+  },
+  "content_hash": "a4ee71d91492f0728a0f8866e67b89d3272a66f384b9792278ebac40f0304da6",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

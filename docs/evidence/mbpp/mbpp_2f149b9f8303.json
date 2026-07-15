@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_2f149b9f8303",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.200647+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 206,
+    "text": "Write a function to perform the adjacent element concatenation in the given tuples.",
+    "code": "def concatenate_elements(test_tup):\r\n  res = tuple(i + j for i, j in zip(test_tup, test_tup[1:]))\r\n  return (res) "
+  },
+  "content_hash": "2f149b9f830306761cfabd05ebd13d6cd8cef30db3bc881a33a19adf18d8cc1f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

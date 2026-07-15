@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_795c12f3b3e6",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.229120+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 326,
+    "text": "Write a function to get the word with most number of occurrences in the given strings list.",
+    "code": "from collections import defaultdict \r\n\r\ndef most_occurrences(test_list):\r\n  temp = defaultdict(int)\r\n  for sub in test_list:\r\n    for wrd in sub.split():\r\n      temp[wrd] += 1\r\n  res = max(temp, key=temp.get)\r\n  return (str(res)) "
+  },
+  "content_hash": "795c12f3b3e63a6ba48d6ddc8c827a0023e51918ee0c308b405ae0fbe6f8ad54",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_66f39d820066",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.324910+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 843,
+    "text": "Write a function to find the nth super ugly number from a given prime list of size k using heap queue algorithm.",
+    "code": "import heapq\r\ndef nth_super_ugly_number(n, primes):\r\n    uglies = [1]\r\n    def gen(prime):\r\n        for ugly in uglies:\r\n            yield ugly * prime\r\n    merged = heapq.merge(*map(gen, primes))\r\n    while len(uglies) < n:\r\n        ugly = next(merged)\r\n        if ugly != uglies[-1]:\r\n            uglies.append(ugly)\r\n    return uglies[-1]"
+  },
+  "content_hash": "66f39d8200660a548cd2c32bb1a035bd4b23636c2b9d1a305c70f858b8001625",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

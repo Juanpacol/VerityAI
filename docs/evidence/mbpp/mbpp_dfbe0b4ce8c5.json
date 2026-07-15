@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_dfbe0b4ce8c5",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.267939+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 558,
+    "text": "Write a python function to find the digit distance between two integers.",
+    "code": "def digit_distance_nums(n1, n2):\r\n         return sum(map(int,str(abs(n1-n2))))"
+  },
+  "content_hash": "dfbe0b4ce8c51d4f18aa961b62086513fcc514a53adc5730c818b39b7c072ff4",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

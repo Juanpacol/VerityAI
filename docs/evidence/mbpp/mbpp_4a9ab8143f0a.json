@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_4a9ab8143f0a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.185816+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 70,
+    "text": "Write a function to find whether all the given tuples have equal length or not.",
+    "code": "def find_equal_tuple(Input, k):\r\n  flag = 1\r\n  for tuple in Input:\r\n    if len(tuple) != k:\r\n      flag = 0\r\n      break\r\n  return flag\r\ndef get_equal(Input, k):\r\n  if find_equal_tuple(Input, k) == 1:\r\n    return (\"All tuples have same length\")\r\n  else:\r\n    return (\"All tuples do not have same length\")"
+  },
+  "content_hash": "4a9ab8143f0ad40659d4e069799d490f510b0a5570160b93341e19b5d2a0844e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

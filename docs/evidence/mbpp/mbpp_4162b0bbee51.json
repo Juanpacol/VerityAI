@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_4162b0bbee51",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.342801+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 919,
+    "text": "Write a python function to multiply all items in the list.",
+    "code": "def multiply_list(items):\r\n    tot = 1\r\n    for x in items:\r\n        tot *= x\r\n    return tot"
+  },
+  "content_hash": "4162b0bbee5107800409a3647100f94fdbf0f0c3ca6d02606aae85f58b98cda4",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

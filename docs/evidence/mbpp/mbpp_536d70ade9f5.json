@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_536d70ade9f5",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.282656+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 641,
+    "text": "Write a function to find the nth nonagonal number.",
+    "code": "def is_nonagonal(n): \r\n\treturn int(n * (7 * n - 5) / 2) "
+  },
+  "content_hash": "536d70ade9f59b5fed6fa3b54c616c34158c18ad809abdd66867cf14a900556d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

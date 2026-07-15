@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_ea2ada1774f7",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.260459+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 514,
+    "text": "Write a function to find the summation of tuple elements in the given tuple list.",
+    "code": "def sum_elements(test_tup):\r\n  res = sum(list(test_tup))\r\n  return (res) "
+  },
+  "content_hash": "ea2ada1774f71f14e880d8fb15918e93efe7554b8d285c850bc97075c03fd88a",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

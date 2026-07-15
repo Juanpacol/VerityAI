@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a5921a3b4434",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.301475+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 740,
+    "text": "Write a function to convert the given tuple to a key-value dictionary using adjacent elements.",
+    "code": "def tuple_to_dict(test_tup):\r\n  res = dict(test_tup[idx : idx + 2] for idx in range(0, len(test_tup), 2))\r\n  return (res) "
+  },
+  "content_hash": "a5921a3b4434175c685f8056c13e144d076c6b9db58358cc36f92524e51f2e8f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

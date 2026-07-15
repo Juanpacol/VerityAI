@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_9741da655f41",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.335570+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 889,
+    "text": "Write a function to reverse each list in a given list of lists.",
+    "code": "def reverse_list_lists(lists):\r\n    for l in lists:\r\n        l.sort(reverse = True)\r\n    return lists "
+  },
+  "content_hash": "9741da655f4178ad0ae130c7c8f8607d611896bd05a0ba8811e9fc296d927643",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

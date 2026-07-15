@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_182f6dee413d",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.192051+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 131,
+    "text": "Write a python function to reverse only the vowels of a given string.",
+    "code": "def reverse_vowels(str1):\r\n\tvowels = \"\"\r\n\tfor char in str1:\r\n\t\tif char in \"aeiouAEIOU\":\r\n\t\t\tvowels += char\r\n\tresult_string = \"\"\r\n\tfor char in str1:\r\n\t\tif char in \"aeiouAEIOU\":\r\n\t\t\tresult_string += vowels[-1]\r\n\t\t\tvowels = vowels[:-1]\r\n\t\telse:\r\n\t\t\tresult_string += char\r\n\treturn result_string"
+  },
+  "content_hash": "182f6dee413d0d18ce8aa53d6fdfcc283228c256daee0e4c265c07036382378c",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

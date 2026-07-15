@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b3b17d516a04",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.279176+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 621,
+    "text": "Write a function to increment the numeric values in the given strings by k.",
+    "code": "def increment_numerics(test_list, K):\r\n  res = [str(int(ele) + K) if ele.isdigit() else ele for ele in test_list]\r\n  return res "
+  },
+  "content_hash": "b3b17d516a04a42097c09468e3fed1e432f0133806ca9108385c2e98abbb002e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

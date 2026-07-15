@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a4fea31414e3",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.290483+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 684,
+    "text": "Write a python function to count occurences of a character in a repeated string.",
+    "code": "def count_Char(str,x): \r\n    count = 0\r\n    for i in range(len(str)):  \r\n        if (str[i] == x) : \r\n            count += 1\r\n    n = 10\r\n    repititions = n // len(str)  \r\n    count = count * repititions  \r\n    l = n % len(str)  \r\n    for i in range(l): \r\n        if (str[i] == x):  \r\n            count += 1\r\n    return count  "
+  },
+  "content_hash": "a4fea31414e3efcfda3777e56ebab4b3eb31faeb54f10c10fd631c465230bdc0",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

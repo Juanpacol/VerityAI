@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_8a9b5c0264e5",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.247211+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 429,
+    "text": "Write a function to extract the elementwise and tuples from the given two tuples.",
+    "code": "def and_tuples(test_tup1, test_tup2):\r\n  res = tuple(ele1 & ele2 for ele1, ele2 in zip(test_tup1, test_tup2))\r\n  return (res) "
+  },
+  "content_hash": "8a9b5c0264e54a4d2b79946ec56f1124a5a4c225054613cd54571bac476e8cf4",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

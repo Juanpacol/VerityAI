@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_1c3a37d8d476",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.336034+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 891,
+    "text": "Write a python function to check whether the given two numbers have same number of digits or not.",
+    "code": "def same_Length(A,B): \r\n    while (A > 0 and B > 0): \r\n        A = A / 10; \r\n        B = B / 10; \r\n    if (A == 0 and B == 0): \r\n        return True; \r\n    return False; "
+  },
+  "content_hash": "1c3a37d8d476e25398201003a8473e6519e83f8c4c5f5d14d73a477fb61d3359",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

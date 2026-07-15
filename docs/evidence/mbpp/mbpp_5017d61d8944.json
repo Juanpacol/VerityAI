@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_5017d61d8944",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.182927+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 41,
+    "text": "Write a function to filter even numbers using lambda function.",
+    "code": "def filter_evennumbers(nums):\r\n even_nums = list(filter(lambda x: x%2 == 0, nums))\r\n return even_nums"
+  },
+  "content_hash": "5017d61d8944212879c592b4f54759da25b3752726ceef2032e722bdac4f352f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

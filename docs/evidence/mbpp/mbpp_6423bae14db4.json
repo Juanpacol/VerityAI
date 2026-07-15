@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_6423bae14db4",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.352361+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 958,
+    "text": "Write a function to convert an integer into a roman numeral.",
+    "code": "def int_to_roman( num):\r\n        val = [1000, 900, 500, 400,100, 90, 50, 40,10, 9, 5, 4,1]\r\n        syb = [\"M\", \"CM\", \"D\", \"CD\",\"C\", \"XC\", \"L\", \"XL\",\"X\", \"IX\", \"V\", \"IV\",\"I\"]\r\n        roman_num = ''\r\n        i = 0\r\n        while  num > 0:\r\n            for _ in range(num // val[i]):\r\n                roman_num += syb[i]\r\n                num -= val[i]\r\n            i += 1\r\n        return roman_num"
+  },
+  "content_hash": "6423bae14db4e6e25ff6f4116719d5b876cf7134bb72daa270659d5380a7214f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

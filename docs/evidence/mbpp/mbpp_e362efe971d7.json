@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e362efe971d7",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.189867+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 110,
+    "text": "Write a function to extract the ranges that are missing from the given list with the given start range and end range values.",
+    "code": "def extract_missing(test_list, strt_val, stop_val):\r\n  res = []\r\n  for sub in test_list:\r\n    if sub[0] > strt_val:\r\n      res.append((strt_val, sub[0]))\r\n      strt_val = sub[1]\r\n    if strt_val < stop_val:\r\n      res.append((strt_val, stop_val))\r\n  return (res) "
+  },
+  "content_hash": "e362efe971d7c0a8f9dea06cbbc8f866815f5220747a73b167874578cff948d2",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

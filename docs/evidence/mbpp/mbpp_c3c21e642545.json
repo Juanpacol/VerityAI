@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c3c21e642545",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.268275+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 560,
+    "text": "Write a function to find the union of elements of the given tuples.",
+    "code": "def union_elements(test_tup1, test_tup2):\r\n  res = tuple(set(test_tup1 + test_tup2))\r\n  return (res) "
+  },
+  "content_hash": "c3c21e6425452441de1223244e1747c72c23ae23148759a6257a81f6ee86611f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

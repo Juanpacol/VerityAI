@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_38c1cae73862",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.321311+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 827,
+    "text": "Write a function to sum a specific column of a list in a given list of lists.",
+    "code": "def sum_column(list1, C):\r\n    result = sum(row[C] for row in list1)\r\n    return result"
+  },
+  "content_hash": "38c1cae738622b7de6712e0666aab878f90e6cb7cee7454af5c430a5d6c11c97",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

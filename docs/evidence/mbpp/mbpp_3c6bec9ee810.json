@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_3c6bec9ee810",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.228592+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 322,
+    "text": "Write a function to find all index positions of the minimum values in a given list.",
+    "code": "def position_min(list1):\r\n    min_val = min(list1)\r\n    min_result = [i for i, j in enumerate(list1) if j == min_val]\r\n    return min_result"
+  },
+  "content_hash": "3c6bec9ee810401089f63baab98b29108319b9a8a40956fdc114df4aa6b97d5c",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

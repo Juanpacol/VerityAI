@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_745db823df8d",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.257098+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 493,
+    "text": "Write a function to calculate a grid of hexagon coordinates where function returns a list of lists containing 6 tuples of x, y point coordinates.",
+    "code": "import math\r\ndef calculate_polygons(startx, starty, endx, endy, radius):\r\n    sl = (2 * radius) * math.tan(math.pi / 6)\r\n    p = sl * 0.5\r\n    b = sl * math.cos(math.radians(30))\r\n    w = b * 2\r\n    h = 2 * sl   \r\n    startx = startx - w\r\n    starty = starty - h\r\n    endx = endx + w\r\n    endy = endy + h\r\n    origx = startx\r\n    origy = starty\r\n    xoffset = b\r\n    yoffset = 3 * p\r\n    polygons = []\r\n    row = 1\r\n    counter = 0\r\n    while starty < endy:\r\n        if row % 2 == 0:\r\n            startx = origx + xoffset\r\n        else:\r\n            startx = origx\r\n        while startx < endx:\r\n            p1x = startx\r\n            p1y = starty + p\r\n            p2x = startx\r\n            p2y = starty + (3 * p)\r\n            p3x = startx + b\r\n            p3y = starty + h\r\n            p4x = startx + w\r\n            p4y = starty + (3 * p)\r\n            p5x = startx + w\r\n            p5y = starty + p\r\n            p6x = startx + b\r\n            p6y = starty\r\n            poly = [\r\n                (p1x, p1y),\r\n                (p2x, p2y),\r\n                (p3x, p3y),\r\n                (p4x, p4y),\r\n                (p5x, p5y),\r\n                (p6x, p6y),\r\n                (p1x, p1y)]\r\n            polygons.append(poly)\r\n            counter += 1\r\n            startx += w\r\n        starty += yoffset\r\n        row += 1\r\n    return polygons"
+  },
+  "content_hash": "745db823df8d7e68ade19b7489682bd5d8d25b8ced4000f1ec33f93d39c520db",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

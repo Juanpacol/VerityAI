@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_0e41f514c18f",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.211139+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 290,
+    "text": "Write a function to find the list of lists with maximum length.",
+    "code": "def max_length(list1):\r\n    max_length = max(len(x) for x in  list1 )  \r\n    max_list = max((x) for x in   list1)\r\n    return(max_length, max_list)"
+  },
+  "content_hash": "0e41f514c18f9ca400321d6f976cdb23b1670e14ce547ca8f70356c54f78d911",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

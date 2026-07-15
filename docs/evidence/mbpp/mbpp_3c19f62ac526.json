@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_3c19f62ac526",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.181249+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 23,
+    "text": "Write a python function to find the maximum sum of elements of list in a list of lists.",
+    "code": "def maximum_Sum(list1): \r\n    maxi = -100000\r\n    for x in list1: \r\n        sum = 0 \r\n        for y in x: \r\n            sum+= y      \r\n        maxi = max(sum,maxi)     \r\n    return maxi "
+  },
+  "content_hash": "3c19f62ac52668c763f00b652db6912b5ee6bbbd4c9a78a4e2041d5fa717f5bf",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

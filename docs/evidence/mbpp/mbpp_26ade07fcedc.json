@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_26ade07fcedc",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.288994+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 676,
+    "text": "Write a function to remove everything except alphanumeric characters from the given string by using regex.",
+    "code": "import re\r\ndef remove_extra_char(text1):\r\n  pattern = re.compile('[\\W_]+')\r\n  return (pattern.sub('', text1))"
+  },
+  "content_hash": "26ade07fcedc6f2a446569e53ff109a54138fdd30a37858e7db73434b27afb01",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

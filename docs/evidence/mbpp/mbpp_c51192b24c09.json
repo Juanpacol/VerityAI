@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c51192b24c09",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.205183+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 244,
+    "text": "Write a python function to find the next perfect square greater than a given number.",
+    "code": "import math  \r\ndef next_Perfect_Square(N): \r\n    nextN = math.floor(math.sqrt(N)) + 1\r\n    return nextN * nextN "
+  },
+  "content_hash": "c51192b24c09abb585e9ada33d8959498224479373cc50015b5d2f0b4a273698",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

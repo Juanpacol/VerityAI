@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_4def69bedcbc",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.271206+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 577,
+    "text": "Write a python function to find the last digit in factorial of a given number.",
+    "code": "def last_Digit_Factorial(n): \r\n    if (n == 0): return 1\r\n    elif (n <= 2): return n  \r\n    elif (n == 3): return 6\r\n    elif (n == 4): return 4 \r\n    else: \r\n      return 0"
+  },
+  "content_hash": "4def69bedcbc8d0c0df6e1bde33e8103630684fb4279eada8a08cebcbd5ecd8f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

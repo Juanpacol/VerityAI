@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_fac9cc4b43e6",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.261537+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 520,
+    "text": "Write a function to find the lcm of the given array elements.",
+    "code": "def find_lcm(num1, num2): \r\n\tif(num1>num2): \r\n\t\tnum = num1 \r\n\t\tden = num2 \r\n\telse: \r\n\t\tnum = num2 \r\n\t\tden = num1 \r\n\trem = num % den \r\n\twhile (rem != 0): \r\n\t\tnum = den \r\n\t\tden = rem \r\n\t\trem = num % den \r\n\tgcd = den \r\n\tlcm = int(int(num1 * num2)/int(gcd)) \r\n\treturn lcm \r\ndef get_lcm(l):\r\n  num1 = l[0]\r\n  num2 = l[1]\r\n  lcm = find_lcm(num1, num2)\r\n  for i in range(2, len(l)):\r\n    lcm = find_lcm(lcm, l[i])\r\n  return lcm "
+  },
+  "content_hash": "fac9cc4b43e6d9a84efa07745630103905bb83f9327068cdab3998d28d65f17c",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

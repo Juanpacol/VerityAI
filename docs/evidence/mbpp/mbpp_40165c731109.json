@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_40165c731109",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.328789+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 860,
+    "text": "Write a function to check whether the given string is ending with only alphanumeric characters or not using regex.",
+    "code": "import re \r\nregex = '[a-zA-z0-9]$'\r\ndef check_alphanumeric(string): \r\n\tif(re.search(regex, string)): \r\n\t\treturn (\"Accept\") \r\n\telse: \r\n\t\treturn (\"Discard\") "
+  },
+  "content_hash": "40165c731109b0f8d33d63b9b57843d6568a127d0e6c1a1a9534082322c66a94",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

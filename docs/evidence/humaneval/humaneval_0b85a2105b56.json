@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_0b85a2105b56",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.907683+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/160",
+    "prompt": "\ndef do_algebra(operator, operand):\n    \"\"\"\n    Given two lists operator, and operand. The first list has basic algebra operations, and \n    the second list is a list of integers. Use the two given lists to build the algebric \n    expression and return the evaluation of this expression.\n\n    The basic algebra operations:\n    Addition ( + ) \n    Subtraction ( - ) \n    Multiplication ( * ) \n    Floor division ( // ) \n    Exponentiation ( ** ) \n\n    Example:\n    operator['+', '*', '-']\n    array = [2, 3, 4, 5]\n    result = 2 + 3 * 4 - 5\n    => result = 9\n\n    Note:\n        The length of operator list is equal to the length of operand list minus one.\n        Operand is a list of of non-negative integers.\n        Operator list has at least one operator, and operand list has at least two operands.\n\n    \"\"\"\n",
+    "canonical_solution": "    expression = str(operand[0])\n    for oprt, oprn in zip(operator, operand[1:]):\n        expression+= oprt + str(oprn)\n    return eval(expression)\n",
+    "entry_point": "do_algebra"
+  },
+  "content_hash": "0b85a2105b56011391c6975922d24bc4809caad6c5f973d8244b59ffba3a4d0a",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

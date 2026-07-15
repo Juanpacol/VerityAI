@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_213e76e961ef",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.294648+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 706,
+    "text": "Write a function to find whether an array is subset of another array.",
+    "code": "def is_subset(arr1, m, arr2, n): \r\n\thashset = set() \r\n\tfor i in range(0, m): \r\n\t\thashset.add(arr1[i]) \r\n\tfor i in range(0, n): \r\n\t\tif arr2[i] in hashset: \r\n\t\t\tcontinue\r\n\t\telse: \r\n\t\t\treturn False\r\n\treturn True\t\t"
+  },
+  "content_hash": "213e76e961efd5c78aacb3eac6b6a827a73482976647199bc6d16ec53496ecdf",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

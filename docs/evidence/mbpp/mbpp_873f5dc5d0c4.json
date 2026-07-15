@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_873f5dc5d0c4",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.293118+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 698,
+    "text": "Write a function to sort dictionary items by tuple product of keys for the given dictionary with tuple keys.",
+    "code": "def sort_dict_item(test_dict):\r\n  res = {key: test_dict[key] for key in sorted(test_dict.keys(), key = lambda ele: ele[1] * ele[0])}\r\n  return  (res) \r\n"
+  },
+  "content_hash": "873f5dc5d0c493cf116fed2105df1588fa47739dc8fca079c62834d083782997",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

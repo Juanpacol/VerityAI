@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_2967ea305edc",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.301282+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 739,
+    "text": "Write a python function to find the index of smallest triangular number with n digits.",
+    "code": "import math \r\ndef find_Index(n): \r\n    x = math.sqrt(2 * math.pow(10,(n - 1))); \r\n    return round(x); "
+  },
+  "content_hash": "2967ea305edcfeafe38d7312b8df0e00be79953b2718617151e8c4029a47a01d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

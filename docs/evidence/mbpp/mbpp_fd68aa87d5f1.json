@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_fd68aa87d5f1",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.296143+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 714,
+    "text": "Write a python function to count the number of distinct power of prime factor of given number.",
+    "code": "def count_Fac(n):  \r\n    m = n \r\n    count = 0\r\n    i = 2\r\n    while((i * i) <= m): \r\n        total = 0\r\n        while (n % i == 0): \r\n            n /= i \r\n            total += 1 \r\n        temp = 0\r\n        j = 1\r\n        while((temp + j) <= total): \r\n            temp += j \r\n            count += 1\r\n            j += 1 \r\n        i += 1\r\n    if (n != 1): \r\n        count += 1 \r\n    return count "
+  },
+  "content_hash": "fd68aa87d5f15d8affa5ea1c999e5be8b2d5fb4a32f2394927c6476e1d5ba545",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

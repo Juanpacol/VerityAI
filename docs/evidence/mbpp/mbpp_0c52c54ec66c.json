@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_0c52c54ec66c",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.298339+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 725,
+    "text": "Write a function to extract values between quotation marks of the given string by using regex.",
+    "code": "import re\r\ndef extract_quotation(text1):\r\n  return (re.findall(r'\"(.*?)\"', text1))"
+  },
+  "content_hash": "0c52c54ec66ced2dcfa192347efacfa4e54f936688a805835b878b05bf7e4e94",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

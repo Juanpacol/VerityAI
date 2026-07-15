@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_9b3346576e4e",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.892053+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/24",
+    "prompt": "\n\ndef largest_divisor(n: int) -> int:\n    \"\"\" For a given number n, find the largest number that divides n evenly, smaller than n\n    >>> largest_divisor(15)\n    5\n    \"\"\"\n",
+    "canonical_solution": "    for i in reversed(range(n)):\n        if n % i == 0:\n            return i\n",
+    "entry_point": "largest_divisor"
+  },
+  "content_hash": "9b3346576e4e3fe4af1b014b75792e850fadadbbf4007a7b939379fca39ef16c",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

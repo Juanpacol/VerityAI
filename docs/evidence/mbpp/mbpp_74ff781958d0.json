@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_74ff781958d0",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.327866+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 856,
+    "text": "Write a python function to find minimum adjacent swaps required to sort binary array.",
+    "code": "def find_Min_Swaps(arr,n) : \r\n    noOfZeroes = [0] * n \r\n    count = 0 \r\n    noOfZeroes[n - 1] = 1 - arr[n - 1] \r\n    for i in range(n-2,-1,-1) : \r\n        noOfZeroes[i] = noOfZeroes[i + 1] \r\n        if (arr[i] == 0) : \r\n            noOfZeroes[i] = noOfZeroes[i] + 1\r\n    for i in range(0,n) : \r\n        if (arr[i] == 1) : \r\n            count = count + noOfZeroes[i] \r\n    return count "
+  },
+  "content_hash": "74ff781958d0893387bcf483e3ace2c57c2c76572140272484c72bcfc2fcd2e1",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

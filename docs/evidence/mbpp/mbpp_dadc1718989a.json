@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_dadc1718989a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.201702+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 215,
+    "text": "Write a function to decode a run-length encoded given list.",
+    "code": "def decode_list(alist):\r\n    def aux(g):\r\n        if isinstance(g, list):\r\n            return [(g[1], range(g[0]))]\r\n        else:\r\n            return [(g, [0])]\r\n    return [x for g in alist for x, R in aux(g) for i in R]"
+  },
+  "content_hash": "dadc1718989ae818c38d683c02e68602e418f98abc12fe97ff0444c62a1b7f5c",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

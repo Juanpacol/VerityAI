@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_922415ceff62",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.181337+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 24,
+    "text": "Write a function to convert the given binary number to its decimal equivalent.",
+    "code": "def binary_to_decimal(binary): \r\n    binary1 = binary \r\n    decimal, i, n = 0, 0, 0\r\n    while(binary != 0): \r\n        dec = binary % 10\r\n        decimal = decimal + dec * pow(2, i) \r\n        binary = binary//10\r\n        i += 1\r\n    return (decimal)"
+  },
+  "content_hash": "922415ceff62651104a4913c1d57222e40d69edef9accbf08cbdc593768c2b29",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_08da9b1380cd",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.240627+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 385,
+    "text": "Write a function to find the n'th perrin number using recursion.",
+    "code": "def get_perrin(n):\r\n  if (n == 0):\r\n    return 3\r\n  if (n == 1):\r\n    return 0\r\n  if (n == 2):\r\n    return 2 \r\n  return get_perrin(n - 2) + get_perrin(n - 3)"
+  },
+  "content_hash": "08da9b1380cd4dffc4f73cd8a086379516c13ef35122c459041ad5021bdc6573",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

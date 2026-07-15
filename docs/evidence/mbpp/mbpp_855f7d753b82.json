@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_855f7d753b82",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.269985+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 570,
+    "text": "Write a function to remove words from a given list of strings containing a character or string.",
+    "code": "def remove_words(list1, charlist):\r\n    new_list = []\r\n    for line in list1:\r\n        new_words = ' '.join([word for word in line.split() if not any([phrase in word for phrase in charlist])])\r\n        new_list.append(new_words)\r\n    return new_list"
+  },
+  "content_hash": "855f7d753b8287bda2df591b32fddc8d66226652652843e650cf4fd72c40feae",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

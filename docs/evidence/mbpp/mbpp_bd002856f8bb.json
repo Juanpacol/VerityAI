@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_bd002856f8bb",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.188609+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 98,
+    "text": "Write a function to multiply all the numbers in a list and divide with the length of the list.",
+    "code": "def multiply_num(numbers):  \r\n    total = 1\r\n    for x in numbers:\r\n        total *= x  \r\n    return total/len(numbers) "
+  },
+  "content_hash": "bd002856f8bb78a5a05fb9571d4262a40ebff696cac36263603fe107aa92a35d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

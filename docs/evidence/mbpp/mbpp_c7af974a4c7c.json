@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c7af974a4c7c",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.332060+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 874,
+    "text": "Write a python function to check if the string is a concatenation of another string.",
+    "code": "def check_Concat(str1,str2):\r\n    N = len(str1)\r\n    M = len(str2)\r\n    if (N % M != 0):\r\n        return False\r\n    for i in range(N):\r\n        if (str1[i] != str2[i % M]):\r\n            return False         \r\n    return True"
+  },
+  "content_hash": "c7af974a4c7c9e6b0081618fa2bd6a72268aee131e4d9d5a651448ec49862615",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

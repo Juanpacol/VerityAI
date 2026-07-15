@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a67b5eb5bd21",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.179977+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 9,
+    "text": "Write a python function to find the minimum number of rotations required to get the same string.",
+    "code": "def find_Rotations(str): \r\n    tmp = str + str\r\n    n = len(str) \r\n    for i in range(1,n + 1): \r\n        substring = tmp[i: i+n] \r\n        if (str == substring): \r\n            return i \r\n    return n "
+  },
+  "content_hash": "a67b5eb5bd213ecc360d8a1c94f03fe5f4ca3ba7683fe67646cc50160335f857",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

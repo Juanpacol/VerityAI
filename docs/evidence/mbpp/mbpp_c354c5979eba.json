@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c354c5979eba",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.281109+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 632,
+    "text": "Write a python function to move all zeroes to the end of the given list.",
+    "code": "def move_zero(num_list):\r\n    a = [0 for i in range(num_list.count(0))]\r\n    x = [ i for i in num_list if i != 0]\r\n    x.extend(a)\r\n    return (x)"
+  },
+  "content_hash": "c354c5979ebacf889887bc88653178cea9f427e680a5f80a72b063b18a0c9eff",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

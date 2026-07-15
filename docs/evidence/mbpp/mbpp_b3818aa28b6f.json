@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b3818aa28b6f",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.184174+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 54,
+    "text": "Write a function to sort the given array by using counting sort.",
+    "code": "def counting_sort(my_list):\r\n    max_value = 0\r\n    for i in range(len(my_list)):\r\n        if my_list[i] > max_value:\r\n            max_value = my_list[i]\r\n    buckets = [0] * (max_value + 1)\r\n    for i in my_list:\r\n        buckets[i] += 1\r\n    i = 0\r\n    for j in range(max_value + 1):\r\n         for a in range(buckets[j]):\r\n             my_list[i] = j\r\n             i += 1\r\n    return my_list"
+  },
+  "content_hash": "b3818aa28b6f3747c748e83101d6abbd931efe70dfba250cafba7ab465f90d25",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

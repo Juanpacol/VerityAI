@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_1413c0e7b22d",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.320859+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 825,
+    "text": "Write a python function to access multiple elements of specified index from a given list.",
+    "code": "def access_elements(nums, list_index):\r\n    result = [nums[i] for i in list_index]\r\n    return result"
+  },
+  "content_hash": "1413c0e7b22d199c5f8976ace1e37e9e8a8b34aaf25cfa565e8147a2f42d79bd",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

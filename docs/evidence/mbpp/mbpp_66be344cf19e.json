@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_66be344cf19e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.300420+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 735,
+    "text": "Write a python function to toggle bits of the number except the first and the last bit.",
+    "code": "def set_middle_bits(n):  \r\n    n |= n >> 1; \r\n    n |= n >> 2; \r\n    n |= n >> 4; \r\n    n |= n >> 8; \r\n    n |= n >> 16;  \r\n    return (n >> 1) ^ 1\r\ndef toggle_middle_bits(n): \r\n    if (n == 1): \r\n        return 1\r\n    return n ^ set_middle_bits(n) "
+  },
+  "content_hash": "66be344cf19e71da34183346935ffd842aa74157ae7e11cf516f2f0476bd312f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

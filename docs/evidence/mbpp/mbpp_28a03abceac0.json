@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_28a03abceac0",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.333906+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 882,
+    "text": "Write a function to caluclate perimeter of a parallelogram.",
+    "code": "def parallelogram_perimeter(b,h):\r\n  perimeter=2*(b*h)\r\n  return perimeter"
+  },
+  "content_hash": "28a03abceac0f8a2c33ad8347cc2eafa4d2477ad24cdefb57a1f7f982aaad77c",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

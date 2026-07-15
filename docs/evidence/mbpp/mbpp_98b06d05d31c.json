@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_98b06d05d31c",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.187219+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 84,
+    "text": "Write a function to find the n-th number in newman conway sequence.",
+    "code": "def sequence(n): \r\n\tif n == 1 or n == 2: \r\n\t\treturn 1\r\n\telse: \r\n\t\treturn sequence(sequence(n-1)) + sequence(n-sequence(n-1))"
+  },
+  "content_hash": "98b06d05d31c0d8838f259c736779223a982dfe1f749f486ac6c397dd1f58ebf",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

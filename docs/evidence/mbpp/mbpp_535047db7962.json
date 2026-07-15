@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_535047db7962",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.265062+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 541,
+    "text": "Write a function to find if the given number is abundant or not.",
+    "code": "import math \r\ndef get_sum(n): \r\n\tsum = 0\r\n\ti = 1\r\n\twhile i <= (math.sqrt(n)): \r\n\t\tif n%i == 0: \r\n\t\t\tif n/i == i : \r\n\t\t\t\tsum = sum + i \r\n\t\t\telse: \r\n\t\t\t\tsum = sum + i \r\n\t\t\t\tsum = sum + (n / i ) \r\n\t\ti = i + 1\r\n\tsum = sum - n \r\n\treturn sum\r\ndef check_abundant(n): \r\n\tif (get_sum(n) > n): \r\n\t\treturn True\r\n\telse: \r\n\t\treturn False"
+  },
+  "content_hash": "535047db7962617583c0973436f1b19c187908ebb796fa834a763b3765e38348",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

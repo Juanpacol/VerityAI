@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f0dc3b0db9ff",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.351864+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 956,
+    "text": "Write a function to split the given string at uppercase letters by using regex.",
+    "code": "import re\r\ndef split_list(text):\r\n  return (re.findall('[A-Z][^A-Z]*', text))"
+  },
+  "content_hash": "f0dc3b0db9ff6d814e002759c23e4173474e293b53247acbaa3b691ca63b4b1d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

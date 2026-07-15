@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e874fe3fe25c",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.321978+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 830,
+    "text": "Write a function to round up a number to specific digits.",
+    "code": "import math\r\ndef round_up(a, digits):\r\n    n = 10**-digits\r\n    return round(math.ceil(a / n) * n, digits)"
+  },
+  "content_hash": "e874fe3fe25c081959316d94df5d667f41597127549bff537c88014c4e1568fb",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

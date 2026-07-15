@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_173934886e3c",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.202890+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 225,
+    "text": "Write a python function to find the minimum element in a sorted and rotated array.",
+    "code": "def find_Min(arr,low,high): \r\n    while (low < high): \r\n        mid = low + (high - low) // 2;   \r\n        if (arr[mid] == arr[high]): \r\n            high -= 1; \r\n        elif (arr[mid] > arr[high]): \r\n            low = mid + 1; \r\n        else: \r\n            high = mid; \r\n    return arr[high]; "
+  },
+  "content_hash": "173934886e3c8cdb7609d079aa94ed9f6255dcf7d6f8224eb1b5ed61843c773d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

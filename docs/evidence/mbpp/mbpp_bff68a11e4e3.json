@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_bff68a11e4e3",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.293684+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 701,
+    "text": "Write a function to find the equilibrium index of the given array.",
+    "code": "def equilibrium_index(arr):\r\n  total_sum = sum(arr)\r\n  left_sum=0\r\n  for i, num in enumerate(arr):\r\n    total_sum -= num\r\n    if left_sum == total_sum:\r\n      return i\r\n    left_sum += num\r\n  return -1"
+  },
+  "content_hash": "bff68a11e4e3fd5706ec596ea158821ec498d9f8845ae288d91319c8d9fb2b77",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

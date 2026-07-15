@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_31feaacb293e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.243562+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 405,
+    "text": "Write a function to check whether an element exists within a tuple.",
+    "code": "def check_tuplex(tuplex,tuple1): \r\n  if tuple1 in tuplex:\r\n    return True\r\n  else:\r\n     return False"
+  },
+  "content_hash": "31feaacb293e40176b8de14915b219b536ae4ce921dc0ddba55c1ad6bf78da51",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

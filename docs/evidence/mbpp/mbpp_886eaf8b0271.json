@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_886eaf8b0271",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.278662+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 618,
+    "text": "Write a function to divide two lists using map and lambda function.",
+    "code": "def div_list(nums1,nums2):\r\n  result = map(lambda x, y: x / y, nums1, nums2)\r\n  return list(result)"
+  },
+  "content_hash": "886eaf8b0271f862afe239ed41aa66a3dd2d77ca5d36d86bf83c36dea26351c7",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

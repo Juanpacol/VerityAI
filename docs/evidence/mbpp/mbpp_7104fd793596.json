@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7104fd793596",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.342321+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 917,
+    "text": "Write a function to find the sequences of one upper case letter followed by lower case letters.",
+    "code": "import re\r\ndef text_uppercase_lowercase(text):\r\n        patterns = '[A-Z]+[a-z]+$'\r\n        if re.search(patterns, text):\r\n                return 'Found a match!'\r\n        else:\r\n                return ('Not matched!')"
+  },
+  "content_hash": "7104fd79359630ca00592fef75df5a55eece77baf1909943ab6401d952920c30",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

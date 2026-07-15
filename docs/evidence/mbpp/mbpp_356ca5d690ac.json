@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_356ca5d690ac",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.253888+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 473,
+    "text": "Write a function to find the tuple intersection of elements in the given tuple list irrespective of their order.",
+    "code": "def tuple_intersection(test_list1, test_list2):\r\n  res = set([tuple(sorted(ele)) for ele in test_list1]) & set([tuple(sorted(ele)) for ele in test_list2])\r\n  return (res)"
+  },
+  "content_hash": "356ca5d690ac362b8c7e83ecb4273dfa6feb35d4749ca785c0da78f9918ea3f9",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

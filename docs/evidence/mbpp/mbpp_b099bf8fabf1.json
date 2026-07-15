@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b099bf8fabf1",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.182373+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 35,
+    "text": "Write a function to find the n-th rectangular number.",
+    "code": "def find_rect_num(n):\r\n  return n*(n + 1) "
+  },
+  "content_hash": "b099bf8fabf1c1255bac64627b4eeb5865b932adc0fdcf27dd0e1eb7c303e33c",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

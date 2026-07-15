@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_98f8e92fe2f3",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.314673+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 798,
+    "text": "Write a python function to find the sum of an array.",
+    "code": "def _sum(arr):  \r\n    sum=0\r\n    for i in arr: \r\n        sum = sum + i      \r\n    return(sum)  "
+  },
+  "content_hash": "98f8e92fe2f320a66ac54aa42db78dcb0e4e08e03512ff066d3842a63790391d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

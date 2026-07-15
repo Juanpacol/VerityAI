@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_eca27928b6e7",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.184640+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 59,
+    "text": "Write a function to find the nth octagonal number.",
+    "code": "def is_octagonal(n): \r\n\treturn 3 * n * n - 2 * n "
+  },
+  "content_hash": "eca27928b6e747ee3f291c2e10a077ffb30a88f9f8db75855dfbb1f79fcde073",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

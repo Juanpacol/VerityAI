@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_ed87734e15b1",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.300808+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 737,
+    "text": "Write a function to check whether the given string is starting with a vowel or not using regex.",
+    "code": "import re \r\nregex = '^[aeiouAEIOU][A-Za-z0-9_]*'\r\ndef check_str(string): \r\n\tif(re.search(regex, string)): \r\n\t\treturn (\"Valid\") \r\n\telse: \r\n\t\treturn (\"Invalid\") "
+  },
+  "content_hash": "ed87734e15b11972c4be0813eb5f917d4e2dafad602594b80625a2fc6edd8438",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

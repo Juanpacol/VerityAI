@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_ef095e56dad1",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.297697+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 722,
+    "text": "Write a function to filter the height and width of students which are stored in a dictionary.",
+    "code": "def filter_data(students,h,w):\r\n    result = {k: s for k, s in students.items() if s[0] >=h and s[1] >=w}\r\n    return result    "
+  },
+  "content_hash": "ef095e56dad1c30bef3d9e49f64ea6bbaf5cfa04268c2503613a5ba3f2adf07f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

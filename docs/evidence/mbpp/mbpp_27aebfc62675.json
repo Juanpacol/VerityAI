@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_27aebfc62675",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.241372+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 390,
+    "text": "Write a function to insert a given string at the beginning of all items in a list.",
+    "code": "def add_string(list,string):\r\n add_string=[string.format(i) for i in  list]\r\n return add_string"
+  },
+  "content_hash": "27aebfc626752874d210b13cf19e579c8a23cc1f5d3fe78e0979ce6167df1d64",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

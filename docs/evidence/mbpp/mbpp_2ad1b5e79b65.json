@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_2ad1b5e79b65",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.211909+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 296,
+    "text": "Write a python function to count inversions in an array.",
+    "code": "def get_Inv_Count(arr,n): \r\n    inv_count = 0\r\n    for i in range(n): \r\n        for j in range(i + 1,n): \r\n            if (arr[i] > arr[j]): \r\n                inv_count += 1\r\n    return inv_count "
+  },
+  "content_hash": "2ad1b5e79b65e3a7ca0777337753d097897adee89c7bdacd9fd5ff8f28effde6",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

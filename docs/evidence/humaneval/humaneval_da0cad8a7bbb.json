@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_da0cad8a7bbb",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.895351+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/55",
+    "prompt": "\n\ndef fib(n: int):\n    \"\"\"Return n-th Fibonacci number.\n    >>> fib(10)\n    55\n    >>> fib(1)\n    1\n    >>> fib(8)\n    21\n    \"\"\"\n",
+    "canonical_solution": "    if n == 0:\n        return 0\n    if n == 1:\n        return 1\n    return fib(n - 1) + fib(n - 2)\n",
+    "entry_point": "fib"
+  },
+  "content_hash": "da0cad8a7bbba36bca89e157739a103576f130a47d9afc4420d5d234b8b08e9f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f88919415090",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.212159+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 298,
+    "text": "Write a function to find the nested list elements which are present in another list.",
+    "code": "def intersection_nested_lists(l1, l2):\r\n    result = [[n for n in lst if n in l1] for lst in l2]\r\n    return result"
+  },
+  "content_hash": "f88919415090448d6aa611d22a644ee9cb9b8c8f04dd0368033416d951e2b986",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

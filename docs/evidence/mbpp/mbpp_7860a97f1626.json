@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7860a97f1626",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.263524+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 532,
+    "text": "Write a function to check if the two given strings are permutations of each other.",
+    "code": "def check_permutation(str1, str2):\r\n  n1=len(str1)\r\n  n2=len(str2)\r\n  if(n1!=n2):\r\n    return False\r\n  a=sorted(str1)\r\n  str1=\" \".join(a)\r\n  b=sorted(str2)\r\n  str2=\" \".join(b)\r\n  for i in range(0, n1, 1):\r\n    if(str1[i] != str2[i]):\r\n      return False\r\n  return True"
+  },
+  "content_hash": "7860a97f16267fe2a1fb19908fe6895a20150ab428dcece1281be5916c8bfb67",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

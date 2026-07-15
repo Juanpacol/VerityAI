@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e50020e8dd3b",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.198563+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 188,
+    "text": "Write a python function to check whether the given number can be represented by product of two squares or not.",
+    "code": "def prod_Square(n):\r\n    for i in range(2,(n) + 1):\r\n        if (i*i < (n+1)):\r\n            for j in range(2,n + 1):\r\n                if ((i*i*j*j) == n):\r\n                    return True;\r\n    return False;"
+  },
+  "content_hash": "e50020e8dd3b9d5dbec41671ffedef472c250949e2f7e49c29f3365f34baebb1",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

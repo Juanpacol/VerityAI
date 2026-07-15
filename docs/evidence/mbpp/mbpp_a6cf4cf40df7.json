@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a6cf4cf40df7",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.274712+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 597,
+    "text": "Write a function to find kth element from the given two sorted arrays.",
+    "code": "def find_kth(arr1, arr2, m, n, k):\r\n\tsorted1 = [0] * (m + n)\r\n\ti = 0\r\n\tj = 0\r\n\td = 0\r\n\twhile (i < m and j < n):\r\n\t\tif (arr1[i] < arr2[j]):\r\n\t\t\tsorted1[d] = arr1[i]\r\n\t\t\ti += 1\r\n\t\telse:\r\n\t\t\tsorted1[d] = arr2[j]\r\n\t\t\tj += 1\r\n\t\td += 1\r\n\twhile (i < m):\r\n\t\tsorted1[d] = arr1[i]\r\n\t\td += 1\r\n\t\ti += 1\r\n\twhile (j < n):\r\n\t\tsorted1[d] = arr2[j]\r\n\t\td += 1\r\n\t\tj += 1\r\n\treturn sorted1[k - 1]"
+  },
+  "content_hash": "a6cf4cf40df7968ffa7a8431f9c9866186282016350cb7d8d36f6f92721e5d04",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

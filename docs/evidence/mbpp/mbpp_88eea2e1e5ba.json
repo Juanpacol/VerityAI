@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_88eea2e1e5ba",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.197199+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 176,
+    "text": "Write a function to find the perimeter of a triangle.",
+    "code": "def perimeter_triangle(a,b,c):\r\n  perimeter=a+b+c\r\n  return perimeter"
+  },
+  "content_hash": "88eea2e1e5bacd8b67abe1a895c8ef117c0934cd29b6f70180099f4e61d33fa9",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

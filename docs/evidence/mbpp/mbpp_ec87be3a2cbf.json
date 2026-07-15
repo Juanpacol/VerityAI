@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_ec87be3a2cbf",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.230421+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 335,
+    "text": "Write a function to find the sum of arithmetic progression.",
+    "code": "def ap_sum(a,n,d):\r\n  total = (n * (2 * a + (n - 1) * d)) / 2\r\n  return total"
+  },
+  "content_hash": "ec87be3a2cbfc662b569c4979100c7a3ab859a57c51ef747c9bed3e49ecaabd5",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

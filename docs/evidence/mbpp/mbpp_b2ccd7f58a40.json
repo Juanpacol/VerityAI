@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b2ccd7f58a40",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.339908+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 907,
+    "text": "Write a function to print the first n lucky numbers.",
+    "code": "def lucky_num(n):\r\n List=range(-1,n*n+9,2)\r\n i=2\r\n while List[i:]:List=sorted(set(List)-set(List[List[i]::List[i]]));i+=1\r\n return List[1:n+1]"
+  },
+  "content_hash": "b2ccd7f58a4026949448b8afc5f960614f3fbbed56af5915270b337ea3628067",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

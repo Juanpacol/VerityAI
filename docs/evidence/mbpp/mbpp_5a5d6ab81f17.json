@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_5a5d6ab81f17",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.286245+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 661,
+    "text": "Write a function to find the maximum sum that can be formed which has no three consecutive elements present.",
+    "code": "def max_sum_of_three_consecutive(arr, n): \r\n\tsum = [0 for k in range(n)] \r\n\tif n >= 1: \r\n\t\tsum[0] = arr[0] \r\n\tif n >= 2: \r\n\t\tsum[1] = arr[0] + arr[1] \r\n\tif n > 2: \r\n\t\tsum[2] = max(sum[1], max(arr[1] + arr[2], arr[0] + arr[2])) \r\n\tfor i in range(3, n): \r\n\t\tsum[i] = max(max(sum[i-1], sum[i-2] + arr[i]), arr[i] + arr[i-1] + sum[i-3]) \r\n\treturn sum[n-1]"
+  },
+  "content_hash": "5a5d6ab81f170f69e1118e3e460a1b1bac183182a082318243ad2cc20bc2dc87",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

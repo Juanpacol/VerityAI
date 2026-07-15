@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_5aed9650bf66",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.346951+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 936,
+    "text": "Write a function to re-arrange the given tuples based on the given ordered list.",
+    "code": "def re_arrange_tuples(test_list, ord_list):\r\n  temp = dict(test_list)\r\n  res = [(key, temp[key]) for key in ord_list]\r\n  return (res) "
+  },
+  "content_hash": "5aed9650bf66df659dc3fadb3f6c000de44cd9b6c6f4a75db94df4383928d406",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f3851f504ab6",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.188841+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 100,
+    "text": "Write a function to find the next smallest palindrome of a specified number.",
+    "code": "import sys\r\ndef next_smallest_palindrome(num):\r\n    numstr = str(num)\r\n    for i in range(num+1,sys.maxsize):\r\n        if str(i) == str(i)[::-1]:\r\n            return i"
+  },
+  "content_hash": "f3851f504ab6da41ffcecc5f0ea9bad746548620f26870e1786cf7f371dd9906",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

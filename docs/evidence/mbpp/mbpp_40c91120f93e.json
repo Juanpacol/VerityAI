@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_40c91120f93e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.336496+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 893,
+    "text": "Write a python function to get the last element of each sublist.",
+    "code": "def Extract(lst): \r\n    return [item[-1] for item in lst] "
+  },
+  "content_hash": "40c91120f93e9e248b215ea13cfc8ce4f2eab8830d3fe1f6d32734a73957a36d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

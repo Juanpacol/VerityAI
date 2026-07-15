@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_8ac09b663c37",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.895712+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/57",
+    "prompt": "\n\ndef monotonic(l: list):\n    \"\"\"Return True is list elements are monotonically increasing or decreasing.\n    >>> monotonic([1, 2, 4, 20])\n    True\n    >>> monotonic([1, 20, 4, 10])\n    False\n    >>> monotonic([4, 1, 0, -10])\n    True\n    \"\"\"\n",
+    "canonical_solution": "    if l == sorted(l) or l == sorted(l, reverse=True):\n        return True\n    return False\n",
+    "entry_point": "monotonic"
+  },
+  "content_hash": "8ac09b663c37ed4391d980a321395ff8f5d756ee9ff71a3001770068ed8c5a0a",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a19d19247d06",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.196747+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 172,
+    "text": "Write a function to find the occurence of characters 'std' in the given string 1. list item 1. list item 1. list item 2. list item 2. list item 2. list item",
+    "code": "def count_occurance(s):\r\n  count=0\r\n  for i in range(len(s)):\r\n    if (s[i]== 's' and s[i+1]=='t' and s[i+2]== 'd'):\r\n      count = count + 1\r\n  return count"
+  },
+  "content_hash": "a19d19247d06251336656e5a1611d67b8cafa840d149ac0b230d7aad65b7bb3f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

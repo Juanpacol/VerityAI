@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b46d2644e76e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.183136+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 43,
+    "text": "Write a function to find sequences of lowercase letters joined with an underscore using regex.",
+    "code": "import re\r\ndef text_match(text):\r\n  patterns = '^[a-z]+_[a-z]+$'\r\n  if re.search(patterns,  text):\r\n    return ('Found a match!')\r\n  else:\r\n    return ('Not matched!')"
+  },
+  "content_hash": "b46d2644e76e35da20fe380c829e669437d007f6a1d934ad5dd7645577b85c58",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

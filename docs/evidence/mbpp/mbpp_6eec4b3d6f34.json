@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_6eec4b3d6f34",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.269115+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 565,
+    "text": "Write a python function to split a string into characters.",
+    "code": "def split(word): \r\n    return [char for char in word] "
+  },
+  "content_hash": "6eec4b3d6f349f8a6d542c958c56c55224482a882ab9185afc6b20fb434d90f2",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

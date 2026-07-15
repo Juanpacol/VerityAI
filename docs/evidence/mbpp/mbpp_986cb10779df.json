@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_986cb10779df",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.259340+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 507,
+    "text": "Write a function to remove specific words from a given list.",
+    "code": "def remove_words(list1, removewords):\r\n    for word in list(list1):\r\n        if word in removewords:\r\n            list1.remove(word)\r\n    return list1  "
+  },
+  "content_hash": "986cb10779dfd2ea6953d5f2a1b5757cfe65b8f819195e6666022d99a6052996",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

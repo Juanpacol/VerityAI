@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7340e3d95c10",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.186304+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 75,
+    "text": "Write a function to find tuples which have all elements divisible by k from the given list of tuples.",
+    "code": "def find_tuples(test_list, K):\r\n  res = [sub for sub in test_list if all(ele % K == 0 for ele in sub)]\r\n  return (str(res)) "
+  },
+  "content_hash": "7340e3d95c1019ed39bed5a0ac6e98cfa0d0ef213bc8efbc6d44c7356ca88b4f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f953ab602ecb",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.287534+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 668,
+    "text": "Write a python function to replace multiple occurence of character by single.",
+    "code": "import re \r\ndef replace(string, char): \r\n    pattern = char + '{2,}'\r\n    string = re.sub(pattern, char, string) \r\n    return string "
+  },
+  "content_hash": "f953ab602ecbb951b54f24e39358a744f171c59fec7d8fdf814a4b3050439e64",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

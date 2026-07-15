@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_36f13ccb50df",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.900606+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/101",
+    "prompt": "\ndef words_string(s):\n    \"\"\"\n    You will be given a string of words separated by commas or spaces. Your task is\n    to split the string into words and return an array of the words.\n    \n    For example:\n    words_string(\"Hi, my name is John\") == [\"Hi\", \"my\", \"name\", \"is\", \"John\"]\n    words_string(\"One, two, three, four, five, six\") == [\"One\", \"two\", \"three\", \"four\", \"five\", \"six\"]\n    \"\"\"\n",
+    "canonical_solution": "    if not s:\n        return []\n\n    s_list = []\n\n    for letter in s:\n        if letter == ',':\n            s_list.append(' ')\n        else:\n            s_list.append(letter)\n\n    s_list = \"\".join(s_list)\n    return s_list.split()\n",
+    "entry_point": "words_string"
+  },
+  "content_hash": "36f13ccb50dff13a6b91e04b9237592c4601d794c0e0473326a1af8e12deef0f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

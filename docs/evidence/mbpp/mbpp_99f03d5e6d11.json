@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_99f03d5e6d11",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.301849+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 742,
+    "text": "Write a function to caluclate the area of a tetrahedron.",
+    "code": "import math\r\ndef area_tetrahedron(side):\r\n  area = math.sqrt(3)*(side*side)\r\n  return area"
+  },
+  "content_hash": "99f03d5e6d11b8da1cfad66acca5f39016c1abedc073fa654ae4b11075cbd90b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

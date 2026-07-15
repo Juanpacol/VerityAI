@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f4669652a7b8",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.286790+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 664,
+    "text": "Write a python function to find the average of even numbers till a given even number.",
+    "code": "def average_Even(n) : \r\n    if (n% 2!= 0) : \r\n        return (\"Invalid Input\") \r\n        return -1  \r\n    sm = 0\r\n    count = 0\r\n    while (n>= 2) : \r\n        count = count+1\r\n        sm = sm+n \r\n        n = n-2\r\n    return sm // count "
+  },
+  "content_hash": "f4669652a7b8a2a0f6e3077cd16e241b0ac5aed87c2465e8317af967530d9b04",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

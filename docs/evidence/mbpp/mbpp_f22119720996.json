@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f22119720996",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.310040+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 778,
+    "text": "Write a function to pack consecutive duplicates of a given list elements into sublists.",
+    "code": "from itertools import groupby\r\ndef pack_consecutive_duplicates(list1):\r\n    return [list(group) for key, group in groupby(list1)]"
+  },
+  "content_hash": "f221197209960d68addb22a61a5e0cc547be1e4102914be63873660748b1aa19",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

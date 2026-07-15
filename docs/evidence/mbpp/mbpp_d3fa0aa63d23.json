@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_d3fa0aa63d23",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.316070+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 804,
+    "text": "Write a python function to check whether the product of numbers is even or not.",
+    "code": "def is_Product_Even(arr,n): \r\n    for i in range(0,n): \r\n        if ((arr[i] & 1) == 0): \r\n            return True\r\n    return False"
+  },
+  "content_hash": "d3fa0aa63d233a9a79d8f6da23b7ad4b7baf9addb7b501ef4c90046632effc35",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

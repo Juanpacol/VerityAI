@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_9e53ad3c0681",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.235477+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 349,
+    "text": "Write a python function to check whether the given string is a binary string or not.",
+    "code": "def check(string) :\r\n    p = set(string) \r\n    s = {'0', '1'} \r\n    if s == p or p == {'0'} or p == {'1'}: \r\n        return (\"Yes\") \r\n    else : \r\n        return (\"No\") "
+  },
+  "content_hash": "9e53ad3c068135377e8aeec9a5a50a53a1a786fe9b850a4ababe1f5f84f5106b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

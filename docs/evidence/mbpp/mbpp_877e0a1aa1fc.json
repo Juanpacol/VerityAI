@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_877e0a1aa1fc",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.294096+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 703,
+    "text": "Write a function to check whether the given key is present in the dictionary or not.",
+    "code": "def is_key_present(d,x):\r\n  if x in d:\r\n    return True\r\n  else:\r\n     return False"
+  },
+  "content_hash": "877e0a1aa1fcd87906643320c84d308c5e6923ab6d20a75cc9e63e03807814c5",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

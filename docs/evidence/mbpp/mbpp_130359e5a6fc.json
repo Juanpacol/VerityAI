@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_130359e5a6fc",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.247513+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 431,
+    "text": "Write a function that takes two lists and returns true if they have at least one common element.",
+    "code": "def common_element(list1, list2):\r\n     result = False\r\n     for x in list1:\r\n         for y in list2:\r\n             if x == y:\r\n                 result = True\r\n                 return result"
+  },
+  "content_hash": "130359e5a6fc55caa2ecf8119c4862e58d4268445a2935ecc659ffa09a17ff7d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_96b5ff807db8",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.336734+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 894,
+    "text": "Write a function to convert the given string of float type into tuple.",
+    "code": "def float_to_tuple(test_str):\r\n  res = tuple(map(float, test_str.split(', ')))\r\n  return (res) "
+  },
+  "content_hash": "96b5ff807db896596a6cad221fce119100e6bca2b142bbb7e80e4590e6463470",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

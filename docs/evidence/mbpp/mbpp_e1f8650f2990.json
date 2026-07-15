@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e1f8650f2990",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.348449+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 942,
+    "text": "Write a function to check if any list element is present in the given list.",
+    "code": "def check_element(test_tup, check_list):\r\n  res = False\r\n  for ele in check_list:\r\n    if ele in test_tup:\r\n      res = True\r\n      break\r\n  return (res) "
+  },
+  "content_hash": "e1f8650f29903f6eecf30dc53eff2b98e5c1134c4c42196bae6a6972621601e9",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

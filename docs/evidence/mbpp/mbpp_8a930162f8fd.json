@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_8a930162f8fd",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.251136+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 455,
+    "text": "Write a function to check whether the given month number contains 31 days or not.",
+    "code": "def check_monthnumb_number(monthnum2):\r\n  if(monthnum2==1 or monthnum2==3 or monthnum2==5 or monthnum2==7 or monthnum2==8 or monthnum2==10 or monthnum2==12):\r\n    return True\r\n  else:\r\n    return False"
+  },
+  "content_hash": "8a930162f8fd595d61a2d037f0c5a3ad8488c5830cd30a5ffaf5dd3d1cd80a9c",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

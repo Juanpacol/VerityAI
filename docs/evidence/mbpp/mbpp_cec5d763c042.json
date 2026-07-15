@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_cec5d763c042",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.261213+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 518,
+    "text": "Write a function to find the square root of a perfect number.",
+    "code": "import math\r\ndef sqrt_root(num):\r\n sqrt_root = math.pow(num, 0.5)\r\n return sqrt_root "
+  },
+  "content_hash": "cec5d763c042dfd2e92c567b5897808006b375c6f03792677c1745f0f5845b87",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

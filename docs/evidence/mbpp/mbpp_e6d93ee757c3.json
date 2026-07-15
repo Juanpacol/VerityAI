@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e6d93ee757c3",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.355147+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 969,
+    "text": "Write a function to join the tuples if they have similar initial elements.",
+    "code": "def join_tuples(test_list):\r\n  res = []\r\n  for sub in test_list:\r\n    if res and res[-1][0] == sub[0]:\r\n      res[-1].extend(sub[1:])\r\n    else:\r\n      res.append([ele for ele in sub])\r\n  res = list(map(tuple, res))\r\n  return (res) "
+  },
+  "content_hash": "e6d93ee757c30735dd63d8a2e2d17277e154a1d03c30f36df653ae486e2fcdbb",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

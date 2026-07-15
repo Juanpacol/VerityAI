@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_8031ad1cb808",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.189966+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 111,
+    "text": "Write a function to find common elements in given nested lists. * list item * list item * list item * list item",
+    "code": "def common_in_nested_lists(nestedlist):\r\n    result = list(set.intersection(*map(set, nestedlist)))\r\n    return result"
+  },
+  "content_hash": "8031ad1cb8082460615d038544b0c238df129a38357311792d31b1653df09850",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

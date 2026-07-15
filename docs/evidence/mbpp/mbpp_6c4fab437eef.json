@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_6c4fab437eef",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.283005+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 643,
+    "text": "Write a function that matches a word containing 'z', not at the start or end of the word.",
+    "code": "import re\r\ndef text_match_wordz_middle(text):\r\n        patterns = '\\Bz\\B'\r\n        if re.search(patterns,  text):\r\n                return 'Found a match!'\r\n        else:\r\n                return('Not matched!')"
+  },
+  "content_hash": "6c4fab437eeffcc09cb89cbe3ee138215794394fdf001e826ae82384bf07d9ea",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_68609c0c9382",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.272945+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 587,
+    "text": "Write a function to convert a list to a tuple.",
+    "code": "def list_tuple(listx):\r\n  tuplex = tuple(listx)\r\n  return tuplex"
+  },
+  "content_hash": "68609c0c9382111c32e96649ba855f29cc8bee20e474e658f5968b2c105b5b3f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

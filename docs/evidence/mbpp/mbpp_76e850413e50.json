@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_76e850413e50",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.232073+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 346,
+    "text": "Write a function to find entringer number e(n, k).",
+    "code": "def zigzag(n, k): \r\n\tif (n == 0 and k == 0): \r\n\t\treturn 1\r\n\tif (k == 0): \r\n\t\treturn 0\r\n\treturn zigzag(n, k - 1) + zigzag(n - 1, n - k)"
+  },
+  "content_hash": "76e850413e504421570c8c8309487aff780fedec3fc7821e37c9078105e9bd35",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

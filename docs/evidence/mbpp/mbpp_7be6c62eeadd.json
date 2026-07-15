@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7be6c62eeadd",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.241668+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 392,
+    "text": "Write a function to find the maximum sum possible by using the given equation f(n) = max( (f(n/2) + f(n/3) + f(n/4) + f(n/5)), n).",
+    "code": "def get_max_sum (n):\r\n\tres = list()\r\n\tres.append(0)\r\n\tres.append(1)\r\n\ti = 2\r\n\twhile i<n + 1:\r\n\t\tres.append(max(i, (res[int(i / 2)] \r\n\t\t\t\t\t\t+ res[int(i / 3)] +\r\n\t\t\t\t\t\t\tres[int(i / 4)]\r\n\t\t\t\t\t\t+ res[int(i / 5)])))\r\n\t\ti = i + 1\r\n\treturn res[n]"
+  },
+  "content_hash": "7be6c62eeadd240df643d998c4e919369a74d383b1f9b10575337992d687124c",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

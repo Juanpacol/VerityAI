@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b215f9b8fa76",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.199954+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 200,
+    "text": "Write a function to find all index positions of the maximum values in a given list.",
+    "code": "def position_max(list1):\r\n    max_val = max(list1)\r\n    max_result = [i for i, j in enumerate(list1) if j == max_val]\r\n    return max_result"
+  },
+  "content_hash": "b215f9b8fa762c1f559fa11434558e69504890fae4ee9385173b23d618292910",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

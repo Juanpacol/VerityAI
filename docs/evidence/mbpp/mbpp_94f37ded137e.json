@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_94f37ded137e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.259500+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 508,
+    "text": "Write a function to check if the common elements between two given lists are in the same order or not.",
+    "code": "def same_order(l1, l2):\r\n    common_elements = set(l1) & set(l2)\r\n    l1 = [e for e in l1 if e in common_elements]\r\n    l2 = [e for e in l2 if e in common_elements]\r\n    return l1 == l2"
+  },
+  "content_hash": "94f37ded137e97ebe342d35daeb3be58b7282c10890102c8f8c815f7a5141a83",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

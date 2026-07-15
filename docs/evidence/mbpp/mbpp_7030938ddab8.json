@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7030938ddab8",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.284077+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 649,
+    "text": "Write a python function to calculate the sum of the numbers in a list between the indices of a specified range.",
+    "code": "def sum_Range_list(nums, m, n):                                                                                                                                                                                                \r\n    sum_range = 0                                                                                                                                                                                                         \r\n    for i in range(m, n+1, 1):                                                                                                                                                                                        \r\n        sum_range += nums[i]                                                                                                                                                                                                  \r\n    return sum_range   "
+  },
+  "content_hash": "7030938ddab8d87e8e19d13b7becaf5ba0ccc8a99f17b3b6ae2b04df60187e9f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

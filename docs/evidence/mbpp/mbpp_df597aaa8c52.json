@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_df597aaa8c52",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.321086+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 826,
+    "text": "Write a python function to find the type of triangle from the given sides.",
+    "code": "def check_Type_Of_Triangle(a,b,c): \r\n    sqa = pow(a,2) \r\n    sqb = pow(b,2) \r\n    sqc = pow(c,2) \r\n    if (sqa == sqa + sqb or sqb == sqa + sqc or sqc == sqa + sqb): \r\n        return (\"Right-angled Triangle\") \r\n    elif (sqa > sqc + sqb or sqb > sqa + sqc or sqc > sqa + sqb): \r\n        return (\"Obtuse-angled Triangle\") \r\n    else: \r\n        return (\"Acute-angled Triangle\") "
+  },
+  "content_hash": "df597aaa8c52cf27cdedbbb57d6aa039258003f6e6d5359956c690ba8cbd9d1b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_6eba7852766d",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.306337+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 763,
+    "text": "Write a python function to find the minimum difference between any two elements in a given array.",
+    "code": "def find_Min_Diff(arr,n): \r\n    arr = sorted(arr) \r\n    diff = 10**20 \r\n    for i in range(n-1): \r\n        if arr[i+1] - arr[i] < diff: \r\n            diff = arr[i+1] - arr[i]  \r\n    return diff "
+  },
+  "content_hash": "6eba7852766d200f0818da86243033252da8331a325842dea1c1e709d5bf7f27",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

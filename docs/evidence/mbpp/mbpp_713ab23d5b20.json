@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_713ab23d5b20",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.182654+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 38,
+    "text": "Write a function to find the division of first even and odd number of a given list.",
+    "code": "def div_even_odd(list1):\r\n    first_even = next((el for el in list1 if el%2==0),-1)\r\n    first_odd = next((el for el in list1 if el%2!=0),-1)\r\n    return (first_even/first_odd)"
+  },
+  "content_hash": "713ab23d5b202e7e4e9b3e72c17dd6c26289c427851afe43b52286432d28e27a",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_420b1639a097",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.295586+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 711,
+    "text": "Write a python function to check whether the product of digits of a number at even and odd places is equal or not.",
+    "code": "def product_Equal(n): \r\n    if n < 10: \r\n        return False\r\n    prodOdd = 1; prodEven = 1\r\n    while n > 0: \r\n        digit = n % 10\r\n        prodOdd *= digit \r\n        n = n//10\r\n        if n == 0: \r\n            break; \r\n        digit = n % 10\r\n        prodEven *= digit \r\n        n = n//10\r\n    if prodOdd == prodEven: \r\n        return True\r\n    return False"
+  },
+  "content_hash": "420b1639a09772de7e657be5c65191ae1fe8de8196653007203767a2e7dd9afa",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

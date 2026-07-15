@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_9b3315f2a207",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.314898+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 799,
+    "text": "Write a python function to left rotate the bits of a given number.",
+    "code": "INT_BITS = 32\r\ndef left_Rotate(n,d):   \r\n    return (n << d)|(n >> (INT_BITS - d))  "
+  },
+  "content_hash": "9b3315f2a2071a6ca1d829bacbdcfdd0b80a682c11dd022b0e15823513caf863",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

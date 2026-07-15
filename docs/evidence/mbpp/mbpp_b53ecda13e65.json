@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b53ecda13e65",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.313252+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 792,
+    "text": "Write a python function to count the number of lists in a given number of lists.",
+    "code": "def count_list(input_list): \r\n    return len(input_list)"
+  },
+  "content_hash": "b53ecda13e6565e33877facf7e350d07dc4ad25c0d212ed51f4274537d703de9",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_427d1fb88662",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.302996+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 748,
+    "text": "Write a function to put spaces between words starting with capital letters in a given string by using regex.",
+    "code": "import re\r\ndef capital_words_spaces(str1):\r\n  return re.sub(r\"(\\w)([A-Z])\", r\"\\1 \\2\", str1)"
+  },
+  "content_hash": "427d1fb88662478a13e75774176846920e6350d3abe5610794d04a5f6e03649b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

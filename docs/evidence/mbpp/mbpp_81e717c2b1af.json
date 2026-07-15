@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_81e717c2b1af",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.297914+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 723,
+    "text": "Write a function to count the same pair in two given lists using map function.",
+    "code": "from operator import eq\r\ndef count_same_pair(nums1, nums2):\r\n    result = sum(map(eq, nums1, nums2))\r\n    return result"
+  },
+  "content_hash": "81e717c2b1af095d47c34e12102617e512740045fb7feace1438737ac3bbb081",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

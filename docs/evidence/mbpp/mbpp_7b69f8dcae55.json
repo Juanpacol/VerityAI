@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7b69f8dcae55",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.280937+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 631,
+    "text": "Write a function to replace whitespaces with an underscore and vice versa in a given string by using regex.",
+    "code": "import re\r\ntext = 'Python Exercises'\r\ndef replace_spaces(text):\r\n  text =text.replace (\" \", \"_\")\r\n  return (text)\r\n  text =text.replace (\"_\", \" \")\r\n  return (text)"
+  },
+  "content_hash": "7b69f8dcae55efff4a7d913abf7c6cce8da5ae140351a6d4794aeac1a05e492e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_17429e7b9b91",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.246297+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 423,
+    "text": "Write a function to solve gold mine problem.",
+    "code": "def get_maxgold(gold, m, n): \r\n    goldTable = [[0 for i in range(n)] \r\n                        for j in range(m)]   \r\n    for col in range(n-1, -1, -1): \r\n        for row in range(m):  \r\n            if (col == n-1): \r\n                right = 0\r\n            else: \r\n                right = goldTable[row][col+1] \r\n            if (row == 0 or col == n-1): \r\n                right_up = 0\r\n            else: \r\n                right_up = goldTable[row-1][col+1] \r\n            if (row == m-1 or col == n-1): \r\n                right_down = 0\r\n            else: \r\n                right_down = goldTable[row+1][col+1] \r\n            goldTable[row][col] = gold[row][col] + max(right, right_up, right_down) \r\n    res = goldTable[0][0] \r\n    for i in range(1, m): \r\n        res = max(res, goldTable[i][0])  \r\n    return res "
+  },
+  "content_hash": "17429e7b9b9181726312741334acf98fb2b03368faaac5c5b4ca69dd32eb133a",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

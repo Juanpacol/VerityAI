@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_8420d673a500",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.206414+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 254,
+    "text": "Write a function to find all words starting with 'a' or 'e' in a given string.",
+    "code": "import re\r\ndef words_ae(text):\r\n list = re.findall(\"[ae]\\w+\", text)\r\n return list"
+  },
+  "content_hash": "8420d673a500441c686810075e0bbf44308875c80e39caab8998be88fdfe0fa7",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

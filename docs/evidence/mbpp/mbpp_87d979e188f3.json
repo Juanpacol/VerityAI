@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_87d979e188f3",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.273120+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 588,
+    "text": "Write a python function to find the difference between largest and smallest value in a given array.",
+    "code": "def big_diff(nums):\r\n     diff= max(nums)-min(nums)\r\n     return diff"
+  },
+  "content_hash": "87d979e188f354f4a6d9c2c86424f9efd919428ee35f8320ec0211bb5f229afe",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

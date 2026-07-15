@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_039aa7a44fae",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.228853+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 324,
+    "text": "Write a function to extract the sum of alternate chains of tuples.",
+    "code": "def sum_of_alternates(test_tuple):\r\n  sum1 = 0\r\n  sum2 = 0\r\n  for idx, ele in enumerate(test_tuple):\r\n    if idx % 2:\r\n      sum1 += ele\r\n    else:\r\n      sum2 += ele\r\n  return ((sum1),(sum2)) "
+  },
+  "content_hash": "039aa7a44fae25e3a6bfb560d525a4a5a1478d791228418cf1a3be1b7dec7f53",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

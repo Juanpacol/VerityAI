@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_40e05be03994",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.277924+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 614,
+    "text": "Write a function to find the cumulative sum of all the values that are present in the given tuple list.",
+    "code": "def cummulative_sum(test_list):\r\n  res = sum(map(sum, test_list))\r\n  return (res)"
+  },
+  "content_hash": "40e05be0399491a4e273e5a5a7e47872ef6ccfcd0334e0724369fc6734d04c37",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

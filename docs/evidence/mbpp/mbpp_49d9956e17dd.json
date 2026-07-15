@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_49d9956e17dd",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.189262+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 104,
+    "text": "Write a function to sort each sublist of strings in a given list of lists using lambda function.",
+    "code": "def sort_sublists(input_list):\r\n    result = [sorted(x, key = lambda x:x[0]) for x in input_list] \r\n    return result\r"
+  },
+  "content_hash": "49d9956e17dd58c178d5f80708e475643ecafb71c64a74e0c916622835ee6233",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

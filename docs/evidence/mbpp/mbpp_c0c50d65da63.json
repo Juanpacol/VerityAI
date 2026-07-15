@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c0c50d65da63",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.315364+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 801,
+    "text": "Write a python function to count the number of equal numbers from three given integers.",
+    "code": "def test_three_equal(x,y,z):\r\n  result= set([x,y,z])\r\n  if len(result)==3:\r\n    return 0\r\n  else:\r\n    return (4-len(result))"
+  },
+  "content_hash": "c0c50d65da636e604f6b8b06d370e198d3e0f0fb1f7afde5558635be5ea5f38f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_6f4729be971d",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.297083+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 719,
+    "text": "Write a function that matches a string that has an a followed by zero or more b's.",
+    "code": "import re\r\ndef text_match(text):\r\n        patterns = 'ab*?'\r\n        if re.search(patterns,  text):\r\n                return 'Found a match!'\r\n        else:\r\n                return('Not matched!')"
+  },
+  "content_hash": "6f4729be971d6b37cb6c7c994615b6c86d8d75c45dc0cd1d1da0d4be04bf1237",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

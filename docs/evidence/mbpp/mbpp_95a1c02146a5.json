@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_95a1c02146a5",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.227762+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 316,
+    "text": "Write a function to find the index of the last occurrence of a given number in a sorted array.",
+    "code": "def find_last_occurrence(A, x):\r\n    (left, right) = (0, len(A) - 1)\r\n    result = -1\r\n    while left <= right:\r\n        mid = (left + right) // 2\r\n        if x == A[mid]:\r\n            result = mid\r\n            left = mid + 1\r\n        elif x < A[mid]:\r\n            right = mid - 1\r\n        else:\r\n            left = mid + 1\r\n    return result "
+  },
+  "content_hash": "95a1c02146a5c19dd3421fb73a5bbe94a03d0a5fd196345b4db6610601ad6b89",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

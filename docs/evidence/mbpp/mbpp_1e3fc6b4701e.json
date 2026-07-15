@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_1e3fc6b4701e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.230561+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 336,
+    "text": "Write a function to check whether the given month name contains 28 days or not.",
+    "code": "def check_monthnum(monthname1):\r\n  if monthname1 == \"February\":\r\n    return True\r\n  else:\r\n    return False"
+  },
+  "content_hash": "1e3fc6b4701e9728d3be21450168d207ce94349f576077341942d92a2e56f96b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

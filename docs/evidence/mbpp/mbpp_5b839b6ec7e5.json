@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_5b839b6ec7e5",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.310264+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 779,
+    "text": "Write a function to count the number of unique lists within a list.",
+    "code": "def unique_sublists(list1):\r\n    result ={}\r\n    for l in list1: \r\n        result.setdefault(tuple(l), list()).append(1) \r\n    for a, b in result.items(): \r\n        result[a] = sum(b)\r\n    return result"
+  },
+  "content_hash": "5b839b6ec7e5582051ff99b4e51e5c8bb6c3dc88f89d004a7a1ef7d83b75d6fe",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

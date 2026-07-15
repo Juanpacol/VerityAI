@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_dbcb781b22c0",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.295024+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 708,
+    "text": "Write a python function to convert a string to a list.",
+    "code": "def Convert(string): \r\n    li = list(string.split(\" \")) \r\n    return li "
+  },
+  "content_hash": "dbcb781b22c08bc4c199331d726ce0c5e290c9fdacdf954398e9892f345beebd",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

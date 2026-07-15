@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_10dc20e318c2",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.331364+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 871,
+    "text": "Write a python function to check whether the given strings are rotations of each other or not.",
+    "code": "def are_Rotations(string1,string2): \r\n    size1 = len(string1) \r\n    size2 = len(string2) \r\n    temp = '' \r\n    if size1 != size2: \r\n        return False\r\n    temp = string1 + string1 \r\n    if (temp.count(string2)> 0): \r\n        return True\r\n    else: \r\n        return False"
+  },
+  "content_hash": "10dc20e318c28d0e009c6c7f9b6fb00469eca087a379effc55211b4972d0d58c",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

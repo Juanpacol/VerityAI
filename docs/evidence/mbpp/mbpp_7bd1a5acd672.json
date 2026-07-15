@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7bd1a5acd672",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.290080+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 682,
+    "text": "Write a function to multiply two lists using map and lambda function.",
+    "code": "def mul_list(nums1,nums2):\r\n  result = map(lambda x, y: x * y, nums1, nums2)\r\n  return list(result)"
+  },
+  "content_hash": "7bd1a5acd672c58e48b7b7647ec5bbf37456f2caccd1ecb6efbf0cdadcf83181",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

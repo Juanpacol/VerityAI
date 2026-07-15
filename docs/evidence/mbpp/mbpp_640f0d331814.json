@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_640f0d331814",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.353191+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 961,
+    "text": "Write a function to convert a roman numeral to an integer.",
+    "code": "def roman_to_int(s):\r\n        rom_val = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}\r\n        int_val = 0\r\n        for i in range(len(s)):\r\n            if i > 0 and rom_val[s[i]] > rom_val[s[i - 1]]:\r\n                int_val += rom_val[s[i]] - 2 * rom_val[s[i - 1]]\r\n            else:\r\n                int_val += rom_val[s[i]]\r\n        return int_val"
+  },
+  "content_hash": "640f0d33181450f18eebddafdce1fd9fecb08332fe81c91483291dfafe85137a",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

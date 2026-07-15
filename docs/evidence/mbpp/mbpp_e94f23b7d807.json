@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e94f23b7d807",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.240915+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 387,
+    "text": "Write a python function to check whether the hexadecimal number is even or odd.",
+    "code": "def even_or_odd(N): \r\n    l = len(N) \r\n    if (N[l-1] =='0'or N[l-1] =='2'or \r\n        N[l-1] =='4'or N[l-1] =='6'or \r\n        N[l-1] =='8'or N[l-1] =='A'or \r\n        N[l-1] =='C'or N[l-1] =='E'): \r\n        return (\"Even\") \r\n    else: \r\n        return (\"Odd\") "
+  },
+  "content_hash": "e94f23b7d807a2825ac411508287c54f2e2ecc410d9073b3b8cf75cca56f6662",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

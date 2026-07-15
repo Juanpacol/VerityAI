@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e771b5de08c3",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.203006+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 226,
+    "text": "Write a python function to remove the characters which have odd index values of a given string.",
+    "code": "def odd_values_string(str):\r\n  result = \"\" \r\n  for i in range(len(str)):\r\n    if i % 2 == 0:\r\n      result = result + str[i]\r\n  return result"
+  },
+  "content_hash": "e771b5de08c32eec3694e3bbd5aa844a57f17983d75801907a31c7c475d33296",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7e9d5c3f0c6c",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.338916+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 903,
+    "text": "Write a python function to count the total unset bits from 1 to n.",
+    "code": "def count_Unset_Bits(n) :  \r\n    cnt = 0;  \r\n    for i in range(1,n + 1) : \r\n        temp = i;  \r\n        while (temp) :  \r\n            if (temp % 2 == 0) : \r\n                cnt += 1;  \r\n            temp = temp // 2;  \r\n    return cnt;  "
+  },
+  "content_hash": "7e9d5c3f0c6c050aee91ea161d2da90e70a79b5fd3c9b108773b3a5960eef171",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

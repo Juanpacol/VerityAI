@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_594112b1dc19",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.327412+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 854,
+    "text": "Write a function which accepts an arbitrary list and converts it to a heap using heap queue algorithm.",
+    "code": "import heapq as hq\r\ndef raw_heap(rawheap):\r\n  hq.heapify(rawheap)\r\n  return rawheap"
+  },
+  "content_hash": "594112b1dc19664adf0edfb6cc04651ec000bdb383df6642812bb3ce80621be9",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

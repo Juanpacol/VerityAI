@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_cbbd758c01ee",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.897180+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/70",
+    "prompt": "\ndef strange_sort_list(lst):\n    '''\n    Given list of integers, return list in strange order.\n    Strange sorting, is when you start with the minimum value,\n    then maximum of the remaining integers, then minimum and so on.\n\n    Examples:\n    strange_sort_list([1, 2, 3, 4]) == [1, 4, 2, 3]\n    strange_sort_list([5, 5, 5, 5]) == [5, 5, 5, 5]\n    strange_sort_list([]) == []\n    '''\n",
+    "canonical_solution": "    res, switch = [], True\n    while lst:\n        res.append(min(lst) if switch else max(lst))\n        lst.remove(res[-1])\n        switch = not switch\n    return res\n",
+    "entry_point": "strange_sort_list"
+  },
+  "content_hash": "cbbd758c01eec7ea856562dac7cc87311eaa1dc73440a1dc186a44d7664c85eb",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

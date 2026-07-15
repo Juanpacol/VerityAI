@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a98186092833",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.181550+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 26,
+    "text": "Write a function to check if the given tuple list has all k elements.",
+    "code": "def check_k_elements(test_list, K):\r\n  res = True\r\n  for tup in test_list:\r\n    for ele in tup:\r\n      if ele != K:\r\n        res = False\r\n  return (res) "
+  },
+  "content_hash": "a9818609283360830b086cf05e91f97fba6db99a1b1a976da895f9a23dd0d1c2",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

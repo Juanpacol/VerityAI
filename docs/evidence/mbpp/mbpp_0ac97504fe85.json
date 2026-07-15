@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_0ac97504fe85",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.287350+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 667,
+    "text": "Write a python function to count number of vowels in the string.",
+    "code": "def Check_Vow(string, vowels): \r\n    final = [each for each in string if each in vowels] \r\n    return(len(final)) \r\n"
+  },
+  "content_hash": "0ac97504fe85a6de2e1a70456609cbac13a163cd8ce60d83f46e5e0d599afddd",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

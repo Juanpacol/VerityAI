@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_ed641057bed1",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.254959+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 480,
+    "text": "Write a python function to find the maximum occurring character in a given string.",
+    "code": "def get_max_occuring_char(str1):\r\n  ASCII_SIZE = 256\r\n  ctr = [0] * ASCII_SIZE\r\n  max = -1\r\n  ch = ''\r\n  for i in str1:\r\n    ctr[ord(i)]+=1;\r\n  for i in str1:\r\n    if max < ctr[ord(i)]:\r\n      max = ctr[ord(i)]\r\n      ch = i\r\n  return ch"
+  },
+  "content_hash": "ed641057bed1b9ed982e90ec9c7fc0901b61a80a536c7dcb9c678fd8a2cc8e58",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

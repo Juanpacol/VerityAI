@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f4b5bf8a0cd4",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.344286+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 925,
+    "text": "Write a python function to calculate the product of all the numbers of a given tuple.",
+    "code": "def mutiple_tuple(nums):\r\n    temp = list(nums)\r\n    product = 1 \r\n    for x in temp:\r\n        product *= x\r\n    return product"
+  },
+  "content_hash": "f4b5bf8a0cd4d26be9e0def8aae29ef504867e5e24faf5d19383dcda430c6b7c",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

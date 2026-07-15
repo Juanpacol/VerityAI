@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_62d1f7c31ebb",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.318625+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 815,
+    "text": "Write a function to sort the given array without using any sorting algorithm. the given array consists of only 0, 1, and 2.",
+    "code": "def sort_by_dnf(arr, n):\r\n  low=0\r\n  mid=0\r\n  high=n-1\r\n  while mid <= high:\r\n    if arr[mid] == 0:\r\n      arr[low], arr[mid] = arr[mid], arr[low]\r\n      low = low + 1\r\n      mid = mid + 1\r\n    elif arr[mid] == 1:\r\n      mid = mid + 1\r\n    else:\r\n      arr[mid], arr[high] = arr[high], arr[mid]\r\n      high = high - 1\r\n  return arr"
+  },
+  "content_hash": "62d1f7c31ebb9029439b5b02b893fe3ecf9571e15ef35e6686f5bfa4d141d6d3",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

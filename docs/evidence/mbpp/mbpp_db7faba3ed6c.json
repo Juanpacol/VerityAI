@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_db7faba3ed6c",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.209146+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 276,
+    "text": "Write a function to find the volume of a cylinder.",
+    "code": "def volume_cylinder(r,h):\r\n  volume=3.1415*r*r*h\r\n  return volume"
+  },
+  "content_hash": "db7faba3ed6c6cd274abc4b10a752b354b7e0ee833012df2af5330004b20fe18",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

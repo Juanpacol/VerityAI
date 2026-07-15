@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_9a9d8bc23519",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.289354+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 678,
+    "text": "Write a python function to remove spaces from a given string.",
+    "code": "def remove_spaces(str1):\r\n  str1 = str1.replace(' ','')\r\n  return str1"
+  },
+  "content_hash": "9a9d8bc23519aaba1d63e6be7384bdc9d93db635ec89ee2d3a62ef93c6b6c75b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

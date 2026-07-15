@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_32e338909955",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.182838+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 40,
+    "text": "Write a function to find frequency of the elements in a given list of lists using collections module.",
+    "code": "from collections import Counter\r\nfrom itertools import chain\r\ndef freq_element(nums):\r\n  result = Counter(chain.from_iterable(nums))\r\n  return result"
+  },
+  "content_hash": "32e33890995502b6a6ea24b318cc5f238a97600b1b013490ed3f6c9a8df0bf8b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

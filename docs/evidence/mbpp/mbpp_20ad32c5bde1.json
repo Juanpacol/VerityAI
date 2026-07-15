@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_20ad32c5bde1",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.229436+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 328,
+    "text": "Write a function to rotate a given list by specified number of items to the left direction.",
+    "code": "def rotate_left(list1,m,n):\r\n  result =  list1[m:]+list1[:n]\r\n  return result"
+  },
+  "content_hash": "20ad32c5bde1292f86e5060fa534ab9686de1b1669879f14b216fd7a07bd4607",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

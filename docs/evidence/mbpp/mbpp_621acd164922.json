@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_621acd164922",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.279006+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 620,
+    "text": "Write a function to find the largest subset where each pair is divisible.",
+    "code": "def largest_subset(a, n):\r\n\tdp = [0 for i in range(n)]\r\n\tdp[n - 1] = 1; \r\n\tfor i in range(n - 2, -1, -1):\r\n\t\tmxm = 0;\r\n\t\tfor j in range(i + 1, n):\r\n\t\t\tif a[j] % a[i] == 0 or a[i] % a[j] == 0:\r\n\t\t\t\tmxm = max(mxm, dp[j])\r\n\t\tdp[i] = 1 + mxm\r\n\treturn max(dp)"
+  },
+  "content_hash": "621acd1649223b1faa50d811a0696005bebd398393c28ddab98f6ac43ec5c33a",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_57eaf668401e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.293495+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 700,
+    "text": "Write a function to count the number of elements in a list which are within a specific range.",
+    "code": "def count_range_in_list(li, min, max):\r\n\tctr = 0\r\n\tfor x in li:\r\n\t\tif min <= x <= max:\r\n\t\t\tctr += 1\r\n\treturn ctr"
+  },
+  "content_hash": "57eaf668401e6d40d247b85db6a1809da48faaa760d9621d26fc92eea6928617",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

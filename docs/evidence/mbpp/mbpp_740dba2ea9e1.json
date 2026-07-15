@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_740dba2ea9e1",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.209877+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 281,
+    "text": "Write a python function to check if the elements of a given list are unique or not.",
+    "code": "def all_unique(test_list):\r\n    if len(test_list) > len(set(test_list)):\r\n        return False\r\n    return True"
+  },
+  "content_hash": "740dba2ea9e10b9a293d34394e4460db3e674fc7d08f3131517e426f89aa1c5d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

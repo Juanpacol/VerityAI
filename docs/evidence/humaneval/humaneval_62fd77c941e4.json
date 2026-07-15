@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_62fd77c941e4",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.907808+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/161",
+    "prompt": "\ndef solve(s):\n    \"\"\"You are given a string s.\n    if s[i] is a letter, reverse its case from lower to upper or vise versa, \n    otherwise keep it as it is.\n    If the string contains no letters, reverse the string.\n    The function should return the resulted string.\n    Examples\n    solve(\"1234\") = \"4321\"\n    solve(\"ab\") = \"AB\"\n    solve(\"#a@C\") = \"#A@c\"\n    \"\"\"\n",
+    "canonical_solution": "    flg = 0\n    idx = 0\n    new_str = list(s)\n    for i in s:\n        if i.isalpha():\n            new_str[idx] = i.swapcase()\n            flg = 1\n        idx += 1\n    s = \"\"\n    for i in new_str:\n        s += i\n    if flg == 0:\n        return s[len(s)::-1]\n    return s\n",
+    "entry_point": "solve"
+  },
+  "content_hash": "62fd77c941e453e3d6acf3808ecca09f2c968df938ee65d42bdeca7598c39877",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

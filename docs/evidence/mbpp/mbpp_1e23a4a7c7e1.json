@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_1e23a4a7c7e1",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.257410+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 495,
+    "text": "Write a function to remove lowercase substrings from a given string by using regex.",
+    "code": "import re\r\ndef remove_lowercase(str1):\r\n  remove_lower = lambda text: re.sub('[a-z]', '', text)\r\n  result =  remove_lower(str1)\r\n  return (result)"
+  },
+  "content_hash": "1e23a4a7c7e16d70deebc6a1798c12a282e6eb2b504275606dbc6a018325980d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

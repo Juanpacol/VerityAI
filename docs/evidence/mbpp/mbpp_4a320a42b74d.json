@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_4a320a42b74d",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.231237+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 341,
+    "text": "Write a function to convert the given set into ordered tuples.",
+    "code": "def set_to_tuple(s):\r\n  t = tuple(sorted(s))\r\n  return (t)"
+  },
+  "content_hash": "4a320a42b74d63d53a67ef4ef5ef55d234f7ea4a5760684c43c2fdd24d03c3fe",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

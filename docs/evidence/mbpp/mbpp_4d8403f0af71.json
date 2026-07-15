@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_4d8403f0af71",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.291047+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 687,
+    "text": "Write a function to find the greatest common divisor (gcd) of two integers by using recursion.",
+    "code": "def recur_gcd(a, b):\r\n\tlow = min(a, b)\r\n\thigh = max(a, b)\r\n\tif low == 0:\r\n\t\treturn high\r\n\telif low == 1:\r\n\t\treturn 1\r\n\telse:\r\n\t\treturn recur_gcd(low, high%low)"
+  },
+  "content_hash": "4d8403f0af71edbaefafb866ddfc5a2b576a8a91886111713144c32f1b401b44",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

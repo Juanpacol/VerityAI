@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_5cc5b1c08acf",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.193020+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 140,
+    "text": "Write a function to extract elements that occur singly in the given tuple list.",
+    "code": "def extract_singly(test_list):\r\n  res = []\r\n  temp = set()\r\n  for inner in test_list:\r\n    for ele in inner:\r\n      if not ele in temp:\r\n        temp.add(ele)\r\n        res.append(ele)\r\n  return (res) "
+  },
+  "content_hash": "5cc5b1c08acfaa483aa838c30aa1a4a54e533f5c56af094b2d5b079578358279",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

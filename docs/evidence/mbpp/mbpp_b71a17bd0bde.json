@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b71a17bd0bde",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.185039+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 62,
+    "text": "Write a python function to find smallest number in a list.",
+    "code": "def smallest_num(xs):\n  return min(xs)\n"
+  },
+  "content_hash": "b71a17bd0bde2e193741fcd0d23e4101655a1f57fe0d9c40eeedc0f3cdc6e61e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

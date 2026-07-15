@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_9c333f9cd75b",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.351383+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 954,
+    "text": "Write a function that gives profit amount if the given amount has profit else return none.",
+    "code": "def profit_amount(actual_cost,sale_amount): \r\n if(actual_cost > sale_amount):\r\n    amount = actual_cost - sale_amount\r\n    return amount\r\n else:\r\n    return None"
+  },
+  "content_hash": "9c333f9cd75bc0b1987cfcda6ecb5dbe63da25f53dc7d2bfe1b0904ae5af4f94",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

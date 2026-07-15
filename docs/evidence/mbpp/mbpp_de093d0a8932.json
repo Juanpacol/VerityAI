@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_de093d0a8932",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.322676+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 833,
+    "text": "Write a function to get dictionary keys as a list.",
+    "code": "def get_key(dict): \r\n    list = [] \r\n    for key in dict.keys(): \r\n        list.append(key)           \r\n    return list"
+  },
+  "content_hash": "de093d0a8932b9b9540c56700c368442e89dca56540f469653389d78c0883741",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

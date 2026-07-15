@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_3eccced78fd0",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.254345+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 476,
+    "text": "Write a python function to find the sum of the largest and smallest value in a given array.",
+    "code": "def big_sum(nums):\r\n      sum= max(nums)+min(nums)\r\n      return sum"
+  },
+  "content_hash": "3eccced78fd0542ca96f8ad45aa4e04972fa8881d5d3397e9ec45324b943fa37",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

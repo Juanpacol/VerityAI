@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_87690f93d7b4",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.271385+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 578,
+    "text": "Write a function to interleave lists of the same length.",
+    "code": "def interleave_lists(list1,list2,list3):\r\n    result = [el for pair in zip(list1, list2, list3) for el in pair]\r\n    return result"
+  },
+  "content_hash": "87690f93d7b4c910d30e2b5844e3dbb9eb9f19a495f331b7a09e061c1c59f12c",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

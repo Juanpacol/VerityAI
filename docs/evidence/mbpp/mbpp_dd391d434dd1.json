@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_dd391d434dd1",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.182193+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 33,
+    "text": "Write a python function to convert a decimal number to binary number.",
+    "code": "def decimal_To_Binary(N): \r\n    B_Number = 0\r\n    cnt = 0\r\n    while (N != 0): \r\n        rem = N % 2\r\n        c = pow(10,cnt)  \r\n        B_Number += rem*c  \r\n        N //= 2 \r\n        cnt += 1\r\n    return B_Number  "
+  },
+  "content_hash": "dd391d434dd1cfb3c68cf30a01f00ed810ff1a0469e22d16e29f558e7abce0d9",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_ab4f8fead8c0",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.900171+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/97",
+    "prompt": "\ndef multiply(a, b):\n    \"\"\"Complete the function that takes two integers and returns \n    the product of their unit digits.\n    Assume the input is always valid.\n    Examples:\n    multiply(148, 412) should return 16.\n    multiply(19, 28) should return 72.\n    multiply(2020, 1851) should return 0.\n    multiply(14,-15) should return 20.\n    \"\"\"\n",
+    "canonical_solution": "    return abs(a % 10) * abs(b % 10)\n",
+    "entry_point": "multiply"
+  },
+  "content_hash": "ab4f8fead8c0e51166c363469ba7f2d1344c17fa0d59fd3b1b72a9ea1701e6d8",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

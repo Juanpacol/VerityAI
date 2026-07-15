@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_6ca2d8fbf3e6",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.337440+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 897,
+    "text": "Write a python function to check whether the word is present in a given sentence or not.",
+    "code": "def is_Word_Present(sentence,word): \r\n    s = sentence.split(\" \") \r\n    for i in s:  \r\n        if (i == word): \r\n            return True\r\n    return False"
+  },
+  "content_hash": "6ca2d8fbf3e6856118f7fa55f3fb2894b1898922c8440b9c6b8b83335b1a9822",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

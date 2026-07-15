@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_229e2c515a54",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.300230+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 734,
+    "text": "Write a python function to find sum of products of all possible subarrays.",
+    "code": "def sum_Of_Subarray_Prod(arr,n):\r\n    ans = 0\r\n    res = 0\r\n    i = n - 1\r\n    while (i >= 0):\r\n        incr = arr[i]*(1 + res)\r\n        ans += incr\r\n        res = incr\r\n        i -= 1\r\n    return (ans)"
+  },
+  "content_hash": "229e2c515a5416f3d2229fe5cc45b01bce9e652b02abe51bc0ece7d6c6e9da73",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

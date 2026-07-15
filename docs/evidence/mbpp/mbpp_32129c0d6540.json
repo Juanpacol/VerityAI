@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_32129c0d6540",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.194337+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 151,
+    "text": "Write a python function to check whether the given number is co-prime or not.",
+    "code": "def gcd(p,q):\r\n    while q != 0:\r\n        p, q = q,p%q\r\n    return p\r\ndef is_coprime(x,y):\r\n    return gcd(x,y) == 1"
+  },
+  "content_hash": "32129c0d6540ce89029d17f791e569cae95924a0ed46e0032f56441529505794",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

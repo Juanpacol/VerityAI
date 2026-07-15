@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_eb2988cbb5be",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.244769+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 413,
+    "text": "Write a function to extract the nth element from a given list of tuples.",
+    "code": "def extract_nth_element(list1, n):\r\n    result = [x[n] for x in list1]\r\n    return result"
+  },
+  "content_hash": "eb2988cbb5bee65472c131919a533f36f88a97958c61084435f68749804ef9e7",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

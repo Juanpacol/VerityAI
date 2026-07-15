@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_6a2a3e231427",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.276679+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 608,
+    "text": "Write a python function to find nth bell number.",
+    "code": "def bell_Number(n): \r\n    bell = [[0 for i in range(n+1)] for j in range(n+1)] \r\n    bell[0][0] = 1\r\n    for i in range(1, n+1):\r\n        bell[i][0] = bell[i-1][i-1]\r\n        for j in range(1, i+1): \r\n            bell[i][j] = bell[i-1][j-1] + bell[i][j-1] \r\n    return bell[n][0] "
+  },
+  "content_hash": "6a2a3e2314275a8a405714191755b43ba951c7b285b4ecb1c355e95267a53a39",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

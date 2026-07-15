@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_4f5bc034676e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.184360+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 56,
+    "text": "Write a python function to check if a given number is one less than twice its reverse.",
+    "code": "def rev(num):    \r\n    rev_num = 0\r\n    while (num > 0):  \r\n        rev_num = (rev_num * 10 + num % 10) \r\n        num = num // 10  \r\n    return rev_num  \r\ndef check(n):    \r\n    return (2 * rev(n) == n + 1)  "
+  },
+  "content_hash": "4f5bc034676eb2dbda3dfddbe77d4825a6ebc525ae6319ecc2987d2acfd5145b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

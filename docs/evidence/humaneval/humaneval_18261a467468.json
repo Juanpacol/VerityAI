@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_18261a467468",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.899165+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/88",
+    "prompt": "\ndef sort_array(array):\n    \"\"\"\n    Given an array of non-negative integers, return a copy of the given array after sorting,\n    you will sort the given array in ascending order if the sum( first index value, last index value) is odd,\n    or sort it in descending order if the sum( first index value, last index value) is even.\n\n    Note:\n    * don't change the given array.\n\n    Examples:\n    * sort_array([]) => []\n    * sort_array([5]) => [5]\n    * sort_array([2, 4, 3, 0, 1, 5]) => [0, 1, 2, 3, 4, 5]\n    * sort_array([2, 4, 3, 0, 1, 5, 6]) => [6, 5, 4, 3, 2, 1, 0]\n    \"\"\"\n",
+    "canonical_solution": "    return [] if len(array) == 0 else sorted(array, reverse= (array[0]+array[-1]) % 2 == 0) \n",
+    "entry_point": "sort_array"
+  },
+  "content_hash": "18261a46746845c747dea2529159b6794ac3b23a478b5b6243b528d4e48ce496",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

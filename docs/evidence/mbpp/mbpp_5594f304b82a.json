@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_5594f304b82a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.303375+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 750,
+    "text": "Write a function to add the given tuple to the given list.",
+    "code": "def add_tuple(test_list, test_tup):\r\n  test_list += test_tup\r\n  return (test_list) "
+  },
+  "content_hash": "5594f304b82a9ab8371415138b375b745c119e97b10584b9e2700180ae69f6d2",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f3bf89cf5d20",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.323800+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 838,
+    "text": "Write a python function to find minimum number swaps required to make two binary strings equal.",
+    "code": "def min_Swaps(s1,s2) :  \r\n    c0 = 0; c1 = 0;  \r\n    for i in range(len(s1)) :  \r\n        if (s1[i] == '0' and s2[i] == '1') : \r\n            c0 += 1;    \r\n        elif (s1[i] == '1' and s2[i] == '0') : \r\n            c1 += 1;  \r\n    result = c0 // 2 + c1 // 2;  \r\n    if (c0 % 2 == 0 and c1 % 2 == 0) : \r\n        return result;  \r\n    elif ((c0 + c1) % 2 == 0) : \r\n        return result + 2;  \r\n    else : \r\n        return -1;  "
+  },
+  "content_hash": "f3bf89cf5d20705e0de6e6c6c5a01bf9c9ce89e8ce0a477231994715a095f509",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

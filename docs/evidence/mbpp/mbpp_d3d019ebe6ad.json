@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_d3d019ebe6ad",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.285514+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 657,
+    "text": "Write a python function to find the first digit in factorial of a given number.",
+    "code": "import math \r\ndef first_Digit(n) : \r\n    fact = 1\r\n    for i in range(2,n + 1) : \r\n        fact = fact * i \r\n        while (fact % 10 == 0) :  \r\n            fact = int(fact / 10) \r\n    while (fact >= 10) : \r\n        fact = int(fact / 10) \r\n    return math.floor(fact) "
+  },
+  "content_hash": "d3d019ebe6ad4cf63feabfd4b31b5292d261b1fa493c504eaddf0cd105954592",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

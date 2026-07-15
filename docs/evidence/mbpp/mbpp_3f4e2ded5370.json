@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_3f4e2ded5370",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.333664+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 881,
+    "text": "Write a function to find the sum of first even and odd number of a given list.",
+    "code": "def sum_even_odd(list1):\r\n    first_even = next((el for el in list1 if el%2==0),-1)\r\n    first_odd = next((el for el in list1 if el%2!=0),-1)\r\n    return (first_even+first_odd)"
+  },
+  "content_hash": "3f4e2ded5370472a286bcd39734b2601d5760cca59b1f9de125e1f58ec6d7035",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_78de78bb98ef",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.894911+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/52",
+    "prompt": "\n\ndef below_threshold(l: list, t: int):\n    \"\"\"Return True if all numbers in the list l are below threshold t.\n    >>> below_threshold([1, 2, 4, 10], 100)\n    True\n    >>> below_threshold([1, 20, 4, 10], 5)\n    False\n    \"\"\"\n",
+    "canonical_solution": "    for e in l:\n        if e >= t:\n            return False\n    return True\n",
+    "entry_point": "below_threshold"
+  },
+  "content_hash": "78de78bb98efd2a6a7e2cc825b67497594eb2434ab992c1493b9082d1d7f8977",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

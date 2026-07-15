@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_e0e7862b4bd8",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.900937+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/104",
+    "prompt": "\ndef unique_digits(x):\n    \"\"\"Given a list of positive integers x. return a sorted list of all \n    elements that hasn't any even digit.\n\n    Note: Returned list should be sorted in increasing order.\n    \n    For example:\n    >>> unique_digits([15, 33, 1422, 1])\n    [1, 15, 33]\n    >>> unique_digits([152, 323, 1422, 10])\n    []\n    \"\"\"\n",
+    "canonical_solution": "    odd_digit_elements = []\n    for i in x:\n        if all (int(c) % 2 == 1 for c in str(i)):\n            odd_digit_elements.append(i)\n    return sorted(odd_digit_elements)\n",
+    "entry_point": "unique_digits"
+  },
+  "content_hash": "e0e7862b4bd88879ec6e11645db32dbe70439797bd764520b3b21c44657f6395",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

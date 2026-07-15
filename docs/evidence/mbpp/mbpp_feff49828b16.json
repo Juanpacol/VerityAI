@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_feff49828b16",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.192601+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 136,
+    "text": "Write a function to calculate electricity bill.",
+    "code": "def cal_electbill(units):\r\n if(units < 50):\r\n    amount = units * 2.60\r\n    surcharge = 25\r\n elif(units <= 100):\r\n    amount = 130 + ((units - 50) * 3.25)\r\n    surcharge = 35\r\n elif(units <= 200):\r\n    amount = 130 + 162.50 + ((units - 100) * 5.26)\r\n    surcharge = 45\r\n else:\r\n    amount = 130 + 162.50 + 526 + ((units - 200) * 8.45)\r\n    surcharge = 75\r\n total = amount + surcharge\r\n return total"
+  },
+  "content_hash": "feff49828b1676e1c3851591dd56259b3d7fd42b172de538229816fe73be17b5",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

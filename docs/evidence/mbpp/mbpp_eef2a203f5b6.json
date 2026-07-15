@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_eef2a203f5b6",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.253590+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 471,
+    "text": "Write a python function to find remainder of array multiplication divided by n.",
+    "code": "def find_remainder(arr, lens, n): \r\n    mul = 1\r\n    for i in range(lens):  \r\n        mul = (mul * (arr[i] % n)) % n \r\n    return mul % n "
+  },
+  "content_hash": "eef2a203f5b6ce099a9c1fbf8412d2059a84ac25801255f2b286766b0184a8e5",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

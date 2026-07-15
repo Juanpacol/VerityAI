@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_62a09d465433",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.251593+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 458,
+    "text": "Write a function to find the area of a rectangle.",
+    "code": "def rectangle_area(l,b):\r\n  area=l*b\r\n  return area"
+  },
+  "content_hash": "62a09d465433c6667020c3b26bde4395c8f5f0baa04f46a274d7d73ae9e473f4",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

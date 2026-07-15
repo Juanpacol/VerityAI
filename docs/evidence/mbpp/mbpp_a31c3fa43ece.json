@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a31c3fa43ece",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.242540+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 398,
+    "text": "Write a function to compute the sum of digits of each number of a given list.",
+    "code": "def sum_of_digits(nums):\r\n    return sum(int(el) for n in nums for el in str(n) if el.isdigit())"
+  },
+  "content_hash": "a31c3fa43ece5f36749a44c989f9b16d12b011b500135d88042ef7e18a70a098",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

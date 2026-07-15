@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_898dc643f1f5",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.183510+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 47,
+    "text": "Write a python function to find the last digit when factorial of a divides factorial of b.",
+    "code": "def compute_Last_Digit(A,B): \r\n    variable = 1\r\n    if (A == B): \r\n        return 1\r\n    elif ((B - A) >= 5):  \r\n        return 0\r\n    else:   \r\n        for i in range(A + 1,B + 1): \r\n            variable = (variable * (i % 10)) % 10\r\n        return variable % 10"
+  },
+  "content_hash": "898dc643f1f56405971089e0a9d9b3ed117dc76072ad473530f0af6b7c40efb0",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

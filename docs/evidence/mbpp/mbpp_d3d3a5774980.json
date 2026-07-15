@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_d3d3a5774980",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.248719+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 439,
+    "text": "Write a function to convert a list of multiple integers into a single integer.",
+    "code": "def multiple_to_single(L):\r\n  x = int(\"\".join(map(str, L)))\r\n  return x"
+  },
+  "content_hash": "d3d3a57749802fb0b509802bc92bcc59010fa9d60de33c1678c1806fa32af716",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

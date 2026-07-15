@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_8dcd282dde3b",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.306787+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 765,
+    "text": "Write a function to find nth polite number.",
+    "code": "import math \r\ndef is_polite(n): \r\n\tn = n + 1\r\n\treturn (int)(n+(math.log((n + math.log(n, 2)), 2))) "
+  },
+  "content_hash": "8dcd282dde3b3999e21538abe2c61ffe8ab0884322bcb32849c8adea9adf02a4",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

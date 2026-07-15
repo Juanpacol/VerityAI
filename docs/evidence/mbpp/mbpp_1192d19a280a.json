@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_1192d19a280a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.324245+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 840,
+    "text": "Write a python function to check whether the roots of a quadratic equation are numerically equal but opposite in sign or not.",
+    "code": "def Check_Solution(a,b,c):  \r\n    if b == 0:  \r\n        return (\"Yes\")  \r\n    else: \r\n        return (\"No\")  "
+  },
+  "content_hash": "1192d19a280a6e0de0f60905dab5ade0f9ecab11460295325adf00f8a4ce649e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

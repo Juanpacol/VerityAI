@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_d894b55041d0",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.251286+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 456,
+    "text": "Write a function to reverse strings in a given list of string values.",
+    "code": "def reverse_string_list(stringlist):\r\n    result = [x[::-1] for x in stringlist]\r\n    return result"
+  },
+  "content_hash": "d894b55041d04c3f19d4604a7e102b92ef6cce03ffeca3cfa877b92992e3537a",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

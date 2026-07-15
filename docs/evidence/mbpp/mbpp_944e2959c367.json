@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_944e2959c367",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.329254+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 862,
+    "text": "Write a function to find the occurrences of n most common words in a given text.",
+    "code": "from collections import Counter\r\nimport re\r\ndef n_common_words(text,n):\r\n  words = re.findall('\\w+',text)\r\n  n_common_words= Counter(words).most_common(n)\r\n  return list(n_common_words)"
+  },
+  "content_hash": "944e2959c36788127517a7aff741166940a950321c17edf6087a01d04f8e139b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

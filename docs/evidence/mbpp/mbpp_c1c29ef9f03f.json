@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c1c29ef9f03f",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.321756+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 829,
+    "text": "Write a function to find out the second most repeated (or frequent) string in the given sequence.",
+    "code": "from collections import Counter \r\n\t\r\ndef second_frequent(input): \r\n\tdict = Counter(input) \r\n\tvalue = sorted(dict.values(), reverse=True)  \r\n\tsecond_large = value[1] \r\n\tfor (key, val) in dict.items(): \r\n\t\tif val == second_large: \r\n\t\t\treturn (key) "
+  },
+  "content_hash": "c1c29ef9f03f297c88808417658b4d344dd34839a37b5abde315f47c477c03f7",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

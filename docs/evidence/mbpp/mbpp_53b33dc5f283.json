@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_53b33dc5f283",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.179781+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 7,
+    "text": "Write a function to find all words which are at least 4 characters long in a string by using regex.",
+    "code": "import re\r\ndef find_char_long(text):\r\n  return (re.findall(r\"\\b\\w{4,}\\b\", text))"
+  },
+  "content_hash": "53b33dc5f283d0101c0f0f24cf8c8d3a39236de10e9ee0e0d3ff52094f8f9a48",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

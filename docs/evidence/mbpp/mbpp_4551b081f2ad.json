@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_4551b081f2ad",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.264379+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 537,
+    "text": "Write a python function to find the first repeated word in a given string.",
+    "code": "def first_repeated_word(str1):\r\n  temp = set()\r\n  for word in str1.split():\r\n    if word in temp:\r\n      return word;\r\n    else:\r\n      temp.add(word)\r\n  return 'None'"
+  },
+  "content_hash": "4551b081f2ad696c366edabca0f6809de9110b8e3add2e1141bcf5316fc8d058",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

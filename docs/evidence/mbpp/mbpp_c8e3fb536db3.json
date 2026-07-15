@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c8e3fb536db3",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.248562+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 438,
+    "text": "Write a function to count bidirectional tuple pairs.",
+    "code": "def count_bidirectional(test_list):\r\n  res = 0\r\n  for idx in range(0, len(test_list)):\r\n    for iidx in range(idx + 1, len(test_list)):\r\n      if test_list[iidx][0] == test_list[idx][1] and test_list[idx][1] == test_list[iidx][0]:\r\n        res += 1\r\n  return (str(res)) "
+  },
+  "content_hash": "c8e3fb536db396e0378cd82f8006ea69067cb747019c1ca07c2be04e6dc24620",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

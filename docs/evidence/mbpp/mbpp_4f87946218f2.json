@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_4f87946218f2",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.286609+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 663,
+    "text": "Write a function to find the largest possible value of k such that k modulo x is y.",
+    "code": "import sys \r\ndef find_max_val(n, x, y): \r\n\tans = -sys.maxsize \r\n\tfor k in range(n + 1): \r\n\t\tif (k % x == y): \r\n\t\t\tans = max(ans, k) \r\n\treturn (ans if (ans >= 0 and\r\n\t\t\t\t\tans <= n) else -1) "
+  },
+  "content_hash": "4f87946218f27b80c3d839c375f521a5f2a45480329905785258dd434bc733a6",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

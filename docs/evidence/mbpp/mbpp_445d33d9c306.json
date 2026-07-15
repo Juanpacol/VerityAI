@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_445d33d9c306",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.312791+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 790,
+    "text": "Write a python function to check whether every even index contains even numbers of a given list.",
+    "code": "def even_position(nums):\r\n\treturn all(nums[i]%2==i%2 for i in range(len(nums)))"
+  },
+  "content_hash": "445d33d9c30659fb0175e48cca5f5154ceed1ddf6f02acf76db7847e1f1677d9",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

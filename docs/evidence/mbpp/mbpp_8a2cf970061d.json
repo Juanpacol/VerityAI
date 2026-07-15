@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_8a2cf970061d",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.341367+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 913,
+    "text": "Write a function to check for a number at the end of a string.",
+    "code": "import re\r\ndef end_num(string):\r\n    text = re.compile(r\".*[0-9]$\")\r\n    if text.match(string):\r\n        return True\r\n    else:\r\n        return False"
+  },
+  "content_hash": "8a2cf970061d21ef0d54a75037ef67f9801adc5ba27e19ce6b4f75764d4959d4",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

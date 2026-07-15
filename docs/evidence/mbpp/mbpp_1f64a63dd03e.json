@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_1f64a63dd03e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.328100+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 857,
+    "text": "Write a function to list out the list of given strings individually using map function.",
+    "code": "def listify_list(list1):\r\n  result = list(map(list,list1)) \r\n  return result "
+  },
+  "content_hash": "1f64a63dd03e754877fe791f16698875a7a2c6c1c2a0dc6f64d38c18d3edbeec",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

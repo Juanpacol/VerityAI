@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_88a625c7beb0",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.323570+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 837,
+    "text": "Write a python function to find the cube sum of first n odd natural numbers.",
+    "code": "def cube_Sum(n): \r\n    sum = 0   \r\n    for i in range(0,n) : \r\n        sum += (2*i+1)*(2*i+1)*(2*i+1) \r\n    return sum"
+  },
+  "content_hash": "88a625c7beb02d2b0c77d0535b0aeade9b25dc8a49da84db374dac43848b9789",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

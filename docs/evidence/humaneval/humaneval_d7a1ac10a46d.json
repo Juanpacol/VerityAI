@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_d7a1ac10a46d",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.897817+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/76",
+    "prompt": "\ndef is_simple_power(x, n):\n    \"\"\"Your task is to write a function that returns true if a number x is a simple\n    power of n and false in other cases.\n    x is a simple power of n if n**int=x\n    For example:\n    is_simple_power(1, 4) => true\n    is_simple_power(2, 2) => true\n    is_simple_power(8, 2) => true\n    is_simple_power(3, 2) => false\n    is_simple_power(3, 1) => false\n    is_simple_power(5, 3) => false\n    \"\"\"\n",
+    "canonical_solution": "    if (n == 1): \n        return (x == 1) \n    power = 1\n    while (power < x): \n        power = power * n \n    return (power == x) \n",
+    "entry_point": "is_simple_power"
+  },
+  "content_hash": "d7a1ac10a46d34c5cf9020979346b6d572a873193ea64d44d9406c34adcec31c",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

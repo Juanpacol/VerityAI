@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_5ada259f9c9f",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.340634+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 910,
+    "text": "Write a function to validate a gregorian date.",
+    "code": "import datetime\r\ndef check_date(m, d, y):\r\n    try:\r\n        m, d, y = map(int, (m, d, y))\r\n        datetime.date(y, m, d)\r\n        return True\r\n    except ValueError:\r\n        return False"
+  },
+  "content_hash": "5ada259f9c9fe16bb29aa9578bbad7151bb6de775302edbb3287f4f47489da83",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

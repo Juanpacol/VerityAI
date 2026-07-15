@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_3ed2f5018b85",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.230123+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 333,
+    "text": "Write a python function to sort a list according to the second element in sublist.",
+    "code": "def Sort(sub_li): \r\n    sub_li.sort(key = lambda x: x[1]) \r\n    return sub_li "
+  },
+  "content_hash": "3ed2f5018b853cce26389598c02e50963cc99d7c70fd4d29dd684c4c3178d866",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

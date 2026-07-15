@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_cb5dba864eae",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.260945+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 517,
+    "text": "Write a python function to find the largest postive number from the given list.",
+    "code": "def largest_pos(list1): \r\n    max = list1[0] \r\n    for x in list1: \r\n        if x > max : \r\n             max = x  \r\n    return max"
+  },
+  "content_hash": "cb5dba864eaefc130405a78f7dbed7622ff5793de4f41d63aaf4b1b4d1d09769",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

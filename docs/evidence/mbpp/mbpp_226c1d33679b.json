@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_226c1d33679b",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.281280+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 633,
+    "text": "Write a python function to find the sum of xor of all pairs of numbers in the given array.",
+    "code": "def pair_OR_Sum(arr,n) : \r\n    ans = 0 \r\n    for i in range(0,n) :    \r\n        for j in range(i + 1,n) :   \r\n            ans = ans + (arr[i] ^ arr[j])          \r\n    return ans "
+  },
+  "content_hash": "226c1d33679b56a09b6b3d972e517bed56f9899ab4c91ffa42bfddcc5f283b9e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

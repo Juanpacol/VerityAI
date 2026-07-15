@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_30f4f2f60cb2",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.340879+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 911,
+    "text": "Write a function to compute maximum product of three numbers of a given array of integers using heap queue algorithm.",
+    "code": "def maximum_product(nums):\r\n    import heapq\r\n    a, b = heapq.nlargest(3, nums), heapq.nsmallest(2, nums)\r\n    return max(a[0] * a[1] * a[2], a[0] * b[0] * b[1])"
+  },
+  "content_hash": "30f4f2f60cb2985a5b7bfc05dd722b6bcfd28384a1cd03486558968c7e0a5848",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

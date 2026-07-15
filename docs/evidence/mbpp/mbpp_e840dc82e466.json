@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e840dc82e466",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.345250+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 929,
+    "text": "Write a function to count repeated items of a tuple.",
+    "code": "def count_tuplex(tuplex,value):  \r\n  count = tuplex.count(value)\r\n  return count"
+  },
+  "content_hash": "e840dc82e466ccc9f5b7bb6bcdedeaae6ecdcf7997eeb04279acb131faf18366",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

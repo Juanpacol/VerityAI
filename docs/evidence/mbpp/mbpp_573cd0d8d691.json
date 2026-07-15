@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_573cd0d8d691",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.236770+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 358,
+    "text": "Write a function to find modulo division of two lists using map and lambda function.",
+    "code": "def moddiv_list(nums1,nums2):\r\n  result = map(lambda x, y: x % y, nums1, nums2)\r\n  return list(result)"
+  },
+  "content_hash": "573cd0d8d6911122b6f276ada05e4c33634378a191a0d30c85a4a855db748e12",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

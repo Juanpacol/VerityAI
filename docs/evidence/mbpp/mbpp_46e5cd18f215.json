@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_46e5cd18f215",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.303185+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 749,
+    "text": "Write a function to sort a given list of strings of numbers numerically.",
+    "code": "def sort_numeric_strings(nums_str):\r\n    result = [int(x) for x in nums_str]\r\n    result.sort()\r\n    return result"
+  },
+  "content_hash": "46e5cd18f2156d5000fc1158c7d5739dff53a46b07259e9154ab4a0042f41ef1",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

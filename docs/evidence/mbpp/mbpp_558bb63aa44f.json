@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_558bb63aa44f",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.355628+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 971,
+    "text": "Write a function to find the maximum number of segments of lengths a, b and c that can be formed from n.",
+    "code": "def maximum_segments(n, a, b, c) : \r\n\tdp = [-1] * (n + 10) \r\n\tdp[0] = 0\r\n\tfor i in range(0, n) : \r\n\t\tif (dp[i] != -1) : \r\n\t\t\tif(i + a <= n ): \r\n\t\t\t\tdp[i + a] = max(dp[i] + 1, \r\n\t\t\t\t\t\t\tdp[i + a]) \r\n\t\t\tif(i + b <= n ): \r\n\t\t\t\tdp[i + b] = max(dp[i] + 1, \r\n\t\t\t\t\t\t\tdp[i + b]) \r\n\t\t\tif(i + c <= n ): \r\n\t\t\t\tdp[i + c] = max(dp[i] + 1, \r\n\t\t\t\t\t\t\tdp[i + c]) \r\n\treturn dp[n]"
+  },
+  "content_hash": "558bb63aa44fffa590893ad4792de4a77f427a56ea45c909491503bb845c373e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_983727643efe",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.303950+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 753,
+    "text": "Write a function to find minimum k records from tuple list.",
+    "code": "def min_k(test_list, K):\r\n  res = sorted(test_list, key = lambda x: x[1])[:K]\r\n  return (res) "
+  },
+  "content_hash": "983727643efe55692591933afdeed76d328bbb27180de3a929a7c65cd2c3bd58",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

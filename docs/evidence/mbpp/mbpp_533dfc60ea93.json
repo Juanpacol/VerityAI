@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_533dfc60ea93",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.326960+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 852,
+    "text": "Write a python function to remove negative numbers from a list.",
+    "code": "def remove_negs(num_list): \r\n    for item in num_list: \r\n        if item < 0: \r\n           num_list.remove(item) \r\n    return num_list"
+  },
+  "content_hash": "533dfc60ea93b97bf68a6c7dfe7d89dd5601852dc5f3ef1612a572512e24b947",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

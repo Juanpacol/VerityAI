@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_1f125ace8545",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.190268+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 114,
+    "text": "Write a function to assign frequency to each tuple in the given tuple list.",
+    "code": "from collections import Counter \r\ndef assign_freq(test_list):\r\n  res = [(*key, val) for key, val in Counter(test_list).items()]\r\n  return (str(res)) "
+  },
+  "content_hash": "1f125ace85450bab3931275bebdba6b4039a5b9735000e63b2ea4c29bc08e94e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

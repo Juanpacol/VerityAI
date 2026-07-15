@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_8e868b5e8a5a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.266064+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 547,
+    "text": "Write a python function to find the sum of hamming distances of all consecutive numbers from o to n.",
+    "code": "def Total_Hamming_Distance(n):   \r\n    i = 1\r\n    sum = 0\r\n    while (n // i > 0):  \r\n        sum = sum + n // i  \r\n        i = i * 2     \r\n    return sum"
+  },
+  "content_hash": "8e868b5e8a5a1bb9dccb6071a6681630b949b777a1312a08c792f0a410b6785a",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

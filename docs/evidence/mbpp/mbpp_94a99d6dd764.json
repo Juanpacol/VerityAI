@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_94a99d6dd764",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.202414+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 221,
+    "text": "Write a python function to find the first even number in a given list of numbers.",
+    "code": "def first_even(nums):\r\n    first_even = next((el for el in nums if el%2==0),-1)\r\n    return first_even"
+  },
+  "content_hash": "94a99d6dd764c09b97f646618bc777784deaee3c518a1e1b9cb18f0f6daae31a",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

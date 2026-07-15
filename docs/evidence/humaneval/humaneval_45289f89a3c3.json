@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_45289f89a3c3",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.903869+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/130",
+    "prompt": "\ndef tri(n):\n    \"\"\"Everyone knows Fibonacci sequence, it was studied deeply by mathematicians in \n    the last couple centuries. However, what people don't know is Tribonacci sequence.\n    Tribonacci sequence is defined by the recurrence:\n    tri(1) = 3\n    tri(n) = 1 + n / 2, if n is even.\n    tri(n) =  tri(n - 1) + tri(n - 2) + tri(n + 1), if n is odd.\n    For example:\n    tri(2) = 1 + (2 / 2) = 2\n    tri(4) = 3\n    tri(3) = tri(2) + tri(1) + tri(4)\n           = 2 + 3 + 3 = 8 \n    You are given a non-negative integer number n, you have to a return a list of the \n    first n + 1 numbers of the Tribonacci sequence.\n    Examples:\n    tri(3) = [1, 3, 2, 8]\n    \"\"\"\n",
+    "canonical_solution": "    if n == 0:\n        return [1]\n    my_tri = [1, 3]\n    for i in range(2, n + 1):\n        if i % 2 == 0:\n            my_tri.append(i / 2 + 1)\n        else:\n            my_tri.append(my_tri[i - 1] + my_tri[i - 2] + (i + 3) / 2)\n    return my_tri\n",
+    "entry_point": "tri"
+  },
+  "content_hash": "45289f89a3c311a06d3d6aaf5b78a167597a53e08823a2dce7d590f80c1e6338",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

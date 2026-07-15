@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b698d0140906",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.314439+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 797,
+    "text": "Write a python function to find the sum of all odd natural numbers within the range l and r.",
+    "code": "def sum_Odd(n): \r\n    terms = (n + 1)//2\r\n    sum1 = terms * terms \r\n    return sum1  \r\ndef sum_in_Range(l,r): \r\n    return sum_Odd(r) - sum_Odd(l - 1)"
+  },
+  "content_hash": "b698d01409065d0c42d41b719acd836554cf177d82924099c3e72da266fa220e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

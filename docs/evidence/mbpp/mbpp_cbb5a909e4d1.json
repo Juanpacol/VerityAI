@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_cbb5a909e4d1",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.325591+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 846,
+    "text": "Write a function to find the minimum number of platforms required for a railway/bus station.",
+    "code": "def find_platform(arr, dep, n): \r\n    arr.sort() \r\n    dep.sort() \r\n    plat_needed = 1\r\n    result = 1\r\n    i = 1\r\n    j = 0\r\n    while (i < n and j < n): \r\n        if (arr[i] <= dep[j]):           \r\n            plat_needed+= 1\r\n            i+= 1\r\n        elif (arr[i] > dep[j]):           \r\n            plat_needed-= 1\r\n            j+= 1\r\n        if (plat_needed > result):  \r\n            result = plat_needed           \r\n    return result"
+  },
+  "content_hash": "cbb5a909e4d1d3dcbcfc6f8ee9fef58f8d2619173e8ebd5dd3f51e44443ad035",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

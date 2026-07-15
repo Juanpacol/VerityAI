@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_def32088b14b",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.184546+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 58,
+    "text": "Write a python function to check whether the given two integers have opposite sign or not.",
+    "code": "def opposite_Signs(x,y): \r\n    return ((x ^ y) < 0); "
+  },
+  "content_hash": "def32088b14b1bbbcdea57bfca68edd99ba55be0e2a10959dd9a80887de4ba7e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_ec90001c6f3c",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.249467+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 444,
+    "text": "Write a function to trim each tuple by k in the given tuple list.",
+    "code": "def trim_tuple(test_list, K):\r\n  res = []\r\n  for ele in test_list:\r\n    N = len(ele)\r\n    res.append(tuple(list(ele)[K: N - K]))\r\n  return (str(res)) "
+  },
+  "content_hash": "ec90001c6f3cec52831741f3d8d2b88690acea62633abf339d95e993bc9bc968",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

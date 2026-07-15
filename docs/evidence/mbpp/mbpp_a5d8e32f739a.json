@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a5d8e32f739a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.320180+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 822,
+    "text": "Write a function to return true if the password is valid.",
+    "code": "import re\r\ndef pass_validity(p):\r\n x = True\r\n while x:  \r\n    if (len(p)<6 or len(p)>12):\r\n        break\r\n    elif not re.search(\"[a-z]\",p):\r\n        break\r\n    elif not re.search(\"[0-9]\",p):\r\n        break\r\n    elif not re.search(\"[A-Z]\",p):\r\n        break\r\n    elif not re.search(\"[$#@]\",p):\r\n        break\r\n    elif re.search(\"\\s\",p):\r\n        break\r\n    else:\r\n        return True\r\n        x=False\r\n        break\r\n\r\n if x:\r\n    return False"
+  },
+  "content_hash": "a5d8e32f739a9da3166e6b4c716ec8d0c80387e0c9cb29258ba520f717da8438",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

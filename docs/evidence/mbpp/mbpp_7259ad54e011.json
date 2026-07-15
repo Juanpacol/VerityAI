@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7259ad54e011",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.206655+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 256,
+    "text": "Write a python function to count the number of prime numbers less than a given non-negative number.",
+    "code": "def count_Primes_nums(n):\r\n    ctr = 0\r\n    for num in range(n):\r\n        if num <= 1:\r\n            continue\r\n        for i in range(2,num):\r\n            if (num % i) == 0:\r\n                break\r\n        else:\r\n            ctr += 1\r\n    return ctr"
+  },
+  "content_hash": "7259ad54e011404b197680d8eefc83432cdd2610f3e30224536332420155eacf",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

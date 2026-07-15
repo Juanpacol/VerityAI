@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_0c455125f8c0",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.249788+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 446,
+    "text": "Write a python function to count the occurence of all elements of list in a tuple.",
+    "code": "from collections import Counter \r\ndef count_Occurrence(tup, lst): \r\n    count = 0\r\n    for item in tup: \r\n        if item in lst: \r\n            count+= 1 \r\n    return count  "
+  },
+  "content_hash": "0c455125f8c04cc7a37c130917f18ec2d056973f21998848eb68fea8f23e6262",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

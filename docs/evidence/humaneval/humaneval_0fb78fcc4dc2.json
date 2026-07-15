@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_0fb78fcc4dc2",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.898715+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/84",
+    "prompt": "\ndef solve(N):\n    \"\"\"Given a positive integer N, return the total sum of its digits in binary.\n    \n    Example\n        For N = 1000, the sum of digits will be 1 the output should be \"1\".\n        For N = 150, the sum of digits will be 6 the output should be \"110\".\n        For N = 147, the sum of digits will be 12 the output should be \"1100\".\n    \n    Variables:\n        @N integer\n             Constraints: 0 ≤ N ≤ 10000.\n    Output:\n         a string of binary number\n    \"\"\"\n",
+    "canonical_solution": "    return bin(sum(int(i) for i in str(N)))[2:]\n",
+    "entry_point": "solve"
+  },
+  "content_hash": "0fb78fcc4dc24044e4b996cdf493981eddf364bd8ef39df80c6e989ef8ba9d93",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

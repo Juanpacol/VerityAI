@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_0c526a8df1c2",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.239179+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 375,
+    "text": "Write a function to round the given number to the nearest multiple of a specific number.",
+    "code": "def round_num(n,m):\r\n    a = (n //m) * m\r\n    b = a + m\r\n    return (b if n - a > b - n else a)"
+  },
+  "content_hash": "0c526a8df1c21edde3af025f113e435f428c03147c0667dd7d43b8fa7e125ca2",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

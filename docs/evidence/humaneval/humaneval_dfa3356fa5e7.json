@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_dfa3356fa5e7",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.902506+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/118",
+    "prompt": "\ndef get_closest_vowel(word):\n    \"\"\"You are given a word. Your task is to find the closest vowel that stands between \n    two consonants from the right side of the word (case sensitive).\n    \n    Vowels in the beginning and ending doesn't count. Return empty string if you didn't\n    find any vowel met the above condition. \n\n    You may assume that the given string contains English letter only.\n\n    Example:\n    get_closest_vowel(\"yogurt\") ==> \"u\"\n    get_closest_vowel(\"FULL\") ==> \"U\"\n    get_closest_vowel(\"quick\") ==> \"\"\n    get_closest_vowel(\"ab\") ==> \"\"\n    \"\"\"\n",
+    "canonical_solution": "    if len(word) < 3:\n        return \"\"\n\n    vowels = {\"a\", \"e\", \"i\", \"o\", \"u\", \"A\", \"E\", 'O', 'U', 'I'}\n    for i in range(len(word)-2, 0, -1):\n        if word[i] in vowels:\n            if (word[i+1] not in vowels) and (word[i-1] not in vowels):\n                return word[i]\n    return \"\"\n",
+    "entry_point": "get_closest_vowel"
+  },
+  "content_hash": "dfa3356fa5e7a601449ba915b4dc05baf3f4195eb68435068d46505822615f2d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_1cb1b4759cb1",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.236348+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 355,
+    "text": "Write a python function to count the number of rectangles in a circle of radius r.",
+    "code": "def count_Rectangles(radius):  \r\n    rectangles = 0 \r\n    diameter = 2 * radius \r\n    diameterSquare = diameter * diameter \r\n    for a in range(1, 2 * radius):  \r\n        for b in range(1, 2 * radius): \r\n            diagnalLengthSquare = (a * a +  b * b)  \r\n            if (diagnalLengthSquare <= diameterSquare) : \r\n                rectangles += 1\r\n    return rectangles "
+  },
+  "content_hash": "1cb1b4759cb1d60f03c85a86181b4a757ac4128bf35fab18cbc05c37ab33464a",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

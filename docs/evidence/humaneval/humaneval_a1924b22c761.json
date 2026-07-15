@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_a1924b22c761",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.905619+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/145",
+    "prompt": "\ndef order_by_points(nums):\n    \"\"\"\n    Write a function which sorts the given list of integers\n    in ascending order according to the sum of their digits.\n    Note: if there are several items with similar sum of their digits,\n    order them based on their index in original list.\n\n    For example:\n    >>> order_by_points([1, 11, -1, -11, -12]) == [-1, -11, 1, -12, 11]\n    >>> order_by_points([]) == []\n    \"\"\"\n",
+    "canonical_solution": "    def digits_sum(n):\n        neg = 1\n        if n < 0: n, neg = -1 * n, -1 \n        n = [int(i) for i in str(n)]\n        n[0] = n[0] * neg\n        return sum(n)\n    return sorted(nums, key=digits_sum)\n",
+    "entry_point": "order_by_points"
+  },
+  "content_hash": "a1924b22c7616b3b5ced4c8d36bf12a723bb5ea2502e00dd2dfb31873282dbbd",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

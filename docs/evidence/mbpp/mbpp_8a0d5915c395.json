@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_8a0d5915c395",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.191947+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 130,
+    "text": "Write a function to find the item with maximum frequency in a given list.",
+    "code": "from collections import defaultdict\r\ndef max_occurrences(nums):\r\n    dict = defaultdict(int)\r\n    for i in nums:\r\n        dict[i] += 1\r\n    result = max(dict.items(), key=lambda x: x[1]) \r\n    return result"
+  },
+  "content_hash": "8a0d5915c3950cf8e1eefde1014ab9a68b169ed57313cd1e3ccf3dad250b4657",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

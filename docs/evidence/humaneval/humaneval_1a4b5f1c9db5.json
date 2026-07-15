@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_1a4b5f1c9db5",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.902069+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/114",
+    "prompt": "\ndef minSubArraySum(nums):\n    \"\"\"\n    Given an array of integers nums, find the minimum sum of any non-empty sub-array\n    of nums.\n    Example\n    minSubArraySum([2, 3, 4, 1, 2, 4]) == 1\n    minSubArraySum([-1, -2, -3]) == -6\n    \"\"\"\n",
+    "canonical_solution": "    max_sum = 0\n    s = 0\n    for num in nums:\n        s += -num\n        if (s < 0):\n            s = 0\n        max_sum = max(s, max_sum)\n    if max_sum == 0:\n        max_sum = max(-i for i in nums)\n    min_sum = -max_sum\n    return min_sum\n",
+    "entry_point": "minSubArraySum"
+  },
+  "content_hash": "1a4b5f1c9db5a2358b597368a2718ea26a4e51504f0d398282a8c512993262f8",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

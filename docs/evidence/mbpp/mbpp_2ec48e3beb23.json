@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_2ec48e3beb23",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.201013+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 209,
+    "text": "Write a function to delete the smallest element from the given heap and then insert a new item.",
+    "code": "import heapq as hq\r\ndef heap_replace(heap,a):\r\n  hq.heapify(heap)\r\n  hq.heapreplace(heap, a)\r\n  return heap"
+  },
+  "content_hash": "2ec48e3beb237c50ff46ade16e3b210e273c94bf31c92676cf4ecfc442da4338",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

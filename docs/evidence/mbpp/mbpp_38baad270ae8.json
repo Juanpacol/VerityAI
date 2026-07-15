@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_38baad270ae8",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.330902+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 869,
+    "text": "Write a function to remove sublists from a given list of lists, which are outside a given range.",
+    "code": "def remove_list_range(list1, leftrange, rigthrange):\r\n   result = [i for i in list1 if (min(i)>=leftrange and max(i)<=rigthrange)]\r\n   return result"
+  },
+  "content_hash": "38baad270ae8c271bb380fce373478ca4e59404316fbffa0ccb5eb96d687301e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_4a0f5e1ec97c",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.271909+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 581,
+    "text": "Write a python function to find the surface area of the square pyramid.",
+    "code": "def surface_Area(b,s): \r\n    return 2 * b * s + pow(b,2) "
+  },
+  "content_hash": "4a0f5e1ec97c988a057805174d09ceddf2f57ed4540ea230aa3261ddc3343f81",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

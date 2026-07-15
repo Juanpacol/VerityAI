@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_6978c3d966eb",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.895496+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/56",
+    "prompt": "\n\ndef correct_bracketing(brackets: str):\n    \"\"\" brackets is a string of \"<\" and \">\".\n    return True if every opening bracket has a corresponding closing bracket.\n\n    >>> correct_bracketing(\"<\")\n    False\n    >>> correct_bracketing(\"<>\")\n    True\n    >>> correct_bracketing(\"<<><>>\")\n    True\n    >>> correct_bracketing(\"><<>\")\n    False\n    \"\"\"\n",
+    "canonical_solution": "    depth = 0\n    for b in brackets:\n        if b == \"<\":\n            depth += 1\n        else:\n            depth -= 1\n        if depth < 0:\n            return False\n    return depth == 0\n",
+    "entry_point": "correct_bracketing"
+  },
+  "content_hash": "6978c3d966eb11b3fa623975d657cdf29d6389d27b0f9326e145eb8d329586e4",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

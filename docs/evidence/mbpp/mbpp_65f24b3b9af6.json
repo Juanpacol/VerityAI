@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_65f24b3b9af6",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.193232+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 142,
+    "text": "Write a function to count the same pair in three given lists.",
+    "code": "def count_samepair(list1,list2,list3):\r\n    result = sum(m == n == o for m, n, o in zip(list1,list2,list3))\r\n    return result"
+  },
+  "content_hash": "65f24b3b9af61d657d56cbf644f70471ead988a8ae3ecb91911a72a77c08d64f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

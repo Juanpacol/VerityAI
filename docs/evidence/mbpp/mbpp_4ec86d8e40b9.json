@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_4ec86d8e40b9",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.181740+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 28,
+    "text": "Write a python function to find binomial co-efficient.",
+    "code": "def binomial_Coeff(n,k): \r\n    if k > n : \r\n       return 0\r\n    if k==0 or k ==n : \r\n        return 1 \r\n    return binomial_Coeff(n-1,k-1) + binomial_Coeff(n-1,k) "
+  },
+  "content_hash": "4ec86d8e40b9efc88f7ed27971d9d7c99d5ea0ec23931e589bab8899627a3899",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

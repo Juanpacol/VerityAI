@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_583405f4fb1b",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.239748+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 379,
+    "text": "Write a function to find the surface area of a cuboid.",
+    "code": "def surfacearea_cuboid(l,w,h):\r\n  SA = 2*(l*w + l * h + w * h)\r\n  return SA"
+  },
+  "content_hash": "583405f4fb1babc77decff0916956ccf73c43560ddb8104e40ccd29ae6fe7603",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

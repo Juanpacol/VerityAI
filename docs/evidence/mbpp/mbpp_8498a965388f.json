@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_8498a965388f",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.250240+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 449,
+    "text": "Write a python function to check whether the triangle is valid or not if 3 points are given.",
+    "code": "def check_Triangle(x1,y1,x2,y2,x3,y3): \r\n    a = (x1*(y2-y3)+x2*(y3-y1)+x3*(y1-y2))   \r\n    if a == 0: \r\n        return ('No') \r\n    else: \r\n        return ('Yes') "
+  },
+  "content_hash": "8498a965388f46945f4e65ff1afc608a18783da3d1156e6e225f8f8824c0ecbd",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

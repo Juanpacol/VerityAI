@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_fb13795ae661",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.907923+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/162",
+    "prompt": "\ndef string_to_md5(text):\n    \"\"\"\n    Given a string 'text', return its md5 hash equivalent string.\n    If 'text' is an empty string, return None.\n\n    >>> string_to_md5('Hello world') == '3e25960a79dbc69b674cd4ec67a72c62'\n    \"\"\"\n",
+    "canonical_solution": "    import hashlib\n    return hashlib.md5(text.encode('ascii')).hexdigest() if text else None\n",
+    "entry_point": "string_to_md5"
+  },
+  "content_hash": "fb13795ae6615d16901bc34464f0c95b9f40342229ecff32551918ec178784ce",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

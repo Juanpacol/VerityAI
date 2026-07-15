@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f8354ac778f8",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.268105+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 559,
+    "text": "Write a function to find the largest sum of contiguous subarray in the given array.",
+    "code": "def max_sub_array_sum(a, size):\r\n  max_so_far = 0\r\n  max_ending_here = 0\r\n  for i in range(0, size):\r\n    max_ending_here = max_ending_here + a[i]\r\n    if max_ending_here < 0:\r\n      max_ending_here = 0\r\n    elif (max_so_far < max_ending_here):\r\n      max_so_far = max_ending_here\r\n  return max_so_far"
+  },
+  "content_hash": "f8354ac778f8e61f9db36ab7567f7f5f2f5a59d951a10d1207e0267534238172",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

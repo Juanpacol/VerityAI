@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_eae7cb5925e0",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.354419+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 966,
+    "text": "Write a function to remove an empty tuple from a list of tuples.",
+    "code": "def remove_empty(tuple1): #L = [(), (), ('',), ('a', 'b'), ('a', 'b', 'c'), ('d')]\r\n   tuple1 = [t for t in tuple1 if t]\r\n   return tuple1"
+  },
+  "content_hash": "eae7cb5925e069fa344e171670ecd4ad7a4c85869841c0e77560d920b8b9310a",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

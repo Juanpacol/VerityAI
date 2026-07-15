@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_8e23d14fe4b5",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.246001+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 421,
+    "text": "Write a function to concatenate each element of tuple by the delimiter.",
+    "code": "def concatenate_tuple(test_tup):\r\n    delim = \"-\"\r\n    res = ''.join([str(ele) + delim for ele in test_tup])\r\n    res = res[ : len(res) - len(delim)]\r\n    return (str(res)) "
+  },
+  "content_hash": "8e23d14fe4b5bba72942599d034ca45287688986e65ebea95d60a7ef523e4be8",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

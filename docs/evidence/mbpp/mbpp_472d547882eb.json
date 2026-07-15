@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_472d547882eb",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.312329+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 788,
+    "text": "Write a function to create a new tuple from the given string and list.",
+    "code": "def new_tuple(test_list, test_str):\r\n  res = tuple(test_list + [test_str])\r\n  return (res) "
+  },
+  "content_hash": "472d547882eb1924d069f40feebaab9795ebbdb846844ad2aa2d30cc9af56ece",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

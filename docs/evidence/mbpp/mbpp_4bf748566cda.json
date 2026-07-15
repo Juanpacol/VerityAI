@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_4bf748566cda",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.200414+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 204,
+    "text": "Write a python function to count the occurrence of a given character in a string.",
+    "code": "def count(s,c) : \r\n    res = 0 \r\n    for i in range(len(s)) : \r\n        if (s[i] == c): \r\n            res = res + 1\r\n    return res "
+  },
+  "content_hash": "4bf748566cdab25f2d6226ac992f92d16f523c7588f89b280a22d2f4f33c9e63",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

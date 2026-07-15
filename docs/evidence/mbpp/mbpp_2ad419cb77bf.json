@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_2ad419cb77bf",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.206174+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 252,
+    "text": "Write a python function to convert complex numbers to polar coordinates.",
+    "code": "import cmath  \r\ndef convert(numbers):    \r\n  num = cmath.polar(numbers)  \r\n  return (num) "
+  },
+  "content_hash": "2ad419cb77bf6b66372afc6d82a8aa94a145b4c255a8da65cbd444858ae58e57",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

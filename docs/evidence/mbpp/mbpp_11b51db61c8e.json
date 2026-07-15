@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_11b51db61c8e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.226965+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 310,
+    "text": "Write a function to convert a given string to a tuple.",
+    "code": "def string_to_tuple(str1):\r\n    result = tuple(x for x in str1 if not x.isspace()) \r\n    return result"
+  },
+  "content_hash": "11b51db61c8ed41db002d5a153fb22ddadab14868774981d600fd2ce59c5e636",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

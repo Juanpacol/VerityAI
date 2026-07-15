@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c93d11f85c99",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.238756+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 372,
+    "text": "Write a function to sort a given list of elements in ascending order using heap queue algorithm.",
+    "code": "import heapq as hq\r\ndef heap_assending(nums):\r\n  hq.heapify(nums)\r\n  s_result = [hq.heappop(nums) for i in range(len(nums))]\r\n  return s_result"
+  },
+  "content_hash": "c93d11f85c99a3943c11cff70f6c3ed1da5519f98d3ba774cf3f479107098443",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

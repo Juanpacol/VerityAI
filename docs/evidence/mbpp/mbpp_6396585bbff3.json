@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_6396585bbff3",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.204338+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 237,
+    "text": "Write a function to check the occurrences of records which occur similar times in the given tuples.",
+    "code": "from collections import Counter \r\ndef check_occurences(test_list):\r\n  res = dict(Counter(tuple(ele) for ele in map(sorted, test_list)))\r\n  return  (res) "
+  },
+  "content_hash": "6396585bbff33662847a0116539b0a4d96385aa2b69c4f95404e88ed54afecbd",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

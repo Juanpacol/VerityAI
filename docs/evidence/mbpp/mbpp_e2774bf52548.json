@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e2774bf52548",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.298764+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 727,
+    "text": "Write a function to remove all characters except letters and numbers using regex",
+    "code": "import re \r\ndef remove_char(S):\r\n  result = re.sub('[\\W_]+', '', S) \r\n  return result"
+  },
+  "content_hash": "e2774bf5254857d532d7e9d8f3c535a257726ee1be5cec22b68146b8775d627b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b8fa7a851a7c",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.252043+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 461,
+    "text": "Write a python function to count the upper case characters in a given string.",
+    "code": "def upper_ctr(str):\r\n    upper_ctr = 0\r\n    for i in range(len(str)):\r\n          if str[i] >= 'A' and str[i] <= 'Z': upper_ctr += 1\r\n          return upper_ctr"
+  },
+  "content_hash": "b8fa7a851a7c5f70e248844d30240441ca8515ebd9782d574c619ebe122ef703",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

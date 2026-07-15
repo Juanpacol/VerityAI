@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c574958d99bd",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.206898+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 258,
+    "text": "Write a function to find number of odd elements in the given list using lambda function.",
+    "code": "def count_odd(array_nums):\r\n   count_odd = len(list(filter(lambda x: (x%2 != 0) , array_nums)))\r\n   return count_odd"
+  },
+  "content_hash": "c574958d99bdbe5ba57b5ee7389ca8dc9aa8b58a1612ba3382ab5e69ffd206cb",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

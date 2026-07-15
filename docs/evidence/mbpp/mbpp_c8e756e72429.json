@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c8e756e72429",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.295958+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 713,
+    "text": "Write a function to check if the given tuple contains all valid values or not.",
+    "code": "def check_valid(test_tup):\r\n  res = not any(map(lambda ele: not ele, test_tup))\r\n  return (res) "
+  },
+  "content_hash": "c8e756e72429b1f6fe6d212ec9cea4ba08e12138613341ad99d42f07cc0259e9",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

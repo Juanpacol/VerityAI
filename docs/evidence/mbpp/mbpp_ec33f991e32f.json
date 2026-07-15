@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_ec33f991e32f",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.283354+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 645,
+    "text": "Write a function to find the product of it’s kth index in the given tuples.",
+    "code": "def get_product(val) : \r\n\tres = 1\r\n\tfor ele in val: \r\n\t\tres *= ele \r\n\treturn res \r\ndef find_k_product(test_list, K):\r\n  res = get_product([sub[K] for sub in test_list])\r\n  return (res) "
+  },
+  "content_hash": "ec33f991e32fea2a35fad92f3b66b0445bde1eeab23ec5e525990653115f5b0f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

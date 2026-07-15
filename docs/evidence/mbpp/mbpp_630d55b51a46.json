@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_630d55b51a46",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.265733+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 545,
+    "text": "Write a python function to toggle only first and last bits of a given number.",
+    "code": "def take_L_and_F_set_bits(n) : \r\n    n = n | n >> 1\r\n    n = n | n >> 2\r\n    n = n | n >> 4\r\n    n = n | n >> 8\r\n    n = n | n >> 16 \r\n    return ((n + 1) >> 1) + 1      \r\ndef toggle_F_and_L_bits(n) :  \r\n    if (n == 1) : \r\n        return 0 \r\n    return n ^ take_L_and_F_set_bits(n) "
+  },
+  "content_hash": "630d55b51a468a2a2f3739a62393842d67b8b2869dcb35a015b0f89b1b60debc",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

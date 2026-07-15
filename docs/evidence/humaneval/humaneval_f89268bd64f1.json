@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_f89268bd64f1",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.898833+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/85",
+    "prompt": "\ndef add(lst):\n    \"\"\"Given a non-empty list of integers lst. add the even elements that are at odd indices..\n\n\n    Examples:\n        add([4, 2, 6, 7]) ==> 2 \n    \"\"\"\n",
+    "canonical_solution": "    return sum([lst[i] for i in range(1, len(lst), 2) if lst[i]%2 == 0])\n",
+    "entry_point": "add"
+  },
+  "content_hash": "f89268bd64f1429f6a1f9e349c2c879f1f4b944f744dcbdacdff5fd2f265bb9e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

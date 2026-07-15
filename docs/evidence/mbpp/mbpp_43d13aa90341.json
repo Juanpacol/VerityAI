@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_43d13aa90341",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.181068+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 21,
+    "text": "Write a function to find m number of multiples of n.",
+    "code": "def multiples_of_num(m,n): \r\n    multiples_of_num= list(range(n,(m+1)*n, n)) \r\n    return list(multiples_of_num)"
+  },
+  "content_hash": "43d13aa903418bd20dafc74e1f2ee11d21ce9e8dfa45cdc946770afc6900b368",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e71180c8731c",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.239035+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 374,
+    "text": "Write a function to print all permutations of a given string including duplicates.",
+    "code": "def permute_string(str):\r\n    if len(str) == 0:\r\n        return ['']\r\n    prev_list = permute_string(str[1:len(str)])\r\n    next_list = []\r\n    for i in range(0,len(prev_list)):\r\n        for j in range(0,len(str)):\r\n            new_str = prev_list[i][0:j]+str[0]+prev_list[i][j:len(str)-1]\r\n            if new_str not in next_list:\r\n                next_list.append(new_str)\r\n    return next_list"
+  },
+  "content_hash": "e71180c8731cce2adb6f73414d01621a916a0bfcc65a394206d54b936b6aef2f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

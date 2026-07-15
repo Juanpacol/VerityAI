@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_cc96e32f2866",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.199843+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 199,
+    "text": "Write a python function to find highest power of 2 less than or equal to given number.",
+    "code": "def highest_Power_of_2(n): \r\n    res = 0; \r\n    for i in range(n, 0, -1):  \r\n        if ((i & (i - 1)) == 0): \r\n            res = i; \r\n            break;      \r\n    return res; "
+  },
+  "content_hash": "cc96e32f2866521dc12cfe8e89b20677bbbbe69e1f4ce4da166dc42ecc9053a1",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

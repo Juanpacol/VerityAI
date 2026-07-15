@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_6f9cbfdb0873",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.328559+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 859,
+    "text": "Write a function to generate all sublists of a given list.",
+    "code": "from itertools import combinations\r\ndef sub_lists(my_list):\r\n\tsubs = []\r\n\tfor i in range(0, len(my_list)+1):\r\n\t  temp = [list(x) for x in combinations(my_list, i)]\r\n\t  if len(temp)>0:\r\n\t    subs.extend(temp)\r\n\treturn subs"
+  },
+  "content_hash": "6f9cbfdb0873f970bfe83bf54286d51759d4221c4ac39de8993de00dba575d7e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

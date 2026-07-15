@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_46397abcf929",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.889804+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/2",
+    "prompt": "\n\ndef truncate_number(number: float) -> float:\n    \"\"\" Given a positive floating point number, it can be decomposed into\n    and integer part (largest integer smaller than given number) and decimals\n    (leftover part always smaller than 1).\n\n    Return the decimal part of the number.\n    >>> truncate_number(3.5)\n    0.5\n    \"\"\"\n",
+    "canonical_solution": "    return number % 1.0\n",
+    "entry_point": "truncate_number"
+  },
+  "content_hash": "46397abcf92979f1f5d5490d7632c705ca3bc3afd87934f74592384001fef9e2",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

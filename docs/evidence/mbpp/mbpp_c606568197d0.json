@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c606568197d0",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.267067+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 553,
+    "text": "Write a function to convert the given tuple to a floating-point number.",
+    "code": "def tuple_to_float(test_tup):\r\n  res = float('.'.join(str(ele) for ele in test_tup))\r\n  return (res) "
+  },
+  "content_hash": "c606568197d0033edb0d72dffe7efc0234a52f17201d3447c768d6990834ef7e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

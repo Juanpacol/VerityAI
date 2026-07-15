@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_220fc9b2e8b7",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.891740+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/21",
+    "prompt": "from typing import List\n\n\ndef rescale_to_unit(numbers: List[float]) -> List[float]:\n    \"\"\" Given list of numbers (of at least two elements), apply a linear transform to that list,\n    such that the smallest number will become 0 and the largest will become 1\n    >>> rescale_to_unit([1.0, 2.0, 3.0, 4.0, 5.0])\n    [0.0, 0.25, 0.5, 0.75, 1.0]\n    \"\"\"\n",
+    "canonical_solution": "    min_number = min(numbers)\n    max_number = max(numbers)\n    return [(x - min_number) / (max_number - min_number) for x in numbers]\n",
+    "entry_point": "rescale_to_unit"
+  },
+  "content_hash": "220fc9b2e8b7f5989b51f7ee6adb18688b74bea6658a5567dd95665688006dd7",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_9745cc6258d4",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.353438+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 962,
+    "text": "Write a python function to find the sum of all even natural numbers within the range l and r.",
+    "code": "def sum_Natural(n): \r\n    sum = (n * (n + 1)) \r\n    return int(sum) \r\ndef sum_Even(l,r): \r\n    return (sum_Natural(int(r / 2)) - sum_Natural(int((l - 1) / 2))) "
+  },
+  "content_hash": "9745cc6258d4668b84938c150a5956bcb000218435ebad3f36b80ca19e5dc988",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

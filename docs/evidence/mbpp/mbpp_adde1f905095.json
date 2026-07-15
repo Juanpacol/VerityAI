@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_adde1f905095",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.294839+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 707,
+    "text": "Write a python function to count the total set bits from 1 to n.",
+    "code": "def count_Set_Bits(n) :  \r\n    n += 1; \r\n    powerOf2 = 2;   \r\n    cnt = n // 2;  \r\n    while (powerOf2 <= n) : \r\n        totalPairs = n // powerOf2;  \r\n        cnt += (totalPairs // 2) * powerOf2;  \r\n        if (totalPairs & 1) : \r\n            cnt += (n % powerOf2) \r\n        else : \r\n            cnt += 0\r\n        powerOf2 <<= 1;    \r\n    return cnt;  "
+  },
+  "content_hash": "adde1f90509587b4ee6ff1e97ce1582b1bbf194ffa4342e7c2db41b99564134b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

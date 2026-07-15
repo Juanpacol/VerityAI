@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b9fc18ff4e8e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.343803+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 923,
+    "text": "Write a function to find the length of the shortest string that has both str1 and str2 as subsequences.",
+    "code": "def super_seq(X, Y, m, n):\r\n\tif (not m):\r\n\t\treturn n\r\n\tif (not n):\r\n\t\treturn m\r\n\tif (X[m - 1] == Y[n - 1]):\r\n\t\treturn 1 + super_seq(X, Y, m - 1, n - 1)\r\n\treturn 1 + min(super_seq(X, Y, m - 1, n),\tsuper_seq(X, Y, m, n - 1))"
+  },
+  "content_hash": "b9fc18ff4e8ee03f85e409e9ca2960d4425ef80f1d31c9118e353e4c0bced8f1",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

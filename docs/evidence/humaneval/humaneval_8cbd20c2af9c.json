@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_8cbd20c2af9c",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.896750+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/66",
+    "prompt": "\ndef digitSum(s):\n    \"\"\"Task\n    Write a function that takes a string as input and returns the sum of the upper characters only'\n    ASCII codes.\n\n    Examples:\n        digitSum(\"\") => 0\n        digitSum(\"abAB\") => 131\n        digitSum(\"abcCd\") => 67\n        digitSum(\"helloE\") => 69\n        digitSum(\"woArBld\") => 131\n        digitSum(\"aAaaaXa\") => 153\n    \"\"\"\n",
+    "canonical_solution": "    if s == \"\": return 0\n    return sum(ord(char) if char.isupper() else 0 for char in s)\n",
+    "entry_point": "digitSum"
+  },
+  "content_hash": "8cbd20c2af9c9da0c3238399cf8f0b10d2061b64292fbc9e52d62c252ce1c0c6",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

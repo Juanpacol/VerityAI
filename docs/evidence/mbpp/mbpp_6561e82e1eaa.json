@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_6561e82e1eaa",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.193544+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 145,
+    "text": "Write a python function to find the maximum difference between any two elements in a given array.",
+    "code": "def max_Abs_Diff(arr,n): \r\n    minEle = arr[0] \r\n    maxEle = arr[0] \r\n    for i in range(1, n): \r\n        minEle = min(minEle,arr[i]) \r\n        maxEle = max(maxEle,arr[i]) \r\n    return (maxEle - minEle) "
+  },
+  "content_hash": "6561e82e1eaa257803edd253cfea45af671ddc14bbe2194dccecff2a608c02f8",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

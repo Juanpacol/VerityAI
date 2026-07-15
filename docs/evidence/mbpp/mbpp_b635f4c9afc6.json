@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b635f4c9afc6",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.350410+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 950,
+    "text": "Write a function to display sign of the chinese zodiac for given year.",
+    "code": "def chinese_zodiac(year):\r\n if (year - 2000) % 12 == 0:\r\n     sign = 'Dragon'\r\n elif (year - 2000) % 12 == 1:\r\n     sign = 'Snake'\r\n elif (year - 2000) % 12 == 2:\r\n     sign = 'Horse'\r\n elif (year - 2000) % 12 == 3:\r\n     sign = 'sheep'\r\n elif (year - 2000) % 12 == 4:\r\n     sign = 'Monkey'\r\n elif (year - 2000) % 12 == 5:\r\n     sign = 'Rooster'\r\n elif (year - 2000) % 12 == 6:\r\n     sign = 'Dog'\r\n elif (year - 2000) % 12 == 7:\r\n     sign = 'Pig'\r\n elif (year - 2000) % 12 == 8:\r\n     sign = 'Rat'\r\n elif (year - 2000) % 12 == 9:\r\n     sign = 'Ox'\r\n elif (year - 2000) % 12 == 10:\r\n     sign = 'Tiger'\r\n else:\r\n     sign = 'Hare'\r\n return sign"
+  },
+  "content_hash": "b635f4c9afc60dc2bc383ab2c41ead2c0fa1442735af74e7044593327ae1a9e1",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

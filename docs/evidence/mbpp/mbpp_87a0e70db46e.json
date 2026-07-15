@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_87a0e70db46e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.323347+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 836,
+    "text": "Write a function to find length of the subarray having maximum sum.",
+    "code": "from sys import maxsize \r\ndef max_sub_array_sum(a,size): \r\n\tmax_so_far = -maxsize - 1\r\n\tmax_ending_here = 0\r\n\tstart = 0\r\n\tend = 0\r\n\ts = 0\r\n\tfor i in range(0,size): \r\n\t\tmax_ending_here += a[i] \r\n\t\tif max_so_far < max_ending_here: \r\n\t\t\tmax_so_far = max_ending_here \r\n\t\t\tstart = s \r\n\t\t\tend = i \r\n\t\tif max_ending_here < 0: \r\n\t\t\tmax_ending_here = 0\r\n\t\t\ts = i+1\r\n\treturn (end - start + 1)"
+  },
+  "content_hash": "87a0e70db46e3394f956ff5cc99c20f93a791ccda989e20216b34e1fd35b727f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

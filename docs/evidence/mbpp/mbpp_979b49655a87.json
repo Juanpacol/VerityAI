@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_979b49655a87",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.320637+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 824,
+    "text": "Write a python function to remove even numbers from a given list.",
+    "code": "def remove_even(l):\r\n    for i in l:\r\n        if i % 2 == 0:\r\n            l.remove(i)\r\n    return l"
+  },
+  "content_hash": "979b49655a87e0d7e8f4b0c4453df3e2eb040846099cf0597c88d4cab18f7418",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

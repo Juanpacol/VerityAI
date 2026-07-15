@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_5cd968ecbe29",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.183782+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 50,
+    "text": "Write a function to find the list with minimum length using lambda function.",
+    "code": "def min_length_list(input_list):\r\n    min_length = min(len(x) for x in input_list )  \r\n    min_list = min(input_list, key = lambda i: len(i))\r\n    return(min_length, min_list)"
+  },
+  "content_hash": "5cd968ecbe29d238da420dc3931fe72af2fc7bb931dc0559727602e1962d9c43",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

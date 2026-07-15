@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_bc3e750a3114",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.291429+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 689,
+    "text": "## write a function to find the minimum number of jumps to reach the end of the array for the given array of integers where each element represents the max number of steps that can be made forward from that element. > indented block > indented block",
+    "code": "def min_jumps(arr, n):\r\n\tjumps = [0 for i in range(n)]\r\n\tif (n == 0) or (arr[0] == 0):\r\n\t\treturn float('inf')\r\n\tjumps[0] = 0\r\n\tfor i in range(1, n):\r\n\t\tjumps[i] = float('inf')\r\n\t\tfor j in range(i):\r\n\t\t\tif (i <= j + arr[j]) and (jumps[j] != float('inf')):\r\n\t\t\t\tjumps[i] = min(jumps[i], jumps[j] + 1)\r\n\t\t\t\tbreak\r\n\treturn jumps[n-1]"
+  },
+  "content_hash": "bc3e750a3114e5830d76e1c7deb99bdfb05e6d2ee02649cd3a728b29c907b631",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

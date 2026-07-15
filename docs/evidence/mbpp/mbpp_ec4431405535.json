@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_ec4431405535",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.244329+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 410,
+    "text": "Write a function to find the minimum value in a given heterogeneous list.",
+    "code": "def min_val(listval):\r\n     min_val = min(i for i in listval if isinstance(i, int))\r\n     return min_val"
+  },
+  "content_hash": "ec4431405535ace3c90e1ad1e93d84f6c836ab09d81dbb37ea8503f025230d83",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

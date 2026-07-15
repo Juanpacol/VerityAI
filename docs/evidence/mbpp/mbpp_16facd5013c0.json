@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_16facd5013c0",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.238447+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 370,
+    "text": "Write a function to sort a tuple by its float element.",
+    "code": "def float_sort(price):\r\n  float_sort=sorted(price, key=lambda x: float(x[1]), reverse=True)\r\n  return float_sort"
+  },
+  "content_hash": "16facd5013c0ff8e4dd97da9ca75a0d1721f0306c4fc1217ff4e379b1599f546",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

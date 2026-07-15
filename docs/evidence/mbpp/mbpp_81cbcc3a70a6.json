@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_81cbcc3a70a6",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.201241+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 211,
+    "text": "Write a python function to count numbers whose oth and nth bits are set.",
+    "code": "def count_Num(n): \r\n    if (n == 1): \r\n        return 1\r\n    count = pow(2,n - 2) \r\n    return count "
+  },
+  "content_hash": "81cbcc3a70a6ca4723ce166476eca88b8cb47158d5b9b4bc46d2173e34e9d20f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

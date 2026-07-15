@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_405f7bd4e7a7",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.898942+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/86",
+    "prompt": "\ndef anti_shuffle(s):\n    \"\"\"\n    Write a function that takes a string and returns an ordered version of it.\n    Ordered version of string, is a string where all words (separated by space)\n    are replaced by a new word where all the characters arranged in\n    ascending order based on ascii value.\n    Note: You should keep the order of words and blank spaces in the sentence.\n\n    For example:\n    anti_shuffle('Hi') returns 'Hi'\n    anti_shuffle('hello') returns 'ehllo'\n    anti_shuffle('Hello World!!!') returns 'Hello !!!Wdlor'\n    \"\"\"\n",
+    "canonical_solution": "    return ' '.join([''.join(sorted(list(i))) for i in s.split(' ')])\n",
+    "entry_point": "anti_shuffle"
+  },
+  "content_hash": "405f7bd4e7a79c2e20db5dc889d80f721461a7ba1a9e93dd6e0ee019cd101741",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_d5106cfc9638",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.250092+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 448,
+    "text": "Write a function to calculate the sum of perrin numbers.",
+    "code": "def cal_sum(n): \r\n\ta = 3\r\n\tb = 0\r\n\tc = 2\r\n\tif (n == 0): \r\n\t\treturn 3\r\n\tif (n == 1): \r\n\t\treturn 3\r\n\tif (n == 2): \r\n\t\treturn 5\r\n\tsum = 5\r\n\twhile (n > 2): \r\n\t\td = a + b \r\n\t\tsum = sum + d \r\n\t\ta = b \r\n\t\tb = c \r\n\t\tc = d \r\n\t\tn = n-1\r\n\treturn sum"
+  },
+  "content_hash": "d5106cfc9638ca5d18848822bfbde504a2410df401cab7afacb5c24e9bf8d372",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

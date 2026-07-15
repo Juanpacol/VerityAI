@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_645448a14450",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.895993+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/59",
+    "prompt": "\n\ndef largest_prime_factor(n: int):\n    \"\"\"Return the largest prime factor of n. Assume n > 1 and is not a prime.\n    >>> largest_prime_factor(13195)\n    29\n    >>> largest_prime_factor(2048)\n    2\n    \"\"\"\n",
+    "canonical_solution": "    def is_prime(k):\n        if k < 2:\n            return False\n        for i in range(2, k - 1):\n            if k % i == 0:\n                return False\n        return True\n    largest = 1\n    for j in range(2, n + 1):\n        if n % j == 0 and is_prime(j):\n            largest = max(largest, j)\n    return largest\n",
+    "entry_point": "largest_prime_factor"
+  },
+  "content_hash": "645448a144500b97541d072acb00dea04be0ad6eda24bb649b46ff249fdc5517",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

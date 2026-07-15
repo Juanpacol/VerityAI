@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_73164bd2fe30",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.264025+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 535,
+    "text": "Write a function to find the top or bottom surface area of a cylinder.",
+    "code": "def topbottom_surfacearea(r):\r\n  toporbottomarea=3.1415*r*r\r\n  return toporbottomarea"
+  },
+  "content_hash": "73164bd2fe30cde526a372c655c9161c5681795c59a55f2b2e55ab97b1594503",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

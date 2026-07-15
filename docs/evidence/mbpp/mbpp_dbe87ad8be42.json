@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_dbe87ad8be42",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.276329+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 606,
+    "text": "Write a function to convert degrees to radians.",
+    "code": "import math\r\ndef radian_degree(degree):\r\n radian = degree*(math.pi/180)\r\n return radian"
+  },
+  "content_hash": "dbe87ad8be426e4c2294120bd353c8669708aecbbd327c72f9bc1c1048763656",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

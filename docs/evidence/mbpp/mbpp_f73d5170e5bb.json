@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f73d5170e5bb",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.237888+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 366,
+    "text": "Write a python function to find the largest product of the pair of adjacent elements from a given list of integers.",
+    "code": "def adjacent_num_product(list_nums):\r\n    return max(a*b for a, b in zip(list_nums, list_nums[1:]))"
+  },
+  "content_hash": "f73d5170e5bb61051d14d1601c798c7765d18cd1985efdb5991b14b5605e7334",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7d0561d71b1e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.350164+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 949,
+    "text": "Write a function to sort the given tuple list basis the total digits in tuple.",
+    "code": "def count_digs(tup):\r\n  return sum([len(str(ele)) for ele in tup ]) \r\ndef sort_list(test_list):\r\n  test_list.sort(key = count_digs)\r\n  return (str(test_list))"
+  },
+  "content_hash": "7d0561d71b1e21eb4ef9e4baab8926026d9d8c5bc7db28916693937bc8c34163",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

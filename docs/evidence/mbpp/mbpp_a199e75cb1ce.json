@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a199e75cb1ce",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.211016+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 289,
+    "text": "Write a python function to calculate the number of odd days in a given year.",
+    "code": "def odd_Days(N): \r\n    hund1 = N // 100\r\n    hund4 = N // 400\r\n    leap = N >> 2\r\n    ordd = N - leap \r\n    if (hund1): \r\n        ordd += hund1 \r\n        leap -= hund1 \r\n    if (hund4): \r\n        ordd -= hund4 \r\n        leap += hund4 \r\n    days = ordd + leap * 2\r\n    odd = days % 7\r\n    return odd "
+  },
+  "content_hash": "a199e75cb1ce66859eee4b3fecb939555d284c8c82e24768f13c4d7d4f3f13c5",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

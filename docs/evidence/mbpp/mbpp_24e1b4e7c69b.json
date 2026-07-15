@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_24e1b4e7c69b",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.180699+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 17,
+    "text": "Write a function to find the perimeter of a square.",
+    "code": "def square_perimeter(a):\r\n  perimeter=4*a\r\n  return perimeter"
+  },
+  "content_hash": "24e1b4e7c69b9b607e4da6566d44f3a5440d4c18639a5aaeebf6558d4759dd96",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

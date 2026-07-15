@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_76b82269f702",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.263162+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 530,
+    "text": "Write a function to find the ration of negative numbers in an array of integers.",
+    "code": "from array import array\r\ndef negative_count(nums):\r\n    n = len(nums)\r\n    n1 = 0\r\n    for x in nums:\r\n        if x < 0:\r\n            n1 += 1\r\n        else:\r\n          None\r\n    return round(n1/n,2)"
+  },
+  "content_hash": "76b82269f702fe05d4371370b7dcf846751e101a0dc317213798e6e7aff6bbb3",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

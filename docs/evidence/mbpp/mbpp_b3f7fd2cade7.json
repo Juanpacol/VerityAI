@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b3f7fd2cade7",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.321533+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 828,
+    "text": "Write a function to count alphabets,digits and special charactes in a given string.",
+    "code": "def count_alpha_dig_spl(string):\r\n  alphabets=digits = special = 0\r\n  for i in range(len(string)):\r\n    if(string[i].isalpha()):\r\n        alphabets = alphabets + 1\r\n    elif(string[i].isdigit()):\r\n        digits = digits + 1\r\n    else:\r\n        special = special + 1\r\n  return (alphabets,digits,special)   "
+  },
+  "content_hash": "b3f7fd2cade7147053cec3a4302051369d676e9f22d789fe7672770bb2a3a732",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

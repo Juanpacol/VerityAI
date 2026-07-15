@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_243b3b71fcf5",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.258386+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 501,
+    "text": "Write a python function to find common divisor between two numbers in a given pair.",
+    "code": "def ngcd(x,y):\r\n    i=1\r\n    while(i<=x and i<=y):\r\n        if(x%i==0 and y%i == 0):\r\n            gcd=i;\r\n        i+=1\r\n    return gcd;\r\ndef num_comm_div(x,y):\r\n  n = ngcd(x,y)\r\n  result = 0\r\n  z = int(n**0.5)\r\n  i = 1\r\n  while(i <= z):\r\n    if(n % i == 0):\r\n      result += 2 \r\n      if(i == n/i):\r\n        result-=1\r\n    i+=1\r\n  return result"
+  },
+  "content_hash": "243b3b71fcf52fc74da89daa1bfd515a086ba0393f2c55b836445ddab0a90b5f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

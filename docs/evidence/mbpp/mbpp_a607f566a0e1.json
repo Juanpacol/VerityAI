@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a607f566a0e1",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.239898+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 380,
+    "text": "Write a function to generate a two-dimensional array.",
+    "code": "def multi_list(rownum,colnum):\r\n  multi_list = [[0 for col in range(colnum)] for row in range(rownum)]\r\n  for row in range(rownum):\r\n    for col in range(colnum):\r\n        multi_list[row][col]= row*col\r\n  return multi_list\r\n"
+  },
+  "content_hash": "a607f566a0e17486df92644ec7f80c72b0e46d3fa516bda08f5f564e46ba331a",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

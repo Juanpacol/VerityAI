@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7145f851c7d1",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.289177+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 677,
+    "text": "Write a function to check if the triangle is valid or not.",
+    "code": "def validity_triangle(a,b,c):\r\n total = a + b + c\r\n if total == 180:\r\n    return True\r\n else:\r\n    return False"
+  },
+  "content_hash": "7145f851c7d1e712df673093a7b1bfa7fa5f57db102054feb230d68677435d85",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

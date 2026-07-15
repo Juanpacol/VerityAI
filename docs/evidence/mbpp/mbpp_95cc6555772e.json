@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_95cc6555772e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.202294+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 220,
+    "text": "Write a function to replace maximum n occurrences of spaces, commas, or dots with a colon.",
+    "code": "import re\r\ndef replace_max_specialchar(text,n):\r\n return (re.sub(\"[ ,.]\", \":\", text, n))"
+  },
+  "content_hash": "95cc6555772ef3ef7e5883170217d73594f7b566630ba7d65493094b6827a59e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

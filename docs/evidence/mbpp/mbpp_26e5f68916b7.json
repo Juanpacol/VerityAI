@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_26e5f68916b7",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.296895+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 718,
+    "text": "Write a function to create a list taking alternate elements from another given list.",
+    "code": "def alternate_elements(list1):\r\n    result=[]\r\n    for item in list1[::2]:\r\n        result.append(item)\r\n    return result "
+  },
+  "content_hash": "26e5f68916b7b556a8976ced4d08a5108b4e84620cb00bb62bc84b9e6ae5c9f6",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

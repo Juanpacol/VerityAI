@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_aeedf49cbf43",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.285883+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 659,
+    "text": "Write a python function to print duplicants from a list of integers.",
+    "code": "def Repeat(x): \r\n    _size = len(x) \r\n    repeated = [] \r\n    for i in range(_size): \r\n        k = i + 1\r\n        for j in range(k, _size): \r\n            if x[i] == x[j] and x[i] not in repeated: \r\n                repeated.append(x[i]) \r\n    return repeated "
+  },
+  "content_hash": "aeedf49cbf43a4c20b48bed6a3927be3b37ac15c653a68cd4d6c0e9329fb61c0",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

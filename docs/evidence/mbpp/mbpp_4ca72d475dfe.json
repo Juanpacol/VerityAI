@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_4ca72d475dfe",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.290861+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 686,
+    "text": "Write a function to find the frequency of each element in the given list.",
+    "code": "from collections import defaultdict \r\ndef freq_element(test_tup):\r\n  res = defaultdict(int)\r\n  for ele in test_tup:\r\n    res[ele] += 1\r\n  return (str(dict(res))) "
+  },
+  "content_hash": "4ca72d475dfed4252f794178f8c0bcbc626618262121b87acba9c4cf27fe5e2c",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

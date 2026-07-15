@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_d0689cdb63eb",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.262014+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 523,
+    "text": "Write a function to check whether a given string has a capital letter, a lower case letter, a number and specified length using lambda function.",
+    "code": "def check_string(str1):\r\n    messg = [\r\n    lambda str1: any(x.isupper() for x in str1) or 'String must have 1 upper case character.',\r\n    lambda str1: any(x.islower() for x in str1) or 'String must have 1 lower case character.',\r\n    lambda str1: any(x.isdigit() for x in str1) or 'String must have 1 number.',\r\n    lambda str1: len(str1) >= 7                 or 'String length should be atleast 8.',]\r\n    result = [x for x in [i(str1) for i in messg] if x != True]\r\n    if not result:\r\n        result.append('Valid string.')\r\n    return result  "
+  },
+  "content_hash": "d0689cdb63eb3851d6e9847e6309d986e964d1aad57d693fa23280f6846549ce",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

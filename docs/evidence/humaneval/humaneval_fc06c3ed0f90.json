@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_fc06c3ed0f90",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.902397+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/117",
+    "prompt": "\ndef select_words(s, n):\n    \"\"\"Given a string s and a natural number n, you have been tasked to implement \n    a function that returns a list of all words from string s that contain exactly \n    n consonants, in order these words appear in the string s.\n    If the string s is empty then the function should return an empty list.\n    Note: you may assume the input string contains only letters and spaces.\n    Examples:\n    select_words(\"Mary had a little lamb\", 4) ==> [\"little\"]\n    select_words(\"Mary had a little lamb\", 3) ==> [\"Mary\", \"lamb\"]\n    select_words(\"simple white space\", 2) ==> []\n    select_words(\"Hello world\", 4) ==> [\"world\"]\n    select_words(\"Uncle sam\", 3) ==> [\"Uncle\"]\n    \"\"\"\n",
+    "canonical_solution": "    result = []\n    for word in s.split():\n        n_consonants = 0\n        for i in range(0, len(word)):\n            if word[i].lower() not in [\"a\",\"e\",\"i\",\"o\",\"u\"]:\n                n_consonants += 1 \n        if n_consonants == n:\n            result.append(word)\n    return result\n\n",
+    "entry_point": "select_words"
+  },
+  "content_hash": "fc06c3ed0f909a704495663c3908962d3139897472f1f4c52334432a708ec869",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

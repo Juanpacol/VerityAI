@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_d1fa673428b4",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.348691+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 943,
+    "text": "Write a function to combine two given sorted lists using heapq module.",
+    "code": "from heapq import merge\r\ndef combine_lists(num1,num2):\r\n  combine_lists=list(merge(num1, num2))\r\n  return combine_lists"
+  },
+  "content_hash": "d1fa673428b47761a27f80eff7fc16462fd8615bb97100c36578c874e8a9e546",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

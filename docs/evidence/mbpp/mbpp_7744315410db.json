@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7744315410db",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.237608+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 364,
+    "text": "Write a function to find the number of flips required to make the given binary string a sequence of alternate characters.",
+    "code": "def make_flip(ch): \r\n\treturn '1' if (ch == '0') else '0'\r\ndef get_flip_with_starting_charcter(str, expected): \r\n\tflip_count = 0\r\n\tfor i in range(len( str)): \r\n\t\tif (str[i] != expected): \r\n\t\t\tflip_count += 1\r\n\t\texpected = make_flip(expected) \r\n\treturn flip_count \r\ndef min_flip_to_make_string_alternate(str): \r\n\treturn min(get_flip_with_starting_charcter(str, '0'),get_flip_with_starting_charcter(str, '1')) "
+  },
+  "content_hash": "7744315410db735de80d36485ef384b9f7b3cbf4f7f9d8b0646d56033ad21cc0",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

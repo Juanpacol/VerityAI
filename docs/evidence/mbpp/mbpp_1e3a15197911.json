@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_1e3a15197911",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.212283+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 299,
+    "text": "Write a function to calculate the maximum aggregate from the list of tuples.",
+    "code": "from collections import defaultdict\r\ndef max_aggregate(stdata):\r\n    temp = defaultdict(int)\r\n    for name, marks in stdata:\r\n        temp[name] += marks\r\n    return max(temp.items(), key=lambda x: x[1])"
+  },
+  "content_hash": "1e3a1519791103fc1c5fc94f97372fc1ade907f90e79c62a19295b9e509c26f7",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

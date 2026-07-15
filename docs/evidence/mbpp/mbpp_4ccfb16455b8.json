@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_4ccfb16455b8",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.210371+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 284,
+    "text": "Write a function to check whether all items of a list are equal to a given string.",
+    "code": "def check_element(list,element):\r\n  check_element=all(v== element for v in list)\r\n  return check_element"
+  },
+  "content_hash": "4ccfb16455b8583631a77ce0173713668da212517940fc518b4e05dc170d1ac4",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

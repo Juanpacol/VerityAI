@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e03ef6f7e666",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.259818+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 510,
+    "text": "Write a function to find the number of subsequences having product smaller than k for the given non negative array.",
+    "code": "def no_of_subsequences(arr, k): \r\n\tn = len(arr) \r\n\tdp = [[0 for i in range(n + 1)] \r\n\t\t\tfor j in range(k + 1)] \r\n\tfor i in range(1, k + 1): \r\n\t\tfor j in range(1, n + 1): \r\n\t\t\tdp[i][j] = dp[i][j - 1] \r\n\t\t\tif arr[j - 1] <= i and arr[j - 1] > 0: \r\n\t\t\t\tdp[i][j] += dp[i // arr[j - 1]][j - 1] + 1\r\n\treturn dp[k][n]"
+  },
+  "content_hash": "e03ef6f7e666a73d33dfa34393de516620388d915476d19d77eebf3d0668b856",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

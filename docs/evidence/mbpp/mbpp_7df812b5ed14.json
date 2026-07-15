@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7df812b5ed14",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.304199+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 754,
+    "text": "Write a function to find common index elements from three lists.",
+    "code": "def extract_index_list(l1, l2, l3):\r\n    result = []\r\n    for m, n, o in zip(l1, l2, l3):\r\n        if (m == n == o):\r\n            result.append(m)\r\n    return result"
+  },
+  "content_hash": "7df812b5ed14c2add19288a49944c42f8696f1220d786d96542a401ad5a4e57e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_be9e61daec7d",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.277313+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 611,
+    "text": "Write a function to find the maximum of nth column from the given tuple list.",
+    "code": "def max_of_nth(test_list, N):\r\n  res = max([sub[N] for sub in test_list])\r\n  return (res) "
+  },
+  "content_hash": "be9e61daec7dc03f6b5d67bd9d554be2a54735aa3e1d6c717cbf5df2924cd3fe",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

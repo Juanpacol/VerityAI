@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_69e25aad5073",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.346709+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 935,
+    "text": "Write a function to calculate the sum of series 1²+2²+3²+….+n².",
+    "code": "def series_sum(number):\r\n total = 0\r\n total = (number * (number + 1) * (2 * number + 1)) / 6\r\n return total"
+  },
+  "content_hash": "69e25aad5073380cb532ef983feb9a41d92a61ff650444f2c3e73a086c6b60d0",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

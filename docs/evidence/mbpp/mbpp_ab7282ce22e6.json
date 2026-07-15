@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_ab7282ce22e6",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.337711+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 898,
+    "text": "Write a function to extract specified number of elements from a given list, which follow each other continuously.",
+    "code": "from itertools import groupby \r\ndef extract_elements(numbers, n):\r\n    result = [i for i, j in groupby(numbers) if len(list(j)) == n] \r\n    return result"
+  },
+  "content_hash": "ab7282ce22e682a0acd9aa704635b5719a36dfa6579622fc6c8e90daa2b98f1f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_9da98ed0b3a7",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.227925+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 317,
+    "text": "Write a function to reflect the modified run-length encoding from a list.",
+    "code": "from itertools import groupby\r\ndef modified_encode(alist):\r\n        def ctr_ele(el):\r\n            if len(el)>1: return [len(el), el[0]]\r\n            else: return el[0]\r\n        return [ctr_ele(list(group)) for key, group in groupby(alist)]"
+  },
+  "content_hash": "9da98ed0b3a755f09f946d4c1091d5e48d38c74566c63c06e4d8ab4ced69481f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

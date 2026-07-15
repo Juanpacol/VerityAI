@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_790015ca6dda",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.890771+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/11",
+    "prompt": "from typing import List\n\n\ndef string_xor(a: str, b: str) -> str:\n    \"\"\" Input are two strings a and b consisting only of 1s and 0s.\n    Perform binary XOR on these inputs and return result also as a string.\n    >>> string_xor('010', '110')\n    '100'\n    \"\"\"\n",
+    "canonical_solution": "    def xor(i, j):\n        if i == j:\n            return '0'\n        else:\n            return '1'\n\n    return ''.join(xor(x, y) for x, y in zip(a, b))\n",
+    "entry_point": "string_xor"
+  },
+  "content_hash": "790015ca6ddac2095978cc38fd5fce448d7b0ffec3d9b9e767de1be71c581f39",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

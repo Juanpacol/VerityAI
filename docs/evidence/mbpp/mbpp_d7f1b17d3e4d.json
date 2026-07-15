@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_d7f1b17d3e4d",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.253439+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 470,
+    "text": "Write a function to find the pairwise addition of the elements of the given tuples.",
+    "code": "def add_pairwise(test_tup):\r\n  res = tuple(i + j for i, j in zip(test_tup, test_tup[1:]))\r\n  return (res) "
+  },
+  "content_hash": "d7f1b17d3e4db5f0b6a17101c1dde12d092b0bd027d26b655582501a4b1951b1",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e1fb99ce6380",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.267430+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 555,
+    "text": "Write a python function to find the difference between sum of cubes of first n natural numbers and the sum of first n natural numbers.",
+    "code": "def difference(n) :  \r\n    S = (n*(n + 1))//2;  \r\n    res = S*(S-1);  \r\n    return res;  "
+  },
+  "content_hash": "e1fb99ce6380a86449cf236dc60a66093296a84dcfdf39b2f0ad835c655af05b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

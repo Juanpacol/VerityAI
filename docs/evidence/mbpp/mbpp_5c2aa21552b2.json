@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_5c2aa21552b2",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.329486+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 863,
+    "text": "Write a function to find the length of the longest sub-sequence such that elements in the subsequences are consecutive integers.",
+    "code": "def find_longest_conseq_subseq(arr, n): \r\n\tans = 0\r\n\tcount = 0\r\n\tarr.sort() \r\n\tv = [] \r\n\tv.append(arr[0]) \r\n\tfor i in range(1, n): \r\n\t\tif (arr[i] != arr[i - 1]): \r\n\t\t\tv.append(arr[i]) \r\n\tfor i in range(len(v)): \r\n\t\tif (i > 0 and v[i] == v[i - 1] + 1): \r\n\t\t\tcount += 1\r\n\t\telse: \r\n\t\t\tcount = 1\r\n\t\tans = max(ans, count) \r\n\treturn ans "
+  },
+  "content_hash": "5c2aa21552b267b14397cc67be25f05c7a8d2cd0c6a327f7e02ad0d7c2379baa",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

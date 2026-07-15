@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_597b08025c0f",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.271728+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 580,
+    "text": "Write a function to extract the even elements in the nested mixed tuple.",
+    "code": "def even_ele(test_tuple, even_fnc): \r\n\tres = tuple() \r\n\tfor ele in test_tuple: \r\n\t\tif isinstance(ele, tuple): \r\n\t\t\tres += (even_ele(ele, even_fnc), ) \r\n\t\telif even_fnc(ele): \r\n\t\t\tres += (ele, ) \r\n\treturn res \r\ndef extract_even(test_tuple):\r\n  res = even_ele(test_tuple, lambda x: x % 2 == 0)\r\n  return (res) "
+  },
+  "content_hash": "597b08025c0f9d606bca5e41467ed852aab67dea1e303996c7fa02f5b70f9787",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

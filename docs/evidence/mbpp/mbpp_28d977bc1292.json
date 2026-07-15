@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_28d977bc1292",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.335107+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 887,
+    "text": "Write a python function to check whether the given number is odd or not using bitwise operator.",
+    "code": "def is_odd(n) : \r\n    if (n^1 == n-1) :\r\n        return True; \r\n    else :\r\n        return False; "
+  },
+  "content_hash": "28d977bc1292cba654e54eca2f371a2046d9d99c7d5a4299f12fb684f0ba7cfc",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

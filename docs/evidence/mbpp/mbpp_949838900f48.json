@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_949838900f48",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.226279+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 305,
+    "text": "Write a function to match two words from a list of words starting with letter 'p'.",
+    "code": "import re\r\ndef start_withp(words):\r\n for w in words:\r\n        m = re.match(\"(P\\w+)\\W(P\\w+)\", w)\r\n        if m:\r\n            return m.groups()"
+  },
+  "content_hash": "949838900f483c208f7b5781b9097d16ac8136c30fa426dd24b07dcc11f44431",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

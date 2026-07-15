@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c571b8eb1a73",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.203862+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 233,
+    "text": "Write a function to find the lateral surface area of a cylinder.",
+    "code": "def lateralsuface_cylinder(r,h):\r\n  lateralsurface= 2*3.1415*r*h\r\n  return lateralsurface"
+  },
+  "content_hash": "c571b8eb1a73ca1ca48cafc9833939bad01afcce48da8510105292fe12178903",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

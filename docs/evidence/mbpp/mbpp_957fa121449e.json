@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_957fa121449e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.195161+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 158,
+    "text": "Write a python function to find k number of operations required to make all elements equal.",
+    "code": "def min_Ops(arr,n,k): \r\n    max1 = max(arr) \r\n    res = 0\r\n    for i in range(0,n):  \r\n        if ((max1 - arr[i]) % k != 0): \r\n            return -1 \r\n        else: \r\n            res += (max1 - arr[i]) / k \r\n    return int(res) "
+  },
+  "content_hash": "957fa121449ebf3174d47f7648aef727063f9ba025018499088106113fde84f9",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

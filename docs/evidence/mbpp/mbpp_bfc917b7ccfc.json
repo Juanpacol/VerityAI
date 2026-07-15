@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_bfc917b7ccfc",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.228725+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 323,
+    "text": "Write a function to re-arrange the given array in alternating positive and negative items.",
+    "code": "def right_rotate(arr, n, out_of_place, cur):\r\n\ttemp = arr[cur]\r\n\tfor i in range(cur, out_of_place, -1):\r\n\t\tarr[i] = arr[i - 1]\r\n\tarr[out_of_place] = temp\r\n\treturn arr\r\ndef re_arrange(arr, n):\r\n\tout_of_place = -1\r\n\tfor index in range(n):\r\n\t\tif (out_of_place >= 0):\r\n\t\t\tif ((arr[index] >= 0 and arr[out_of_place] < 0) or\r\n\t\t\t(arr[index] < 0 and arr[out_of_place] >= 0)):\r\n\t\t\t\tarr = right_rotate(arr, n, out_of_place, index)\r\n\t\t\t\tif (index-out_of_place > 2):\r\n\t\t\t\t\tout_of_place += 2\r\n\t\t\t\telse:\r\n\t\t\t\t\tout_of_place = - 1\r\n\t\tif (out_of_place == -1):\r\n\t\t\tif ((arr[index] >= 0 and index % 2 == 0) or\r\n\t\t\t (arr[index] < 0 and index % 2 == 1)):\r\n\t\t\t\tout_of_place = index\r\n\treturn arr"
+  },
+  "content_hash": "bfc917b7ccfcb78a8573a69ab421c65d69ae0e783a3f5af3e4c46ccfbfdc4e59",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

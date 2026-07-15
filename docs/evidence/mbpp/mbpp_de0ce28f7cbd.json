@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_de0ce28f7cbd",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.326038+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 848,
+    "text": "Write a function to find the area of a trapezium.",
+    "code": "def area_trapezium(base1,base2,height):\r\n area = 0.5 * (base1 + base2) * height\r\n return area"
+  },
+  "content_hash": "de0ce28f7cbd0932b0e3ed9232f0b3bf37aef81d238c56355872379560695aee",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

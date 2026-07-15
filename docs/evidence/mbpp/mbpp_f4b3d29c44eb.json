@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f4b3d29c44eb",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.320407+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 823,
+    "text": "Write a function to check if the given string starts with a substring using regex.",
+    "code": "import re \r\ndef check_substring(string, sample) : \r\n  if (sample in string): \r\n      y = \"\\A\" + sample \r\n      x = re.search(y, string) \r\n      if x : \r\n          return (\"string starts with the given substring\") \r\n      else : \r\n          return (\"string doesnt start with the given substring\") \r\n  else : \r\n      return (\"entered string isnt a substring\")"
+  },
+  "content_hash": "f4b3d29c44ebb6f4645c86893e4b0ca6620063a968f53156012944fb093fc960",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_ff628cb9ee24",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.277026+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 610,
+    "text": "Write a python function to remove the k'th element from a given list.",
+    "code": "def remove_kth_element(list1, L):\r\n    return  list1[:L-1] + list1[L:]"
+  },
+  "content_hash": "ff628cb9ee241dbfdfcad60d02a4d1c32da955de34b6c6765df7a9979d6cf888",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

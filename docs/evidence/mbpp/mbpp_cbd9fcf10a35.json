@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_cbd9fcf10a35",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.272597+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 585,
+    "text": "Write a function to find the n - expensive price items from a given dataset using heap queue algorithm.",
+    "code": "import heapq\r\ndef expensive_items(items,n):\r\n  expensive_items = heapq.nlargest(n, items, key=lambda s: s['price'])\r\n  return expensive_items"
+  },
+  "content_hash": "cbd9fcf10a35ed001743c0c5be35d7ef6d7be5cae9b17d76cc7912646b5f86e6",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

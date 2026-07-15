@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_909c6ce0a3f6",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.262669+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 527,
+    "text": "Write a function to find all pairs in an integer array whose sum is equal to a given number.",
+    "code": "def get_pairs_count(arr, n, sum):\r\n    count = 0 \r\n    for i in range(0, n):\r\n        for j in range(i + 1, n):\r\n            if arr[i] + arr[j] == sum:\r\n                count += 1\r\n    return count"
+  },
+  "content_hash": "909c6ce0a3f68b9909fb13bd4ea869c88694ae1d6bb324b5b444ae293eb3460d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

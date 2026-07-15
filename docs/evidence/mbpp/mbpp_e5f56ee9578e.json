@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e5f56ee9578e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.333214+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 879,
+    "text": "Write a function that matches a string that has an 'a' followed by anything, ending in 'b' by using regex.",
+    "code": "import re\r\ndef text_match(text):\r\n  patterns = 'a.*?b$'\r\n  if re.search(patterns,  text):\r\n    return ('Found a match!')\r\n  else:\r\n    return ('Not matched!')"
+  },
+  "content_hash": "e5f56ee9578e04df7fad7e26bbd13a220dcd3a8d3ce6bda8b6f1f0c87edfc1d5",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

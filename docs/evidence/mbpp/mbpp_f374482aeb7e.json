@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f374482aeb7e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.188306+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 95,
+    "text": "Write a python function to find the minimum length of sublist.",
+    "code": "def Find_Min_Length(lst):  \r\n    minLength = min(len(x) for x in lst )\r\n    return minLength "
+  },
+  "content_hash": "f374482aeb7edcd1885ba727ce134851f764f2893524dcf9c6b21302e16fe0bc",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

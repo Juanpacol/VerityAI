@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_193fa81e571a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.236624+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 357,
+    "text": "Write a function to find the maximum element of all the given tuple records.",
+    "code": "def find_max(test_list):\r\n  res = max(int(j) for i in test_list for j in i)\r\n  return (res) "
+  },
+  "content_hash": "193fa81e571ab36420fab82605e91c743bbac37c2042c4d2d90994d8bc383321",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

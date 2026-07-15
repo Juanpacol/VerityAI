@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_9c9bde99d391",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.226005+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 303,
+    "text": "Write a python function to check whether the count of inversion of two types are same or not.",
+    "code": "import sys \r\ndef solve(a,n):   \r\n    mx = -sys.maxsize - 1\r\n    for j in range(1,n):  \r\n        if (mx > a[j]):  \r\n            return False  \r\n        mx = max(mx,a[j - 1])    \r\n    return True"
+  },
+  "content_hash": "9c9bde99d391425804ee28099043c4930e397a99ea7c2d3813f1975ced2becb5",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

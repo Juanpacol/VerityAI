@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_2b69a720703a",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.907330+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/157",
+    "prompt": "\ndef right_angle_triangle(a, b, c):\n    '''\n    Given the lengths of the three sides of a triangle. Return True if the three\n    sides form a right-angled triangle, False otherwise.\n    A right-angled triangle is a triangle in which one angle is right angle or \n    90 degree.\n    Example:\n    right_angle_triangle(3, 4, 5) == True\n    right_angle_triangle(1, 2, 3) == False\n    '''\n",
+    "canonical_solution": "    return a*a == b*b + c*c or b*b == a*a + c*c or c*c == a*a + b*b\n",
+    "entry_point": "right_angle_triangle"
+  },
+  "content_hash": "2b69a720703afce2a375952902f2fc2421495ee8eb3fa0f6027b186a81fb804d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

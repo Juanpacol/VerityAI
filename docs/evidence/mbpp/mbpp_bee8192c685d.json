@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_bee8192c685d",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.180977+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 20,
+    "text": "Write a function to check if the given number is woodball or not.",
+    "code": "def is_woodall(x): \r\n\tif (x % 2 == 0): \r\n\t\treturn False\r\n\tif (x == 1): \r\n\t\treturn True\r\n\tx = x + 1 \r\n\tp = 0\r\n\twhile (x % 2 == 0): \r\n\t\tx = x/2\r\n\t\tp = p + 1\r\n\t\tif (p == x): \r\n\t\t\treturn True\r\n\treturn False"
+  },
+  "content_hash": "bee8192c685d304f9a3bea79d834bde0ee95a2803566a3c532a6e78726b2ca4b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

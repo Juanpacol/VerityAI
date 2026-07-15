@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7759760d580d",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.284949+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 654,
+    "text": "Write a function to find the perimeter of a rectangle.",
+    "code": "def rectangle_perimeter(l,b):\r\n  perimeter=2*(l+b)\r\n  return perimeter"
+  },
+  "content_hash": "7759760d580da9d677dd06a8ac5447643675455ae61d04afaa2e289bdc080203",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

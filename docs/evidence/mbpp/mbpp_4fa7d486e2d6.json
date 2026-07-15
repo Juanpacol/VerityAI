@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_4fa7d486e2d6",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.255486+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 483,
+    "text": "Write a python function to find the first natural number whose factorial is divisible by x.",
+    "code": "def first_Factorial_Divisible_Number(x): \r\n    i = 1;\r\n    fact = 1; \r\n    for i in range(1,x): \r\n        fact = fact * i \r\n        if (fact % x == 0): \r\n            break\r\n    return i "
+  },
+  "content_hash": "4fa7d486e2d6eec60ed967cc8f756bd22366a80eb5ce3dfb7bb66c5dc8973135",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

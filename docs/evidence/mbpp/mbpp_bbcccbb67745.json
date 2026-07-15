@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_bbcccbb67745",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.188737+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 99,
+    "text": "Write a function to convert the given decimal number to its binary equivalent.",
+    "code": "def decimal_to_binary(n): \r\n    return bin(n).replace(\"0b\",\"\") "
+  },
+  "content_hash": "bbcccbb677456aca9817295798b9034fd7428a329e93d31908ed56bad7dd621b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

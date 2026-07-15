@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_6f50e84a1327",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.892351+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/27",
+    "prompt": "\n\ndef flip_case(string: str) -> str:\n    \"\"\" For a given string, flip lowercase characters to uppercase and uppercase to lowercase.\n    >>> flip_case('Hello')\n    'hELLO'\n    \"\"\"\n",
+    "canonical_solution": "    return string.swapcase()\n",
+    "entry_point": "flip_case"
+  },
+  "content_hash": "6f50e84a1327132617ab8bddba707d3d9201adba8aa79ba5ae6aad5c23f703e8",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

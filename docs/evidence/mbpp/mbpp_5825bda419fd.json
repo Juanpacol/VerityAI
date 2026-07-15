@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_5825bda419fd",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.190808+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 119,
+    "text": "Write a python function to find the element that appears only once in a sorted array.",
+    "code": "def search(arr,n) :\r\n    XOR = 0\r\n    for i in range(n) :\r\n        XOR = XOR ^ arr[i]\r\n    return (XOR)"
+  },
+  "content_hash": "5825bda419fd8560e02bf455ff5a6e917cdb2c4d15a60d18bf432ff82cccac41",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a4950f32d44d",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.309312+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 775,
+    "text": "Write a python function to check whether every odd index contains odd numbers of a given list.",
+    "code": "def odd_position(nums):\r\n\treturn all(nums[i]%2==i%2 for i in range(len(nums)))"
+  },
+  "content_hash": "a4950f32d44d91ac640156a99aac848392df6ff7dc16a05190a48dfd2206c542",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

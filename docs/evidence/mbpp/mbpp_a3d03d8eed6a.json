@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a3d03d8eed6a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.335804+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 890,
+    "text": "Write a python function to find the index of an extra element present in one sorted array.",
+    "code": "def find_Extra(arr1,arr2,n) : \r\n    for i in range(0, n) : \r\n        if (arr1[i] != arr2[i]) : \r\n            return i \r\n    return n "
+  },
+  "content_hash": "a3d03d8eed6a8db48739deaa93268a2a1b80ab3fcfb329c86641e3e1a0760832",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

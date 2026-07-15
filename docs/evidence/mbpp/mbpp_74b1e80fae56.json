@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_74b1e80fae56",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.208405+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 270,
+    "text": "Write a python function to find the sum of even numbers at even positions.",
+    "code": "def sum_even_and_even_index(arr,n):  \r\n    i = 0\r\n    sum = 0\r\n    for i in range(0,n,2): \r\n        if (arr[i] % 2 == 0) : \r\n            sum += arr[i]  \r\n    return sum"
+  },
+  "content_hash": "74b1e80fae561f49220f8fd30122197addcdf8445d5d782eab2b6e37a74a5847",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

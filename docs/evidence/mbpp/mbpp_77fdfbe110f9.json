@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_77fdfbe110f9",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.227096+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 311,
+    "text": "Write a python function to set the left most unset bit.",
+    "code": "def set_left_most_unset_bit(n): \r\n    if not (n & (n + 1)): \r\n        return n \r\n    pos, temp, count = 0, n, 0 \r\n    while temp: \r\n        if not (temp & 1): \r\n            pos = count      \r\n        count += 1; temp>>=1\r\n    return (n | (1 << (pos))) "
+  },
+  "content_hash": "77fdfbe110f97eda8cf13ce81cb38faea430ae9459120e3977b7fe1df5d8c237",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

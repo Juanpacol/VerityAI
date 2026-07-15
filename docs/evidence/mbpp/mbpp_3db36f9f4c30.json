@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_3db36f9f4c30",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.273290+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 589,
+    "text": "Write a function to find perfect squares between two given numbers.",
+    "code": "def perfect_squares(a, b):\r\n    lists=[]\r\n    for i in range (a,b+1):\r\n        j = 1;\r\n        while j*j <= i:\r\n            if j*j == i:\r\n                 lists.append(i)  \r\n            j = j+1\r\n        i = i+1\r\n    return lists"
+  },
+  "content_hash": "3db36f9f4c306786f9c4386066f8ee29e7da8e20c536949d139fef1cb3087bfc",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_d23eb26a12d6",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.184064+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 53,
+    "text": "Write a python function to check whether the first and last characters of a given string are equal or not.",
+    "code": "def check_Equality(str):\r\n  if (str[0] == str[-1]):  \r\n    return (\"Equal\") \r\n  else:  \r\n    return (\"Not Equal\") "
+  },
+  "content_hash": "d23eb26a12d65261024af4459a315219ded47ed0cb93c64431606124bfc9894d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_84315e8bf03c",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.318403+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 814,
+    "text": "Write a function to find the area of a rombus.",
+    "code": "def rombus_area(p,q):\r\n  area=(p*q)/2\r\n  return area"
+  },
+  "content_hash": "84315e8bf03c224ac0b409c79dc694bd00c9a13da2622372568e34b17afedb1e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

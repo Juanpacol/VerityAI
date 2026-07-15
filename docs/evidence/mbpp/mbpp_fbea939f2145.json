@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_fbea939f2145",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.202176+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 219,
+    "text": "Write a function to extract maximum and minimum k elements in the given tuple.",
+    "code": "\r\ndef extract_min_max(test_tup, K):\r\n  res = []\r\n  test_tup = list(test_tup)\r\n  temp = sorted(test_tup)\r\n  for idx, val in enumerate(temp):\r\n    if idx < K or idx >= len(temp) - K:\r\n      res.append(val)\r\n  res = tuple(res)\r\n  return (res) "
+  },
+  "content_hash": "fbea939f2145c3b0648f1c8adbf416b776565f200f8f52e4da57d32029125237",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

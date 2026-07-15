@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_a73fe7de46cb",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.892256+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/26",
+    "prompt": "from typing import List\n\n\ndef remove_duplicates(numbers: List[int]) -> List[int]:\n    \"\"\" From a list of integers, remove all elements that occur more than once.\n    Keep order of elements left the same as in the input.\n    >>> remove_duplicates([1, 2, 3, 2, 4])\n    [1, 3, 4]\n    \"\"\"\n",
+    "canonical_solution": "    import collections\n    c = collections.Counter(numbers)\n    return [n for n in numbers if c[n] <= 1]\n",
+    "entry_point": "remove_duplicates"
+  },
+  "content_hash": "a73fe7de46cbde95eb0e7fdfd71ebc2be15788567612294a456faccc4580396d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

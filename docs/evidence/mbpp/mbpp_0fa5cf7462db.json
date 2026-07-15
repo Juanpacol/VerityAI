@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_0fa5cf7462db",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.194569+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 153,
+    "text": "Write a function to find the vertex of a parabola.",
+    "code": "def parabola_vertex(a, b, c): \r\n  vertex=(((-b / (2 * a)),(((4 * a * c) - (b * b)) / (4 * a))))\r\n  return vertex"
+  },
+  "content_hash": "0fa5cf7462dbfbd9e82bc5cad2c5ad71f5c2b0b69bbe8bbede9295503852d6e2",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

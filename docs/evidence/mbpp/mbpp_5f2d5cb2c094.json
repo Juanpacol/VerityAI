@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_5f2d5cb2c094",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.352112+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 957,
+    "text": "Write a python function to get the position of rightmost set bit.",
+    "code": "import math\r\ndef get_First_Set_Bit_Pos(n):\r\n     return math.log2(n&-n)+1"
+  },
+  "content_hash": "5f2d5cb2c094ae708773818c9b4a03b9d860b0152fee00385c61c41b165b0256",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

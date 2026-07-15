@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_0bbc16087b01",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.235759+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 351,
+    "text": "Write a python function to find the first element occurring k times in a given array.",
+    "code": "def first_Element(arr,n,k): \r\n    count_map = {}; \r\n    for i in range(0, n): \r\n        if(arr[i] in count_map.keys()): \r\n            count_map[arr[i]] += 1\r\n        else: \r\n            count_map[arr[i]] = 1\r\n        i += 1\r\n    for i in range(0, n):  \r\n        if (count_map[arr[i]] == k): \r\n            return arr[i] \r\n        i += 1 \r\n    return -1"
+  },
+  "content_hash": "0bbc16087b01243d8701777b3901be7871505a4411b473d866dc8ccb2e9f02e0",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

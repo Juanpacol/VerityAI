@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_fdf9b26d6d8a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.272081+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 582,
+    "text": "Write a function to check if a dictionary is empty or not.",
+    "code": "def my_dict(dict1):\r\n  if bool(dict1):\r\n     return False\r\n  else:\r\n     return True"
+  },
+  "content_hash": "fdf9b26d6d8a44932703440f019ecd48f23c1f23bd9383def619b4a3a217e0dc",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

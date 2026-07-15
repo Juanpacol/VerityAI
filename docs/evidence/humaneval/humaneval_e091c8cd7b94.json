@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_e091c8cd7b94",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.894067+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/44",
+    "prompt": "\n\ndef change_base(x: int, base: int):\n    \"\"\"Change numerical base of input number x to base.\n    return string representation after the conversion.\n    base numbers are less than 10.\n    >>> change_base(8, 3)\n    '22'\n    >>> change_base(8, 2)\n    '1000'\n    >>> change_base(7, 2)\n    '111'\n    \"\"\"\n",
+    "canonical_solution": "    ret = \"\"\n    while x > 0:\n        ret = str(x % base) + ret\n        x //= base\n    return ret\n",
+    "entry_point": "change_base"
+  },
+  "content_hash": "e091c8cd7b94880dbbd434c6c9b8bea266eace6dc18e0691b8b9582b59ba21d4",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

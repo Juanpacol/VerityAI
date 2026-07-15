@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_53cb2783841e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.182283+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 34,
+    "text": "Write a python function to find the missing number in a sorted array.",
+    "code": "def find_missing(ar,N): \r\n    l = 0\r\n    r = N - 1\r\n    while (l <= r):  \r\n        mid = (l + r) / 2\r\n        mid= int (mid) \r\n        if (ar[mid] != mid + 1 and ar[mid - 1] == mid): \r\n            return (mid + 1)  \r\n        elif (ar[mid] != mid + 1): \r\n            r = mid - 1 \r\n        else: \r\n            l = mid + 1\r\n    return (-1) "
+  },
+  "content_hash": "53cb2783841ed97d75819d88f57de85a4016fe15fce347b39575e8bb5dcb4f0b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

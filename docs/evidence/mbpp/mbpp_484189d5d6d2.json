@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_484189d5d6d2",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.252676+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 465,
+    "text": "Write a function to drop empty items from a given dictionary.",
+    "code": "def drop_empty(dict1):\r\n  dict1 = {key:value for (key, value) in dict1.items() if value is not None}\r\n  return dict1"
+  },
+  "content_hash": "484189d5d6d24e090b70854ce98abe45d1c16a89b6f6c310e28f46c3853f6d6a",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

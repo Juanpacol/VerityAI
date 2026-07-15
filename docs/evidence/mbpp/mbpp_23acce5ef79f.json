@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_23acce5ef79f",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.265400+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 543,
+    "text": "Write a function to add two numbers and print number of digits of sum.",
+    "code": "def count_digits(num1,num2):\r\n    number=num1+num2\r\n    count = 0\r\n    while(number > 0):\r\n        number = number // 10\r\n        count = count + 1\r\n    return count"
+  },
+  "content_hash": "23acce5ef79f93914b7fac157a5ef34543c1a86996d29635e5b9839a77885c99",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

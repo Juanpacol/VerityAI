@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_8a995808e7bc",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.207154+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 260,
+    "text": "Write a function to find the nth newman–shanks–williams prime number.",
+    "code": "def newman_prime(n): \r\n\tif n == 0 or n == 1: \r\n\t\treturn 1\r\n\treturn 2 * newman_prime(n - 1) + newman_prime(n - 2)"
+  },
+  "content_hash": "8a995808e7bc1e27ca4ce31515e2486d39060d42f6a9d85ebfc4fe807bca9bec",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

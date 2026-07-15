@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_b672a31be30d",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.893238+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/36",
+    "prompt": "\n\ndef fizz_buzz(n: int):\n    \"\"\"Return the number of times the digit 7 appears in integers less than n which are divisible by 11 or 13.\n    >>> fizz_buzz(50)\n    0\n    >>> fizz_buzz(78)\n    2\n    >>> fizz_buzz(79)\n    3\n    \"\"\"\n",
+    "canonical_solution": "    ns = []\n    for i in range(n):\n        if i % 11 == 0 or i % 13 == 0:\n            ns.append(i)\n    s = ''.join(list(map(str, ns)))\n    ans = 0\n    for c in s:\n        ans += (c == '7')\n    return ans\n",
+    "entry_point": "fizz_buzz"
+  },
+  "content_hash": "b672a31be30d2adc23c8d79df2c6aced0deed812509a704713e95363a9610fc1",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e211de7c89ac",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.331130+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 870,
+    "text": "Write a function to calculate the sum of the positive numbers of a given list of numbers using lambda function.",
+    "code": "def sum_positivenum(nums):\r\n  sum_positivenum = list(filter(lambda nums:nums>0,nums))\r\n  return sum(sum_positivenum)"
+  },
+  "content_hash": "e211de7c89ac713d943dde07fafc16b5aec06540a67d025edeb79dd9af65ae47",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

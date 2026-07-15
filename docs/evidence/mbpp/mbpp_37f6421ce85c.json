@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_37f6421ce85c",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.194829+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 155,
+    "text": "Write a python function to toggle all even bits of a given number.",
+    "code": "def even_bit_toggle_number(n) : \r\n    res = 0; count = 0; temp = n \r\n    while (temp > 0) :     \r\n        if (count % 2 == 1) : \r\n            res = res | (1 << count)      \r\n        count = count + 1\r\n        temp >>= 1 \r\n    return n ^ res "
+  },
+  "content_hash": "37f6421ce85cb236bee88b9f8e7ff5f0da5c43ea2a5f1c8bcaf9a3b2952e1ab5",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_edc4b5b280b0",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.332289+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 875,
+    "text": "Write a function to find the minimum difference in the tuple pairs of given tuples.",
+    "code": "def min_difference(test_list):\r\n  temp = [abs(b - a) for a, b in test_list]\r\n  res = min(temp)\r\n  return (res) "
+  },
+  "content_hash": "edc4b5b280b0f55c1ef2ddec8c79490f17dfd037941449300ef785f01c441785",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

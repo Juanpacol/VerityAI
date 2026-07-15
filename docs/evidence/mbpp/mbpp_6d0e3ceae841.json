@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_6d0e3ceae841",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.268613+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 562,
+    "text": "Write a python function to find the maximum length of sublist.",
+    "code": "def Find_Max_Length(lst):  \r\n    maxLength = max(len(x) for x in lst )\r\n    return maxLength "
+  },
+  "content_hash": "6d0e3ceae8415564f94bac8aecb4b736d1d3620c7ec5a20717595b3fc9adf267",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

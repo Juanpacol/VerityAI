@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e72e85820215",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.238893+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 373,
+    "text": "Write a function to find the volume of a cuboid.",
+    "code": "def volume_cuboid(l,w,h):\r\n  volume=l*w*h\r\n  return volume"
+  },
+  "content_hash": "e72e85820215695f5f73fa11a92f80a4d04097146d924946a6b05034ac785828",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

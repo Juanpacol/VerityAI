@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_ce45a3b43855",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.335338+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 888,
+    "text": "Write a function to substract the elements of the given nested tuples.",
+    "code": "def substract_elements(test_tup1, test_tup2):\r\n  res = tuple(tuple(a - b for a, b in zip(tup1, tup2))\r\n   for tup1, tup2 in zip(test_tup1, test_tup2))\r\n  return (res) "
+  },
+  "content_hash": "ce45a3b438557196c0e1620ded1f59517750ea33e8d22b5230b6310ad8fe38fa",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

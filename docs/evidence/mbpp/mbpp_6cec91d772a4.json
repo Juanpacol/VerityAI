@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_6cec91d772a4",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.229715+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 330,
+    "text": "Write a function to find all three, four, five characters long words in the given string by using regex.",
+    "code": "import re\r\ndef find_char(text):\r\n  return (re.findall(r\"\\b\\w{3,5}\\b\", text))"
+  },
+  "content_hash": "6cec91d772a46a9e8d3d3342cfa8736bcb6996859663bb5ab316d3b287d4df40",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

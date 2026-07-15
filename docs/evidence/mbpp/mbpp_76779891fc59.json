@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_76779891fc59",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.337207+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 896,
+    "text": "Write a function to sort a list in increasing order by the last element in each tuple from a given list of non-empty tuples.",
+    "code": "def last(n):\r\n   return n[-1]\r\ndef sort_list_last(tuples):\r\n  return sorted(tuples, key=last)"
+  },
+  "content_hash": "76779891fc597c655d87dabf58289aa53436c0285ef17fe7a81a81d1d15ffd6d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

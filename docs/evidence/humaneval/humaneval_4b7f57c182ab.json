@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_4b7f57c182ab",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.894262+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/46",
+    "prompt": "\n\ndef fib4(n: int):\n    \"\"\"The Fib4 number sequence is a sequence similar to the Fibbonacci sequnece that's defined as follows:\n    fib4(0) -> 0\n    fib4(1) -> 0\n    fib4(2) -> 2\n    fib4(3) -> 0\n    fib4(n) -> fib4(n-1) + fib4(n-2) + fib4(n-3) + fib4(n-4).\n    Please write a function to efficiently compute the n-th element of the fib4 number sequence.  Do not use recursion.\n    >>> fib4(5)\n    4\n    >>> fib4(6)\n    8\n    >>> fib4(7)\n    14\n    \"\"\"\n",
+    "canonical_solution": "    results = [0, 0, 2, 0]\n    if n < 4:\n        return results[n]\n\n    for _ in range(4, n + 1):\n        results.append(results[-1] + results[-2] + results[-3] + results[-4])\n        results.pop(0)\n\n    return results[-1]\n",
+    "entry_point": "fib4"
+  },
+  "content_hash": "4b7f57c182abd187c5986f9fe7a2715eec9b51c8ef8df1b63134ddbabdfdebd9",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

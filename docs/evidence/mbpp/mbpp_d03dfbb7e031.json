@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_d03dfbb7e031",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.229573+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 329,
+    "text": "Write a python function to count negative numbers in a list.",
+    "code": "def neg_count(list):\r\n  neg_count= 0\r\n  for num in list: \r\n    if num <= 0: \r\n      neg_count += 1\r\n  return neg_count "
+  },
+  "content_hash": "d03dfbb7e0319d0f90f3c0fe8e233c415e68b9bc460f117bee68db2b1971bafb",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_779fbec5deb8",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.241818+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 393,
+    "text": "Write a function to find the list with maximum length using lambda function.",
+    "code": "def max_length_list(input_list):\r\n    max_length = max(len(x) for x in input_list )   \r\n    max_list = max(input_list, key = lambda i: len(i))    \r\n    return(max_length, max_list)"
+  },
+  "content_hash": "779fbec5deb837c40e418e986d94724dfc579688bd30e71c98142dac857c233d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

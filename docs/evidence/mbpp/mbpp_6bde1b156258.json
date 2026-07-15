@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_6bde1b156258",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.180161+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 11,
+    "text": "Write a python function to remove first and last occurrence of a given character from the string.",
+    "code": "def remove_Occ(s,ch): \r\n    for i in range(len(s)): \r\n        if (s[i] == ch): \r\n            s = s[0 : i] + s[i + 1:] \r\n            break\r\n    for i in range(len(s) - 1,-1,-1):  \r\n        if (s[i] == ch): \r\n            s = s[0 : i] + s[i + 1:] \r\n            break\r\n    return s "
+  },
+  "content_hash": "6bde1b15625890d6ce1be3892177fe5629abd4c8a1cc46eccc285e50268c2da1",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

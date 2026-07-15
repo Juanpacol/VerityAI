@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_840b3fe5f1bc",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.288077+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 671,
+    "text": "Write a python function to set the right most unset bit.",
+    "code": "import math \r\ndef get_Pos_Of_Right_most_Set_Bit(n): \r\n    return int(math.log2(n&-n)+1)   \r\ndef set_Right_most_Unset_Bit(n): \r\n    if (n == 0): \r\n        return 1\r\n    if ((n & (n + 1)) == 0):     \r\n        return n \r\n    pos = get_Pos_Of_Right_most_Set_Bit(~n)      \r\n    return ((1 << (pos - 1)) | n) "
+  },
+  "content_hash": "840b3fe5f1bc77c34c7fc92a4bccd7ee9245c04ef1e72f7ffc8e1e852c52d19f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

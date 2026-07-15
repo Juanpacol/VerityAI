@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f18c7e6b61b6",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.240338+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 383,
+    "text": "Write a python function to toggle all odd bits of a given number.",
+    "code": "def even_bit_toggle_number(n) : \r\n    res = 0; count = 0; temp = n    \r\n    while(temp > 0 ) : \r\n        if (count % 2 == 0) : \r\n            res = res | (1 << count)      \r\n        count = count + 1\r\n        temp >>= 1 \r\n    return n ^ res "
+  },
+  "content_hash": "f18c7e6b61b602330e717e5637def33d1724c442cb47b05df94573a9b4cf9ecb",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

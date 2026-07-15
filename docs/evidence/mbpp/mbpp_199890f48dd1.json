@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_199890f48dd1",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.318176+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 813,
+    "text": "Write a function to find length of the string.",
+    "code": "def string_length(str1):\r\n    count = 0\r\n    for char in str1:\r\n        count += 1\r\n    return count"
+  },
+  "content_hash": "199890f48dd15fea82621802bba0dd44f25860088fdc2ce9369b78ee58b9feb7",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

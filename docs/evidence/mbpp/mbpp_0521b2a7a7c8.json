@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_0521b2a7a7c8",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.310726+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 781,
+    "text": "Write a python function to check whether the count of divisors is even or odd.",
+    "code": "import math \r\ndef count_Divisors(n) : \r\n    count = 0\r\n    for i in range(1, (int)(math.sqrt(n)) + 2) : \r\n        if (n % i == 0) : \r\n            if( n // i == i) : \r\n                count = count + 1\r\n            else : \r\n                count = count + 2\r\n    if (count % 2 == 0) : \r\n        return (\"Even\") \r\n    else : \r\n        return (\"Odd\") "
+  },
+  "content_hash": "0521b2a7a7c8a44c25c335749eb055a2fba13159059caa49470c4efcc801404e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

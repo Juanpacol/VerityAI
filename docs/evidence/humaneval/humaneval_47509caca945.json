@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_47509caca945",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.891841+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/22",
+    "prompt": "from typing import List, Any\n\n\ndef filter_integers(values: List[Any]) -> List[int]:\n    \"\"\" Filter given list of any python values only for integers\n    >>> filter_integers(['a', 3.14, 5])\n    [5]\n    >>> filter_integers([1, 2, 3, 'abc', {}, []])\n    [1, 2, 3]\n    \"\"\"\n",
+    "canonical_solution": "    return [x for x in values if isinstance(x, int)]\n",
+    "entry_point": "filter_integers"
+  },
+  "content_hash": "47509caca94530e82c13d698f1a1a738a937a7f519f05dce6d11bd77696d9f80",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

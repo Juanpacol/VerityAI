@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a3878a8555ca",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.344767+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 927,
+    "text": "Write a function to calculate the height of the given binary tree.",
+    "code": "class Node: \r\n\tdef __init__(self, data): \r\n\t\tself.data = data \r\n\t\tself.left = None\r\n\t\tself.right = None\r\ndef max_height(node): \r\n\tif node is None: \r\n\t\treturn 0 ; \r\n\telse : \r\n\t\tleft_height = max_height(node.left) \r\n\t\tright_height = max_height(node.right) \r\n\t\tif (left_height > right_height): \r\n\t\t\treturn left_height+1\r\n\t\telse: \r\n\t\t\treturn right_height+1"
+  },
+  "content_hash": "a3878a8555cadfd5a6d70a6e452f9bce57898bd0a42d56c9c46835fc663adb8d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

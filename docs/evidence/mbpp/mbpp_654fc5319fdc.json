@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_654fc5319fdc",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.190373+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 115,
+    "text": "Write a function to check whether all dictionaries in a list are empty or not.",
+    "code": "def empty_dit(list1):\r\n empty_dit=all(not d for d in list1)\r\n return empty_dit"
+  },
+  "content_hash": "654fc5319fdcc64cf0c90f7823f9ec6b97681dbe69596b43bee0a4a8556543d0",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

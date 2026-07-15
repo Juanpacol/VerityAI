@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_89571f1d88da",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.207517+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 263,
+    "text": "Write a function to merge two dictionaries.",
+    "code": "def merge_dict(d1,d2):\r\n d = d1.copy()\r\n d.update(d2)\r\n return d"
+  },
+  "content_hash": "89571f1d88da5a838a727b8dd610211d50256ce7aa881e8fc18743c8eb46112a",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

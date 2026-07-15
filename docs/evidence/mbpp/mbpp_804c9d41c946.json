@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_804c9d41c946",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.182014+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 31,
+    "text": "Write a function to find the top k integers that occur most frequently from given lists of sorted and distinct integers using heap queue algorithm.",
+    "code": "def func(nums, k):\r\n    import collections\r\n    d = collections.defaultdict(int)\r\n    for row in nums:\r\n        for i in row:\r\n            d[i] += 1\r\n    temp = []\r\n    import heapq\r\n    for key, v in d.items():\r\n        if len(temp) < k:\r\n            temp.append((v, key))\r\n            if len(temp) == k:\r\n                heapq.heapify(temp)\r\n        else:\r\n            if v > temp[0][0]:\r\n                heapq.heappop(temp)\r\n                heapq.heappush(temp, (v, key))\r\n    result = []\r\n    while temp:\r\n        v, key = heapq.heappop(temp)\r\n        result.append(key)\r\n    return result"
+  },
+  "content_hash": "804c9d41c94603188ff08423fb4d3aa4475b7d552408656f1cb5e5081879c173",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

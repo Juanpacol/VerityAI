@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f7ad963ccc7b",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.343529+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 922,
+    "text": "Write a function to find a pair with the highest product from a given array of integers.",
+    "code": "def max_product(arr): \r\n    arr_len = len(arr) \r\n    if (arr_len < 2): \r\n        return None     \r\n    x = arr[0]; y = arr[1]    \r\n    for i in range(0, arr_len): \r\n        for j in range(i + 1, arr_len): \r\n            if (arr[i] * arr[j] > x * y): \r\n                x = arr[i]; y = arr[j] \r\n    return x,y   "
+  },
+  "content_hash": "f7ad963ccc7b94719b14c7a5713d0e43f6506b7fec471c656a88f9241ee59814",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

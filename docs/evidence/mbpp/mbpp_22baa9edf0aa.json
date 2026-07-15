@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_22baa9edf0aa",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.266903+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 552,
+    "text": "Write a python function to check whether a given sequence is linear or not.",
+    "code": "def Seq_Linear(seq_nums):\r\n  seq_nums = [seq_nums[x] - seq_nums[x-1] for x in range(1, len(seq_nums))]\r\n  if len(set(seq_nums)) == 1: \r\n    return \"Linear Sequence\"\r\n  else:\r\n    return \"Non Linear Sequence\""
+  },
+  "content_hash": "22baa9edf0aa434c295e75387caac761751f34f9a6dc269a7a1f22f27b05ea42",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

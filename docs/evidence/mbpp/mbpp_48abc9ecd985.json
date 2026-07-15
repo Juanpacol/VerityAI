@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_48abc9ecd985",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.322454+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 832,
+    "text": "Write a function to extract the maximum numeric value from a string by using regex.",
+    "code": "import re \r\ndef extract_max(input): \r\n\tnumbers = re.findall('\\d+',input) \r\n\tnumbers = map(int,numbers) \r\n\treturn max(numbers)"
+  },
+  "content_hash": "48abc9ecd98569bbf6b77b755fa0c1297bcfe046f02314f68112929e958a464f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

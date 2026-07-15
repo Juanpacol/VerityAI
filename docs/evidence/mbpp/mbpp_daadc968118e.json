@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_daadc968118e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.308844+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 773,
+    "text": "Write a function to find the occurrence and position of the substrings within a string.",
+    "code": "import re\r\ndef occurance_substring(text,pattern):\r\n for match in re.finditer(pattern, text):\r\n    s = match.start()\r\n    e = match.end()\r\n    return (text[s:e], s, e)"
+  },
+  "content_hash": "daadc968118ee5dc99ec673f181425a7f12cf88316ecaf175a9b9861a47392d4",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

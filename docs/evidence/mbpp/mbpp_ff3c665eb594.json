@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_ff3c665eb594",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.186401+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 76,
+    "text": "Write a python function to count the number of squares in a rectangle.",
+    "code": "def count_Squares(m,n):\r\n    if(n < m):\r\n        temp = m\r\n        m = n\r\n        n = temp\r\n    return ((m * (m + 1) * (2 * m + 1) / 6 + (n - m) * m * (m + 1) / 2))"
+  },
+  "content_hash": "ff3c665eb594ebb8d79ccf14692393a0cd874b2e1bae39342b74376882167a51",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

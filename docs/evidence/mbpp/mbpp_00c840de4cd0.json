@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_00c840de4cd0",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.195718+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 163,
+    "text": "Write a function to calculate the area of a regular polygon.",
+    "code": "from math import tan, pi\r\ndef area_polygon(s,l):\r\n  area = s * (l ** 2) / (4 * tan(pi / s))\r\n  return area"
+  },
+  "content_hash": "00c840de4cd0d04654ed1f8684cf48d3b16ba35d95f1b1e1594d7cdbcfcbf695",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

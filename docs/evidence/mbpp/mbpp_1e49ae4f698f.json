@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_1e49ae4f698f",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.184452+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 57,
+    "text": "Write a python function to find the largest number that can be formed with the given digits.",
+    "code": "def find_Max_Num(arr,n) : \r\n    arr.sort(reverse = True) \r\n    num = arr[0] \r\n    for i in range(1,n) : \r\n        num = num * 10 + arr[i] \r\n    return num "
+  },
+  "content_hash": "1e49ae4f698f01f6932e08723a810489418d0ca7bfaf51a77a0d77e524dcbf17",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

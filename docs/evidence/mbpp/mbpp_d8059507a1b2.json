@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_d8059507a1b2",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.190603+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 117,
+    "text": "Write a function to convert all possible convertible elements in the list to float.",
+    "code": "def list_to_float(test_list):\r\n  res = []\r\n  for tup in test_list:\r\n    temp = []\r\n    for ele in tup:\r\n      if ele.isalpha():\r\n        temp.append(ele)\r\n      else:\r\n        temp.append(float(ele))\r\n    res.append((temp[0],temp[1])) \r\n  return (str(res)) "
+  },
+  "content_hash": "d8059507a1b227003ab579f3bdc1e2e56379ca4fe5199c91b522ba4a6c5a7821",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

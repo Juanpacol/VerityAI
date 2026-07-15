@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7a1fe51841f3",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.188007+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 92,
+    "text": "Write a function to check whether the given number is undulating or not.",
+    "code": "def is_undulating(n): \r\n\tif (len(n) <= 2): \r\n\t\treturn False\r\n\tfor i in range(2, len(n)): \r\n\t\tif (n[i - 2] != n[i]): \r\n\t\t\treturn False\r\n\treturn True"
+  },
+  "content_hash": "7a1fe51841f39f9be1e4c871d30c0315f7e940164ad1b51020b92a6d670f5b4d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

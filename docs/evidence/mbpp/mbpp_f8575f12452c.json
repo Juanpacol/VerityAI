@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f8575f12452c",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.241517+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 391,
+    "text": "Write a function to convert more than one list to nested dictionary.",
+    "code": "def convert_list_dictionary(l1, l2, l3):\r\n     result = [{x: {y: z}} for (x, y, z) in zip(l1, l2, l3)]\r\n     return result"
+  },
+  "content_hash": "f8575f12452c04e0bc3bf200d8e6b96afcefc6cd0e33a1730ffc49908653b5b1",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

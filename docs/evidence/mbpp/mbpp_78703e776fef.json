@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_78703e776fef",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.265224+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 542,
+    "text": "Write a function to replace all occurrences of spaces, commas, or dots with a colon in the given string by using regex.",
+    "code": "import re\r\ndef fill_spaces(text):\r\n  return (re.sub(\"[ ,.]\", \":\", text))"
+  },
+  "content_hash": "78703e776fefd6b0f8d6e8e775d6129cf1973eea935518749c7fe4b557135086",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

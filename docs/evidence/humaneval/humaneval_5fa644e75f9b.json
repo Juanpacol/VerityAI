@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_5fa644e75f9b",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.894649+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/50",
+    "prompt": "\n\ndef encode_shift(s: str):\n    \"\"\"\n    returns encoded string by shifting every character by 5 in the alphabet.\n    \"\"\"\n    return \"\".join([chr(((ord(ch) + 5 - ord(\"a\")) % 26) + ord(\"a\")) for ch in s])\n\n\ndef decode_shift(s: str):\n    \"\"\"\n    takes as input string encoded with encode_shift function. Returns decoded string.\n    \"\"\"\n",
+    "canonical_solution": "    return \"\".join([chr(((ord(ch) - 5 - ord(\"a\")) % 26) + ord(\"a\")) for ch in s])\n",
+    "entry_point": "decode_shift"
+  },
+  "content_hash": "5fa644e75f9b0fa71a28be13bd802370595f58bf839fd4ed761936936b6ca7cd",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

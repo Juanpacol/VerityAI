@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7af53700b434",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.180888+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 19,
+    "text": "Write a function to find whether a given array of integers contains any duplicate element.",
+    "code": "def test_duplicate(arraynums):\r\n    nums_set = set(arraynums)    \r\n    return len(arraynums) != len(nums_set)     "
+  },
+  "content_hash": "7af53700b434b77ef6229d9f31801f9f521b9a959f7924bc425f0d3819f2392a",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

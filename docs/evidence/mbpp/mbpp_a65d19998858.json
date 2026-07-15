@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a65d19998858",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.265566+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 544,
+    "text": "Write a function to flatten the tuple list to a string.",
+    "code": "def flatten_tuple(test_list):\r\n  res = ' '.join([idx for tup in test_list for idx in tup])\r\n  return (res) "
+  },
+  "content_hash": "a65d1999885839e1173ff8203067f268e4be0ccd8a46fbe2010af12563ba0425",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

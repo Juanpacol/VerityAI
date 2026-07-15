@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_5619ce4d39f0",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.204455+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 238,
+    "text": "Write a python function to count number of non-empty substrings of a given string.",
+    "code": "def number_of_substrings(str): \r\n\tstr_len = len(str); \r\n\treturn int(str_len * (str_len + 1) / 2); "
+  },
+  "content_hash": "5619ce4d39f0b35819f43e92de1be793f1a1b4f5bab63ea5eb48a248a34c5bcb",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

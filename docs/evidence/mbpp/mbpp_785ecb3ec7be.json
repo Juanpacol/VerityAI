@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_785ecb3ec7be",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.181647+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 27,
+    "text": "Write a python function to remove all digits from a list of strings.",
+    "code": "import re  \r\ndef remove(list): \r\n    pattern = '[0-9]'\r\n    list = [re.sub(pattern, '', i) for i in list] \r\n    return list"
+  },
+  "content_hash": "785ecb3ec7be581c6ec7cedf7d442f914110576b5ab6d9adef1e6ff0de3c5f23",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

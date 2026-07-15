@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_6ffcc1b7d425",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.298987+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 728,
+    "text": "Write a function to sum elements in two lists.",
+    "code": "def sum_list(lst1,lst2):\r\n  res_list = [lst1[i] + lst2[i] for i in range(len(lst1))] \r\n  return res_list"
+  },
+  "content_hash": "6ffcc1b7d42566d3f47d7cb855b600b8ef826cccc55c36a2b7872cdcfe9afa26",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

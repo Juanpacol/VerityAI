@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_9866fe08f7b1",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.240192+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 382,
+    "text": "Write a function to find the number of rotations in a circularly sorted array.",
+    "code": "def find_rotation_count(A):\r\n    (left, right) = (0, len(A) - 1)\r\n    while left <= right:\r\n        if A[left] <= A[right]:\r\n            return left\r\n        mid = (left + right) // 2\r\n        next = (mid + 1) % len(A)\r\n        prev = (mid - 1 + len(A)) % len(A)\r\n        if A[mid] <= A[next] and A[mid] <= A[prev]:\r\n            return mid\r\n        elif A[mid] <= A[right]:\r\n            right = mid - 1\r\n        elif A[mid] >= A[left]:\r\n            left = mid + 1\r\n    return -1"
+  },
+  "content_hash": "9866fe08f7b1eff4f8606be19fe56495f06742b9f2a5316534e8cde2a1d6e459",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

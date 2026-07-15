@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b7a5012b7314",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.263860+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 534,
+    "text": "Write a function to search a literals string in a string and also find the location within the original string where the pattern occurs.",
+    "code": "import re\r\ndef search_literal(pattern,text):\r\n match = re.search(pattern, text)\r\n s = match.start()\r\n e = match.end()\r\n return (s, e)"
+  },
+  "content_hash": "b7a5012b7314756ac18e624415809979242e434f34c08f719fe3b21923888606",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b8e704c4ba9a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.186594+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 78,
+    "text": "Write a python function to find number of integers with odd number of set bits.",
+    "code": "def count_With_Odd_SetBits(n): \r\n    if (n % 2 != 0): \r\n        return (n + 1) / 2\r\n    count = bin(n).count('1') \r\n    ans = n / 2\r\n    if (count % 2 != 0): \r\n        ans += 1\r\n    return ans "
+  },
+  "content_hash": "b8e704c4ba9a28ad256e4623207d6f03ca39e67ef18cdabe670b89061fd53af2",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_d8d50ba4d921",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.197315+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 177,
+    "text": "Write a python function to find two distinct numbers such that their lcm lies within the given range.",
+    "code": "def answer(L,R): \r\n    if (2 * L <= R): \r\n        return (L ,2*L)\r\n    else: \r\n        return (-1) "
+  },
+  "content_hash": "d8d50ba4d92123baf23b30aacc9745f1684c330aa05ec3811121e84cff4f67ac",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_28afdf7694c3",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.894166+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/45",
+    "prompt": "\n\ndef triangle_area(a, h):\n    \"\"\"Given length of a side and high return area for a triangle.\n    >>> triangle_area(5, 3)\n    7.5\n    \"\"\"\n",
+    "canonical_solution": "    return a * h / 2.0\n",
+    "entry_point": "triangle_area"
+  },
+  "content_hash": "28afdf7694c3180e03ceb991045220b6695fe4ba90cd7bc9b922ba7c924a6fde",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

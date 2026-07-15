@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_de17a738e2b3",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.289717+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 680,
+    "text": "Write a python function to check whether a sequence of numbers has an increasing trend or not.",
+    "code": "def increasing_trend(nums):\r\n    if (sorted(nums)== nums):\r\n        return True\r\n    else:\r\n        return False"
+  },
+  "content_hash": "de17a738e2b30c34588f7290c6ca26f42b5db558a6429bb032fbdfd46deca69b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

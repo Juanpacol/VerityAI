@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_9931f4277439",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.270324+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 572,
+    "text": "Write a python function to remove two duplicate numbers from a given number of lists.",
+    "code": "def two_unique_nums(nums):\r\n  return [i for i in nums if nums.count(i)==1]"
+  },
+  "content_hash": "9931f427743947188ef3fdd1fdfeec954bb7f289614f7d51cef6ed605a60df2e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

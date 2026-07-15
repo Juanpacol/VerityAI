@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7a5904d3ffc1",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.304899+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 757,
+    "text": "Write a function to count the pairs of reverse strings in the given string list.",
+    "code": "def count_reverse_pairs(test_list):\r\n  res = sum([1 for idx in range(0, len(test_list)) for idxn in range(idx, len( \r\n\ttest_list)) if test_list[idxn] == str(''.join(list(reversed(test_list[idx]))))]) \r\n  return str(res)"
+  },
+  "content_hash": "7a5904d3ffc1e676f8bfe55873cc74e5a8d4f7141b43630e5becdc7e91866810",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c958d19a8a3e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.198221+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 185,
+    "text": "Write a function to find the focus of a parabola.",
+    "code": "def parabola_focus(a, b, c): \r\n  focus= (((-b / (2 * a)),(((4 * a * c) - (b * b) + 1) / (4 * a))))\r\n  return focus"
+  },
+  "content_hash": "c958d19a8a3e4efff04cf56323ba945bb881a54db671033e0bd83715d6bd0324",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f2c799c17f47",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.293310+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 699,
+    "text": "Write a python function to find the minimum number of swaps required to convert one binary string to another.",
+    "code": "def min_Swaps(str1,str2) : \r\n    count = 0\r\n    for i in range(len(str1)) : \r\n        if str1[i] != str2[i] : \r\n            count += 1\r\n    if count % 2 == 0 : \r\n        return (count // 2) \r\n    else : \r\n        return (\"Not Possible\") "
+  },
+  "content_hash": "f2c799c17f4721ce8f588b3548fa5270663ad1d045da9db5ea9d875caac6a93a",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

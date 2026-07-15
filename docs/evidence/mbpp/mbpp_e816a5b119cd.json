@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e816a5b119cd",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.275792+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 603,
+    "text": "Write a function to get a lucid number smaller than or equal to n.",
+    "code": "def get_ludic(n):\r\n\tludics = []\r\n\tfor i in range(1, n + 1):\r\n\t\tludics.append(i)\r\n\tindex = 1\r\n\twhile(index != len(ludics)):\r\n\t\tfirst_ludic = ludics[index]\r\n\t\tremove_index = index + first_ludic\r\n\t\twhile(remove_index < len(ludics)):\r\n\t\t\tludics.remove(ludics[remove_index])\r\n\t\t\tremove_index = remove_index + first_ludic - 1\r\n\t\tindex += 1\r\n\treturn ludics"
+  },
+  "content_hash": "e816a5b119cd48a002e3616358a43ae41c949468683633d67ab280c6e9d90e40",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

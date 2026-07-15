@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_92ef8dcdf5b7",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.255817+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 485,
+    "text": "Write a function to find the largest palindromic number in the given array.",
+    "code": "def is_palindrome(n) : \r\n\tdivisor = 1\r\n\twhile (n / divisor >= 10) : \r\n\t\tdivisor *= 10\r\n\twhile (n != 0) : \r\n\t\tleading = n // divisor \r\n\t\ttrailing = n % 10\r\n\t\tif (leading != trailing) : \r\n\t\t\treturn False\r\n\t\tn = (n % divisor) // 10\r\n\t\tdivisor = divisor // 100\r\n\treturn True\r\ndef largest_palindrome(A, n) : \r\n\tA.sort() \r\n\tfor i in range(n - 1, -1, -1) : \r\n\t\tif (is_palindrome(A[i])) : \r\n\t\t\treturn A[i] \r\n\treturn -1"
+  },
+  "content_hash": "92ef8dcdf5b70b21df301789be424f5d116f00253260f162a78561176884d453",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

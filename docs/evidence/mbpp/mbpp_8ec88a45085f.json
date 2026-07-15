@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_8ec88a45085f",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.211397+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 292,
+    "text": "Write a python function to find quotient of two numbers.",
+    "code": "def find(n,m):  \r\n    q = n//m \r\n    return (q)"
+  },
+  "content_hash": "8ec88a45085f9a5d4936b0db72df2865c83e9f6ff8a7e65f7218b426f8314997",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

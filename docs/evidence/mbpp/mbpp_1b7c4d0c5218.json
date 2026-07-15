@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_1b7c4d0c5218",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.181456+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 25,
+    "text": "Write a python function to find the product of non-repeated elements in a given array.",
+    "code": "def find_Product(arr,n): \r\n    arr.sort() \r\n    prod = 1\r\n    for i in range(0,n,1): \r\n        if (arr[i - 1] != arr[i]): \r\n            prod = prod * arr[i] \r\n    return prod; "
+  },
+  "content_hash": "1b7c4d0c5218c623095a60152984023e0d668742c28aa359ac471456097ae580",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

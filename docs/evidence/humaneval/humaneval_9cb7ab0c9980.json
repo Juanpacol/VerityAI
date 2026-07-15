@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_9cb7ab0c9980",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.903979+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/131",
+    "prompt": "\ndef digits(n):\n    \"\"\"Given a positive integer n, return the product of the odd digits.\n    Return 0 if all digits are even.\n    For example:\n    digits(1)  == 1\n    digits(4)  == 0\n    digits(235) == 15\n    \"\"\"\n",
+    "canonical_solution": "    product = 1\n    odd_count = 0\n    for digit in str(n):\n        int_digit = int(digit)\n        if int_digit%2 == 1:\n            product= product*int_digit\n            odd_count+=1\n    if odd_count ==0:\n        return 0\n    else:\n        return product\n",
+    "entry_point": "digits"
+  },
+  "content_hash": "9cb7ab0c9980f5d92fe4784391e73900861ab1c02d304caae2479f81108fc32e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

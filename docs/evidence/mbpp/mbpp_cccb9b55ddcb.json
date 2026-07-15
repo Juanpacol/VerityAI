@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_cccb9b55ddcb",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.314201+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 796,
+    "text": "Write function to find the sum of all items in the given dictionary.",
+    "code": "def return_sum(dict):\r\n  sum = 0\r\n  for i in dict.values():\r\n    sum = sum + i\r\n  return sum"
+  },
+  "content_hash": "cccb9b55ddcb13e5b5680248de44b886fee577fc2ee178c14534fa662be1f913",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

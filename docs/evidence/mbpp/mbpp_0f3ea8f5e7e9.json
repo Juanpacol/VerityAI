@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_0f3ea8f5e7e9",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.204220+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 236,
+    "text": "Write a python function to count the maximum number of equilateral triangles that can be formed within a given equilateral triangle.",
+    "code": "def No_of_Triangle(N,K):\r\n    if (N < K):\r\n        return -1;\r\n    else:\r\n        Tri_up = 0;\r\n        Tri_up = ((N - K + 1) *(N - K + 2)) // 2;\r\n        Tri_down = 0;\r\n        Tri_down = ((N - 2 * K + 1) *(N - 2 * K + 2)) // 2;\r\n        return Tri_up + Tri_down;"
+  },
+  "content_hash": "0f3ea8f5e7e9b46767834f9ee138b7a0a7488c2186065510518c93f2439952a2",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

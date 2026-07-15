@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_851034f5ca1e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.202657+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 223,
+    "text": "Write a function to check for majority element in the given sorted array.",
+    "code": "def is_majority(arr, n, x):\r\n\ti = binary_search(arr, 0, n-1, x)\r\n\tif i == -1:\r\n\t\treturn False\r\n\tif ((i + n//2) <= (n -1)) and arr[i + n//2] == x:\r\n\t\treturn True\r\n\telse:\r\n\t\treturn False\r\ndef binary_search(arr, low, high, x):\r\n\tif high >= low:\r\n\t\tmid = (low + high)//2 \r\n\t\tif (mid == 0 or x > arr[mid-1]) and (arr[mid] == x):\r\n\t\t\treturn mid\r\n\t\telif x > arr[mid]:\r\n\t\t\treturn binary_search(arr, (mid + 1), high, x)\r\n\t\telse:\r\n\t\t\treturn binary_search(arr, low, (mid -1), x)\r\n\treturn -1"
+  },
+  "content_hash": "851034f5ca1ea0765471295f0bd31b6677ba00d6836c01d3201ea920c15ded80",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c55cddd4bfe1",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.182566+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 37,
+    "text": "Write a function to sort a given mixed list of integers and strings.",
+    "code": "def sort_mixed_list(mixed_list):\r\n    int_part = sorted([i for i in mixed_list if type(i) is int])\r\n    str_part = sorted([i for i in mixed_list if type(i) is str])\r\n    return int_part + str_part"
+  },
+  "content_hash": "c55cddd4bfe1968167616bc301b682b9e388909419457e8693ea24e381283160",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

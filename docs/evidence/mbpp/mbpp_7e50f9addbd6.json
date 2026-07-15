@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7e50f9addbd6",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.319511+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 819,
+    "text": "Write a function to count the frequency of consecutive duplicate elements in a given list of numbers.",
+    "code": "def count_duplic(lists):\r\n    element = []\r\n    frequency = []\r\n    if not lists:\r\n        return element\r\n    running_count = 1\r\n    for i in range(len(lists)-1):\r\n        if lists[i] == lists[i+1]:\r\n            running_count += 1\r\n        else:\r\n            frequency.append(running_count)\r\n            element.append(lists[i])\r\n            running_count = 1\r\n    frequency.append(running_count)\r\n    element.append(lists[i+1])\r\n    return element,frequency\r\n"
+  },
+  "content_hash": "7e50f9addbd678777216221420fd2cd54424928601c4794d744acb140f33f3a9",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

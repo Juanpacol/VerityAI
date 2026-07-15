@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_201df5e91f62",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.349666+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 947,
+    "text": "Write a python function to find the length of the shortest word.",
+    "code": "def len_log(list1):\r\n    min=len(list1[0])\r\n    for i in list1:\r\n        if len(i)<min:\r\n            min=len(i)\r\n    return min"
+  },
+  "content_hash": "201df5e91f627ce427bbfc097a7f97a2bd7a2117c8cbe167d2a4ef285e833fb6",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

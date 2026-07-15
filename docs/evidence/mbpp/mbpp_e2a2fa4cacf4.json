@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e2a2fa4cacf4",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.352694+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 959,
+    "text": "Write a python function to find the average of a list.",
+    "code": "def Average(lst): \r\n    return sum(lst) / len(lst) "
+  },
+  "content_hash": "e2a2fa4cacf4d86156b60e4dacb45bbc00557788108c99bda1d75d04b9b3b9de",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

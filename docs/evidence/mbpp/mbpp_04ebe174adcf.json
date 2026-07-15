@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_04ebe174adcf",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.330413+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 867,
+    "text": "Write a python function to add a minimum number such that the sum of array becomes even.",
+    "code": "def min_Num(arr,n):  \r\n    odd = 0\r\n    for i in range(n): \r\n        if (arr[i] % 2): \r\n            odd += 1 \r\n    if (odd % 2): \r\n        return 1\r\n    return 2"
+  },
+  "content_hash": "04ebe174adcfaf11f0d26f66c9dc49508121d5ad795a9ce8c392cf701176a78f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

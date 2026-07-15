@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a73b1a9161c5",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.196606+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 171,
+    "text": "Write a function to find the perimeter of a pentagon.",
+    "code": "import math\r\ndef perimeter_pentagon(a):\r\n  perimeter=(5*a)\r\n  return perimeter"
+  },
+  "content_hash": "a73b1a9161c58c78ecf67aa66d75e4d59b724dda85603a34c7e56ccb9e82d9a6",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

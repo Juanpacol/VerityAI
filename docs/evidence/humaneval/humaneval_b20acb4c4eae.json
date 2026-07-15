@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_b20acb4c4eae",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.895221+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/54",
+    "prompt": "\n\ndef same_chars(s0: str, s1: str):\n    \"\"\"\n    Check if two words have the same characters.\n    >>> same_chars('eabcdzzzz', 'dddzzzzzzzddeddabc')\n    True\n    >>> same_chars('abcd', 'dddddddabc')\n    True\n    >>> same_chars('dddddddabc', 'abcd')\n    True\n    >>> same_chars('eabcd', 'dddddddabc')\n    False\n    >>> same_chars('abcd', 'dddddddabce')\n    False\n    >>> same_chars('eabcdzzzz', 'dddzzzzzzzddddabc')\n    False\n    \"\"\"\n",
+    "canonical_solution": "    return set(s0) == set(s1)\n",
+    "entry_point": "same_chars"
+  },
+  "content_hash": "b20acb4c4eaef52afb36fe1fac072893cd24e3524ec5f830ce073ad3b2c95fa7",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

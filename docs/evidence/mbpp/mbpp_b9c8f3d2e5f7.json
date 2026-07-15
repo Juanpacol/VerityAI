@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b9c8f3d2e5f7",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.347191+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 937,
+    "text": "Write a function to count the most common character in a given string.",
+    "code": "from collections import Counter \r\ndef max_char(str1):\r\n    temp = Counter(str1) \r\n    max_char = max(temp, key = temp.get)\r\n    return max_char"
+  },
+  "content_hash": "b9c8f3d2e5f73f360402fcf8d869185c61ae1a388e04b68d039b4c091c07e625",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

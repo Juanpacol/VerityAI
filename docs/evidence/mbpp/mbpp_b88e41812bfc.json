@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b88e41812bfc",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.256288+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 488,
+    "text": "Write a function to find the area of a pentagon.",
+    "code": "import math\r\ndef area_pentagon(a):\r\n  area=(math.sqrt(5*(5+2*math.sqrt(5)))*pow(a,2))/4.0\r\n  return area"
+  },
+  "content_hash": "b88e41812bfc5bdf54522bc0ced880a6ecddbc516e06a89e94ac96fbb4d16a5d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

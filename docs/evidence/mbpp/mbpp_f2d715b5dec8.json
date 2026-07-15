@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f2d715b5dec8",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.280593+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 629,
+    "text": "Write a python function to find even numbers from a mixed list.",
+    "code": "def Split(list): \r\n    ev_li = [] \r\n    for i in list: \r\n        if (i % 2 == 0): \r\n            ev_li.append(i)  \r\n    return ev_li"
+  },
+  "content_hash": "f2d715b5dec81da2d7e2e7c8b58f73dbeef0a4f7a6662f0635512984ca376060",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

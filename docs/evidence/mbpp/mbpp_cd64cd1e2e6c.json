@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_cd64cd1e2e6c",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.245849+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 420,
+    "text": "Write a python function to find the cube sum of first n even natural numbers.",
+    "code": "def cube_Sum(n): \r\n    sum = 0\r\n    for i in range(1,n + 1): \r\n        sum += (2*i)*(2*i)*(2*i) \r\n    return sum"
+  },
+  "content_hash": "cd64cd1e2e6c3950086e401dc8a8ac5de6ebdd8a37fa8d7a4f954d1f2a463dc1",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

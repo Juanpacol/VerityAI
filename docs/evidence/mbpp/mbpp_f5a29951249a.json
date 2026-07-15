@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f5a29951249a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.197085+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 175,
+    "text": "Write a function to verify validity of a string of parentheses.",
+    "code": "def is_valid_parenthese( str1):\r\n        stack, pchar = [], {\"(\": \")\", \"{\": \"}\", \"[\": \"]\"}\r\n        for parenthese in str1:\r\n            if parenthese in pchar:\r\n                stack.append(parenthese)\r\n            elif len(stack) == 0 or pchar[stack.pop()] != parenthese:\r\n                return False\r\n        return len(stack) == 0"
+  },
+  "content_hash": "f5a29951249a26059a6f01743c59c3de99d486199e588630407824f7e3b18cbc",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

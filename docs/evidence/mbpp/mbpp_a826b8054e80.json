@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a826b8054e80",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.283526+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 646,
+    "text": "Write a python function to count number of cubes of size k in a cube of size n.",
+    "code": "def No_of_cubes(N,K):\r\n    No = 0\r\n    No = (N - K + 1)\r\n    No = pow(No, 3)\r\n    return No"
+  },
+  "content_hash": "a826b8054e80d2050d9a90783c089f336bf6acdf01e8c623644ad6caf6abebea",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

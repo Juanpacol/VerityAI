@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_d3ee11209ecf",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.211651+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 294,
+    "text": "Write a function to find the maximum value in a given heterogeneous list.",
+    "code": "def max_val(listval):\r\n     max_val = max(i for i in listval if isinstance(i, int)) \r\n     return(max_val)"
+  },
+  "content_hash": "d3ee11209ecfd3e402144ca2c50a9d6daf6a01464e03cbd5a1bdf15865c41f5c",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

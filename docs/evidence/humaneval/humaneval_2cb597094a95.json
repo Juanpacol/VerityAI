@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_2cb597094a95",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.894455+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/48",
+    "prompt": "\n\ndef is_palindrome(text: str):\n    \"\"\"\n    Checks if given string is a palindrome\n    >>> is_palindrome('')\n    True\n    >>> is_palindrome('aba')\n    True\n    >>> is_palindrome('aaaaa')\n    True\n    >>> is_palindrome('zbcd')\n    False\n    \"\"\"\n",
+    "canonical_solution": "    for i in range(len(text)):\n        if text[i] != text[len(text) - 1 - i]:\n            return False\n    return True\n",
+    "entry_point": "is_palindrome"
+  },
+  "content_hash": "2cb597094a95d95f7398feff92f6593f91533ab24ba426538aeb20e6e7880cfc",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

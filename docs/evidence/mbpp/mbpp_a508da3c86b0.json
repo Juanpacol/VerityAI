@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a508da3c86b0",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.197880+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 182,
+    "text": "Write a function to find uppercase, lowercase, special character and numeric values using regex.",
+    "code": "import re\r\ndef find_character(string):\r\n  uppercase_characters = re.findall(r\"[A-Z]\", string) \r\n  lowercase_characters = re.findall(r\"[a-z]\", string) \r\n  numerical_characters = re.findall(r\"[0-9]\", string) \r\n  special_characters = re.findall(r\"[, .!?]\", string) \r\n  return uppercase_characters, lowercase_characters, numerical_characters, special_characters"
+  },
+  "content_hash": "a508da3c86b0928e869f4ee5d398e3733976b82884d2dad8b8a7e128e286f32d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

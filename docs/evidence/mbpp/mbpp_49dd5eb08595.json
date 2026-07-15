@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_49dd5eb08595",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.181155+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 22,
+    "text": "Write a function to find the first duplicate element in a given array of integers.",
+    "code": "def find_first_duplicate(nums):\r\n    num_set = set()\r\n    no_duplicate = -1\r\n\r\n    for i in range(len(nums)):\r\n\r\n        if nums[i] in num_set:\r\n            return nums[i]\r\n        else:\r\n            num_set.add(nums[i])\r\n\r\n    return no_duplicate"
+  },
+  "content_hash": "49dd5eb085957c1a58b14b8fcb670fb8a3a40f5275503d4a898a17423daa8ffc",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

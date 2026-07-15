@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_2821e3cde40a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.180069+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 10,
+    "text": "Write a function to get the n smallest items from a dataset.",
+    "code": "import heapq\r\ndef small_nnum(list1,n):\r\n  smallest=heapq.nsmallest(n,list1)\r\n  return smallest"
+  },
+  "content_hash": "2821e3cde40a3a2c6aacf3de3d531861e51608c0163e86331d0fcb5912bc7e30",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

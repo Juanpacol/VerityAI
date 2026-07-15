@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_39812fa78755",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.356114+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 973,
+    "text": "Write a python function to left rotate the string.",
+    "code": "def left_rotate(s,d):\r\n    tmp = s[d : ] + s[0 : d]\r\n    return tmp  "
+  },
+  "content_hash": "39812fa7875500b14889269c4584c78a14eb6407953782c1c6e0657ab05a1e97",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

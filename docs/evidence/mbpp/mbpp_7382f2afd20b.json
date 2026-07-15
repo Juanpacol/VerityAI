@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7382f2afd20b",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.202772+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 224,
+    "text": "Write a python function to count set bits of a given number.",
+    "code": "def count_Set_Bits(n): \r\n    count = 0\r\n    while (n): \r\n        count += n & 1\r\n        n >>= 1\r\n    return count "
+  },
+  "content_hash": "7382f2afd20b1d6089a4e997345c6b8001e5cb7e51e0db7d391a79e507fbf50b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

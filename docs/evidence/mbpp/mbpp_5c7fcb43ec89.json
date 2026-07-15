@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_5c7fcb43ec89",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.190708+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 118,
+    "text": "[link text](https:// [link text](https:// [link text](https://)))write a function to convert a string to a list.",
+    "code": "def string_to_list(string): \r\n    lst = list(string.split(\" \")) \r\n    return lst"
+  },
+  "content_hash": "5c7fcb43ec89ec5a7effce785ca60f4e10d4f285b7c11e4006eebb20e6e5b84f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

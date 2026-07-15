@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c2a585303587",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.299647+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 731,
+    "text": "Write a function to find the lateral surface area of a cone.",
+    "code": "import math\r\ndef lateralsurface_cone(r,h):\r\n  l = math.sqrt(r * r + h * h)\r\n  LSA = math.pi * r  * l\r\n  return LSA"
+  },
+  "content_hash": "c2a585303587d697c6c6ff16d092aeed79a25ba2beb38832e4b43eda97719719",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

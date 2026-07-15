@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_cf73a5043505",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.260783+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 516,
+    "text": "Write a function to sort a list of elements using radix sort.",
+    "code": "def radix_sort(nums):\r\n    RADIX = 10\r\n    placement = 1\r\n    max_digit = max(nums)\r\n\r\n    while placement < max_digit:\r\n      buckets = [list() for _ in range( RADIX )]\r\n      for i in nums:\r\n        tmp = int((i / placement) % RADIX)\r\n        buckets[tmp].append(i)\r\n      a = 0\r\n      for b in range( RADIX ):\r\n        buck = buckets[b]\r\n        for i in buck:\r\n          nums[a] = i\r\n          a += 1\r\n      placement *= RADIX\r\n    return nums"
+  },
+  "content_hash": "cf73a5043505a0770455d3b37a0987466d4ca53d338d0536f40abf1641a18df7",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

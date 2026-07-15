@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_eb4a4fc9c6cc",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.231508+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 343,
+    "text": "Write a function to calculate the number of digits and letters in a string.",
+    "code": "def dig_let(s):\r\n d=l=0\r\n for c in s:\r\n    if c.isdigit():\r\n        d=d+1\r\n    elif c.isalpha():\r\n        l=l+1\r\n    else:\r\n        pass\r\n return (l,d)"
+  },
+  "content_hash": "eb4a4fc9c6ccb44ba77d7d1374227799ef9fd92d0c7f034e4e74a7ad46d83486",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_d1ccb00c781e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.228061+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 318,
+    "text": "Write a python function to find the maximum volume of a cuboid with given sum of sides.",
+    "code": "def max_volume (s): \r\n    maxvalue = 0\r\n    i = 1\r\n    for i in range(s - 1): \r\n        j = 1\r\n        for j in range(s): \r\n            k = s - i - j \r\n            maxvalue = max(maxvalue, i * j * k)         \r\n    return maxvalue "
+  },
+  "content_hash": "d1ccb00c781efa572ce39a477d68ec630692ebf0cc64a8b5424e0d46594bae56",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

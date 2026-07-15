@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e85729702327",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.307007+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 766,
+    "text": "Write a function to iterate over all pairs of consecutive items in a given list.",
+    "code": "def pair_wise(l1):\r\n    temp = []\r\n    for i in range(len(l1) - 1):\r\n        current_element, next_element = l1[i], l1[i + 1]\r\n        x = (current_element, next_element)\r\n        temp.append(x)\r\n    return temp"
+  },
+  "content_hash": "e8572970232734a5e0d49556e40862220dd9ed42fc37c0fa413e0146c34da32b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

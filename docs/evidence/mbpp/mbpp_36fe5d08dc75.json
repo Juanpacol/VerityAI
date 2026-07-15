@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_36fe5d08dc75",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.192366+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 134,
+    "text": "Write a python function to check whether the last element of given array is even or odd after performing an operation p times.",
+    "code": "def check_last (arr,n,p): \r\n    _sum = 0\r\n    for i in range(n): \r\n        _sum = _sum + arr[i] \r\n    if p == 1: \r\n        if _sum % 2 == 0: \r\n            return \"ODD\"\r\n        else: \r\n            return \"EVEN\"\r\n    return \"EVEN\"\r\n      "
+  },
+  "content_hash": "36fe5d08dc758a1ce11d7384af2e9f7e73717f3e32c365e4ff0b9f44e2919c94",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

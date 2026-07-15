@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_29f21cfce791",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.259983+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 511,
+    "text": "Write a python function to find minimum sum of factors of a given number.",
+    "code": "def find_Min_Sum(num): \r\n    sum = 0\r\n    i = 2\r\n    while(i * i <= num): \r\n        while(num % i == 0): \r\n            sum += i \r\n            num /= i \r\n        i += 1\r\n    sum += num \r\n    return sum"
+  },
+  "content_hash": "29f21cfce791b592e867a483ad0ca6542b23a55515406e822fb837b2da50897e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_d9120510ee6b",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.900492+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/100",
+    "prompt": "\ndef make_a_pile(n):\n    \"\"\"\n    Given a positive integer n, you have to make a pile of n levels of stones.\n    The first level has n stones.\n    The number of stones in the next level is:\n        - the next odd number if n is odd.\n        - the next even number if n is even.\n    Return the number of stones in each level in a list, where element at index\n    i represents the number of stones in the level (i+1).\n\n    Examples:\n    >>> make_a_pile(3)\n    [3, 5, 7]\n    \"\"\"\n",
+    "canonical_solution": "    return [n + 2*i for i in range(n)]\n",
+    "entry_point": "make_a_pile"
+  },
+  "content_hash": "d9120510ee6bef1ca930da45066e81e0fd1aae2eb850701f55d4fafda04450f4",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

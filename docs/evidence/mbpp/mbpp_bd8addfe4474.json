@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_bd8addfe4474",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.289537+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 679,
+    "text": "Write a function to access dictionary key’s element by index.",
+    "code": "def access_key(ditionary,key):\r\n  return list(ditionary)[key]"
+  },
+  "content_hash": "bd8addfe447441bf23eee3cf4799aa8d34b2257dbaf9bab897b7bc5f20e46d8c",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

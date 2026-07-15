@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b25fb6e5cba8",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.255111+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 481,
+    "text": "Write a function to determine if there is a subset of the given set with sum equal to the given sum.",
+    "code": "def is_subset_sum(set, n, sum):\r\n\tif (sum == 0):\r\n\t\treturn True\r\n\tif (n == 0):\r\n\t\treturn False\r\n\tif (set[n - 1] > sum):\r\n\t\treturn is_subset_sum(set, n - 1, sum)\r\n\treturn is_subset_sum(set, n-1, sum) or is_subset_sum(set, n-1, sum-set[n-1])"
+  },
+  "content_hash": "b25fb6e5cba8e506de6bdfd134326c852cac20e5478ff87b358dd2f94936a3c7",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

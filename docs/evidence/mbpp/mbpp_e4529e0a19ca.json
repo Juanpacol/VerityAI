@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e4529e0a19ca",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.195934+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 165,
+    "text": "Write a python function to count characters at same position in a given string (lower and uppercase characters) as in english alphabet.",
+    "code": "def count_char_position(str1): \r\n    count_chars = 0\r\n    for i in range(len(str1)):\r\n        if ((i == ord(str1[i]) - ord('A')) or \r\n            (i == ord(str1[i]) - ord('a'))): \r\n            count_chars += 1\r\n    return count_chars "
+  },
+  "content_hash": "e4529e0a19ca7a2090a72f6ea88e3c14850766d9a0b1c17c7ce2d160f8c41ef9",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

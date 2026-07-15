@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_8f1dea3eb89c",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.305888+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 761,
+    "text": "Write a function to caluclate arc length of an angle.",
+    "code": "def arc_length(d,a):\r\n    pi=22/7\r\n    if a >= 360:\r\n        return None\r\n    arclength = (pi*d) * (a/360)\r\n    return arclength"
+  },
+  "content_hash": "8f1dea3eb89c999831b8cd1e2d71e45e729da98058acf78ca3702af3c50d41e3",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_d4d062bf229e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.292376+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 694,
+    "text": "Write a function to extract unique values from the given dictionary values.",
+    "code": "def extract_unique(test_dict):\r\n  res = list(sorted({ele for val in test_dict.values() for ele in val}))\r\n  return res"
+  },
+  "content_hash": "d4d062bf229ee858b73580b71bff5a39b79ced80064a2602df6d6855d2ac79f7",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

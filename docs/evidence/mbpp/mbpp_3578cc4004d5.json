@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_3578cc4004d5",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.245208+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 416,
+    "text": "Write a function to find the maximum sum we can make by dividing number in three parts recursively and summing them up together for the given number.",
+    "code": "MAX = 1000000\r\ndef breakSum(n): \r\n\tdp = [0]*(n+1) \r\n\tdp[0] = 0\r\n\tdp[1] = 1\r\n\tfor i in range(2, n+1): \r\n\t\tdp[i] = max(dp[int(i/2)] + dp[int(i/3)] + dp[int(i/4)], i); \r\n\treturn dp[n]"
+  },
+  "content_hash": "3578cc4004d5211bb00b37f2a25ce6198997932248a9396446ac905bd0fc6dcd",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

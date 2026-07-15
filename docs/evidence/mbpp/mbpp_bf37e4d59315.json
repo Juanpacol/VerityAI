@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_bf37e4d59315",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.316767+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 807,
+    "text": "Write a python function to find the first odd number in a given list of numbers.",
+    "code": "def first_odd(nums):\r\n  first_odd = next((el for el in nums if el%2!=0),-1)\r\n  return first_odd"
+  },
+  "content_hash": "bf37e4d593159dec2982e72e66f791f8ce454d27cd605e9aaf27e0619c332658",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

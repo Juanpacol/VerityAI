@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_23358b32915a",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.891157+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/15",
+    "prompt": "\n\ndef string_sequence(n: int) -> str:\n    \"\"\" Return a string containing space-delimited numbers starting from 0 upto n inclusive.\n    >>> string_sequence(0)\n    '0'\n    >>> string_sequence(5)\n    '0 1 2 3 4 5'\n    \"\"\"\n",
+    "canonical_solution": "    return ' '.join([str(x) for x in range(n + 1)])\n",
+    "entry_point": "string_sequence"
+  },
+  "content_hash": "23358b32915a64dae82be3c755aa42c11efed2db7cab50fed8300b151dea9720",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_35a68a7342ab",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.230256+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 334,
+    "text": "Write a python function to check whether the triangle is valid or not if sides are given.",
+    "code": "def check_Validity(a,b,c):  \r\n    if (a + b <= c) or (a + c <= b) or (b + c <= a) : \r\n        return False\r\n    else: \r\n        return True        "
+  },
+  "content_hash": "35a68a7342ab57699d9dd2be6f1fb9a9898909e7af0a63ba642c756c7ab833a7",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

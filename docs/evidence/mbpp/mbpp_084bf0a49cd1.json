@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_084bf0a49cd1",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.197654+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 180,
+    "text": "Write a function to calculate distance between two points using latitude and longitude.",
+    "code": "from math import radians, sin, cos, acos\r\ndef distance_lat_long(slat,slon,elat,elon):\r\n dist = 6371.01 * acos(sin(slat)*sin(elat) + cos(slat)*cos(elat)*cos(slon - elon))\r\n return dist"
+  },
+  "content_hash": "084bf0a49cd15971c62f78337bdb204c09ed5d4969ea673096b06bf18ecf2ea3",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_432df2c7e1e4",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.252837+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 466,
+    "text": "Write a function to find the peak element in the given array.",
+    "code": "def find_peak_util(arr, low, high, n): \r\n\tmid = low + (high - low)/2\r\n\tmid = int(mid) \r\n\tif ((mid == 0 or arr[mid - 1] <= arr[mid]) and\r\n\t\t(mid == n - 1 or arr[mid + 1] <= arr[mid])): \r\n\t\treturn mid \r\n\telif (mid > 0 and arr[mid - 1] > arr[mid]): \r\n\t\treturn find_peak_util(arr, low, (mid - 1), n) \r\n\telse: \r\n\t\treturn find_peak_util(arr, (mid + 1), high, n) \r\ndef find_peak(arr, n): \r\n\treturn find_peak_util(arr, 0, n - 1, n) "
+  },
+  "content_hash": "432df2c7e1e45d8c0937456961a55905ff634293bd35a3be3171c03648ef7f8f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_465346dc0dca",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.242254+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 396,
+    "text": "Write a function to check whether the given string starts and ends with the same character or not using regex.",
+    "code": "import re  \r\nregex = r'^[a-z]$|^([a-z]).*\\1$'\r\ndef check_char(string): \r\n\tif(re.search(regex, string)): \r\n\t\treturn \"Valid\" \r\n\telse: \r\n\t\treturn \"Invalid\" "
+  },
+  "content_hash": "465346dc0dca2969d770e7ec3883c63e1946f37b0c66825e1691eb5cfe56fef3",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_22a01097d5f2",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.338196+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 900,
+    "text": "Write a function where a string will start with a specific number.",
+    "code": "import re\r\ndef match_num(string):\r\n    text = re.compile(r\"^5\")\r\n    if text.match(string):\r\n        return True\r\n    else:\r\n        return False"
+  },
+  "content_hash": "22a01097d5f2c0a76b928a8fbcac79c9ffc8f80db999fa4a68274c095838c8fa",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

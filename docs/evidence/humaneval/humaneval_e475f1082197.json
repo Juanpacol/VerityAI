@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_e475f1082197",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.893140+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/35",
+    "prompt": "\n\ndef max_element(l: list):\n    \"\"\"Return maximum element in the list.\n    >>> max_element([1, 2, 3])\n    3\n    >>> max_element([5, 3, -5, 2, -3, 3, 9, 0, 123, 1, -10])\n    123\n    \"\"\"\n",
+    "canonical_solution": "    m = l[0]\n    for e in l:\n        if e > m:\n            m = e\n    return m\n",
+    "entry_point": "max_element"
+  },
+  "content_hash": "e475f1082197d4cc1f3dc16dc8ab80f180e0c327bcef4a039dc89041df6703ce",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_8cb6e40f99cd",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.194214+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 150,
+    "text": "Write a python function to find whether the given number is present in the infinite sequence or not.",
+    "code": "def does_Contain_B(a,b,c): \r\n    if (a == b): \r\n        return True\r\n    if ((b - a) * c > 0 and (b - a) % c == 0): \r\n        return True\r\n    return False"
+  },
+  "content_hash": "8cb6e40f99cdbc0feab8341a6febac8c1d639802c4834d3e3f647bd5d42559b7",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

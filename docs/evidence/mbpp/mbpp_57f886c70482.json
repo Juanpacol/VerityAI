@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_57f886c70482",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.192154+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 132,
+    "text": "Write a function to convert tuple to a string.",
+    "code": "def tup_string(tup1):\r\n  str =  ''.join(tup1)\r\n  return str"
+  },
+  "content_hash": "57f886c70482746bcdfe729421d69390963dda54afedfbf284c4c8a85a370388",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

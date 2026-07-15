@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_77fcfe350444",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.244032+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 408,
+    "text": "Write a function to find k number of pairs which consist of one element from the first array and one element from the second array.",
+    "code": "import heapq\r\ndef k_smallest_pairs(nums1, nums2, k):\r\n   queue = []\r\n   def push(i, j):\r\n       if i < len(nums1) and j < len(nums2):\r\n           heapq.heappush(queue, [nums1[i] + nums2[j], i, j])\r\n   push(0, 0)\r\n   pairs = []\r\n   while queue and len(pairs) < k:\r\n       _, i, j = heapq.heappop(queue)\r\n       pairs.append([nums1[i], nums2[j]])\r\n       push(i, j + 1)\r\n       if j == 0:\r\n           push(i + 1, 0)\r\n   return pairs"
+  },
+  "content_hash": "77fcfe350444471b55afa192c1180dafc0a1c5e3cbb928701800f6fb9b066de1",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

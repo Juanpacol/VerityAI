@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_46ff70861de2",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.186496+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 77,
+    "text": "Write a python function to find the difference between sum of even and odd digits.",
+    "code": "def is_Diff(n): \r\n    return (n % 11 == 0) "
+  },
+  "content_hash": "46ff70861de2cf96f57189938fb325276578863124eb318fa0004854cd304075",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

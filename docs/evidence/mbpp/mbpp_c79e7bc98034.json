@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c79e7bc98034",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.198925+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 191,
+    "text": "Write a function to check whether the given month name contains 30 days or not.",
+    "code": "def check_monthnumber(monthname3):\r\n  if monthname3 ==\"April\" or monthname3== \"June\" or monthname3== \"September\" or monthname3== \"November\":\r\n    return True\r\n  else:\r\n    return False"
+  },
+  "content_hash": "c79e7bc980343aae9f90f8c6ec71e4cbc5bb127de3dcc1b832abcfb7fa1b866d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

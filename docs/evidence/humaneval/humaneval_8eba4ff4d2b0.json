@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_8eba4ff4d2b0",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.904812+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/138",
+    "prompt": "\ndef is_equal_to_sum_even(n):\n    \"\"\"Evaluate whether the given number n can be written as the sum of exactly 4 positive even numbers\n    Example\n    is_equal_to_sum_even(4) == False\n    is_equal_to_sum_even(6) == False\n    is_equal_to_sum_even(8) == True\n    \"\"\"\n",
+    "canonical_solution": "    return n%2 == 0 and n >= 8\n",
+    "entry_point": "is_equal_to_sum_even"
+  },
+  "content_hash": "8eba4ff4d2b05d8d46aecbb78929d1d73f5bbc871441c873aef839d9530ad04a",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_89651573dbdf",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.180250+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 12,
+    "text": "Write a function to sort a given matrix in ascending order according to the sum of its rows.",
+    "code": "def sort_matrix(M):\r\n    result = sorted(M, key=sum)\r\n    return result"
+  },
+  "content_hash": "89651573dbdfff7597f3601960e375124251fb8601a5c362bfd186c77239cca9",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

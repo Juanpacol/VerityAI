@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_5c752ef55030",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.225865+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 302,
+    "text": "Write a python function to find the most significant bit number which is also a set bit.",
+    "code": "def set_Bit_Number(n): \r\n    if (n == 0): \r\n        return 0; \r\n    msb = 0; \r\n    n = int(n / 2); \r\n    while (n > 0): \r\n        n = int(n / 2); \r\n        msb += 1; \r\n    return (1 << msb)"
+  },
+  "content_hash": "5c752ef55030bd17ac5f8652b53ccd0688988b617a1e8bcac5cbab2faefa72de",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

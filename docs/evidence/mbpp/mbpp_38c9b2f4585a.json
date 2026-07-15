@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_38c9b2f4585a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.231786+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 345,
+    "text": "Write a function to find the difference between two consecutive numbers in a given list.",
+    "code": "def diff_consecutivenums(nums):\r\n    result = [b-a for a, b in zip(nums[:-1], nums[1:])]\r\n    return result"
+  },
+  "content_hash": "38c9b2f4585a20eebde5cd1501e3968bf8f8bad0062f72dd9061d3e310a10d3e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

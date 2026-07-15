@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b9af2a1a1e7c",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.226142+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 304,
+    "text": "Write a python function to find element at a given index after number of rotations.",
+    "code": "def find_Element(arr,ranges,rotations,index) :  \r\n    for i in range(rotations - 1,-1,-1 ) : \r\n        left = ranges[i][0] \r\n        right = ranges[i][1] \r\n        if (left <= index and right >= index) : \r\n            if (index == left) : \r\n                index = right \r\n            else : \r\n                index = index - 1 \r\n    return arr[index] "
+  },
+  "content_hash": "b9af2a1a1e7c14faf6bfc535ef86d7d031642c9ced22c505f9ddb495627b8aec",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

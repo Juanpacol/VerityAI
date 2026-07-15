@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_81da14b135c8",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.198787+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 190,
+    "text": "Write a python function to count the number of integral co-ordinates that lie inside a square.",
+    "code": "def count_Intgral_Points(x1,y1,x2,y2): \r\n    return ((y2 - y1 - 1) * (x2 - x1 - 1)) "
+  },
+  "content_hash": "81da14b135c889eaf18c020f8940f976d77bf919b2ccce62af574499175eafca",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

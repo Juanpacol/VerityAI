@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e48677ea6803",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.326514+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 850,
+    "text": "Write a function to check if a triangle of positive area is possible with the given angles.",
+    "code": "def is_triangleexists(a,b,c): \r\n    if(a != 0 and b != 0 and c != 0 and (a + b + c)== 180): \r\n        if((a + b)>= c or (b + c)>= a or (a + c)>= b): \r\n            return True \r\n        else:\r\n            return False\r\n    else:\r\n        return False"
+  },
+  "content_hash": "e48677ea6803ef7864f7fed52b00ae9ef66b1ebb1c6e556afeedc1ac975581c1",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

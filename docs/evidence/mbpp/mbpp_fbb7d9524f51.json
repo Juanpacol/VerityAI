@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_fbb7d9524f51",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.228456+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 321,
+    "text": "Write a function to find the demlo number for the given number.",
+    "code": "def find_demlo(s): \r\n\tl = len(s) \r\n\tres = \"\" \r\n\tfor i in range(1,l+1): \r\n\t\tres = res + str(i) \r\n\tfor i in range(l-1,0,-1): \r\n\t\tres = res + str(i) \r\n\treturn res \t"
+  },
+  "content_hash": "fbb7d9524f5169e32b2cd143e5d4d9f32172b0af5268c1aed59d210433b6fbb0",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

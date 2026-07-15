@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_2d4b53cc9f49",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.319957+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 821,
+    "text": "Write a function to merge two dictionaries into a single expression.",
+    "code": "import collections as ct\r\ndef merge_dictionaries(dict1,dict2):\r\n    merged_dict = dict(ct.ChainMap({}, dict1, dict2))\r\n    return merged_dict"
+  },
+  "content_hash": "2d4b53cc9f490a9b6ba7230adf55bc5ab895774cce9d6672ac9d1ce63bfdfba0",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

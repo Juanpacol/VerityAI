@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_32e252ddda0d",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.906213+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/150",
+    "prompt": "\ndef x_or_y(n, x, y):\n    \"\"\"A simple program which should return the value of x if n is \n    a prime number and should return the value of y otherwise.\n\n    Examples:\n    for x_or_y(7, 34, 12) == 34\n    for x_or_y(15, 8, 5) == 5\n    \n    \"\"\"\n",
+    "canonical_solution": "    if n == 1:\n        return y\n    for i in range(2, n):\n        if n % i == 0:\n            return y\n            break\n    else:\n        return x\n",
+    "entry_point": "x_or_y"
+  },
+  "content_hash": "32e252ddda0d7b21a43aaf8c2a1a4000545a6f86f56ac56abc6877f6ccdd6045",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

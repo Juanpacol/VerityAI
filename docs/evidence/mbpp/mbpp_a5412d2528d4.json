@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a5412d2528d4",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.339188+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 904,
+    "text": "Write a function to return true if the given number is even else return false.",
+    "code": "def even_num(x):\r\n  if x%2==0:\r\n     return True\r\n  else:\r\n    return False"
+  },
+  "content_hash": "a5412d2528d41db16b7688b4b3f94e6994b59f5ac372acc004c5317e9eecb211",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

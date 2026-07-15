@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_617d4091968b",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.209617+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 279,
+    "text": "Write a function to find the nth decagonal number.",
+    "code": "def is_num_decagonal(n): \r\n\treturn 4 * n * n - 3 * n "
+  },
+  "content_hash": "617d4091968be13bfb1203ce19341b764e186302da97a818dc5a8478cac450c3",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

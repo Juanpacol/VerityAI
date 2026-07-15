@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_2a6bc34ef8a9",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.183227+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 44,
+    "text": "Write a function that matches a word at the beginning of a string.",
+    "code": "import re\r\ndef text_match_string(text):\r\n        patterns = '^\\w+'\r\n        if re.search(patterns,  text):\r\n                return 'Found a match!'\r\n        else:\r\n                return 'Not matched!'"
+  },
+  "content_hash": "2a6bc34ef8a9b7bdbf7ccff2c1670e6ac1e44a7fa06337e36189be7a628f59fd",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

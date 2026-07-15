@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f1ab077cd9ba",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.256769+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 491,
+    "text": "Write a function to find the sum of geometric progression series.",
+    "code": "import math\r\ndef sum_gp(a,n,r):\r\n total = (a * (1 - math.pow(r, n ))) / (1- r)\r\n return total"
+  },
+  "content_hash": "f1ab077cd9ba36785a78164cf3b8e57ea951c6bfb15e424ceb04065de9e1a3a1",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

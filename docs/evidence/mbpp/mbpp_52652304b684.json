@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_52652304b684",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.198336+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 186,
+    "text": "Write a function to search some literals strings in a string by using regex.",
+    "code": "import re\r\ndef check_literals(text, patterns):\r\n  for pattern in patterns:\r\n    if re.search(pattern,  text):\r\n        return ('Matched!')\r\n    else:\r\n        return ('Not Matched!')"
+  },
+  "content_hash": "52652304b684cd3b0e73c3fd223c0882910868f78f37a9f2da6fe09bf39dbee1",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

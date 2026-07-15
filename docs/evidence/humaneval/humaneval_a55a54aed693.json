@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_a55a54aed693",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.896639+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/65",
+    "prompt": "\ndef circular_shift(x, shift):\n    \"\"\"Circular shift the digits of the integer x, shift the digits right by shift\n    and return the result as a string.\n    If shift > number of digits, return digits reversed.\n    >>> circular_shift(12, 1)\n    \"21\"\n    >>> circular_shift(12, 2)\n    \"12\"\n    \"\"\"\n",
+    "canonical_solution": "    s = str(x)\n    if shift > len(s):\n        return s[::-1]\n    else:\n        return s[len(s) - shift:] + s[:len(s) - shift]\n",
+    "entry_point": "circular_shift"
+  },
+  "content_hash": "a55a54aed693fdc89c4098984b60d4bdf77336e3f8eefb3a462197c447cd81b9",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

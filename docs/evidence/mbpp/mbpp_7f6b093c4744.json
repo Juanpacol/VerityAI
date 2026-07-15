@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7f6b093c4744",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.248415+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 437,
+    "text": "Write a function to remove odd characters in a string.",
+    "code": "def remove_odd(str1):\r\n str2 = ''\r\n for i in range(1, len(str1) + 1):\r\n    if(i % 2 == 0):\r\n        str2 = str2 + str1[i - 1]\r\n return str2"
+  },
+  "content_hash": "7f6b093c4744dd3a7466859e0cf413b7a7778fafe62c7b9ede33af42506e44e5",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

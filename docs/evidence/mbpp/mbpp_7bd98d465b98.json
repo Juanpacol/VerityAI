@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7bd98d465b98",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.196273+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 168,
+    "text": "Write a python function to find the frequency of a number in a given array.",
+    "code": "def frequency(a,x): \r\n    count = 0  \r\n    for i in a: \r\n        if i == x: count += 1\r\n    return count "
+  },
+  "content_hash": "7bd98d465b980fb8fde01d227e174d4706014d7a5d19a6725bba558b0f91428d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

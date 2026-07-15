@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_ab5f9d63d587",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.201816+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 216,
+    "text": "Write a function to check if a nested list is a subset of another nested list.",
+    "code": "def check_subset_list(list1, list2): \r\n    l1, l2 = list1[0], list2[0] \r\n    exist = True\r\n    for i in list2: \r\n        if i not in list1: \r\n            exist = False\r\n    return exist "
+  },
+  "content_hash": "ab5f9d63d58754e4202c9b02355ec54e0d4ccbc10033132e17d315ceee4d3305",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

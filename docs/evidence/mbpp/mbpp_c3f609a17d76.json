@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c3f609a17d76",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.179644+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 6,
+    "text": "Write a python function to check whether the two numbers differ at one bit position only or not.",
+    "code": "def is_Power_Of_Two (x): \r\n    return x and (not(x & (x - 1))) \r\ndef differ_At_One_Bit_Pos(a,b): \r\n    return is_Power_Of_Two(a ^ b)"
+  },
+  "content_hash": "c3f609a17d76fb3a3802bd4af58c7cab59ee63572ac355585b352f9f3409f3bb",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7994c8b21d73",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.264897+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 540,
+    "text": "Write a python function to find the difference between highest and least frequencies in a given array.",
+    "code": "def find_Diff(arr,n): \r\n    arr.sort()  \r\n    count = 0; max_count = 0; min_count = n \r\n    for i in range(0,(n-1)): \r\n        if arr[i] == arr[i + 1]: \r\n            count += 1\r\n            continue\r\n        else: \r\n            max_count = max(max_count,count) \r\n            min_count = min(min_count,count) \r\n            count = 0\r\n    return max_count - min_count "
+  },
+  "content_hash": "7994c8b21d73fcf9b66a3f1960a7971b94be2b421ac08694e7cf20860d102243",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

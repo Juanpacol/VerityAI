@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_f103b16b26c0",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.893866+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/42",
+    "prompt": "\n\ndef incr_list(l: list):\n    \"\"\"Return list with elements incremented by 1.\n    >>> incr_list([1, 2, 3])\n    [2, 3, 4]\n    >>> incr_list([5, 3, 5, 2, 3, 3, 9, 0, 123])\n    [6, 4, 6, 3, 4, 4, 10, 1, 124]\n    \"\"\"\n",
+    "canonical_solution": "    return [(e + 1) for e in l]\n",
+    "entry_point": "incr_list"
+  },
+  "content_hash": "f103b16b26c0b3cb24763bd862af00f574c0ef7e53e6d3cfe15e2195935929af",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_1ef0420b8adb",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.189666+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 108,
+    "text": "Write a function to merge multiple sorted inputs into a single sorted iterator using heap queue algorithm.",
+    "code": "import heapq\r\ndef merge_sorted_list(num1,num2,num3):\r\n  num1=sorted(num1)\r\n  num2=sorted(num2)\r\n  num3=sorted(num3)\r\n  result = heapq.merge(num1,num2,num3)\r\n  return list(result)"
+  },
+  "content_hash": "1ef0420b8adb73bb7894b9ae675532dc5d36acbc8fd70ef578b6f84799d139dd",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e3622112ebeb",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.326738+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 851,
+    "text": "Write a python function to find sum of inverse of divisors.",
+    "code": "def Sum_of_Inverse_Divisors(N,Sum): \r\n    ans = float(Sum)*1.0 /float(N);  \r\n    return round(ans,2); "
+  },
+  "content_hash": "e3622112ebebe2933187fd145ed68457346b33fa21c4a155e29657214c2735b1",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

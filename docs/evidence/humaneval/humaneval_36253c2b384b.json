@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_36253c2b384b",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.892925+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/33",
+    "prompt": "\n\ndef sort_third(l: list):\n    \"\"\"This function takes a list l and returns a list l' such that\n    l' is identical to l in the indicies that are not divisible by three, while its values at the indicies that are divisible by three are equal\n    to the values of the corresponding indicies of l, but sorted.\n    >>> sort_third([1, 2, 3])\n    [1, 2, 3]\n    >>> sort_third([5, 6, 3, 4, 8, 9, 2])\n    [2, 6, 3, 4, 8, 9, 5]\n    \"\"\"\n",
+    "canonical_solution": "    l = list(l)\n    l[::3] = sorted(l[::3])\n    return l\n",
+    "entry_point": "sort_third"
+  },
+  "content_hash": "36253c2b384b3ec497403e0c02c586138565ce927db19e25ba0c5a5ef092601e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

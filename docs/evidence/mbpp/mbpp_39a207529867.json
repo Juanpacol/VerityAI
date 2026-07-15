@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_39a207529867",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.187021+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 82,
+    "text": "Write a function to find the volume of a sphere.",
+    "code": "import math\r\ndef volume_sphere(r):\r\n  volume=(4/3)*math.pi*r*r*r\r\n  return volume"
+  },
+  "content_hash": "39a20752986750f65333650482de87f560b054b5a49908c0e5195f7bbc46ecc3",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

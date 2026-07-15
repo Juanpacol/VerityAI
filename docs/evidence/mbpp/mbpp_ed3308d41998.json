@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_ed3308d41998",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.354910+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 968,
+    "text": "Write a python function to find maximum possible value for the given periodic function.",
+    "code": "def floor_Max(A,B,N):\r\n    x = min(B - 1,N)\r\n    return (A*x) // B"
+  },
+  "content_hash": "ed3308d41998016d1d115b1f451498d0993f8ae1f452f74b25f66c7e479fedb1",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

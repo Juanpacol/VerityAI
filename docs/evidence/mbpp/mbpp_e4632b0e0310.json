@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e4632b0e0310",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.187605+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 88,
+    "text": "Write a function to get the frequency of the elements in a list.",
+    "code": "import collections\r\ndef freq_count(list1):\r\n  freq_count= collections.Counter(list1)\r\n  return freq_count"
+  },
+  "content_hash": "e4632b0e0310beb47c29ee9c4d7e8b3c4f8b0ef51f85c631aa9b093aef971c61",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

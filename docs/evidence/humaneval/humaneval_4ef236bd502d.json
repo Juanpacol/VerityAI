@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_4ef236bd502d",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.908042+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/163",
+    "prompt": "\ndef generate_integers(a, b):\n    \"\"\"\n    Given two positive integers a and b, return the even digits between a\n    and b, in ascending order.\n\n    For example:\n    generate_integers(2, 8) => [2, 4, 6, 8]\n    generate_integers(8, 2) => [2, 4, 6, 8]\n    generate_integers(10, 14) => []\n    \"\"\"\n",
+    "canonical_solution": "    lower = max(2, min(a, b))\n    upper = min(8, max(a, b))\n\n    return [i for i in range(lower, upper+1) if i % 2 == 0]\n",
+    "entry_point": "generate_integers"
+  },
+  "content_hash": "4ef236bd502d3af5c08270f744aef956d8cb732a81f5006b3af7255f75a22917",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

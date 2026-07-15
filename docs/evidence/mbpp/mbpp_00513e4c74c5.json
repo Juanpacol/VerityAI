@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_00513e4c74c5",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.209749+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 280,
+    "text": "Write a function to search an element in the given array by using sequential search.",
+    "code": "def sequential_search(dlist, item):\r\n    pos = 0\r\n    found = False\r\n    while pos < len(dlist) and not found:\r\n        if dlist[pos] == item:\r\n            found = True\r\n        else:\r\n            pos = pos + 1\r\n    return found, pos"
+  },
+  "content_hash": "00513e4c74c50b2211db3593955d64ba8ce4e0bd36f393b36fcdb5469fb4cffc",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a4fb0f9108a6",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.183969+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 52,
+    "text": "Write a function to caluclate area of a parallelogram.",
+    "code": "def parallelogram_area(b,h):\r\n  area=b*h\r\n  return area"
+  },
+  "content_hash": "a4fb0f9108a677600eb76bd07c653bf6c8ef2065098dcd42933b2987002d35ca",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

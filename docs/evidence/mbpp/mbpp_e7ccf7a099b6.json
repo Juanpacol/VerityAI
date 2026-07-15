@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e7ccf7a099b6",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.204102+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 235,
+    "text": "Write a python function to set all even bits of a given number.",
+    "code": "def even_bit_set_number(n): \r\n    count = 0;res = 0;temp = n \r\n    while(temp > 0): \r\n        if (count % 2 == 1): \r\n            res |= (1 << count)\r\n        count+=1\r\n        temp >>= 1\r\n    return (n | res) "
+  },
+  "content_hash": "e7ccf7a099b65bc56f76bbf95e11badccb9b7ed91114474beb7c382e7ede2b63",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

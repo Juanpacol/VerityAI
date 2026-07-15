@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_0e87159ed6c0",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.246150+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 422,
+    "text": "Write a python function to find the average of cubes of first n natural numbers.",
+    "code": "def find_Average_Of_Cube(n):  \r\n    sum = 0\r\n    for i in range(1, n + 1): \r\n        sum += i * i * i  \r\n    return round(sum / n, 6) "
+  },
+  "content_hash": "0e87159ed6c000a2035bae0fcd029f88b883083a6be5d77f1e383fd54a9a99fe",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_3bb29ae24d29",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.286063+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 660,
+    "text": "Write a python function to choose points from two ranges such that no point lies in both the ranges.",
+    "code": "def find_Points(l1,r1,l2,r2): \r\n    x = min(l1,l2) if (l1 != l2) else -1\r\n    y = max(r1,r2) if (r1 != r2) else -1\r\n    return (x,y)"
+  },
+  "content_hash": "3bb29ae24d2943dec99cb642996ec1083b8193b2da708c42dd41c783efbd22de",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

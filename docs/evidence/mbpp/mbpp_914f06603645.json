@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_914f06603645",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.192260+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 133,
+    "text": "Write a function to calculate the sum of the negative numbers of a given list of numbers using lambda function.",
+    "code": "def sum_negativenum(nums):\r\n  sum_negativenum = list(filter(lambda nums:nums<0,nums))\r\n  return sum(sum_negativenum)"
+  },
+  "content_hash": "914f066036459f81a4361b6f91d3e8863df1b30f1a63801b91a800219ee9f363",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

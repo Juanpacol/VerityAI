@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_9520ae0e5cff",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.191844+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 129,
+    "text": "Write a function to calculate magic square.",
+    "code": "def magic_square_test(my_matrix):\r\n    iSize = len(my_matrix[0])\r\n    sum_list = []\r\n    sum_list.extend([sum (lines) for lines in my_matrix])   \r\n    for col in range(iSize):\r\n        sum_list.append(sum(row[col] for row in my_matrix))\r\n    result1 = 0\r\n    for i in range(0,iSize):\r\n        result1 +=my_matrix[i][i]\r\n    sum_list.append(result1)      \r\n    result2 = 0\r\n    for i in range(iSize-1,-1,-1):\r\n        result2 +=my_matrix[i][i]\r\n    sum_list.append(result2)\r\n    if len(set(sum_list))>1:\r\n        return False\r\n    return True"
+  },
+  "content_hash": "9520ae0e5cffce74f0f80e3e0f6d757d506fe984ac2d56d2fc4bda6a9e821593",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

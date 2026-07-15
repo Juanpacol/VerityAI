@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_399bb28c4151",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.236065+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 353,
+    "text": "Write a function to remove a specified column from a given nested list.",
+    "code": "def remove_column(list1, n):\r\n   for i in list1: \r\n    del i[n] \r\n   return list1"
+  },
+  "content_hash": "399bb28c4151f58d5bc036f74777be8a034867b43e374692584aa5702064f588",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

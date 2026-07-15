@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_ed9a231b521a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.245388+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 417,
+    "text": "Write a function to find common first element in given list of tuple.",
+    "code": "def group_tuples(Input): \r\n\tout = {} \r\n\tfor elem in Input: \r\n\t\ttry: \r\n\t\t\tout[elem[0]].extend(elem[1:]) \r\n\t\texcept KeyError: \r\n\t\t\tout[elem[0]] = list(elem) \r\n\treturn [tuple(values) for values in out.values()] "
+  },
+  "content_hash": "ed9a231b521a56d0c2f552c1af808d38cb465b87e565ae1219543c258df0050d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

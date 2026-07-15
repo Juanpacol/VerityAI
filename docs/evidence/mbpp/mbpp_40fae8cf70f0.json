@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_40fae8cf70f0",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.207664+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 264,
+    "text": "Write a function to calculate a dog's age in dog's years.",
+    "code": "def dog_age(h_age):\r\n if h_age < 0:\r\n \texit()\r\n elif h_age <= 2:\r\n\t d_age = h_age * 10.5\r\n else:\r\n\t d_age = 21 + (h_age - 2)*4\r\n return d_age"
+  },
+  "content_hash": "40fae8cf70f0317c88ed6a488f1b423a3e220efbeebea0551fd0c00f4eab0464",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

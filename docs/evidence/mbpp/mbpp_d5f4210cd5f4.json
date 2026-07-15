@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_d5f4210cd5f4",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.184268+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 55,
+    "text": "Write a function to find t-nth term of geometric series.",
+    "code": "import math\r\ndef tn_gp(a,n,r):\r\n  tn = a * (math.pow(r, n - 1))\r\n  return tn"
+  },
+  "content_hash": "d5f4210cd5f4eda8d56f42a017d7bc8ca840cc652de6332fb5b53a3b42ca3614",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

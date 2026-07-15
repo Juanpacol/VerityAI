@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_09c7326c7c60",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.906970+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/154",
+    "prompt": "\ndef cycpattern_check(a , b):\n    \"\"\"You are given 2 words. You need to return True if the second word or any of its rotations is a substring in the first word\n    cycpattern_check(\"abcd\",\"abd\") => False\n    cycpattern_check(\"hello\",\"ell\") => True\n    cycpattern_check(\"whassup\",\"psus\") => False\n    cycpattern_check(\"abab\",\"baa\") => True\n    cycpattern_check(\"efef\",\"eeff\") => False\n    cycpattern_check(\"himenss\",\"simen\") => True\n\n    \"\"\"\n",
+    "canonical_solution": "    l = len(b)\n    pat = b + b\n    for i in range(len(a) - l + 1):\n        for j in range(l + 1):\n            if a[i:i+l] == pat[j:j+l]:\n                return True\n    return False\n",
+    "entry_point": "cycpattern_check"
+  },
+  "content_hash": "09c7326c7c601543d04bfb87a46222edba6c8eb487f90eec8c673f650d37f57b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

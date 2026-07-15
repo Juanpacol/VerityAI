@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c4af51fdb12e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.228982+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 325,
+    "text": "Write a python function to find the minimum number of squares whose sum is equal to a given number.",
+    "code": "def get_Min_Squares(n):\r\n    if n <= 3:\r\n        return n;\r\n    res = n \r\n    for x in range(1,n + 1):\r\n        temp = x * x;\r\n        if temp > n:\r\n            break\r\n        else:\r\n            res = min(res,1 + get_Min_Squares(n  - temp)) \r\n    return res;"
+  },
+  "content_hash": "c4af51fdb12e8950b57bee2cf8277fe9268d0ea37855e3a677efc31a57184ac8",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_9e0c2f4afdcb",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.295775+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 712,
+    "text": "Write a function to remove duplicates from a list of lists.",
+    "code": "import itertools\r\ndef remove_duplicate(list1):\r\n list.sort(list1)\r\n remove_duplicate = list(list1 for list1,_ in itertools.groupby(list1))\r\n return remove_duplicate"
+  },
+  "content_hash": "9e0c2f4afdcb9652dedcd8fa84c639d7c8d1d314806b6729a39ecf142740b421",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_01c4baf29c4a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.322897+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 834,
+    "text": "Write a function to generate a square matrix filled with elements from 1 to n raised to the power of 2 in spiral order.",
+    "code": "def generate_matrix(n):\r\n        if n<=0:\r\n            return [] \r\n        matrix=[row[:] for row in [[0]*n]*n]        \r\n        row_st=0\r\n        row_ed=n-1        \r\n        col_st=0\r\n        col_ed=n-1\r\n        current=1        \r\n        while (True):\r\n            if current>n*n:\r\n                break\r\n            for c in range (col_st, col_ed+1):\r\n                matrix[row_st][c]=current\r\n                current+=1\r\n            row_st+=1\r\n            for r in range (row_st, row_ed+1):\r\n                matrix[r][col_ed]=current\r\n                current+=1\r\n            col_ed-=1\r\n            for c in range (col_ed, col_st-1, -1):\r\n                matrix[row_ed][c]=current\r\n                current+=1\r\n            row_ed-=1\r\n            for r in range (row_ed, row_st-1, -1):\r\n                matrix[r][col_st]=current\r\n                current+=1\r\n            col_st+=1\r\n        return matrix"
+  },
+  "content_hash": "01c4baf29c4a1197cbdb05bc421bee1bb537c53775aab39e95fa4031f88b65b8",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

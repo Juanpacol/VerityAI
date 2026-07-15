@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_1b8f29257a4b",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.905744+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/146",
+    "prompt": "\ndef specialFilter(nums):\n    \"\"\"Write a function that takes an array of numbers as input and returns \n    the number of elements in the array that are greater than 10 and both \n    first and last digits of a number are odd (1, 3, 5, 7, 9).\n    For example:\n    specialFilter([15, -73, 14, -15]) => 1 \n    specialFilter([33, -2, -3, 45, 21, 109]) => 2\n    \"\"\"\n",
+    "canonical_solution": "    \n    count = 0\n    for num in nums:\n        if num > 10:\n            odd_digits = (1, 3, 5, 7, 9)\n            number_as_string = str(num)\n            if int(number_as_string[0]) in odd_digits and int(number_as_string[-1]) in odd_digits:\n                count += 1\n        \n    return count \n",
+    "entry_point": "specialFilter"
+  },
+  "content_hash": "1b8f29257a4be8e85cbd14daac514dbc81cc5740742f22b1fb8df2309af893cc",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

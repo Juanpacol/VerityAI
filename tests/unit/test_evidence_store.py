@@ -63,6 +63,24 @@ class TestIdempotentSave:
 
         assert changed is False
 
+    def test_resave_after_out_of_band_file_deletion_rewrites(self, tmp_path):
+        """Regression: if the backing file is deleted while the manifest
+        survives (e.g. `rm -rf` on a source subdir without also clearing
+        manifest.json), re-saving the identical record must NOT be treated
+        as a no-op -- otherwise the manifest keeps pointing at a file that
+        no longer exists, and the record silently vanishes from
+        `iter_records()` even though `save()` reported nothing changed.
+        """
+        store = EvidenceStore(tmp_path)
+        record = make_record()
+        store.save(record)
+        (tmp_path / record.source / f"{record.id}.json").unlink()
+
+        changed = store.save(record)
+
+        assert changed is True
+        assert store.load(record.id) == record
+
     def test_resaving_changed_content_hash_rewrites(self, tmp_path):
         store = EvidenceStore(tmp_path)
         record = make_record()

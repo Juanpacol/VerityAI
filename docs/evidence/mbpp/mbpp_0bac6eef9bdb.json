@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_0bac6eef9bdb",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.238031+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 367,
+    "text": "Write a function to check if a binary tree is balanced or not.",
+    "code": "class Node: \r\n\tdef __init__(self, data): \r\n\t\tself.data = data \r\n\t\tself.left = None\r\n\t\tself.right = None\r\ndef get_height(root): \r\n\tif root is None: \r\n\t\treturn 0\r\n\treturn max(get_height(root.left), get_height(root.right)) + 1\r\ndef is_tree_balanced(root): \r\n\tif root is None: \r\n\t\treturn True\r\n\tlh = get_height(root.left) \r\n\trh = get_height(root.right) \r\n\tif (abs(lh - rh) <= 1) and is_tree_balanced( \r\n\troot.left) is True and is_tree_balanced( root.right) is True: \r\n\t\treturn True\r\n\treturn False"
+  },
+  "content_hash": "0bac6eef9bdbfe7587c8ac9da1a3afab65f42f27baf46037327570cab22526a1",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

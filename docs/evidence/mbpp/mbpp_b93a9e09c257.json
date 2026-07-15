@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b93a9e09c257",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.304428+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 755,
+    "text": "Write a function to find the second smallest number in a list.",
+    "code": "def second_smallest(numbers):\r\n  if (len(numbers)<2):\r\n    return\r\n  if ((len(numbers)==2)  and (numbers[0] == numbers[1]) ):\r\n    return\r\n  dup_items = set()\r\n  uniq_items = []\r\n  for x in numbers:\r\n    if x not in dup_items:\r\n      uniq_items.append(x)\r\n      dup_items.add(x)\r\n  uniq_items.sort()    \r\n  return  uniq_items[1] "
+  },
+  "content_hash": "b93a9e09c257535f972057ccf3a672e4a73d29f00cfbd6a814f09fbe91c4b5c9",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

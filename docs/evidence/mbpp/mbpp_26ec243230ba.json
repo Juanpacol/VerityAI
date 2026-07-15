@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_26ec243230ba",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.325362+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 845,
+    "text": "Write a python function to count the number of digits in factorial of a given number.",
+    "code": "import math \r\ndef find_Digits(n): \r\n    if (n < 0): \r\n        return 0;\r\n    if (n <= 1): \r\n        return 1; \r\n    x = ((n * math.log10(n / math.e) + math.log10(2 * math.pi * n) /2.0)); \r\n    return math.floor(x) + 1; "
+  },
+  "content_hash": "26ec243230baea0ec413763974a18112851773c5581a32c5d008913aaf3967a6",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

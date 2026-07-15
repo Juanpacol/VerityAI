@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_0eeb3963e333",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.243272+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 403,
+    "text": "Write a function to check if a url is valid or not using regex.",
+    "code": "import re\r\ndef is_valid_URL(str):\r\n\tregex = (\"((http|https)://)(www.)?\" +\r\n\t\t\t\"[a-zA-Z0-9@:%._\\\\+~#?&//=]\" +\r\n\t\t\t\"{2,256}\\\\.[a-z]\" +\r\n\t\t\t\"{2,6}\\\\b([-a-zA-Z0-9@:%\" +\r\n\t\t\t\"._\\\\+~#?&//=]*)\")\r\n\tp = re.compile(regex)\r\n\tif (str == None):\r\n\t\treturn False\r\n\tif(re.search(p, str)):\r\n\t\treturn True\r\n\telse:\r\n\t\treturn False"
+  },
+  "content_hash": "0eeb3963e333a1b3d048dbfad28036f5e693d63312709acb7194a9320cbe1eeb",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

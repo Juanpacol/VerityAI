@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_6d300467d2bc",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.276149+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 605,
+    "text": "Write a function to check if the given integer is a prime number.",
+    "code": "def prime_num(num):\r\n  if num >=1:\r\n   for i in range(2, num//2):\r\n     if (num % i) == 0:\r\n                return False\r\n     else:\r\n                return True\r\n  else:\r\n          return False"
+  },
+  "content_hash": "6d300467d2bcdfef0a24ea42e62e702a0423829e43856ea3462537e78e16fd79",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

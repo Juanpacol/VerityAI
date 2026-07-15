@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_67e820a9c6de",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.907446+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/158",
+    "prompt": "\ndef find_max(words):\n    \"\"\"Write a function that accepts a list of strings.\n    The list contains different words. Return the word with maximum number\n    of unique characters. If multiple strings have maximum number of unique\n    characters, return the one which comes first in lexicographical order.\n\n    find_max([\"name\", \"of\", \"string\"]) == \"string\"\n    find_max([\"name\", \"enam\", \"game\"]) == \"enam\"\n    find_max([\"aaaaaaa\", \"bb\" ,\"cc\"]) == \"\"aaaaaaa\"\n    \"\"\"\n",
+    "canonical_solution": "    return sorted(words, key = lambda x: (-len(set(x)), x))[0]\n",
+    "entry_point": "find_max"
+  },
+  "content_hash": "67e820a9c6deff1a4c139f4dffc18a466b214ff45bb1dfa5db69b0413fe04eba",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

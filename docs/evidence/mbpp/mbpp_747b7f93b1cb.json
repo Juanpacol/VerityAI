@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_747b7f93b1cb",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.258038+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 499,
+    "text": "Write a function to find the diameter of a circle.",
+    "code": "def diameter_circle(r):\r\n  diameter=2*r\r\n  return diameter"
+  },
+  "content_hash": "747b7f93b1cb039e53e1519067a54051c754f93bcd22f3d083480e78dde984db",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

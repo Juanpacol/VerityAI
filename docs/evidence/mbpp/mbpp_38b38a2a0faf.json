@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_38b38a2a0faf",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.211268+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 291,
+    "text": "Write a function to find out the number of ways of painting the fence such that at most 2 adjacent posts have the same color for the given fence with n posts and k colors.",
+    "code": "def count_no_of_ways(n, k): \r\n\tdp = [0] * (n + 1) \r\n\ttotal = k \r\n\tmod = 1000000007\r\n\tdp[1] = k \r\n\tdp[2] = k * k\t \r\n\tfor i in range(3,n+1): \r\n\t\tdp[i] = ((k - 1) * (dp[i - 1] + dp[i - 2])) % mod \r\n\treturn dp[n]"
+  },
+  "content_hash": "38b38a2a0faf69b5e5a95fbf3ec1f7d04dad8ed0e40a9bc567775caa45082a45",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

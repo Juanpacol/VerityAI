@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_66075896853a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.254037+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 474,
+    "text": "Write a function to replace characters in a string.",
+    "code": "def replace_char(str1,ch,newch):\r\n str2 = str1.replace(ch, newch)\r\n return str2"
+  },
+  "content_hash": "66075896853aa79d8297e880c20d058a472029f7760403f8b6393944ec442d31",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

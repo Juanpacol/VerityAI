@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_866eab0ba232",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.282485+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 640,
+    "text": "Write a function to remove the parenthesis area in a string.",
+    "code": "import re\r\ndef remove_parenthesis(items):\r\n for item in items:\r\n    return (re.sub(r\" ?\\([^)]+\\)\", \"\", item))"
+  },
+  "content_hash": "866eab0ba2320c957216532f2be33ae84bc4be31cb923e25177549c98aa608a0",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

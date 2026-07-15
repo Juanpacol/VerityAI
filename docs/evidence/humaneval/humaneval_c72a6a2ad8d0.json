@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_c72a6a2ad8d0",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.893337+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/37",
+    "prompt": "\n\ndef sort_even(l: list):\n    \"\"\"This function takes a list l and returns a list l' such that\n    l' is identical to l in the odd indicies, while its values at the even indicies are equal\n    to the values of the even indicies of l, but sorted.\n    >>> sort_even([1, 2, 3])\n    [1, 2, 3]\n    >>> sort_even([5, 6, 3, 4])\n    [3, 6, 5, 4]\n    \"\"\"\n",
+    "canonical_solution": "    evens = l[::2]\n    odds = l[1::2]\n    evens.sort()\n    ans = []\n    for e, o in zip(evens, odds):\n        ans.extend([e, o])\n    if len(evens) > len(odds):\n        ans.append(evens[-1])\n    return ans\n",
+    "entry_point": "sort_even"
+  },
+  "content_hash": "c72a6a2ad8d0d938967f47e8c8d9a7b08863b447ff0841c0449488ee1c106c22",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

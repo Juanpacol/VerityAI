@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_2ae737ffaa66",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.290269+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 683,
+    "text": "Write a python function to check whether the given number can be represented by sum of two squares or not.",
+    "code": "def sum_Square(n) : \r\n    i = 1 \r\n    while i*i <= n : \r\n        j = 1\r\n        while (j*j <= n) : \r\n            if (i*i+j*j == n) : \r\n                return True\r\n            j = j+1\r\n        i = i+1     \r\n    return False"
+  },
+  "content_hash": "2ae737ffaa66784c70ac7c92d458e7e0329e272f7f37fb21db3032d1efb7b500",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

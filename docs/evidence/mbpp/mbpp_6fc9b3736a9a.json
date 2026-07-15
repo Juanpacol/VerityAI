@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_6fc9b3736a9a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.242975+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 401,
+    "text": "Write a function to perform index wise addition of tuple elements in the given two nested tuples.",
+    "code": "def add_nested_tuples(test_tup1, test_tup2):\r\n  res = tuple(tuple(a + b for a, b in zip(tup1, tup2))\r\n   for tup1, tup2 in zip(test_tup1, test_tup2))\r\n  return (res) "
+  },
+  "content_hash": "6fc9b3736a9a359d2ea5a5354578436110488aa6547996e5a2fe5462ba2763d5",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

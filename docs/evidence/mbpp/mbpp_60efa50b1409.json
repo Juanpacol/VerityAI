@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_60efa50b1409",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.199151+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 193,
+    "text": "Write a function to remove the duplicates from the given tuple.",
+    "code": "def remove_tuple(test_tup):\r\n  res = tuple(set(test_tup))\r\n  return (res) "
+  },
+  "content_hash": "60efa50b140958729d883f9a0dc8726a61cf218212f3e5dd7e2cf9c5d4e2e378",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

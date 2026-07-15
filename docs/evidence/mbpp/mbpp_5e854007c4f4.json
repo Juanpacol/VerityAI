@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_5e854007c4f4",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.183018+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 42,
+    "text": "Write a python function to find the sum of repeated elements in a given array.",
+    "code": "def find_Sum(arr,n): \r\n    return sum([x for x in arr if arr.count(x) > 1])"
+  },
+  "content_hash": "5e854007c4f4c79352c83ecf13e3a3cb1d335b873036d5951fde48c6511e6cbe",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

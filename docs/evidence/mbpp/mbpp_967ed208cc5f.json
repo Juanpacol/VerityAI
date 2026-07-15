@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_967ed208cc5f",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.342084+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 916,
+    "text": "Write a function to find if there is a triplet in the array whose sum is equal to a given value.",
+    "code": "def find_triplet_array(A, arr_size, sum): \r\n\tfor i in range( 0, arr_size-2): \r\n\t\tfor j in range(i + 1, arr_size-1): \r\n\t\t\tfor k in range(j + 1, arr_size): \r\n\t\t\t\tif A[i] + A[j] + A[k] == sum: \r\n\t\t\t\t\treturn  A[i],A[j],A[k] \r\n\t\t\t\t\treturn True\r\n\treturn False"
+  },
+  "content_hash": "967ed208cc5f696d274c72125355daa710fb6a01903c5b1df4ab4f355202004d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_26becb3c7f22",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.264731+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 539,
+    "text": "Write a function to create a list containing the power of said number in bases raised to the corresponding number in the index using map function.",
+    "code": "def basesnum_coresspondingnum(bases_num,index):\r\n  result = list(map(pow, bases_num, index))\r\n  return result"
+  },
+  "content_hash": "26becb3c7f22ef0e1d8c95e7ab25c7c4b6c0c6943ec4c677f01561fa1bd31b80",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

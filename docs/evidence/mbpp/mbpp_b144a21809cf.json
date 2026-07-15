@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b144a21809cf",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.208160+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 268,
+    "text": "Write a function to find the n'th star number.",
+    "code": "def find_star_num(n): \r\n\treturn (6 * n * (n - 1) + 1) "
+  },
+  "content_hash": "b144a21809cf0c30c45edbd53c78baea935bf471da2852e759b46b48e83b668d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

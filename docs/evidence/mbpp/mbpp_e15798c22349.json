@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e15798c22349",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.228196+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 319,
+    "text": "Write a function to find all five characters long word in the given string by using regex.",
+    "code": "import re\r\ndef find_long_word(text):\r\n  return (re.findall(r\"\\b\\w{5}\\b\", text))"
+  },
+  "content_hash": "e15798c223495c02342b883232164d3ec15cc8de5922d5c28122b3092a74baea",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

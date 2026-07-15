@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_86528542ea12",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.294283+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 704,
+    "text": "Write a function to calculate the harmonic sum of n-1.",
+    "code": "def harmonic_sum(n):\r\n  if n < 2:\r\n    return 1\r\n  else:\r\n    return 1 / n + (harmonic_sum(n - 1))"
+  },
+  "content_hash": "86528542ea12fee081a9c52f89b7753425234c5998b7346ce88d27e567ee9324",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

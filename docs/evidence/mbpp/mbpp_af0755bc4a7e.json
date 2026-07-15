@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_af0755bc4a7e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.227225+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 312,
+    "text": "Write a function to find the volume of a cone.",
+    "code": "import math\r\ndef volume_cone(r,h):\r\n  volume = (1.0/3) * math.pi * r * r * h\r\n  return volume"
+  },
+  "content_hash": "af0755bc4a7ef437a54ebe17af5764505e3add9b6f509c6f1c4709914c65a3e5",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

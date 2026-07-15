@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_0361bcd248d5",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.191738+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 128,
+    "text": "Write a function to shortlist words that are longer than n from a given list of words.",
+    "code": "def long_words(n, str):\r\n    word_len = []\r\n    txt = str.split(\" \")\r\n    for x in txt:\r\n        if len(x) > n:\r\n            word_len.append(x)\r\n    return word_len\t"
+  },
+  "content_hash": "0361bcd248d55fdc59989074f483c7db757a031809554b8dac68df4dba645d03",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

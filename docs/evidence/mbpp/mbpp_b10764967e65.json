@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b10764967e65",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.179123+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 4,
+    "text": "Write a function to find the largest integers from a given list of numbers using heap queue algorithm.",
+    "code": "import heapq as hq\r\ndef heap_queue_largest(nums,n):\r\n  largest_nums = hq.nlargest(n, nums)\r\n  return largest_nums"
+  },
+  "content_hash": "b10764967e65cf76968ae81bf47ff4e3b12350a4bdf3f746ec11820e20f90c58",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

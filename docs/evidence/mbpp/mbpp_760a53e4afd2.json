@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_760a53e4afd2",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.196969+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 174,
+    "text": "Write a function to group a sequence of key-value pairs into a dictionary of lists.",
+    "code": "def group_keyvalue(l):\r\n    result = {}\r\n    for k, v in l:\r\n         result.setdefault(k, []).append(v)\r\n    return result"
+  },
+  "content_hash": "760a53e4afd2d7e2ccba64af87d9d76567b85d028666b1d9a784c2fb9d89301f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

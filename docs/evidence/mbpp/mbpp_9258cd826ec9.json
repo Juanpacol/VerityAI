@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_9258cd826ec9",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.353683+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 963,
+    "text": "Write a function to calculate the discriminant value.",
+    "code": "def discriminant_value(x,y,z):\r\n    discriminant = (y**2) - (4*x*z)\r\n    if discriminant > 0:\r\n        return (\"Two solutions\",discriminant)\r\n    elif discriminant == 0:\r\n        return (\"one solution\",discriminant)\r\n    elif discriminant < 0:\r\n        return (\"no real solution\",discriminant)"
+  },
+  "content_hash": "9258cd826ec9b7f13464830b3e4f809e02326c3a21bc486f15028dc3664d778f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e990fc4a9f50",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.331598+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 872,
+    "text": "Write a function to check if a nested list is a subset of another nested list.",
+    "code": "def check_subset(list1,list2): \r\n    return all(map(list1.__contains__,list2)) "
+  },
+  "content_hash": "e990fc4a9f50d43dfc72c5f2a4a7ba4e43df36e5bcf11402d4bd4b59a73d5acf",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b65097462e0a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.185623+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 68,
+    "text": "Write a python function to check whether the given array is monotonic or not.",
+    "code": "def is_Monotonic(A): \r\n    return (all(A[i] <= A[i + 1] for i in range(len(A) - 1)) or\r\n            all(A[i] >= A[i + 1] for i in range(len(A) - 1))) "
+  },
+  "content_hash": "b65097462e0a8c36cfd13da9dffc5725e31ecd74b5b6ae38a7bcfd1fa0a947f0",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

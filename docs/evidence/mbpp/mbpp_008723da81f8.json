@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_008723da81f8",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.191012+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 121,
+    "text": "Write a function to find the triplet with sum of the given array",
+    "code": "def check_triplet(A, n, sum, count):\r\n    if count == 3 and sum == 0:\r\n        return True\r\n    if count == 3 or n == 0 or sum < 0:\r\n        return False\r\n    return check_triplet(A, n - 1, sum - A[n - 1], count + 1) or\\\r\n           check_triplet(A, n - 1, sum, count)"
+  },
+  "content_hash": "008723da81f89c8a34f93663974f8092de757ea3c89edd12cfc6958eed4e9154",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

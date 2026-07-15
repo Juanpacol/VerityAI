@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_94fc44463c87",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.273633+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 591,
+    "text": "Write a python function to interchange the first and last elements in a list.",
+    "code": "def swap_List(newList): \r\n    size = len(newList) \r\n    temp = newList[0] \r\n    newList[0] = newList[size - 1] \r\n    newList[size - 1] = temp  \r\n    return newList "
+  },
+  "content_hash": "94fc44463c87b85ef578de2200cbd52be9db70d903a08afdaacc173c732ce399",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

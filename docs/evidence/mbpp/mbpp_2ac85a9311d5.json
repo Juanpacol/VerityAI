@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_2ac85a9311d5",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.331826+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 873,
+    "text": "Write a function to solve the fibonacci sequence using recursion.",
+    "code": "def fibonacci(n):\r\n  if n == 1 or n == 2:\r\n    return 1\r\n  else:\r\n    return (fibonacci(n - 1) + (fibonacci(n - 2)))"
+  },
+  "content_hash": "2ac85a9311d5bba70d0bd9dfa0b5d07e922b915820094d65e34ff34a6e1174ad",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

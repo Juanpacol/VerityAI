@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_03828cbf69b0",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.300612+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 736,
+    "text": "Write a function to locate the left insertion point for a specified value in sorted order.",
+    "code": "import bisect\r\ndef left_insertion(a, x):\r\n    i = bisect.bisect_left(a, x)\r\n    return i"
+  },
+  "content_hash": "03828cbf69b0cc4cf826d5e8dd630533ec02e1faffa9c35bfe013d1e9bf68a77",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

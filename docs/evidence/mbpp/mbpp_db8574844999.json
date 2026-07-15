@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_db8574844999",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.349184+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 945,
+    "text": "Write a function to convert the given tuples into set.",
+    "code": "def tuple_to_set(t):\r\n  s = set(t)\r\n  return (s) "
+  },
+  "content_hash": "db8574844999b9228d85a3c5ec340840efd779ab8679163e242f1a7ed7a5daea",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

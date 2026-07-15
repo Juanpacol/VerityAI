@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_844b34f83fa7",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.328330+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 858,
+    "text": "Write a function to count number of lists in a given list of lists and square the count.",
+    "code": "def count_list(input_list): \r\n    return (len(input_list))**2"
+  },
+  "content_hash": "844b34f83fa71d5eb1b91c6addb9933096f0987dc5db10363ac84d022dd4fa1b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

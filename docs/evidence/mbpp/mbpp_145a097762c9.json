@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_145a097762c9",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.196157+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 167,
+    "text": "Write a python function to find smallest power of 2 greater than or equal to n.",
+    "code": "def next_Power_Of_2(n): \r\n    count = 0; \r\n    if (n and not(n & (n - 1))): \r\n        return n   \r\n    while( n != 0): \r\n        n >>= 1\r\n        count += 1\r\n    return 1 << count; "
+  },
+  "content_hash": "145a097762c92eb9855cff2810576026a2aeb83e7b92ae638d76dd712c8ae6ba",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

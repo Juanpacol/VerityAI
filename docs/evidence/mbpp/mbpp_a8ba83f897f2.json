@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a8ba83f897f2",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.298121+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 724,
+    "text": "Write a function to calculate the sum of all digits of the base to the specified power.",
+    "code": "def power_base_sum(base, power):\r\n    return sum([int(i) for i in str(pow(base, power))])"
+  },
+  "content_hash": "a8ba83f897f211fb8a2e3758bd19586124e62c25fe22274d72d590cf457c6e5f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

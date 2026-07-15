@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_1e3703d16e69",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.206779+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 257,
+    "text": "Write a function to swap two numbers.",
+    "code": "def swap_numbers(a,b):\r\n temp = a\r\n a = b\r\n b = temp\r\n return (a,b)"
+  },
+  "content_hash": "1e3703d16e6905f195d2616db1ba7ef758068622a06513a56023fe73b98dd5cf",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_3614f65092e3",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.330670+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 868,
+    "text": "Write a python function to find the length of the last word in a given string.",
+    "code": "def length_Of_Last_Word(a): \r\n    l = 0\r\n    x = a.strip() \r\n    for i in range(len(x)): \r\n        if x[i] == \" \": \r\n            l = 0\r\n        else: \r\n            l += 1\r\n    return l "
+  },
+  "content_hash": "3614f65092e35caa96fa4dd8fd4a2595ea28dce9058bd5e43b1f1a05caa322db",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

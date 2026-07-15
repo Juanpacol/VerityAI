@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_a494e1703319",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.891061+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/14",
+    "prompt": "from typing import List\n\n\ndef all_prefixes(string: str) -> List[str]:\n    \"\"\" Return list of all prefixes from shortest to longest of the input string\n    >>> all_prefixes('abc')\n    ['a', 'ab', 'abc']\n    \"\"\"\n",
+    "canonical_solution": "    result = []\n\n    for i in range(len(string)):\n        result.append(string[:i+1])\n    return result\n",
+    "entry_point": "all_prefixes"
+  },
+  "content_hash": "a494e1703319567319cf0d53d196b4c2f31fe09cf47129af7506d20bfb3acfff",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

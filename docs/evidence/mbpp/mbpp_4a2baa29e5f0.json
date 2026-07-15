@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_4a2baa29e5f0",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.332983+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 878,
+    "text": "Write a function to check if the given tuple contains only k elements.",
+    "code": "def check_tuples(test_tuple, K):\r\n  res = all(ele in K for ele in test_tuple)\r\n  return (res) "
+  },
+  "content_hash": "4a2baa29e5f085f20af1df33638ecff21cd064c53c8e15827c507ceab29f69ba",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

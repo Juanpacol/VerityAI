@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_265a6cb5ec70",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.276504+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 607,
+    "text": "Write a function to search a literals string in a string and also find the location within the original string where the pattern occurs by using regex.",
+    "code": "import re\r\npattern = 'fox'\r\ntext = 'The quick brown fox jumps over the lazy dog.'\r\ndef find_literals(text, pattern):\r\n  match = re.search(pattern, text)\r\n  s = match.start()\r\n  e = match.end()\r\n  return (match.re.pattern, s, e)"
+  },
+  "content_hash": "265a6cb5ec708189cc24679f18ba3bf2c423901c7787da92f246f52638d59b0d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_d49615730e4c",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.252527+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 464,
+    "text": "Write a function to check if all values are same in a dictionary.",
+    "code": "def check_value(dict, n):\r\n    result = all(x == n for x in dict.values()) \r\n    return result"
+  },
+  "content_hash": "d49615730e4c8ad72954416ec38a9c653ff2028ae137b1deebd414307ea8c734",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

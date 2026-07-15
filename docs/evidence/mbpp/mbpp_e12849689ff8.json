@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e12849689ff8",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.193653+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 146,
+    "text": "Write a function to find the ascii value of total characters in a string.",
+    "code": "def ascii_value_string(str1):\r\n  for i in range(len(str1)):\r\n   return ord(str1[i])"
+  },
+  "content_hash": "e12849689ff8ecc6cada10c5d527260e33c729cc0696f5bebd70302508869ee7",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

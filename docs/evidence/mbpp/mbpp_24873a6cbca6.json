@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_24873a6cbca6",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.312103+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 787,
+    "text": "Write a function that matches a string that has an a followed by three 'b'.",
+    "code": "import re\r\ndef text_match_three(text):\r\n        patterns = 'ab{3}?'\r\n        if re.search(patterns,  text):\r\n                return 'Found a match!'\r\n        else:\r\n                return('Not matched!')"
+  },
+  "content_hash": "24873a6cbca6b6269b296f74b5459afda69584950e969ca1f08c785f1f64d2ed",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

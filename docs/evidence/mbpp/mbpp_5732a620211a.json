@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_5732a620211a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.205933+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 250,
+    "text": "Write a python function to count the occcurences of an element in a tuple.",
+    "code": "def count_X(tup, x): \r\n    count = 0\r\n    for ele in tup: \r\n        if (ele == x): \r\n            count = count + 1\r\n    return count "
+  },
+  "content_hash": "5732a620211af45ede8544390283e305c6358007254927a5eb25517d3b6ed458",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

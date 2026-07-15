@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b4e4ef052efc",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.236907+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 359,
+    "text": "Write a python function to check whether one root of the quadratic equation is twice of the other or not.",
+    "code": "def Check_Solution(a,b,c): \r\n    if (2*b*b == 9*a*c): \r\n        return (\"Yes\"); \r\n    else: \r\n        return (\"No\"); "
+  },
+  "content_hash": "b4e4ef052efc8f46e90f7d047474466be036629d55f29595f0cf5217755556d4",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

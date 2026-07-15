@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b86b2523fd3b",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.243416+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 404,
+    "text": "Write a python function to find the minimum of two numbers.",
+    "code": "def minimum(a,b):   \r\n    if a <= b: \r\n        return a \r\n    else: \r\n        return b "
+  },
+  "content_hash": "b86b2523fd3b5a4525d38b5c66805b68393d236ec32a66ab04be33ff12add78b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_436d53a0e67b",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.322229+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 831,
+    "text": "Write a python function to count equal element pairs from the given array.",
+    "code": "def count_Pairs(arr,n): \r\n    cnt = 0; \r\n    for i in range(n): \r\n        for j in range(i + 1,n): \r\n            if (arr[i] == arr[j]): \r\n                cnt += 1; \r\n    return cnt; "
+  },
+  "content_hash": "436d53a0e67bcefe9ba161fcc2f4ce2cb5c9a54ec543f34f40806db5743dfa08",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

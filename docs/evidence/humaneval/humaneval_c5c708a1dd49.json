@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_c5c708a1dd49",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.891959+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/23",
+    "prompt": "\n\ndef strlen(string: str) -> int:\n    \"\"\" Return length of given string\n    >>> strlen('')\n    0\n    >>> strlen('abc')\n    3\n    \"\"\"\n",
+    "canonical_solution": "    return len(string)\n",
+    "entry_point": "strlen"
+  },
+  "content_hash": "c5c708a1dd49ded2e6d45e2280c4ff56b5231c05e0a546c718b634d71bc627c7",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

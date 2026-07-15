@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_059bc04b645e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.183601+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 48,
+    "text": "Write a python function to set all odd bits of a given number.",
+    "code": "def odd_bit_set_number(n):\r\n    count = 0;res = 0;temp = n\r\n    while temp > 0:\r\n        if count % 2 == 0:\r\n            res |= (1 << count)\r\n        count += 1\r\n        temp >>= 1\r\n    return (n | res)"
+  },
+  "content_hash": "059bc04b645e223a14500f9039f5fe83f812676f4f7611a8e14242d8c1cb51a3",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

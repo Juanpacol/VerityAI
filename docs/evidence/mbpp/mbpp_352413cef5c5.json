@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_352413cef5c5",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.333438+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 880,
+    "text": "Write a python function to find number of solutions in quadratic equation.",
+    "code": "def Check_Solution(a,b,c) : \r\n    if ((b*b) - (4*a*c)) > 0 : \r\n        return (\"2 solutions\") \r\n    elif ((b*b) - (4*a*c)) == 0 : \r\n        return (\"1 solution\") \r\n    else : \r\n        return (\"No solutions\") "
+  },
+  "content_hash": "352413cef5c52144164189ebb2f5d2fa0b40a8d856db80c6dfd5aed21813f6d5",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

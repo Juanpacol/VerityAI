@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_43ede20d19da",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.279691+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 624,
+    "text": "Write a python function to convert the given string to upper case.",
+    "code": "def is_upper(string):\r\n  return (string.upper())"
+  },
+  "content_hash": "43ede20d19da36e05fbf21e4b26624f9440a3ed0ba59920f39c77ec5d66e0a3e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

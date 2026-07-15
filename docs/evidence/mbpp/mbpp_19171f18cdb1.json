@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_19171f18cdb1",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.271558+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 579,
+    "text": "Write a function to find the dissimilar elements in the given two tuples.",
+    "code": "def find_dissimilar(test_tup1, test_tup2):\r\n  res = tuple(set(test_tup1) ^ set(test_tup2))\r\n  return (res) "
+  },
+  "content_hash": "19171f18cdb1bdeabf14d215f50d2bf5bf0fcc6686a76b1de81ceeea020fd6d4",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f93817bbd543",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.241199+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 389,
+    "text": "Write a function to find the n'th lucas number.",
+    "code": "def find_lucas(n): \r\n\tif (n == 0): \r\n\t\treturn 2\r\n\tif (n == 1): \r\n\t\treturn 1\r\n\treturn find_lucas(n - 1) + find_lucas(n - 2) "
+  },
+  "content_hash": "f93817bbd543ecb39c7b4975ba18adba9aa5c7ac3240467c0e60d52833db77aa",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

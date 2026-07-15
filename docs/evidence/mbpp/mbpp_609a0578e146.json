@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_609a0578e146",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.345987+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 932,
+    "text": "Write a function to remove duplicate words from a given list of strings.",
+    "code": "def remove_duplic_list(l):\r\n    temp = []\r\n    for x in l:\r\n        if x not in temp:\r\n            temp.append(x)\r\n    return temp"
+  },
+  "content_hash": "609a0578e146e333ff64966bde71b88ae479bf98b8dd77a68eca9332408154dd",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

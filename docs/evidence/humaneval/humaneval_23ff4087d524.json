@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_23ff4087d524",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.892637+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/30",
+    "prompt": "\n\ndef get_positive(l: list):\n    \"\"\"Return only positive numbers in the list.\n    >>> get_positive([-1, 2, -4, 5, 6])\n    [2, 5, 6]\n    >>> get_positive([5, 3, -5, 2, -3, 3, 9, 0, 123, 1, -10])\n    [5, 3, 2, 3, 9, 123, 1]\n    \"\"\"\n",
+    "canonical_solution": "    return [e for e in l if e > 0]\n",
+    "entry_point": "get_positive"
+  },
+  "content_hash": "23ff4087d524ff9bc126948f7a57ad82bf357351655ac022f30d83ea6cec6200",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

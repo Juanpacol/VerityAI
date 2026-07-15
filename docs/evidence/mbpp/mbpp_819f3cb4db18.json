@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_819f3cb4db18",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.244179+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 409,
+    "text": "Write a function to find the minimum product from the pairs of tuples within a given list.",
+    "code": "def min_product_tuple(list1):\r\n    result_min = min([abs(x * y) for x, y in list1] )\r\n    return result_min"
+  },
+  "content_hash": "819f3cb4db182cd8a8fac491c089daabf593afccb059524ddefaba4a44e23165",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

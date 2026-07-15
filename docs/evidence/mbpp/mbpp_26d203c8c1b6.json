@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_26d203c8c1b6",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.286427+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 662,
+    "text": "Write a function to sort a list in a dictionary.",
+    "code": "def sorted_dict(dict1):\r\n  sorted_dict = {x: sorted(y) for x, y in dict1.items()}\r\n  return sorted_dict"
+  },
+  "content_hash": "26d203c8c1b611f6b09e8d046335b187a030749cdc9cd19eedc986335577d582",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7133aca314c7",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.272424+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 584,
+    "text": "Write a function to find all adverbs and their positions in a given sentence by using regex.",
+    "code": "import re\r\ndef find_adverbs(text):\r\n  for m in re.finditer(r\"\\w+ly\", text):\r\n    return ('%d-%d: %s' % (m.start(), m.end(), m.group(0)))"
+  },
+  "content_hash": "7133aca314c7b49a9e73bfd2eb1987de4b53ad06b2141f2a5eb69a0bc338d6d0",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

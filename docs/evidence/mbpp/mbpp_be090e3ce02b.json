@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_be090e3ce02b",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.290675+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 685,
+    "text": "Write a python function to find sum of prime numbers between 1 to n.",
+    "code": "def sum_Of_Primes(n): \r\n    prime = [True] * (n + 1)  \r\n    p = 2\r\n    while p * p <= n: \r\n        if prime[p] == True:  \r\n            i = p * 2\r\n            while i <= n: \r\n                prime[i] = False\r\n                i += p \r\n        p += 1    \r\n    sum = 0\r\n    for i in range (2,n + 1): \r\n        if(prime[i]): \r\n            sum += i \r\n    return sum"
+  },
+  "content_hash": "be090e3ce02b7c39c5f6dbdbac17e236819539232c7f228abfb5e6735fa23b4f",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

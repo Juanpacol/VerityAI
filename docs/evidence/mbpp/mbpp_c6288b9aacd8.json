@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c6288b9aacd8",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.186923+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 81,
+    "text": "Write a function to zip the two given tuples.",
+    "code": "def zip_tuples(test_tup1, test_tup2):\r\n  res = []\r\n  for i, j in enumerate(test_tup1):\r\n    res.append((j, test_tup2[i % len(test_tup2)])) \r\n  return (res) "
+  },
+  "content_hash": "c6288b9aacd8fab4f63ce68229b0459f65ba0692859b974f426c435aae977f41",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

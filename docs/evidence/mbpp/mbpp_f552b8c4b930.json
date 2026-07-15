@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f552b8c4b930",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.339666+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 906,
+    "text": "Write a function to extract year, month and date from a url by using regex.",
+    "code": "import re\r\ndef extract_date(url):\r\n        return re.findall(r'/(\\d{4})/(\\d{1,2})/(\\d{1,2})/', url)"
+  },
+  "content_hash": "f552b8c4b930422c8da74539d00cacecbade32e8257979939ca301c0b2ba9f4c",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

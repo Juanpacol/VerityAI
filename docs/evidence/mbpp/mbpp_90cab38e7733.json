@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_90cab38e7733",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.209026+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 275,
+    "text": "Write a python function to find the position of the last removed element from the given array.",
+    "code": "import math as mt \r\ndef get_Position(a,n,m): \r\n    for i in range(n): \r\n        a[i] = (a[i] // m + (a[i] % m != 0))  \r\n    result,maxx = -1,-1\r\n    for i in range(n - 1,-1,-1): \r\n        if (maxx < a[i]): \r\n            maxx = a[i] \r\n            result = i \r\n    return result + 1"
+  },
+  "content_hash": "90cab38e773338da08a1f15de8facfde4fda27db4153c4091f7874934f0bdf00",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

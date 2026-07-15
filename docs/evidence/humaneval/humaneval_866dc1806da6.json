@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_866dc1806da6",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.898505+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/82",
+    "prompt": "\ndef prime_length(string):\n    \"\"\"Write a function that takes a string and returns True if the string\n    length is a prime number or False otherwise\n    Examples\n    prime_length('Hello') == True\n    prime_length('abcdcba') == True\n    prime_length('kittens') == True\n    prime_length('orange') == False\n    \"\"\"\n",
+    "canonical_solution": "    l = len(string)\n    if l == 0 or l == 1:\n        return False\n    for i in range(2, l):\n        if l % i == 0:\n            return False\n    return True\n",
+    "entry_point": "prime_length"
+  },
+  "content_hash": "866dc1806da61d4b28648ae054ac9f26e72e2c55123be3c6ab32c96f93b01bb5",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

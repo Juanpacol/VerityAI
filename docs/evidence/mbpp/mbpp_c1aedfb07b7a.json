@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c1aedfb07b7a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.316992+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 808,
+    "text": "Write a function to check if the given tuples contain the k or not.",
+    "code": "def check_K(test_tup, K):\r\n  res = False\r\n  for ele in test_tup:\r\n    if ele == K:\r\n      res = True\r\n      break\r\n  return (res) "
+  },
+  "content_hash": "c1aedfb07b7a6f1f0e140eeac29cb1014a35cc64846e1f9efdb281c73bb91321",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

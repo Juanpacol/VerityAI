@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_b4f1ade4a5db",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.891253+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/16",
+    "prompt": "\n\ndef count_distinct_characters(string: str) -> int:\n    \"\"\" Given a string, find out how many distinct characters (regardless of case) does it consist of\n    >>> count_distinct_characters('xyzXYZ')\n    3\n    >>> count_distinct_characters('Jerry')\n    4\n    \"\"\"\n",
+    "canonical_solution": "    return len(set(string.lower()))\n",
+    "entry_point": "count_distinct_characters"
+  },
+  "content_hash": "b4f1ade4a5db54020cbeecbf473dc9cc248f27a6b0fa3a73694ed87e394be0c2",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

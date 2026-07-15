@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e3c4d83783cd",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.307877+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 769,
+    "text": "Write a python function to get the difference between two lists.",
+    "code": "def Diff(li1,li2):\r\n    return (list(list(set(li1)-set(li2)) + list(set(li2)-set(li1))))\r\n "
+  },
+  "content_hash": "e3c4d83783cdfcddfbb3ffd90b50711d6e1cbf3e9991fd8e7a6fc6415200b939",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

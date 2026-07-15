@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_30343e00bfc6",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.907093+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/155",
+    "prompt": "\ndef even_odd_count(num):\n    \"\"\"Given an integer. return a tuple that has the number of even and odd digits respectively.\n\n     Example:\n        even_odd_count(-12) ==> (1, 1)\n        even_odd_count(123) ==> (1, 2)\n    \"\"\"\n",
+    "canonical_solution": "    even_count = 0\n    odd_count = 0\n    for i in str(abs(num)):\n        if int(i)%2==0:\n            even_count +=1\n        else:\n            odd_count +=1\n    return (even_count, odd_count)\n",
+    "entry_point": "even_odd_count"
+  },
+  "content_hash": "30343e00bfc6b1d0a8ab0ccf1b176a516ff08d9e764e9a70daa4022fae1531f0",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

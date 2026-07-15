@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7ded4edb9e88",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.334610+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 885,
+    "text": "Write a python function to check whether the two given strings are isomorphic to each other or not.",
+    "code": "def is_Isomorphic(str1,str2):          \r\n    dict_str1 = {}\r\n    dict_str2 = {}\r\n    for i, value in enumerate(str1):\r\n        dict_str1[value] = dict_str1.get(value,[]) + [i]        \r\n    for j, value in enumerate(str2):\r\n        dict_str2[value] = dict_str2.get(value,[]) + [j]\r\n    if sorted(dict_str1.values()) == sorted(dict_str2.values()):\r\n        return True\r\n    else:\r\n        return False"
+  },
+  "content_hash": "7ded4edb9e88cc201fbd446e03dcc0e7a7b027fe46bf60e734b008a027acfa23",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

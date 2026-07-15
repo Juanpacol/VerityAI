@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a049ed8ba5be",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.295208+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 709,
+    "text": "Write a function to count unique keys for each value present in the tuple.",
+    "code": "from collections import defaultdict \r\ndef get_unique(test_list):\r\n  res = defaultdict(list)\r\n  for sub in test_list:\r\n    res[sub[1]].append(sub[0])\r\n  res = dict(res)\r\n  res_dict = dict()\r\n  for key in res:\r\n    res_dict[key] = len(list(set(res[key])))\r\n  return (str(res_dict)) "
+  },
+  "content_hash": "a049ed8ba5be5b1ad26c5951bba7a7a6e83ca0cf447657f1c2f31a1e9bbbdcf9",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

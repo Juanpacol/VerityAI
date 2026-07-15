@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_6aa33394f4de",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.894359+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/47",
+    "prompt": "\n\ndef median(l: list):\n    \"\"\"Return median of elements in the list l.\n    >>> median([3, 1, 2, 4, 5])\n    3\n    >>> median([-10, 4, 6, 1000, 10, 20])\n    15.0\n    \"\"\"\n",
+    "canonical_solution": "    l = sorted(l)\n    if len(l) % 2 == 1:\n        return l[len(l) // 2]\n    else:\n        return (l[len(l) // 2 - 1] + l[len(l) // 2]) / 2.0\n",
+    "entry_point": "median"
+  },
+  "content_hash": "6aa33394f4de1eaa07be786b6f6b01be58b3668510b76b1c8b74c80ab1525831",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

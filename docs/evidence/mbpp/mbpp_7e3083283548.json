@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7e3083283548",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.250392+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 450,
+    "text": "Write a function to extract specified size of strings from a give list of string values.",
+    "code": "def extract_string(str, l):\r\n    result = [e for e in str if len(e) == l] \r\n    return result"
+  },
+  "content_hash": "7e3083283548ad119d189617cdc334599df9b73eafa63d456145549df42cde1c",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

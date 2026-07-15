@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b84bfe5bdb45",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.346230+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 933,
+    "text": "Write a function to convert camel case string to snake case string by using regex.",
+    "code": "import re\r\ndef camel_to_snake(text):\r\n  str1 = re.sub('(.)([A-Z][a-z]+)', r'\\1_\\2', text)\r\n  return re.sub('([a-z0-9])([A-Z])', r'\\1_\\2', str1).lower()"
+  },
+  "content_hash": "b84bfe5bdb4551d05c21d10aa69361fe60dd45c83b1620a705a3fb20d041d2a1",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_527b366acb94",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.272765+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 586,
+    "text": "Write a python function to split the array and add the first part to the end.",
+    "code": "def split_Arr(a,n,k):  \r\n   b = a[:k] \r\n   return (a[k::]+b[::]) "
+  },
+  "content_hash": "527b366acb94ce2799f88b9d954abcd022ef9f795dc2cafe9e42c3a183319c3b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

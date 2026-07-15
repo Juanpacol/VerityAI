@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_1cc25ddb68d7",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.325133+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 844,
+    "text": "Write a python function to find the kth element in an array containing odd elements first and then even elements.",
+    "code": "def get_Number(n, k): \r\n    arr = [0] * n; \r\n    i = 0; \r\n    odd = 1; \r\n    while (odd <= n):   \r\n        arr[i] = odd; \r\n        i += 1; \r\n        odd += 2;\r\n    even = 2; \r\n    while (even <= n): \r\n        arr[i] = even; \r\n        i += 1;\r\n        even += 2; \r\n    return arr[k - 1]; "
+  },
+  "content_hash": "1cc25ddb68d70e306800592061144a7e9acd5c5bcf82749890018ed137c1b8cd",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

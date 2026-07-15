@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_4ea1a65e28e0",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.275969+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 604,
+    "text": "Write a function to reverse words in a given string.",
+    "code": "def reverse_words(s):\r\n        return ' '.join(reversed(s.split()))"
+  },
+  "content_hash": "4ea1a65e28e097c58f553df2915cce892a56c5b8c3433de23041f0f020c9fcda",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

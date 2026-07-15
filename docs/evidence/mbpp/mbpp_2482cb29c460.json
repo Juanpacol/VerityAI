@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_2482cb29c460",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.281797+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 636,
+    "text": "Write a python function to check if roots of a quadratic equation are reciprocal of each other or not.",
+    "code": "def Check_Solution(a,b,c): \r\n    if (a == c): \r\n        return (\"Yes\"); \r\n    else: \r\n        return (\"No\"); "
+  },
+  "content_hash": "2482cb29c4606a712fb6d981ef099261e3cbeaaa9e4e194da8ec5ffb5123386d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

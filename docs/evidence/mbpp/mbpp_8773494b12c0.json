@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_8773494b12c0",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.196042+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 166,
+    "text": "Write a python function to count the pairs with xor as an even number.",
+    "code": "def find_even_Pair(A,N): \r\n    evenPair = 0\r\n    for i in range(0,N): \r\n        for j in range(i+1,N): \r\n            if ((A[i] ^ A[j]) % 2 == 0): \r\n                evenPair+=1\r\n    return evenPair; "
+  },
+  "content_hash": "8773494b12c03727161b1c1b4e2b424706e7c2c4653120a2e134aea239d1c495",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

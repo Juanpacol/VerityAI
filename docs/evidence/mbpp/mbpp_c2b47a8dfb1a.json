@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c2b47a8dfb1a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.284251+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 650,
+    "text": "Write a python function to check whether the given two arrays are equal or not.",
+    "code": "def are_Equal(arr1,arr2,n,m):\r\n    if (n != m):\r\n        return False\r\n    arr1.sort()\r\n    arr2.sort()\r\n    for i in range(0,n - 1):\r\n        if (arr1[i] != arr2[i]):\r\n            return False\r\n    return True"
+  },
+  "content_hash": "c2b47a8dfb1a8397995f45b0dbdf53848e026dde30c37983d7fdfe9ea0c4b9f0",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

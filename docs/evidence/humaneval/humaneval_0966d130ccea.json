@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_0966d130ccea",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.895084+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/53",
+    "prompt": "\n\ndef add(x: int, y: int):\n    \"\"\"Add two numbers x and y\n    >>> add(2, 3)\n    5\n    >>> add(5, 7)\n    12\n    \"\"\"\n",
+    "canonical_solution": "    return x + y\n",
+    "entry_point": "add"
+  },
+  "content_hash": "0966d130ccea504307024cdf2f84ace6524d7269678b37bdbd9ae98aeddd185b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b431f0cab03e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.203504+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 230,
+    "text": "Write a function to replace blank spaces with any character in a string.",
+    "code": "def replace_blank(str1,char):\r\n str2 = str1.replace(' ', char)\r\n return str2"
+  },
+  "content_hash": "b431f0cab03e649e0eb110876b18e20c7b214598b428a8612059b0599ef5427a",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

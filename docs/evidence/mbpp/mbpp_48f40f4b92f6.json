@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_48f40f4b92f6",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.349424+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 946,
+    "text": "Write a function to find the most common elements and their counts of a specified text.",
+    "code": "from collections import Counter \r\ndef most_common_elem(s,a):\r\n  most_common_elem=Counter(s).most_common(a)\r\n  return most_common_elem"
+  },
+  "content_hash": "48f40f4b92f65e44e317c4e30c144a7462572a35900905e694d7e57500699692",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

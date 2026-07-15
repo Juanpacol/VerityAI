@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_299914ce6975",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.183419+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 46,
+    "text": "Write a python function to determine whether all the numbers are different from each other are not.",
+    "code": "def test_distinct(data):\r\n  if len(data) == len(set(data)):\r\n    return True\r\n  else:\r\n    return False;"
+  },
+  "content_hash": "299914ce697579de628f46798ef00fc686bd3a29e4e09257c4553b699b4142ee",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

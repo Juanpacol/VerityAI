@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e6a4610590d6",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.309078+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 774,
+    "text": "Write a function to check if the string is a valid email address or not using regex.",
+    "code": "import re \r\nregex = '^[a-z0-9]+[\\._]?[a-z0-9]+[@]\\w+[.]\\w{2,3}$'\r\ndef check_email(email): \r\n\tif(re.search(regex,email)): \r\n\t\treturn (\"Valid Email\") \r\n\telse: \r\n\t\treturn (\"Invalid Email\") "
+  },
+  "content_hash": "e6a4610590d6a2ec950bf2a2f94f4a307417af61aadf1eb44e4e266d4f5c69c3",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

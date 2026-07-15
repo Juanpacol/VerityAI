@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_54b9caf0abf4",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.195611+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 162,
+    "text": "Write a function to calculate the sum of the positive integers of n+(n-2)+(n-4)... (until n-x =< 0).",
+    "code": "def sum_series(n):\r\n  if n < 1:\r\n    return 0\r\n  else:\r\n    return n + sum_series(n - 2)"
+  },
+  "content_hash": "54b9caf0abf43187481b5c4c5545c3418efc36949a251680f5c84f83a519be9c",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_da95dc7fd409",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.226691+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 308,
+    "text": "Write a function to find the specified number of largest products from two given lists.",
+    "code": "def large_product(nums1, nums2, N):\r\n    result = sorted([x*y for x in nums1 for y in nums2], reverse=True)[:N]\r\n    return result"
+  },
+  "content_hash": "da95dc7fd4093ab58d669f325c3a85ee7cf9b2a964f4fe4a9c46251b34b843ce",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

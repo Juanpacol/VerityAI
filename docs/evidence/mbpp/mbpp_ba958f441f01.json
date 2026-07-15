@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_ba958f441f01",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.194713+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 154,
+    "text": "Write a function to extract every specified element from a given two dimensional list.",
+    "code": "def specified_element(nums, N):\r\n    result = [i[N] for i in nums]\r\n    return result"
+  },
+  "content_hash": "ba958f441f01e0dc2f84f5cb105f27c5db3a241154a96989cc5263de0023e922",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

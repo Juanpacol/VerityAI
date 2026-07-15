@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_339dae79f9f1",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.274002+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 593,
+    "text": "Write a function to remove leading zeroes from an ip address.",
+    "code": "import re\r\ndef removezero_ip(ip):\r\n string = re.sub('\\.[0]*', '.', ip)\r\n return string\r"
+  },
+  "content_hash": "339dae79f9f198b6445fea86038d3345c1b79ee0e70b8aba0af38f1b592e489c",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

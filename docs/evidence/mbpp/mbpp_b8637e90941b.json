@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b8637e90941b",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.238587+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 371,
+    "text": "Write a function to find the smallest missing element in a sorted array.",
+    "code": "def smallest_missing(A, left_element, right_element):\r\n    if left_element > right_element:\r\n        return left_element\r\n    mid = left_element + (right_element - left_element) // 2\r\n    if A[mid] == mid:\r\n        return smallest_missing(A, mid + 1, right_element)\r\n    else:\r\n        return smallest_missing(A, left_element, mid - 1)"
+  },
+  "content_hash": "b8637e90941b440ab17c0b78e4c8932f92cd6f0cfe97f85901676a62bedaf796",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

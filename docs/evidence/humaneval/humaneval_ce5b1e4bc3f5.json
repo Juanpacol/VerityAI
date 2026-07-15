@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_ce5b1e4bc3f5",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.890960+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/13",
+    "prompt": "\n\ndef greatest_common_divisor(a: int, b: int) -> int:\n    \"\"\" Return a greatest common divisor of two integers a and b\n    >>> greatest_common_divisor(3, 5)\n    1\n    >>> greatest_common_divisor(25, 15)\n    5\n    \"\"\"\n",
+    "canonical_solution": "    while b:\n        a, b = b, a % b\n    return a\n",
+    "entry_point": "greatest_common_divisor"
+  },
+  "content_hash": "ce5b1e4bc3f531ef15162e1142cd2ace4025e721b2da59a5851958fd027b284e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

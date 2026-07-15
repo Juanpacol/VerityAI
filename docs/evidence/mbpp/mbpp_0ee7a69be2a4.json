@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_0ee7a69be2a4",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.308599+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 772,
+    "text": "Write a function to remove all the words with k length in the given string.",
+    "code": "def remove_length(test_str, K):\r\n  temp = test_str.split()\r\n  res = [ele for ele in temp if len(ele) != K]\r\n  res = ' '.join(res)\r\n  return (res) "
+  },
+  "content_hash": "0ee7a69be2a4122d2f51e6e5134a65088deca244c24c95b34afa7223e0b8efec",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

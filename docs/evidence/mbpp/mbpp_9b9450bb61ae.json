@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_9b9450bb61ae",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.295394+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 710,
+    "text": "Write a function to access the initial and last data of the given tuple record.",
+    "code": "def front_and_rear(test_tup):\r\n  res = (test_tup[0], test_tup[-1])\r\n  return (res) "
+  },
+  "content_hash": "9b9450bb61ae7956584c73ca5c764d31e31acc61607ab7b039f3c05f534ed7a2",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

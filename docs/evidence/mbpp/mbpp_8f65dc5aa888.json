@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_8f65dc5aa888",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.205810+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 249,
+    "text": "Write a function to find the intersection of two arrays using lambda function.",
+    "code": "def intersection_array(array_nums1,array_nums2):\r\n result = list(filter(lambda x: x in array_nums1, array_nums2)) \r\n return result"
+  },
+  "content_hash": "8f65dc5aa8882299b66cd977338655273cdc2287e26e2aa84e0e19ff4a2ea35c",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

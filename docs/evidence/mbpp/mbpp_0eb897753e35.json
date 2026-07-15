@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_0eb897753e35",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.345011+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 928,
+    "text": "Write a function to convert a date of yyyy-mm-dd format to dd-mm-yyyy format.",
+    "code": "import re\r\ndef change_date_format(dt):\r\n        return re.sub(r'(\\d{4})-(\\d{1,2})-(\\d{1,2})', '\\\\3-\\\\2-\\\\1', dt)\r\n        return change_date_format(dt)"
+  },
+  "content_hash": "0eb897753e351e24ac6bc855af1b2149a5213f5e60075bcf114c178fa2f8d993",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_234654e0fc46",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.199507+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 196,
+    "text": "Write a function to remove all the tuples with length k.",
+    "code": "def remove_tuples(test_list, K):\r\n  res = [ele for ele in test_list if len(ele) != K]\r\n  return (res) "
+  },
+  "content_hash": "234654e0fc4601c523ed83857154a49f741740210eac83c3f3299a69396c7421",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

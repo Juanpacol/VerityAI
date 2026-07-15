@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_17a86b9d2eca",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.231103+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 340,
+    "text": "Write a python function to find the sum of the three lowest positive numbers from a given list of numbers.",
+    "code": "def sum_three_smallest_nums(lst):\r\n\treturn sum(sorted([x for x in lst if x > 0])[:3])"
+  },
+  "content_hash": "17a86b9d2eca928ce4dff51b082ba7841742b8345a18cc16d4837438015588c2",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

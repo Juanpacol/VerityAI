@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_99afef1e707d",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.267767+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 557,
+    "text": "Write a function to toggle characters case in a string.",
+    "code": "def toggle_string(string):\r\n string1 = string.swapcase()\r\n return string1"
+  },
+  "content_hash": "99afef1e707d91a6c44e9cce4fe49172c432163dbbabcdfd3f5c32f78aac698a",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

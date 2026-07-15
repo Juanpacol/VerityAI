@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e7b6576df4d6",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.192705+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 137,
+    "text": "Write a function to find the ration of zeroes in an array of integers.",
+    "code": "from array import array\r\ndef zero_count(nums):\r\n    n = len(nums)\r\n    n1 = 0\r\n    for x in nums:\r\n        if x == 0:\r\n            n1 += 1\r\n        else:\r\n          None\r\n    return round(n1/n,2)"
+  },
+  "content_hash": "e7b6576df4d6a1581652437260968ac4b3b5793df8add9c3ef6f43d6c5d6f7eb",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

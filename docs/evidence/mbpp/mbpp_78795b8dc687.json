@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_78795b8dc687",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.206536+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 255,
+    "text": "Write a function to choose specified number of colours from three different colours and generate all the combinations with repetitions.",
+    "code": "from itertools import combinations_with_replacement \r\ndef combinations_colors(l, n):\r\n    return list(combinations_with_replacement(l,n))\r"
+  },
+  "content_hash": "78795b8dc687691a37128fb59929ad97a3804f4ad71585e2110833bdd5377193",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

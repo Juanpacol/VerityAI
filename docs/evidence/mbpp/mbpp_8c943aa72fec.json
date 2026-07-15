@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_8c943aa72fec",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.178927+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 3,
+    "text": "Write a python function to identify non-prime numbers.",
+    "code": "import math\r\ndef is_not_prime(n):\r\n    result = False\r\n    for i in range(2,int(math.sqrt(n)) + 1):\r\n        if n % i == 0:\r\n            result = True\r\n    return result"
+  },
+  "content_hash": "8c943aa72fec33d082236fb66f15e5e349cebc96e56655425ec3f7f8d460693d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

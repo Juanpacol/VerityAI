@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_fa1713fffeef",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.199731+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 198,
+    "text": "Write a function to find the largest triangle that can be inscribed in an ellipse.",
+    "code": "import math\r\ndef largest_triangle(a,b): \r\n    if (a < 0 or b < 0): \r\n        return -1 \r\n    area = (3 * math.sqrt(3) * pow(a, 2)) / (4 * b);  \r\n    return area "
+  },
+  "content_hash": "fa1713fffeef0b7e7cc6b9454754cd2652b66c75af71da79293d7bcd40396bb6",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

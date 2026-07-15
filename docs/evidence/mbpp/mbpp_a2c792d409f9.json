@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a2c792d409f9",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.185145+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 63,
+    "text": "Write a function to find the maximum difference between available pairs in the given tuple list.",
+    "code": "def max_difference(test_list):\r\n  temp = [abs(b - a) for a, b in test_list]\r\n  res = max(temp)\r\n  return (res) "
+  },
+  "content_hash": "a2c792d409f982ae2a8cede9fa4d0ca700f12df21317c741589e2e6b4e8e12d5",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

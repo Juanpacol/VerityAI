@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_6cf82d430734",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.210113+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 282,
+    "text": "Write a function to substaract two lists using map and lambda function.",
+    "code": "def sub_list(nums1,nums2):\r\n  result = map(lambda x, y: x - y, nums1, nums2)\r\n  return list(result)"
+  },
+  "content_hash": "6cf82d430734d825404f1b0fc1a4fea0c576ec17e22f10838d8c9f2c1121b0cd",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7d8f816f6111",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.239466+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 377,
+    "text": "Write a python function to remove all occurrences of a character in a given string.",
+    "code": "def remove_Char(s,c) :  \r\n    counts = s.count(c) \r\n    s = list(s) \r\n    while counts :  \r\n        s.remove(c) \r\n        counts -= 1 \r\n    s = '' . join(s)   \r\n    return (s) "
+  },
+  "content_hash": "7d8f816f6111eedec7c8a3d6c819b6d47ef053f2b52d4b3db83b7f45c392f7e2",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

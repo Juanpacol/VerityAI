@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_115ee9d077ad",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.291234+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 688,
+    "text": "Write a function to get the length of a complex number.",
+    "code": "import cmath\r\ndef len_complex(a,b):\r\n  cn=complex(a,b)\r\n  length=abs(cn)\r\n  return length"
+  },
+  "content_hash": "115ee9d077ad0f1c267f40000d7045217833ad487b666238d6bfe7a6efec10dc",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_ee1ec4b7953c",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.262508+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 526,
+    "text": "Write a python function to capitalize first and last letters of each word of a given string.",
+    "code": "def capitalize_first_last_letters(str1):\r\n     str1 = result = str1.title()\r\n     result =  \"\"\r\n     for word in str1.split():\r\n        result += word[:-1] + word[-1].upper() + \" \"\r\n     return result[:-1]  "
+  },
+  "content_hash": "ee1ec4b7953c4615910fb454914189a9e821b1f8eea60abdafb68a81fce191ba",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

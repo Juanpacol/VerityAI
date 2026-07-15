@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_4e7e42295680",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.238309+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 369,
+    "text": "Write a function to find the lateral surface area of cuboid",
+    "code": "def lateralsurface_cuboid(l,w,h):\r\n  LSA = 2*h*(l+w)\r\n  return LSA"
+  },
+  "content_hash": "4e7e42295680e42e4f2ce600899e0fec739a9e829b75d907c7813792809cde36",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

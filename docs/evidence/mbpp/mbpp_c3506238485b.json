@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c3506238485b",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.287714+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 669,
+    "text": "Write a function to check whether the given ip address is valid or not using regex.",
+    "code": "import re \r\nregex = '''^(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\\.( \r\n\t\t\t25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\\.( \r\n\t\t\t25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\\.( \r\n\t\t\t25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)$'''\r\ndef check_IP(Ip): \r\n\tif(re.search(regex, Ip)): \r\n\t\treturn (\"Valid IP address\") \r\n\telse: \r\n\t\treturn (\"Invalid IP address\") "
+  },
+  "content_hash": "c3506238485b5046e63455dc5daab619c9c80dec64e8861270d7649fbd097a78",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

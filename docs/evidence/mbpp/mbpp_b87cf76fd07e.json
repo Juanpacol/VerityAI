@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b87cf76fd07e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.207911+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 266,
+    "text": "Write a function to find the lateral surface area of a cube.",
+    "code": "def lateralsurface_cube(l):\r\n  LSA = 4 * (l * l)\r\n  return LSA"
+  },
+  "content_hash": "b87cf76fd07e02191c9bc2f3b4e54e533e92432298d2009751aab87d5e6321ef",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

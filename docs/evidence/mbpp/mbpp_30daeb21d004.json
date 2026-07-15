@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_30daeb21d004",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.279521+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 623,
+    "text": "Write a function to find the n-th power of individual elements in a list using lambda function.",
+    "code": "def nth_nums(nums,n):\r\n nth_nums = list(map(lambda x: x ** n, nums))\r\n return nth_nums"
+  },
+  "content_hash": "30daeb21d0040a4e5200e10303b37bc46cf97bde3b69ede94cb4dc30a0f95af8",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

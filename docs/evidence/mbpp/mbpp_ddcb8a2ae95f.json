@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_ddcb8a2ae95f",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.211785+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 295,
+    "text": "Write a function to return the sum of all divisors of a number.",
+    "code": "def sum_div(number):\r\n    divisors = [1]\r\n    for i in range(2, number):\r\n        if (number % i)==0:\r\n            divisors.append(i)\r\n    return sum(divisors)"
+  },
+  "content_hash": "ddcb8a2ae95f6c4febb414049dd1488536ecd8f58f5ffeb8f166c93d3b0cf237",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

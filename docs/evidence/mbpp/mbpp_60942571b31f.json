@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_60942571b31f",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.202536+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 222,
+    "text": "Write a function to check if all the elements in tuple have same data type or not.",
+    "code": "def check_type(test_tuple):\r\n  res = True\r\n  for ele in test_tuple:\r\n    if not isinstance(ele, type(test_tuple[0])):\r\n      res = False\r\n      break\r\n  return (res) "
+  },
+  "content_hash": "60942571b31f093eba958e6ba9d1f7859554116c580e315ff1e8c3272120390c",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

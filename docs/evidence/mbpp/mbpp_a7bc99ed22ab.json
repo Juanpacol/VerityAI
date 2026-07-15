@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_a7bc99ed22ab",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.182103+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 32,
+    "text": "Write a python function to find the largest prime factor of a given number.",
+    "code": "import math \r\ndef max_Prime_Factors (n): \r\n    maxPrime = -1 \r\n    while n%2 == 0: \r\n        maxPrime = 2\r\n        n >>= 1    \r\n    for i in range(3,int(math.sqrt(n))+1,2): \r\n        while n % i == 0: \r\n            maxPrime = i \r\n            n = n / i \r\n    if n > 2: \r\n        maxPrime = n  \r\n    return int(maxPrime)"
+  },
+  "content_hash": "a7bc99ed22ab25274e38dcac74328186ad816e3329f919a1b7e58c416c4cfef3",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

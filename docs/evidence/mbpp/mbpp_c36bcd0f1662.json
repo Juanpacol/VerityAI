@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c36bcd0f1662",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.263688+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 533,
+    "text": "Write a function to remove particular data type elements from the given tuple.",
+    "code": "def remove_datatype(test_tuple, data_type):\r\n  res = []\r\n  for ele in test_tuple:\r\n    if not isinstance(ele, data_type):\r\n      res.append(ele)\r\n  return (res) "
+  },
+  "content_hash": "c36bcd0f1662e028bd0d7c757c737693065e6b0d7fcb0f8c6ecb707f90e68d79",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

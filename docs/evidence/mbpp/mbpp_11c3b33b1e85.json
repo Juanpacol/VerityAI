@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_11c3b33b1e85",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.306565+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 764,
+    "text": "Write a python function to count numeric values in a given string.",
+    "code": "def number_ctr(str):\r\n      number_ctr= 0\r\n      for i in range(len(str)):\r\n          if str[i] >= '0' and str[i] <= '9': number_ctr += 1     \r\n      return  number_ctr"
+  },
+  "content_hash": "11c3b33b1e85ebf87d10d0ce21709e025697d156c619c8f7b60f69a3021b0faa",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

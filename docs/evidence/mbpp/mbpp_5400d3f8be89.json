@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_5400d3f8be89",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.305379+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 759,
+    "text": "Write a function to check a decimal with a precision of 2.",
+    "code": "def is_decimal(num):\r\n    import re\r\n    dnumre = re.compile(r\"\"\"^[0-9]+(\\.[0-9]{1,2})?$\"\"\")\r\n    result = dnumre.search(num)\r\n    return bool(result)"
+  },
+  "content_hash": "5400d3f8be89f6f071bde8ca2739b1398f961a6c8592cb8bfb10d03e706e49be",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

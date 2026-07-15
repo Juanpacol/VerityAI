@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_294563cd3bfa",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.260617+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 515,
+    "text": "Write a function to check if there is a subset with sum divisible by m.",
+    "code": "def modular_sum(arr, n, m): \r\n\tif (n > m): \r\n\t\treturn True\r\n\tDP = [False for i in range(m)] \r\n\tfor i in range(n): \r\n\t\tif (DP[0]): \r\n\t\t\treturn True\r\n\t\ttemp = [False for i in range(m)] \r\n\t\tfor j in range(m): \r\n\t\t\tif (DP[j] == True): \r\n\t\t\t\tif (DP[(j + arr[i]) % m] == False): \r\n\t\t\t\t\ttemp[(j + arr[i]) % m] = True\r\n\t\tfor j in range(m): \r\n\t\t\tif (temp[j]): \r\n\t\t\t\tDP[j] = True\r\n\t\tDP[arr[i] % m] = True\r\n\treturn DP[0]"
+  },
+  "content_hash": "294563cd3bfadafc8a03ef583268fd1af1a6713e3c50ed03eaf89693d5e686f7",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c9597799bb67",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.340157+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 908,
+    "text": "Write a function to find the fixed point in the given array.",
+    "code": "def find_fixed_point(arr, n): \r\n\tfor i in range(n): \r\n\t\tif arr[i] is i: \r\n\t\t\treturn i \r\n\treturn -1"
+  },
+  "content_hash": "c9597799bb6749a9641f006cbb5a51b0971e052c0774ee275b024b7ce8a910fe",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

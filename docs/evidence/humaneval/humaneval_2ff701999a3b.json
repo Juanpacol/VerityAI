@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_2ff701999a3b",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.896104+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/60",
+    "prompt": "\n\ndef sum_to_n(n: int):\n    \"\"\"sum_to_n is a function that sums numbers from 1 to n.\n    >>> sum_to_n(30)\n    465\n    >>> sum_to_n(100)\n    5050\n    >>> sum_to_n(5)\n    15\n    >>> sum_to_n(10)\n    55\n    >>> sum_to_n(1)\n    1\n    \"\"\"\n",
+    "canonical_solution": "    return sum(range(n + 1))\n",
+    "entry_point": "sum_to_n"
+  },
+  "content_hash": "2ff701999a3b00c952f2927890ec4376576344aaf229a03d6738b8207404f742",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

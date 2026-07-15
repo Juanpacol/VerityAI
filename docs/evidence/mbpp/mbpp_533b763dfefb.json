@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_533b763dfefb",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.195275+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 159,
+    "text": "Write a function to print the season for the given month and day.",
+    "code": "def month_season(month,days):\r\n if month in ('January', 'February', 'March'):\r\n\t season = 'winter'\r\n elif month in ('April', 'May', 'June'):\r\n\t season = 'spring'\r\n elif month in ('July', 'August', 'September'):\r\n\t season = 'summer'\r\n else:\r\n\t season = 'autumn'\r\n if (month == 'March') and (days > 19):\r\n\t season = 'spring'\r\n elif (month == 'June') and (days > 20):\r\n\t season = 'summer'\r\n elif (month == 'September') and (days > 21):\r\n\t season = 'autumn'\r\n elif (month == 'October') and (days > 21):\r\n\t season = 'autumn'\r\n elif (month == 'November') and (days > 21):\r\n\t season = 'autumn'\r\n elif (month == 'December') and (days > 20):\r\n\t season = 'winter'\r\n return season"
+  },
+  "content_hash": "533b763dfefbd897c68f84c4935f476fc6563e653171d4b174527fd3f322eebc",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

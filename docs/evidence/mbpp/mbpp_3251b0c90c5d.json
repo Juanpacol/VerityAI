@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_3251b0c90c5d",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.302413+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 745,
+    "text": "Write a function to find numbers within a given range where every number is divisible by every digit it contains.",
+    "code": "def divisible_by_digits(startnum, endnum):\r\n    return [n for n in range(startnum, endnum+1) \\\r\n                if not any(map(lambda x: int(x) == 0 or n%int(x) != 0, str(n)))]"
+  },
+  "content_hash": "3251b0c90c5d4f70e778a93664348cd138d045cadeadee1a649c3da3e29e7692",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

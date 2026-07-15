@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_e344a5b9a00a",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.901825+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/112",
+    "prompt": "\ndef reverse_delete(s,c):\n    \"\"\"Task\n    We are given two strings s and c, you have to deleted all the characters in s that are equal to any character in c\n    then check if the result string is palindrome.\n    A string is called palindrome if it reads the same backward as forward.\n    You should return a tuple containing the result string and True/False for the check.\n    Example\n    For s = \"abcde\", c = \"ae\", the result should be ('bcd',False)\n    For s = \"abcdef\", c = \"b\"  the result should be ('acdef',False)\n    For s = \"abcdedcba\", c = \"ab\", the result should be ('cdedc',True)\n    \"\"\"\n",
+    "canonical_solution": "    s = ''.join([char for char in s if char not in c])\n    return (s,s[::-1] == s)\n",
+    "entry_point": "reverse_delete"
+  },
+  "content_hash": "e344a5b9a00ad425dda878e508ac6a56daa4fc67c1215441e37fc1f9265f07f7",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

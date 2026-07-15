@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f68fcbfb6ab7",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.201128+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 210,
+    "text": "Write a function to check that the given string contains only a certain set of characters(in this case a-z, a-z and 0-9) by using regex.",
+    "code": "import re\r\ndef is_allowed_specific_char(string):\r\n    get_char = re.compile(r'[^a-zA-Z0-9.]')\r\n    string = get_char.search(string)\r\n    return not bool(string)"
+  },
+  "content_hash": "f68fcbfb6ab7023260016a3c96e34ba4688695be9211d9337fa1e38e434e0535",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

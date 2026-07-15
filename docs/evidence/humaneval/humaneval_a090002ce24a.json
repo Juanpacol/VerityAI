@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_a090002ce24a",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.899484+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/91",
+    "prompt": "\ndef is_bored(S):\n    \"\"\"\n    You'll be given a string of words, and your task is to count the number\n    of boredoms. A boredom is a sentence that starts with the word \"I\".\n    Sentences are delimited by '.', '?' or '!'.\n   \n    For example:\n    >>> is_bored(\"Hello world\")\n    0\n    >>> is_bored(\"The sky is blue. The sun is shining. I love this weather\")\n    1\n    \"\"\"\n",
+    "canonical_solution": "    import re\n    sentences = re.split(r'[.?!]\\s*', S)\n    return sum(sentence[0:2] == 'I ' for sentence in sentences)\n",
+    "entry_point": "is_bored"
+  },
+  "content_hash": "a090002ce24ab4fdc229ed2d2f1fd9406a5107caa2feb0de417001b42c292120",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

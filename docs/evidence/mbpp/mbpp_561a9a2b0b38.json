@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_561a9a2b0b38",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.237748+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 365,
+    "text": "Write a python function to count the number of digits of a given number.",
+    "code": "def count_Digit(n):\r\n    count = 0\r\n    while n != 0:\r\n        n //= 10\r\n        count += 1\r\n    return count"
+  },
+  "content_hash": "561a9a2b0b384f7119405c6cd8cd8dc0a49fd053f0db37dbed6ba0e216910d8d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

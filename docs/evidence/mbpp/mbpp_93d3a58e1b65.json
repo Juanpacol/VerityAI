@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_93d3a58e1b65",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.292175+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 693,
+    "text": "Write a function to remove multiple spaces in a string by using regex.",
+    "code": "import re\r\ndef remove_multiple_spaces(text1):\r\n  return (re.sub(' +',' ',text1))"
+  },
+  "content_hash": "93d3a58e1b65dc710e5cd64f31ca07dcd7ddc80fc2291bde9923d9ce70465ec7",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

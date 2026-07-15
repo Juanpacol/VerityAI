@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_058430825a2a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.317460+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 810,
+    "text": "Write a function to iterate over elements repeating each as many times as its count.",
+    "code": "from collections import Counter\r\ndef count_variable(a,b,c,d):\r\n  c = Counter(p=a, q=b, r=c, s=d)\r\n  return list(c.elements())"
+  },
+  "content_hash": "058430825a2a6de95af6f62e22b59be89fe277e379dc131c43d395579fd3e46e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

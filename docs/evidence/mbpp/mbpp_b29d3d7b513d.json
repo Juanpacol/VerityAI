@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b29d3d7b513d",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.197991+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 183,
+    "text": "Write a function to count all the distinct pairs having a difference of k in any array.",
+    "code": "def count_pairs(arr, n, k):\r\n  count=0;\r\n  for i in range(0,n):\r\n    for j in range(i+1, n):\r\n      if arr[i] - arr[j] == k or arr[j] - arr[i] == k:\r\n        count += 1\r\n  return count"
+  },
+  "content_hash": "b29d3d7b513d2b9279aa29fc02a700ade28627f3f7241adf0cb0c575fa8e54c9",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

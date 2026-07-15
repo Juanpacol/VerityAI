@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_6e8045f0c0f2",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.288816+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 675,
+    "text": "Write a function to add two integers. however, if the sum is between the given range it will return 20.",
+    "code": "def sum_nums(x, y,m,n):\r\n    sum_nums= x + y\r\n    if sum_nums in range(m, n):\r\n        return 20\r\n    else:\r\n        return sum_nums"
+  },
+  "content_hash": "6e8045f0c0f21c6de503fd2c46bea9e048790073d36c5bbf76bbb61a25613fd8",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

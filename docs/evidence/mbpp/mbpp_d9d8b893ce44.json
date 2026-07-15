@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_d9d8b893ce44",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.183873+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 51,
+    "text": "Write a function to print check if the triangle is equilateral or not.",
+    "code": "def check_equilateral(x,y,z):\r\n  if x == y == z:\r\n\t   return True\r\n  else:\r\n     return False"
+  },
+  "content_hash": "d9d8b893ce449cba3e7ea59d4cb266017c20dea1d1bc21d0bfd24cbcf716f2b4",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

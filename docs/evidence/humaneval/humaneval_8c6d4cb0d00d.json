@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_8c6d4cb0d00d",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.902735+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/120",
+    "prompt": "\ndef maximum(arr, k):\n    \"\"\"\n    Given an array arr of integers and a positive integer k, return a sorted list \n    of length k with the maximum k numbers in arr.\n\n    Example 1:\n\n        Input: arr = [-3, -4, 5], k = 3\n        Output: [-4, -3, 5]\n\n    Example 2:\n\n        Input: arr = [4, -4, 4], k = 2\n        Output: [4, 4]\n\n    Example 3:\n\n        Input: arr = [-3, 2, 1, 2, -1, -2, 1], k = 1\n        Output: [2]\n\n    Note:\n        1. The length of the array will be in the range of [1, 1000].\n        2. The elements in the array will be in the range of [-1000, 1000].\n        3. 0 <= k <= len(arr)\n    \"\"\"\n",
+    "canonical_solution": "    if k == 0:\n        return []\n    arr.sort()\n    ans = arr[-k:]\n    return ans\n",
+    "entry_point": "maximum"
+  },
+  "content_hash": "8c6d4cb0d00d7127a680f9e2bf81e3a9ebd66e0afa98e0f1befdb456831d65fb",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

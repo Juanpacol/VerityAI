@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f7022b938a78",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.181830+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 29,
+    "text": "Write a python function to find the element occurring odd number of times.",
+    "code": "def get_Odd_Occurrence(arr,arr_size):   \r\n    for i in range(0,arr_size): \r\n        count = 0\r\n        for j in range(0,arr_size): \r\n            if arr[i] == arr[j]: \r\n                count+=1     \r\n        if (count % 2 != 0): \r\n            return arr[i]     \r\n    return -1"
+  },
+  "content_hash": "f7022b938a781871794c4302afab22ea65f0181bff5bd6214b55980bc6b73a2b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

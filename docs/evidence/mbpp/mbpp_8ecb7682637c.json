@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_8ecb7682637c",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.203386+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 229,
+    "text": "Write a function to re-arrange the elements of the given array so that all negative elements appear before positive ones.",
+    "code": "def re_arrange_array(arr, n):\r\n  j=0\r\n  for i in range(0, n):\r\n    if (arr[i] < 0):\r\n      temp = arr[i]\r\n      arr[i] = arr[j]\r\n      arr[j] = temp\r\n      j = j + 1\r\n  return arr"
+  },
+  "content_hash": "8ecb7682637c073e8f2649dd249816b9b0a763b49f58dc050e06b975381a885b",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

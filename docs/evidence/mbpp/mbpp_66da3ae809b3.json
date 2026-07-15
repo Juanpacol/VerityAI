@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_66da3ae809b3",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.246733+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 426,
+    "text": "Write a function to filter odd numbers using lambda function.",
+    "code": "def filter_oddnumbers(nums):\r\n odd_nums = list(filter(lambda x: x%2 != 0, nums))\r\n return odd_nums"
+  },
+  "content_hash": "66da3ae809b3a821e96c5bd89f251cb06fbc66a01c5309c36cd81f8d1d0ca2c0",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

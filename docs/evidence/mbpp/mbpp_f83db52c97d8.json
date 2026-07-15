@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f83db52c97d8",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.341129+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 912,
+    "text": "Write a function to find ln, m lobb number.",
+    "code": "def binomial_coeff(n, k): \r\n\tC = [[0 for j in range(k + 1)] \r\n\t\t\tfor i in range(n + 1)] \r\n\tfor i in range(0, n + 1): \r\n\t\tfor j in range(0, min(i, k) + 1): \r\n\t\t\tif (j == 0 or j == i): \r\n\t\t\t\tC[i][j] = 1\r\n\t\t\telse: \r\n\t\t\t\tC[i][j] = (C[i - 1][j - 1] \r\n\t\t\t\t\t\t\t+ C[i - 1][j]) \r\n\treturn C[n][k] \r\ndef lobb_num(n, m): \r\n\treturn (((2 * m + 1) *\r\n\t\tbinomial_coeff(2 * n, m + n)) \r\n\t\t\t\t\t/ (m + n + 1))"
+  },
+  "content_hash": "f83db52c97d8df400ab1af549035fd95a8deff8be63ef79ac433c67bec5c804d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

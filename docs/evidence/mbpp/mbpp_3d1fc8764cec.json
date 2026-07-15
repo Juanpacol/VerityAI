@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_3d1fc8764cec",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.203150+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 227,
+    "text": "Write a function to find minimum of three numbers.",
+    "code": "def min_of_three(a,b,c): \r\n      if (a <= b) and (a <= c): \r\n        smallest = a \r\n      elif (b <= a) and (b <= c): \r\n        smallest = b \r\n      else: \r\n        smallest = c \r\n      return smallest "
+  },
+  "content_hash": "3d1fc8764cece7ad1fe6d8f179904586850f22ec7d12487c67f8bf816665ff19",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_10ad7179f80a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.252988+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 467,
+    "text": "Write a python function to convert decimal number to octal number.",
+    "code": "def decimal_to_Octal(deciNum):\r\n    octalNum = 0\r\n    countval = 1;\r\n    dNo = deciNum;\r\n    while (deciNum!= 0):\r\n        remainder= deciNum % 8;\r\n        octalNum+= remainder*countval;\r\n        countval= countval*10;\r\n        deciNum //= 8; \r\n    return (octalNum)"
+  },
+  "content_hash": "10ad7179f80ac502ab11c7ae796b83824aaab8db2f5abbe221eec8690e93a418",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_567d1ac14055",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.270493+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 573,
+    "text": "Write a python function to calculate the product of the unique numbers of a given list.",
+    "code": "def unique_product(list_data):\r\n    temp = list(set(list_data))\r\n    p = 1\r\n    for i in temp:\r\n        p *= i\r\n    return p"
+  },
+  "content_hash": "567d1ac1405543f6c4260aee650185f604c2d972d733df80634a490a8753ba88",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

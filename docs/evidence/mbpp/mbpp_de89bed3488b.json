@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_de89bed3488b",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.296330+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 715,
+    "text": "Write a function to convert the given string of integers into a tuple.",
+    "code": "def str_to_tuple(test_str):\r\n  res = tuple(map(int, test_str.split(', ')))\r\n  return (res) "
+  },
+  "content_hash": "de89bed3488bfd177b8af0f641f7d16039bbf69bd8b8f6470a93e6bff37bd463",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

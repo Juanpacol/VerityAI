@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_dcb134b19a98",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.226555+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 307,
+    "text": "Write a function to get a colon of a tuple.",
+    "code": "from copy import deepcopy\r\ndef colon_tuplex(tuplex,m,n):\r\n  tuplex_colon = deepcopy(tuplex)\r\n  tuplex_colon[m].append(n)\r\n  return tuplex_colon"
+  },
+  "content_hash": "dcb134b19a9886f43abc9a100a384e348e2cc19a4a31222e662c89acfb9cc41d",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

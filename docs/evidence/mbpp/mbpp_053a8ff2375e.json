@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_053a8ff2375e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.200295+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 203,
+    "text": "Write a python function to find the hamming distance between given two integers.",
+    "code": "def hamming_Distance(n1,n2) : \r\n    x = n1 ^ n2  \r\n    setBits = 0\r\n    while (x > 0) : \r\n        setBits += x & 1\r\n        x >>= 1\r\n    return setBits  "
+  },
+  "content_hash": "053a8ff2375e7b3363fc11f67596da0f5fef5771f71986e8f0cfa7f146fd5f76",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

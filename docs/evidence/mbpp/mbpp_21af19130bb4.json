@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_21af19130bb4",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.198452+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 187,
+    "text": "Write a function to find the longest common subsequence for the given two sequences.",
+    "code": "def longest_common_subsequence(X, Y, m, n): \r\n    if m == 0 or n == 0: \r\n       return 0 \r\n    elif X[m-1] == Y[n-1]: \r\n       return 1 + longest_common_subsequence(X, Y, m-1, n-1) \r\n    else: \r\n       return max(longest_common_subsequence(X, Y, m, n-1), longest_common_subsequence(X, Y, m-1, n))"
+  },
+  "content_hash": "21af19130bb48ab505bdbf5584bf4098c4c353963b7418d8f1e88c57c86340e0",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

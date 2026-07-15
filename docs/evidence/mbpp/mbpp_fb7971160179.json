@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_fb7971160179",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.239324+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 376,
+    "text": "Write a function to remove tuple elements that occur more than once and replace the duplicates with some custom value.",
+    "code": "def remove_replica(test_tup):\r\n  temp = set()\r\n  res = tuple(ele if ele not in temp and not temp.add(ele) \r\n\t\t\t\telse 'MSP' for ele in test_tup)\r\n  return (res)"
+  },
+  "content_hash": "fb79711601796b4e50fac0b06aadba8c2d2d2550e4b817de799657b8415c0e4a",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

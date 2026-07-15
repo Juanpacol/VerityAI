@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7fd324c061ec",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.341845+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 915,
+    "text": "Write a function to rearrange positive and negative numbers in a given array using lambda function.",
+    "code": "def rearrange_numbs(array_nums):\r\n  result = sorted(array_nums, key = lambda i: 0 if i == 0 else -1 / i)\r\n  return result "
+  },
+  "content_hash": "7fd324c061ec7101a9a06bd26e98e7aac03ce4e00458990d56496f5edc38c416",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

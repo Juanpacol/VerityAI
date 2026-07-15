@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_78a750312382",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.212035+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 297,
+    "text": "Write a function to flatten a given nested list structure.",
+    "code": "def flatten_list(list1):\r\n    result_list = []\r\n    if not list1: return result_list\r\n    stack = [list(list1)]\r\n    while stack:\r\n        c_num = stack.pop()\r\n        next = c_num.pop()\r\n        if c_num: stack.append(c_num)\r\n        if isinstance(next, list):\r\n            if next: stack.append(list(next))\r\n        else: result_list.append(next)\r\n    result_list.reverse()\r\n    return result_list "
+  },
+  "content_hash": "78a750312382fa4cd19786782947b41e2776aa7a3eeb0577cd55b54fa8fdc3dd",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_d56367debd75",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.288267+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 672,
+    "text": "Write a function to find maximum of three numbers.",
+    "code": "def max_of_three(num1,num2,num3): \r\n    if (num1 >= num2) and (num1 >= num3):\r\n       lnum = num1\r\n    elif (num2 >= num1) and (num2 >= num3):\r\n       lnum = num2\r\n    else:\r\n       lnum = num3\r\n    return lnum"
+  },
+  "content_hash": "d56367debd75b51cbececeb744540734229bef993b11c0fdff017e2caa49e145",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

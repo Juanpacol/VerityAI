@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f11128f2e5ed",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.351141+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 953,
+    "text": "Write a python function to find the minimun number of subsets with distinct elements.",
+    "code": "def subset(ar, n): \r\n    res = 0\r\n    ar.sort() \r\n    for i in range(0, n) : \r\n        count = 1\r\n        for i in range(n - 1): \r\n            if ar[i] == ar[i + 1]: \r\n                count+=1\r\n            else: \r\n                break \r\n        res = max(res, count)  \r\n    return res "
+  },
+  "content_hash": "f11128f2e5edc9e1bf2acc7d6d652dde86a5dd6a0bc14cfc4118a61282acbc4e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

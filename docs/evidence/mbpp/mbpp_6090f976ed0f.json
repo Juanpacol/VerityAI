@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_6090f976ed0f",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.289897+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 681,
+    "text": "Write a python function to find the smallest prime divisor of a number.",
+    "code": "def smallest_Divisor(n): \r\n    if (n % 2 == 0): \r\n        return 2; \r\n    i = 3;  \r\n    while (i*i <= n): \r\n        if (n % i == 0): \r\n            return i; \r\n        i += 2; \r\n    return n; "
+  },
+  "content_hash": "6090f976ed0fefd5e5f2c58fc1664a49095ee65391e0c8f6b99bdb6a7a5d88b9",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

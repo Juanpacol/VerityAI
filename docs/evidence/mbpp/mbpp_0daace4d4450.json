@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_0daace4d4450",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.204695+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 240,
+    "text": "Write a function to replace the last element of the list with another list.",
+    "code": "def replace_list(list1,list2):\r\n list1[-1:] = list2\r\n replace_list=list1\r\n return replace_list\r\n"
+  },
+  "content_hash": "0daace4d4450db1385629eb07c39e4ae39edc2a97dd7b0d4fc578e4cc97676c6",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

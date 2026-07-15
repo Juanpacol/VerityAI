@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c453c75ad6c5",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.257565+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 496,
+    "text": "Write a function to find the smallest integers from a given list of numbers using heap queue algorithm.",
+    "code": "import heapq as hq\r\ndef heap_queue_smallest(nums,n):\r\n  smallest_nums = hq.nsmallest(n, nums)\r\n  return smallest_nums"
+  },
+  "content_hash": "c453c75ad6c5162f5fbac42bc33db6d279cd74ef992735b23c63d47b17e9f369",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

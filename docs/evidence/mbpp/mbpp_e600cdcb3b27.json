@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_e600cdcb3b27",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.258697+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 503,
+    "text": "Write a function to add consecutive numbers of a given list.",
+    "code": "def add_consecutive_nums(nums):\r\n    result = [b+a for a, b in zip(nums[:-1], nums[1:])]\r\n    return result"
+  },
+  "content_hash": "e600cdcb3b275975398d4900d1b8fc0be89433030a8769c92876f85e5e5a2556",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

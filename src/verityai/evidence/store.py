@@ -41,13 +41,24 @@ class EvidenceStore:
         return self.root / source / f"{record_id}.json"
 
     def save(self, record: EvidenceRecord) -> bool:
-        """Persist `record`. Returns True if content changed, False if it was already current."""
+        """Persist `record`. Returns True if content changed, False if it was already current.
+
+        The "already current" short-circuit also checks the backing file
+        actually exists on disk -- not just that the manifest says so.
+        Without that check, a record file deleted out-of-band (while the
+        manifest survives) would be silently treated as "still saved" and
+        never rewritten, leaving a manifest entry that points at nothing.
+        """
         manifest = self._load_manifest()
         existing = manifest.get(record.id)
-        if existing is not None and existing.get("content_hash") == record.content_hash:
+        path = self._record_path(record.source, record.id)
+        if (
+            existing is not None
+            and existing.get("content_hash") == record.content_hash
+            and path.exists()
+        ):
             return False
 
-        path = self._record_path(record.source, record.id)
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(record.model_dump_json(indent=2))
 

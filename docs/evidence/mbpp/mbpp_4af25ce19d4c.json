@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_4af25ce19d4c",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.261854+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 522,
+    "text": "Write a function to find the longest bitonic subsequence for the given array.",
+    "code": "def lbs(arr): \r\n\tn = len(arr) \r\n\tlis = [1 for i in range(n+1)] \r\n\tfor i in range(1 , n): \r\n\t\tfor j in range(0 , i): \r\n\t\t\tif ((arr[i] > arr[j]) and (lis[i] < lis[j] +1)): \r\n\t\t\t\tlis[i] = lis[j] + 1\r\n\tlds = [1 for i in range(n+1)] \r\n\tfor i in reversed(range(n-1)): \r\n\t\tfor j in reversed(range(i-1 ,n)): \r\n\t\t\tif(arr[i] > arr[j] and lds[i] < lds[j] + 1): \r\n\t\t\t\tlds[i] = lds[j] + 1\r\n\tmaximum = lis[0] + lds[0] - 1\r\n\tfor i in range(1 , n): \r\n\t\tmaximum = max((lis[i] + lds[i]-1), maximum) \r\n\treturn maximum"
+  },
+  "content_hash": "4af25ce19d4c17868ac28e0fc180feff1cd933d41e5e5be6ffae3e79c312d5a4",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

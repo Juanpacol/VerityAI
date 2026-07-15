@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_cb834ef35543",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.275615+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 602,
+    "text": "Write a python function to find the first repeated character in a given string.",
+    "code": "def first_repeated_char(str1):\r\n  for index,c in enumerate(str1):\r\n    if str1[:index+1].count(c) > 1:\r\n      return c \r\n  return \"None\""
+  },
+  "content_hash": "cb834ef355436e6527b3994434d0b5aec0b3f130ffcb9dcdb5e956ecdcd80826",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

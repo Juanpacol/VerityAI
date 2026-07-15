@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_27b4a8164f6f",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.269628+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 568,
+    "text": "Write a function to create a list of empty dictionaries.",
+    "code": "def empty_list(length):\r\n empty_list = [{} for _ in range(length)]\r\n return empty_list"
+  },
+  "content_hash": "27b4a8164f6f41e67bd7c904c4d763934082243953108541643b748e672b8bdc",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

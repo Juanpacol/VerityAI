@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_0f7f9b8abc5b",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.195826+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 164,
+    "text": "Write a python function to check whether the sum of divisors are same or not.",
+    "code": "import math \r\ndef divSum(n): \r\n    sum = 1; \r\n    i = 2; \r\n    while(i * i <= n): \r\n        if (n % i == 0): \r\n            sum = (sum + i +math.floor(n / i)); \r\n        i += 1; \r\n    return sum; \r\ndef areEquivalent(num1,num2): \r\n    return divSum(num1) == divSum(num2); "
+  },
+  "content_hash": "0f7f9b8abc5b485b43c2fb81a8b97b3ec69da4afa9a6f697c6afde479c804ff0",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

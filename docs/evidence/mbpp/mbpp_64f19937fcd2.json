@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_64f19937fcd2",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.202052+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 218,
+    "text": "Write a python function to find the minimum operations required to make two numbers equal.",
+    "code": "import math   \r\ndef min_Operations(A,B):  \r\n    if (A > B): \r\n        swap(A,B)  \r\n    B = B // math.gcd(A,B);  \r\n    return B - 1"
+  },
+  "content_hash": "64f19937fcd2c62b819c05d667be411bfadce4e2a320c42e82dffa7f8454fcad",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

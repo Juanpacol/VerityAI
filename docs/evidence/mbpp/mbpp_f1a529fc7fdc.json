@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f1a529fc7fdc",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.249320+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 443,
+    "text": "Write a python function to find the largest negative number from the given list.",
+    "code": "def largest_neg(list1): \r\n    max = list1[0] \r\n    for x in list1: \r\n        if x < max : \r\n             max = x  \r\n    return max"
+  },
+  "content_hash": "f1a529fc7fdc5300e9dbf60a65db1c7d894127fa7ac27c28e0caceac714aa041",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

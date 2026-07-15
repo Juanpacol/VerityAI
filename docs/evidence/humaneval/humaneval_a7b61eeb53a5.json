@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_a7b61eeb53a5",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.893027+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/34",
+    "prompt": "\n\ndef unique(l: list):\n    \"\"\"Return sorted unique elements in a list\n    >>> unique([5, 3, 5, 2, 3, 3, 9, 0, 123])\n    [0, 2, 3, 5, 9, 123]\n    \"\"\"\n",
+    "canonical_solution": "    return sorted(list(set(l)))\n",
+    "entry_point": "unique"
+  },
+  "content_hash": "a7b61eeb53a56f09227ea6a32967f5e559b6abc5de125a255d59680239debd98",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

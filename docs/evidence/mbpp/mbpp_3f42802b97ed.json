@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_3f42802b97ed",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.247666+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 432,
+    "text": "Write a function to find the median of a trapezium.",
+    "code": "def median_trapezium(base1,base2,height):\r\n median = 0.5 * (base1+ base2)\r\n return median"
+  },
+  "content_hash": "3f42802b97edf69787f7594f75f2bcf9ee293e166bb8118556789d2915b8b3e8",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_d01c63c0e08a",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.204819+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 241,
+    "text": "Write a function to generate a 3d array having each element as '*'.",
+    "code": "def array_3d(m,n,o):\r\n array_3d = [[ ['*' for col in range(m)] for col in range(n)] for row in range(o)]\r\n return array_3d"
+  },
+  "content_hash": "d01c63c0e08a05ed97dbfd51a9df90e8ad4fd42eae1599af9c4162174fbfbfba",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

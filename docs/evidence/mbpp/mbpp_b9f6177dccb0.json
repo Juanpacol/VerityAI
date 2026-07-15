@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_b9f6177dccb0",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.310501+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 780,
+    "text": "Write a function to find the combinations of sums with tuples in the given tuple list.",
+    "code": "from itertools import combinations \r\ndef find_combinations(test_list):\r\n  res = [(b1 + a1, b2 + a2) for (a1, a2), (b1, b2) in combinations(test_list, 2)]\r\n  return (res) "
+  },
+  "content_hash": "b9f6177dccb09cc57f510f21e67e5f37b244a9fe3933c31dfb2223fd54b5f1f4",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

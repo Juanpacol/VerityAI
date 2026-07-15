@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_ed18d770c5b9",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.317704+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 811,
+    "text": "Write a function to check if two lists of tuples are identical or not.",
+    "code": "def check_identical(test_list1, test_list2):\r\n  res = test_list1 == test_list2\r\n  return (res) "
+  },
+  "content_hash": "ed18d770c5b9825cd5b424215152c9722a54cb37393eb4dd3f4d95c633726068",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

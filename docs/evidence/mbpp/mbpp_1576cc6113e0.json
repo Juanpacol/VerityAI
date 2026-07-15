@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_1576cc6113e0",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.237330+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 362,
+    "text": "Write a python function to find the item with maximum occurrences in a given list.",
+    "code": "def max_occurrences(nums):\r\n    max_val = 0\r\n    result = nums[0] \r\n    for i in nums:\r\n        occu = nums.count(i)\r\n        if occu > max_val:\r\n            max_val = occu\r\n            result = i \r\n    return result"
+  },
+  "content_hash": "1576cc6113e0eca9ad2dc5cbc3acd4c7f80bbb7d40ab6620892ce39ed1860b54",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

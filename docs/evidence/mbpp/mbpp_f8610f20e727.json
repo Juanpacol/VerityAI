@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_f8610f20e727",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.288451+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 673,
+    "text": "Write a python function to convert a list of multiple integers into a single integer.",
+    "code": "def convert(list): \r\n    s = [str(i) for i in list] \r\n    res = int(\"\".join(s))  \r\n    return (res) "
+  },
+  "content_hash": "f8610f20e7270d6fbdf8ab36ab3e4fb71d6045a8cb1651cf43163b4481184f2e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

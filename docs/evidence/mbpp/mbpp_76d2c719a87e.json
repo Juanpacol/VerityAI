@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_76d2c719a87e",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.293903+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 702,
+    "text": "Write a function to find the minimum number of elements that should be removed such that amax-amin<=k.",
+    "code": "def find_ind(key, i, n, \r\n\t\t\tk, arr):\r\n\tind = -1\r\n\tstart = i + 1\r\n\tend = n - 1;\r\n\twhile (start < end):\r\n\t\tmid = int(start +\r\n\t\t\t\t(end - start) / 2)\r\n\t\tif (arr[mid] - key <= k):\r\n\t\t\tind = mid\r\n\t\t\tstart = mid + 1\r\n\t\telse:\r\n\t\t\tend = mid\r\n\treturn ind\r\ndef removals(arr, n, k):\r\n\tans = n - 1\r\n\tarr.sort()\r\n\tfor i in range(0, n):\r\n\t\tj = find_ind(arr[i], i, \r\n\t\t\t\t\tn, k, arr)\r\n\t\tif (j != -1):\r\n\t\t\tans = min(ans, n -\r\n\t\t\t\t\t\t(j - i + 1))\r\n\treturn ans"
+  },
+  "content_hash": "76d2c719a87e34ac2a630fccca7d603ae0059e869fc33f9d206587c02fa796cf",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

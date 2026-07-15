@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_62c2698cc762",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.239607+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 378,
+    "text": "Write a python function to shift last element to first position in the given list.",
+    "code": "def move_first(test_list):\r\n  test_list = test_list[-1:] + test_list[:-1]  \r\n  return test_list"
+  },
+  "content_hash": "62c2698cc76200afc9189f000b1e8fe97af2baf3671b5d9cfa895d9dcae75124",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

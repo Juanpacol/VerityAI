@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c5f830ddb7f3",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.312558+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 789,
+    "text": "Write a function to calculate the perimeter of a regular polygon.",
+    "code": "from math import tan, pi\r\ndef perimeter_polygon(s,l):\r\n  perimeter = s*l\r\n  return perimeter"
+  },
+  "content_hash": "c5f830ddb7f39654cca5be484ca29594d400763f8891a54a4b4a09e665d82aac",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

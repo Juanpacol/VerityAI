@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_efeb7b77d8b9",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.899589+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/92",
+    "prompt": "\ndef any_int(x, y, z):\n    '''\n    Create a function that takes 3 numbers.\n    Returns true if one of the numbers is equal to the sum of the other two, and all numbers are integers.\n    Returns false in any other cases.\n    \n    Examples\n    any_int(5, 2, 7) ➞ True\n    \n    any_int(3, 2, 2) ➞ False\n\n    any_int(3, -2, 1) ➞ True\n    \n    any_int(3.6, -2.2, 2) ➞ False\n  \n\n    \n    '''\n",
+    "canonical_solution": "    \n    if isinstance(x,int) and isinstance(y,int) and isinstance(z,int):\n        if (x+y==z) or (x+z==y) or (y+z==x):\n            return True\n        return False\n    return False\n",
+    "entry_point": "any_int"
+  },
+  "content_hash": "efeb7b77d8b9ac12373e9b7e227fd0fc726370777b47c2d4693955900fcb0ba5",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

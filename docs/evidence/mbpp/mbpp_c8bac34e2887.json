@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_c8bac34e2887",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.242109+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 395,
+    "text": "Write a python function to find the first non-repeated character in a given string.",
+    "code": "def first_non_repeating_character(str1):\r\n  char_order = []\r\n  ctr = {}\r\n  for c in str1:\r\n    if c in ctr:\r\n      ctr[c] += 1\r\n    else:\r\n      ctr[c] = 1 \r\n      char_order.append(c)\r\n  for c in char_order:\r\n    if ctr[c] == 1:\r\n      return c\r\n  return None"
+  },
+  "content_hash": "c8bac34e2887e6114913eb895d7bebd2836a06bd6a2364ca305436b0602258f7",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

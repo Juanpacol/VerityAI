@@ -1,0 +1,23 @@
+{
+  "id": "humaneval_2e9c7a5ccfb1",
+  "source": "humaneval",
+  "source_url": "https://github.com/openai/human-eval",
+  "license": "MIT",
+  "retrieved_at": "2026-07-15T03:49:06.906729+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": "HumanEval/152",
+    "prompt": "\ndef compare(game,guess):\n    \"\"\"I think we all remember that feeling when the result of some long-awaited\n    event is finally known. The feelings and thoughts you have at that moment are\n    definitely worth noting down and comparing.\n    Your task is to determine if a person correctly guessed the results of a number of matches.\n    You are given two arrays of scores and guesses of equal length, where each index shows a match. \n    Return an array of the same length denoting how far off each guess was. If they have guessed correctly,\n    the value is 0, and if not, the value is the absolute difference between the guess and the score.\n    \n    \n    example:\n\n    compare([1,2,3,4,5,1],[1,2,3,4,2,-2]) -> [0,0,0,0,3,3]\n    compare([0,5,0,0,0,4],[4,1,1,0,0,-2]) -> [4,4,1,0,0,6]\n    \"\"\"\n",
+    "canonical_solution": "    return [abs(x-y) for x,y in zip(game,guess)]\n",
+    "entry_point": "compare"
+  },
+  "content_hash": "2e9c7a5ccfb1f7906b625b9de2a7b3f2a1a81dda19501d8e3eafc10ede076987",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

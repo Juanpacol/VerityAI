@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_ea7bb373a292",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.332518+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 876,
+    "text": "Write a python function to find lcm of two positive integers.",
+    "code": "def lcm(x, y):\r\n   if x > y:\r\n       z = x\r\n   else:\r\n       z = y\r\n   while(True):\r\n       if((z % x == 0) and (z % y == 0)):\r\n           lcm = z\r\n           break\r\n       z += 1\r\n   return lcm"
+  },
+  "content_hash": "ea7bb373a29257e3b7e5cca1d6e821da7a911c75b011ca250347d99a487bf2e9",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

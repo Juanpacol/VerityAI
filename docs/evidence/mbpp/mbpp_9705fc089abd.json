@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_9705fc089abd",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.356360+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 974,
+    "text": "Write a function to find the minimum total path sum in the given triangle.",
+    "code": "def min_sum_path(A): \r\n\tmemo = [None] * len(A) \r\n\tn = len(A) - 1\r\n\tfor i in range(len(A[n])): \r\n\t\tmemo[i] = A[n][i] \r\n\tfor i in range(len(A) - 2, -1,-1): \r\n\t\tfor j in range( len(A[i])): \r\n\t\t\tmemo[j] = A[i][j] + min(memo[j], \r\n\t\t\t\t\t\t\t\t\tmemo[j + 1]) \r\n\treturn memo[0]"
+  },
+  "content_hash": "9705fc089abda9076478e6a2f90c256de833a28dae426dfa1d8715664c1a4084",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

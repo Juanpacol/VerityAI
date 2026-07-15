@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_8024f2aef27f",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.281970+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 637,
+    "text": "Write a function to check whether the given amount has no profit and no loss",
+    "code": "def noprofit_noloss(actual_cost,sale_amount): \r\n  if(sale_amount == actual_cost):\r\n    return True\r\n  else:\r\n    return False"
+  },
+  "content_hash": "8024f2aef27f21fce31448bb771b2ec7a8301823c78a4d59a5d24c1b82736449",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

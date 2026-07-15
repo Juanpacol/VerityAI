@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_ab524175d1d9",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.242827+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 400,
+    "text": "Write a function to extract the frequency of unique tuples in the given list order irrespective.",
+    "code": "def extract_freq(test_list):\r\n  res = len(list(set(tuple(sorted(sub)) for sub in test_list)))\r\n  return (res)"
+  },
+  "content_hash": "ab524175d1d9d1ccb5ae4411b649ec0fbe437f96b7e3fadc5be60b21ac379e06",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

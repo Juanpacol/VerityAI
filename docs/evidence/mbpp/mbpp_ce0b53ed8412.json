@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_ce0b53ed8412",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.271038+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 576,
+    "text": "Write a python function to check whether an array is subarray of another or not.",
+    "code": "def is_Sub_Array(A,B,n,m): \r\n    i = 0; j = 0; \r\n    while (i < n and j < m):  \r\n        if (A[i] == B[j]): \r\n            i += 1; \r\n            j += 1; \r\n            if (j == m): \r\n                return True;  \r\n        else: \r\n            i = i - j + 1; \r\n            j = 0;       \r\n    return False; "
+  },
+  "content_hash": "ce0b53ed8412a18881a12f28375fb4730cce0c0e30026d644b105136691cc490",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

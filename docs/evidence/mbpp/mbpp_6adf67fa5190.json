@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_6adf67fa5190",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.325814+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 847,
+    "text": "Write a python function to copy a list from a singleton tuple.",
+    "code": "def lcopy(xs):\n  return xs[:]\n"
+  },
+  "content_hash": "6adf67fa51905cbcfb749a405ba35a5f17e32ae72f43ab6df9b9cfd8b5221e53",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

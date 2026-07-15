@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_bf697426fe61",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.204576+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 239,
+    "text": "Write a function to find the number of possible sequences of length n such that each of the next element is greater than or equal to twice of the previous element but less than or equal to m.",
+    "code": "def get_total_number_of_sequences(m,n): \r\n\tT=[[0 for i in range(n+1)] for i in range(m+1)] \r\n\tfor i in range(m+1): \r\n\t\tfor j in range(n+1): \r\n\t\t\tif i==0 or j==0: \r\n\t\t\t\tT[i][j]=0\r\n\t\t\telif i<j: \r\n\t\t\t\tT[i][j]=0\r\n\t\t\telif j==1: \r\n\t\t\t\tT[i][j]=i \r\n\t\t\telse: \r\n\t\t\t\tT[i][j]=T[i-1][j]+T[i//2][j-1] \r\n\treturn T[m][n]"
+  },
+  "content_hash": "bf697426fe615610a26a8feffdffcdcb47c40636924a0f7aa5fe1b55d4e7d23e",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}

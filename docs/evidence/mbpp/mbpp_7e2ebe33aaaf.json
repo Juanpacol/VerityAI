@@ -1,0 +1,22 @@
+{
+  "id": "mbpp_7e2ebe33aaaf",
+  "source": "mbpp",
+  "source_url": "https://github.com/google-research/google-research/tree/master/mbpp",
+  "license": "Apache-2.0",
+  "retrieved_at": "2026-07-15T03:49:07.327186+00:00",
+  "retrieval_method": "file_download",
+  "content": {
+    "task_id": 853,
+    "text": "Write a python function to find sum of odd factors of a number.",
+    "code": "import math\r\ndef sum_of_odd_Factors(n): \r\n    res = 1\r\n    while n % 2 == 0: \r\n        n = n // 2 \r\n    for i in range(3,int(math.sqrt(n) + 1)): \r\n        count = 0\r\n        curr_sum = 1\r\n        curr_term = 1\r\n        while n % i == 0: \r\n            count+=1 \r\n            n = n // i \r\n            curr_term *= i \r\n            curr_sum += curr_term    \r\n        res *= curr_sum  \r\n    if n >= 2: \r\n        res *= (1 + n) \r\n    return res "
+  },
+  "content_hash": "7e2ebe33aaaf3509688798c993080c6f7e5d407ba3c6bceafa33c202b5a9a7ac",
+  "feeds_topics": [
+    "T3"
+  ],
+  "validation": {
+    "status": "valid",
+    "reasons": []
+  },
+  "classification": null
+}
