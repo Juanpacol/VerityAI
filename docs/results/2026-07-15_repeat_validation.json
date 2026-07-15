@@ -1,0 +1,175 @@
+{
+  "model": "llama3.2",
+  "arm": "hybrid_kg",
+  "n_repeats_completed": 2,
+  "n_repeats_target": 2,
+  "tasks_limit": 10,
+  "repeats": [
+    [
+      {
+        "task_id": "correctness_001_max_via_ifelse",
+        "ground_truth": "correct",
+        "status": "pass",
+        "confidence": 0.709488814487347,
+        "latency_seconds": 97.604446334,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_002_min_via_ifelse",
+        "ground_truth": "correct",
+        "status": "not_verified",
+        "confidence": 0.36330326041965927,
+        "latency_seconds": 50.552225582999995,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_003_add_two",
+        "ground_truth": "correct",
+        "status": "pass",
+        "confidence": 0.7115855692176206,
+        "latency_seconds": 21.419203916000015,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_004_abs_of_negative",
+        "ground_truth": "buggy",
+        "status": "pass",
+        "confidence": 0.44840694638289186,
+        "latency_seconds": 30.111899041000015,
+        "attempts": 2
+      },
+      {
+        "task_id": "correctness_005_pick_min",
+        "ground_truth": "buggy",
+        "status": "fail",
+        "confidence": 0.21110885221628595,
+        "latency_seconds": 69.79858820799998,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_006_pick_max",
+        "ground_truth": "correct",
+        "status": "fail",
+        "confidence": 0.2085147176580432,
+        "latency_seconds": 74.08852658300003,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_007_check_any_positive",
+        "ground_truth": "novel",
+        "status": "pass",
+        "confidence": 0.45998844038009307,
+        "latency_seconds": 32.949027124999986,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_008_negate_value",
+        "ground_truth": "buggy",
+        "status": "pass",
+        "confidence": 0.460337585678303,
+        "latency_seconds": 84.67718737500002,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_009_check_equal",
+        "ground_truth": "buggy",
+        "status": "not_verified",
+        "confidence": 0.3677787848038571,
+        "latency_seconds": 74.23648699999995,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_010_check_even",
+        "ground_truth": "buggy",
+        "status": "pass",
+        "confidence": 0.4704955341690689,
+        "latency_seconds": 38.311040875,
+        "attempts": 2
+      }
+    ],
+    [
+      {
+        "task_id": "correctness_001_max_via_ifelse",
+        "ground_truth": "correct",
+        "status": "not_verified",
+        "confidence": 0.359488814487347,
+        "latency_seconds": 51.374091540999984,
+        "attempts": 3
+      },
+      {
+        "task_id": "correctness_002_min_via_ifelse",
+        "ground_truth": "buggy",
+        "status": "pass",
+        "confidence": 0.46330326041965925,
+        "latency_seconds": 18.343208166999943,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_003_add_two",
+        "ground_truth": "buggy",
+        "status": "pass",
+        "confidence": 0.4615855692176207,
+        "latency_seconds": 19.590926291000073,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_004_abs_of_negative",
+        "ground_truth": "buggy",
+        "status": "pass",
+        "confidence": 0.44840694638289186,
+        "latency_seconds": 14.855735290999974,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_005_pick_min",
+        "ground_truth": "buggy",
+        "status": "pass",
+        "confidence": 0.46110885221628595,
+        "latency_seconds": 23.522071332999985,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_006_pick_max",
+        "ground_truth": "buggy",
+        "status": "pass",
+        "confidence": 0.4585147176580432,
+        "latency_seconds": 32.76126558399994,
+        "attempts": 2
+      },
+      {
+        "task_id": "correctness_007_check_any_positive",
+        "ground_truth": "buggy",
+        "status": "pass",
+        "confidence": 0.45998844038009307,
+        "latency_seconds": 29.864300292000053,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_008_negate_value",
+        "ground_truth": "buggy",
+        "status": "pass",
+        "confidence": 0.460337585678303,
+        "latency_seconds": 54.296923042,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_009_check_equal",
+        "ground_truth": "buggy",
+        "status": "pass",
+        "confidence": 0.46777878480385715,
+        "latency_seconds": 25.061693541999944,
+        "attempts": 1
+      },
+      {
+        "task_id": "correctness_010_check_even",
+        "ground_truth": "buggy",
+        "status": "not_verified",
+        "confidence": 0.3704955341690689,
+        "latency_seconds": 62.91182741600005,
+        "attempts": 3
+      }
+    ]
+  ],
+  "errors": [],
+  "generated_at": "2026-07-15T14:31:38.359348+00:00"
+}

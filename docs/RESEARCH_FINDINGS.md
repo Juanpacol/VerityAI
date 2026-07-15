@@ -52,19 +52,29 @@ identical check: pairwise divergence between `no_kg`/`legacy_kg`/
 the ~69-71% noise floor — the KG-context effect is likely real, unlike
 the retry-loop trade-off.
 
-### T3 — What fraction of realistic code is inside the verifiable subset? **6.1% (HumanEval) / 8.8% (MBPP). The most serious limitation found.**
+### T3 — What fraction of realistic code is inside the verifiable subset? **6.1% (HumanEval) / 9.4% (MBPP), post-expansion. The most serious limitation found.**
 
 Running the *actual* `ASTtoSMTConverter` (not a reimplementation)
-against all 164 HumanEval and all 974 MBPP canonical solutions found
-only 6.1% and 8.8% respectively fall inside the int/bool/if-else/
+against all 164 HumanEval and all 974 MBPP canonical solutions originally
+found 6.1% and 8.8% respectively fall inside the int/bool/if-else/
 bounded-for verifiable subset. This is far below the "70-80% fine,
 30-40% concerning" range assumed in conversation before the number was
 known. A small fraction of exclusions (3.7%/0.8%) are a known Z3
 boolean-coercion engine bug, not genuine scope limitations — kept in
-their own category rather than conflated. Full detail:
-`docs/PHASE_3_METHODOLOGY.md` Real run #3 section's classifier
-methodology (T3 was answered via the evidence pipeline's
-`subset_classifier.py`, not a new run).
+their own category rather than conflated.
+
+**Updated same evening**: basic Z3 String theory support (equality,
+concatenation, `len()`, annotation-aware parameter typing) was added to
+`ast_to_smt.py` and the same evidence re-classified with no new fetching.
+Result: HumanEval unchanged (6.1%, gained nothing — its problems mostly
+need indexing/slicing/methods/recursion, none of which this touches),
+MBPP moved from 8.8% to **9.4%** (+6 problems out of 974). Real, but
+modest — direct evidence that closing this gap further needs string
+*indexing and method-call* support, a materially larger and riskier
+undertaking, not just equality/concatenation. Full detail:
+`docs/PHASE_3_METHODOLOGY.md`'s Real run #3 section (original classifier
+methodology) and "Follow-up on RESEARCH_FINDINGS.md's direction" section
+(the expansion and its measured impact).
 
 ### T4 — Does hybrid-retrieval accuracy improve with a bigger rule corpus? **No detectable ROI from 10→48 rules in this run.**
 
@@ -125,22 +135,29 @@ incomplete heuristic solver," not decidable in general. Full detail:
    to an actual developer. If humans say "I don't even look at the
    score, I look at the Z3 counterexample," that reprioritizes
    everything above it — including whether fixing T1's calibration is
-   even the right lever to pull.
-2. **Build repeated-run infrastructure.** T2's retraction and T4's
-   "at-or-above noise floor" reading both depended on manually
-   improvising a same-configuration comparison after the fact. A real
-   `--repeat N` capability in the A/B/ablation scripts (report variance
-   across repeats, not just a single run's confusion matrix) should be
-   built before running another comparison-driven experiment — this is
-   concrete engineering debt the noise-floor finding created.
+   even the right lever to pull. Still not done — needs real participants.
+2. ~~Build repeated-run infrastructure.~~ **Done, same evening.**
+   `src/verityai/evaluation/repetition.py` (tested library:
+   `pairwise_agreement_summary`, `summarize_metric_variance`) plus
+   `scripts/run_repeat_validation.py`, run for real (10 tasks, 2 repeats,
+   same day) -- agreement rate 60.0%, close to the prior cross-day
+   estimate of 69.2% (diff 0.09), cross-validating the noise floor across
+   two different measurement methods. Use this infrastructure for any
+   future comparison-driven experiment instead of the ad-hoc after-the-
+   fact check T2 originally relied on.
 3. **Expand the verifiable subset, if the T3 number is going to be
-   defended at all.** 6-9% coverage is the number that would come up
-   first in any serious technical interview about this project. The
-   honest options are: (a) invest in Z3 String/Array theory support to
-   measurably move that number, or (b) explicitly reposition VerityAI as
-   a narrow-scope tool for a specific class of logic (arithmetic/
-   control-flow-heavy functions) rather than "code verification"
-   broadly, and say so up front rather than let 6-9% be a surprise.
+   defended at all.** Partially attempted, same evening: basic Z3 String
+   theory (equality, concatenation, `len()`, annotation-aware parameter
+   typing) moved MBPP from 8.8% to 9.4% (+6/974) and HumanEval not at all
+   (6.1%, unchanged) — real but modest, and direct evidence that closing
+   this gap further needs string indexing/slicing/method-call support, a
+   materially larger and riskier investment than what was attempted here.
+   The choice is now more informed but still open: (a) invest further in
+   Z3 String/Array theory to try to move the number more, or (b)
+   explicitly reposition VerityAI as a narrow-scope tool for a specific
+   class of logic (arithmetic/control-flow-heavy functions) rather than
+   "code verification" broadly, and say so up front rather than let
+   single-digit-percent coverage be a surprise in an interview.
 
 **Continue, validated by this research phase:**
 - Pattern-matching for the specific gaps Z3 structurally cannot cover
@@ -183,3 +200,7 @@ first for whether it's since been qualified or retracted.
 3. A finding that "no effect was detected" must be checked against the
    noise floor before being read as "no effect exists" (T4's central
    methodological move, reusable for any future ablation).
+4. Rule 1 now has real tooling, not just a reminder:
+   `evaluation/repetition.py` is the reusable, tested implementation --
+   use it (`pairwise_agreement_summary`, `summarize_metric_variance`)
+   rather than re-deriving the check ad hoc in a new script.

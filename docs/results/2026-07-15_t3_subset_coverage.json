@@ -5,17 +5,16 @@
     "non_members": 154,
     "coverage_rate": 0.06097560975609756,
     "exclusion_category_histogram": {
-      "unsupported_expression": 77,
-      "unsupported_call": 76,
-      "container_ops": 37,
-      "undefined_variable": 32,
+      "unsupported_expression": 76,
+      "unsupported_call": 74,
+      "container_ops": 35,
+      "undefined_variable": 29,
       "import_statement": 26,
-      "string_ops": 15,
       "while_loop": 13,
+      "converter_error": 9,
       "unsupported_loop": 7,
       "unsupported_assignment": 7,
-      "converter_error": 6,
-      "unsupported_operator": 4,
+      "unsupported_operator": 5,
       "other": 2,
       "recursion": 2,
       "other_constant": 2,
@@ -57,7 +56,6 @@
         "id": "humaneval_08e209a77071",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -71,7 +69,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "container_ops",
-          "string_ops",
           "undefined_variable",
           "unsupported_call",
           "unsupported_expression"
@@ -96,8 +93,7 @@
         "id": "humaneval_0a7411cb0e9f",
         "subset_member": false,
         "exclusion_categories": [
-          "container_ops",
-          "string_ops"
+          "container_ops"
         ]
       },
       {
@@ -189,7 +185,6 @@
         "id": "humaneval_1dc5be3ed421",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
           "undefined_variable",
           "unsupported_assignment",
           "while_loop"
@@ -477,7 +472,7 @@
         "id": "humaneval_4b851fbf283f",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops"
+          "unsupported_expression"
         ]
       },
       {
@@ -592,10 +587,7 @@
         "id": "humaneval_62fd77c941e4",
         "subset_member": false,
         "exclusion_categories": [
-          "container_ops",
-          "string_ops",
-          "unsupported_call",
-          "unsupported_expression"
+          "converter_error"
         ]
       },
       {
@@ -733,7 +725,6 @@
         "id": "humaneval_8447b510e011",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
           "unsupported_call",
           "unsupported_expression",
           "while_loop"
@@ -780,8 +771,7 @@
         "id": "humaneval_8cbd20c2af9c",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
-          "unsupported_call"
+          "converter_error"
         ]
       },
       {
@@ -898,10 +888,7 @@
         "id": "humaneval_a9133eb6ce4b",
         "subset_member": false,
         "exclusion_categories": [
-          "container_ops",
-          "string_ops",
-          "undefined_variable",
-          "unsupported_expression"
+          "converter_error"
         ]
       },
       {
@@ -986,7 +973,6 @@
         "id": "humaneval_c64853885352",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
           "undefined_variable",
           "unsupported_expression"
         ]
@@ -1110,7 +1096,6 @@
         "id": "humaneval_dfa3356fa5e7",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
           "unsupported_expression",
           "unsupported_loop"
         ]
@@ -1119,8 +1104,6 @@
         "id": "humaneval_e091c8cd7b94",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
-          "undefined_variable",
           "while_loop"
         ]
       },
@@ -1190,7 +1173,6 @@
         "id": "humaneval_e9e1701f0279",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
           "undefined_variable",
           "unsupported_call",
           "unsupported_expression"
@@ -1207,16 +1189,14 @@
         "id": "humaneval_ee2d93605731",
         "subset_member": false,
         "exclusion_categories": [
-          "container_ops",
-          "string_ops",
-          "undefined_variable"
+          "container_ops"
         ]
       },
       {
         "id": "humaneval_ee7f00ea5e04",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops"
+          "unsupported_operator"
         ]
       },
       {
@@ -1307,23 +1287,22 @@
   },
   "mbpp": {
     "total": 974,
-    "subset_members": 86,
-    "non_members": 888,
-    "coverage_rate": 0.08829568788501027,
+    "subset_members": 92,
+    "non_members": 882,
+    "coverage_rate": 0.0944558521560575,
     "exclusion_category_histogram": {
-      "unsupported_call": 454,
-      "unsupported_expression": 337,
-      "undefined_variable": 331,
-      "import_statement": 193,
+      "unsupported_call": 453,
+      "unsupported_expression": 339,
+      "undefined_variable": 320,
+      "import_statement": 192,
       "container_ops": 115,
       "while_loop": 96,
-      "string_ops": 65,
       "unsupported_operator": 62,
       "unsupported_assignment": 57,
       "unsupported_loop": 48,
       "recursion": 40,
+      "converter_error": 14,
       "other_constant": 11,
-      "converter_error": 8,
       "other": 5,
       "class_definition": 4,
       "exceptions": 1
@@ -1426,7 +1405,6 @@
         "id": "mbpp_0310840e3fad",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
           "undefined_variable",
           "unsupported_call"
         ]
@@ -1512,7 +1490,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "import_statement",
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -1544,7 +1521,6 @@
         "id": "mbpp_059109f20018",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
           "while_loop"
         ]
       },
@@ -1632,7 +1608,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "container_ops",
-          "string_ops",
           "undefined_variable",
           "unsupported_call",
           "unsupported_expression",
@@ -1763,7 +1738,6 @@
         "exclusion_categories": [
           "import_statement",
           "other_constant",
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -1862,8 +1836,7 @@
         "id": "mbpp_10dc20e318c2",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
-          "unsupported_call"
+          "converter_error"
         ]
       },
       {
@@ -1877,10 +1850,8 @@
       },
       {
         "id": "mbpp_1192d19a280a",
-        "subset_member": false,
-        "exclusion_categories": [
-          "string_ops"
-        ]
+        "subset_member": true,
+        "exclusion_categories": []
       },
       {
         "id": "mbpp_11984ea7fe30",
@@ -2038,9 +2009,7 @@
         "id": "mbpp_182f6dee413d",
         "subset_member": false,
         "exclusion_categories": [
-          "container_ops",
-          "string_ops",
-          "undefined_variable"
+          "container_ops"
         ]
       },
       {
@@ -2156,7 +2125,7 @@
         "id": "mbpp_1e3fc6b4701e",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops"
+          "converter_error"
         ]
       },
       {
@@ -2338,7 +2307,6 @@
         "id": "mbpp_2418a14415dd",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -2353,17 +2321,14 @@
       },
       {
         "id": "mbpp_2482cb29c460",
-        "subset_member": false,
-        "exclusion_categories": [
-          "string_ops"
-        ]
+        "subset_member": true,
+        "exclusion_categories": []
       },
       {
         "id": "mbpp_24873a6cbca6",
         "subset_member": false,
         "exclusion_categories": [
           "import_statement",
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -2413,7 +2378,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "import_statement",
-          "string_ops",
           "unsupported_call",
           "unsupported_expression"
         ]
@@ -2558,7 +2522,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "import_statement",
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -2807,10 +2770,8 @@
       },
       {
         "id": "mbpp_352413cef5c5",
-        "subset_member": false,
-        "exclusion_categories": [
-          "string_ops"
-        ]
+        "subset_member": true,
+        "exclusion_categories": []
       },
       {
         "id": "mbpp_356ca5d690ac",
@@ -2867,7 +2828,6 @@
         "id": "mbpp_36fe5d08dc75",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
           "unsupported_expression"
         ]
       },
@@ -2875,7 +2835,6 @@
         "id": "mbpp_37920e2eb57b",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
           "undefined_variable",
           "unsupported_call",
           "unsupported_expression",
@@ -2953,7 +2912,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "import_statement",
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -3093,7 +3051,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "import_statement",
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -3124,7 +3081,6 @@
         "id": "mbpp_40fa2572fcc6",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
           "while_loop"
         ]
       },
@@ -3256,7 +3212,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "container_ops",
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -3265,7 +3220,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "import_statement",
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -3479,7 +3433,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "import_statement",
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -3644,9 +3597,7 @@
         "id": "mbpp_533b763dfefb",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
-          "undefined_variable",
-          "unsupported_expression"
+          "converter_error"
         ]
       },
       {
@@ -4190,8 +4141,6 @@
         "id": "mbpp_6423bae14db4",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
-          "undefined_variable",
           "unsupported_expression",
           "while_loop"
         ]
@@ -4298,7 +4247,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "import_statement",
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -4329,9 +4277,7 @@
         "id": "mbpp_6a4bdc584f6f",
         "subset_member": false,
         "exclusion_categories": [
-          "container_ops",
-          "string_ops",
-          "undefined_variable"
+          "container_ops"
         ]
       },
       {
@@ -4402,7 +4348,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "import_statement",
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -4508,7 +4453,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "import_statement",
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -4550,7 +4494,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "import_statement",
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -4828,7 +4771,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "import_statement",
-          "string_ops",
           "unsupported_expression"
         ]
       },
@@ -4936,7 +4878,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "import_statement",
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -4945,7 +4886,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "import_statement",
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -5100,8 +5040,7 @@
         "id": "mbpp_7f6b093c4744",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
-          "undefined_variable"
+          "unsupported_expression"
         ]
       },
       {
@@ -5253,10 +5192,8 @@
       },
       {
         "id": "mbpp_8498a965388f",
-        "subset_member": false,
-        "exclusion_categories": [
-          "string_ops"
-        ]
+        "subset_member": true,
+        "exclusion_categories": []
       },
       {
         "id": "mbpp_851034f5ca1e",
@@ -5321,7 +5258,6 @@
         "id": "mbpp_86893ea345b5",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
           "unsupported_expression"
         ]
       },
@@ -5484,7 +5420,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "import_statement",
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -5537,7 +5472,6 @@
         "id": "mbpp_8e23d14fe4b5",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
           "unsupported_call",
           "unsupported_expression"
         ]
@@ -5970,8 +5904,7 @@
         "id": "mbpp_9bf66dacc46e",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
-          "undefined_variable"
+          "unsupported_expression"
         ]
       },
       {
@@ -6070,7 +6003,6 @@
         "id": "mbpp_a0fd5295fd27",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
           "unsupported_expression"
         ]
       },
@@ -6562,7 +6494,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "import_statement",
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -6576,10 +6507,8 @@
       },
       {
         "id": "mbpp_b4e4ef052efc",
-        "subset_member": false,
-        "exclusion_categories": [
-          "string_ops"
-        ]
+        "subset_member": true,
+        "exclusion_categories": []
       },
       {
         "id": "mbpp_b536382f11ff",
@@ -6597,11 +6526,8 @@
       },
       {
         "id": "mbpp_b635f4c9afc6",
-        "subset_member": false,
-        "exclusion_categories": [
-          "string_ops",
-          "undefined_variable"
-        ]
+        "subset_member": true,
+        "exclusion_categories": []
       },
       {
         "id": "mbpp_b65097462e0a",
@@ -6827,7 +6753,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "import_statement",
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -7001,7 +6926,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "import_statement",
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -7111,7 +7035,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "import_statement",
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -7171,7 +7094,7 @@
         "id": "mbpp_c79e7bc98034",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops"
+          "converter_error"
         ]
       },
       {
@@ -7277,7 +7200,6 @@
         "id": "mbpp_cb834ef35543",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
           "unsupported_loop"
         ]
       },
@@ -7564,7 +7486,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "import_statement",
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -7963,9 +7884,7 @@
         "id": "mbpp_e28f1b6951ab",
         "subset_member": false,
         "exclusion_categories": [
-          "container_ops",
-          "string_ops",
-          "undefined_variable"
+          "container_ops"
         ]
       },
       {
@@ -8039,7 +7958,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "import_statement",
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -8061,7 +7979,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "import_statement",
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -8078,7 +7995,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "import_statement",
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -8118,8 +8034,7 @@
         "id": "mbpp_e771b5de08c3",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
-          "undefined_variable"
+          "unsupported_expression"
         ]
       },
       {
@@ -8239,7 +8154,6 @@
         "id": "mbpp_e9a9a0979c94",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
           "undefined_variable",
           "unsupported_operator"
         ]
@@ -8298,7 +8212,6 @@
         "id": "mbpp_eb5f481b76c4",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
           "unsupported_expression",
           "while_loop"
         ]
@@ -8356,8 +8269,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "container_ops",
-          "string_ops",
-          "undefined_variable",
           "unsupported_expression"
         ]
       },
@@ -8366,7 +8277,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "import_statement",
-          "string_ops",
           "unsupported_call"
         ]
       },
@@ -8399,7 +8309,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "container_ops",
-          "string_ops",
           "unsupported_assignment",
           "unsupported_expression"
         ]
@@ -8535,7 +8444,6 @@
         "id": "mbpp_f2c799c17f47",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
           "unsupported_expression"
         ]
       },
@@ -8576,7 +8484,6 @@
         "id": "mbpp_f4669652a7b8",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
           "while_loop"
         ]
       },
@@ -8732,7 +8639,7 @@
         "id": "mbpp_f8cdcebe1dc5",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops"
+          "converter_error"
         ]
       },
       {
@@ -8773,9 +8680,7 @@
         "id": "mbpp_f953ab602ecb",
         "subset_member": false,
         "exclusion_categories": [
-          "import_statement",
-          "string_ops",
-          "unsupported_call"
+          "converter_error"
         ]
       },
       {
@@ -8783,7 +8688,6 @@
         "subset_member": false,
         "exclusion_categories": [
           "container_ops",
-          "string_ops",
           "unsupported_expression"
         ]
       },
@@ -8827,8 +8731,7 @@
         "id": "mbpp_fbb7d9524f51",
         "subset_member": false,
         "exclusion_categories": [
-          "string_ops",
-          "undefined_variable",
+          "unsupported_call",
           "unsupported_loop"
         ]
       },
@@ -8916,5 +8819,5 @@
       }
     ]
   },
-  "generated_at": "2026-07-15T03:49:10.796342+00:00"
+  "generated_at": "2026-07-15T14:24:26.089402+00:00"
 }

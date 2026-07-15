@@ -22,6 +22,20 @@ class TestFullyVerifiableCode:
         result = classify_problem(code)
         assert result.subset_member is True
 
+    def test_basic_string_equality_and_concatenation_is_a_subset_member(self):
+        # T3's headline finding (6.1%/8.8% coverage) was measured before
+        # basic Z3 String theory support existed in ast_to_smt.py -- this
+        # documents the subset actually grew, at the classifier level.
+        code = "def f(a: str, b: str) -> bool:\n    return a + b == 'ab'\n"
+        result = classify_problem(code)
+        assert result.subset_member is True
+        assert result.exclusion_categories == []
+
+    def test_len_on_typed_string_parameter_is_a_subset_member(self):
+        code = "def f(s: str) -> int:\n    return len(s)\n"
+        result = classify_problem(code)
+        assert result.subset_member is True
+
 
 class TestSyntaxError:
     def test_syntax_error_is_excluded_with_its_own_category(self):
@@ -31,11 +45,20 @@ class TestSyntaxError:
 
 
 class TestExclusionBuckets:
-    def test_string_constant_categorized_as_string_ops(self):
-        code = "def f() -> str:\n    return 'hello'\n"
+    def test_string_method_call_still_categorized_as_unsupported_call(self):
+        # Basic string equality/concatenation entered the verifiable subset
+        # (see TestBasicStringSupport below) -- method calls did not, since
+        # _convert_expr has no method-call dispatch for any type.
+        code = "def f(s: str) -> str:\n    return s.upper()\n"
         result = classify_problem(code)
         assert result.subset_member is False
-        assert "string_ops" in result.exclusion_categories
+        assert "unsupported_call" in result.exclusion_categories
+
+    def test_fstring_still_categorized_as_unsupported_expression(self):
+        code = 'def f(s: str) -> str:\n    return f"{s}!"\n'
+        result = classify_problem(code)
+        assert result.subset_member is False
+        assert "unsupported_expression" in result.exclusion_categories
 
     def test_list_iteration_categorized_as_container_ops(self):
         code = "def f(xs):\n    total = 0\n    for x in xs:\n        total = total + x\n    return total\n"

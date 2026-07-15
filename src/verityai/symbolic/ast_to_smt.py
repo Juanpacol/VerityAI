@@ -19,10 +19,13 @@ from z3 import (
     Implies,
     Int,
     IntVal,
+    Length,
     Not,
     Or,
     Real,
     RealVal,
+    String,
+    StringVal,
 )
 
 logger = logging.getLogger(__name__)
@@ -118,6 +121,13 @@ class ASTtoSMTConverter:
             return body[1:]
         return body
 
+    # Maps a parameter's `ast.arg.annotation` source name to this converter's
+    # var_type vocabulary. Only simple `ast.Name` annotations are read (e.g.
+    # `s: str`) -- subscripted annotations (`List[int]`, `Optional[str]`)
+    # are left unhandled and fall through to the "int" default, same as an
+    # absent annotation, rather than guessing at a container's element type.
+    _ANNOTATION_TYPE_MAP = {"str": "string", "int": "int", "bool": "bool", "float": "float"}
+
     def _bind_parameters(self, node: ast.FunctionDef) -> None:
         """Bind each function parameter as a free (unconstrained) Z3 variable.
 
@@ -130,11 +140,22 @@ class ASTtoSMTConverter:
         keyword-only parameters are left unbound (same "variable not
         defined" degradation as before this existed).
 
-        Defaults every parameter to type "int" — no annotation-based type
-        inference yet, consistent with the rest of the converter's default.
+        Reads a simple `ast.Name` type annotation (`s: str`, `n: int`, ...)
+        via `_ANNOTATION_TYPE_MAP` when present; defaults to "int" for an
+        absent or unrecognized annotation, preserving this method's
+        original behavior for every case it used to handle. Without this,
+        a `str`-annotated parameter would still be bound as a Z3 Int, and
+        any string operation on it inside the function body would hit
+        `_convert_expr`'s (now-supported) string handling with a variable
+        that was silently the wrong Z3 sort -- string support elsewhere in
+        this converter is close to useless for real code without this,
+        since real functions declare string parameters via type hints.
         """
         for arg in node.args.args:
-            self._new_binding(arg.arg, "int")
+            var_type = "int"
+            if isinstance(arg.annotation, ast.Name):
+                var_type = self._ANNOTATION_TYPE_MAP.get(arg.annotation.id, "int")
+            self._new_binding(arg.arg, var_type)
             self.parameters.append(arg.arg)
 
     def _process_statements(
@@ -281,7 +302,7 @@ class ASTtoSMTConverter:
 
         Args:
             var_name: Python variable name
-            var_type: "int", "bool", or "float"
+            var_type: "int", "bool", "float", or "string"
 
         Returns:
             The newly created (and now current) Z3 variable
@@ -296,6 +317,8 @@ class ASTtoSMTConverter:
             new_var = Bool(versioned_name)
         elif var_type == "float":
             new_var = Real(versioned_name)
+        elif var_type == "string":
+            new_var = String(versioned_name)
         else:
             raise VerifiableSubsetViolation(f"Unknown type '{var_type}' for variable {var_name}")
 
@@ -569,6 +592,8 @@ class ASTtoSMTConverter:
                 return IntVal(node.value)
             elif isinstance(node.value, float):
                 return RealVal(node.value)
+            elif isinstance(node.value, str):
+                return StringVal(node.value)
             else:
                 raise VerifiableSubsetViolation(f"Unsupported constant: {node.value!r}")
 
@@ -655,12 +680,24 @@ class ASTtoSMTConverter:
     def _convert_builtin_call(self, func_name: str, args: list[ast.expr]) -> Any:
         """Convert built-in function call to Z3."""
         if func_name == "len":
-            # len(x) - create a read-only symbolic length variable len_<name>
             if len(args) != 1:
                 raise VerifiableSubsetViolation("len() takes exactly 1 argument")
 
             arg = args[0]
             if isinstance(arg, ast.Name):
+                if arg.id in self.variables and self._variable_types.get(arg.id) == "string":
+                    # Real semantic connection: an actual Z3 String variable's
+                    # own length, rather than the disconnected symbolic int
+                    # below -- e.g. `assert len(s) == 5` now genuinely
+                    # constrains `s`, instead of a free variable only ever
+                    # asserted positive with no link back to `s`'s value.
+                    return Length(self.variables[arg.id])
+
+                # len(x) on a name with no Z3 binding of its own (e.g. an
+                # array-bounds spec's array name, which this converter never
+                # models as a real value) -- create a read-only symbolic
+                # length variable len_<name>, unchanged from before string
+                # support existed.
                 len_var_name = f"len_{arg.id}"
                 if len_var_name not in self.variables:
                     len_var = Int(len_var_name)
@@ -707,6 +744,8 @@ class ASTtoSMTConverter:
                 return "int"
             elif isinstance(node.value, float):
                 return "float"
+            elif isinstance(node.value, str):
+                return "string"
 
         elif isinstance(node, ast.Name):
             if node.id in self._variable_types:
@@ -714,6 +753,20 @@ class ASTtoSMTConverter:
 
         elif isinstance(node, (ast.Compare, ast.BoolOp)):
             return "bool"
+
+        # String concatenation (`s1 + s2`) infers "string" if either side
+        # does -- needed so `s3 = s1 + s2` binds s3 as a Z3 String, not the
+        # "int" default. Any other mix (e.g. string + int) is left to fall
+        # through to Z3 itself raising at conversion time, since Python
+        # doesn't allow that mix either.
+        elif (
+            isinstance(node, ast.BinOp)
+            and isinstance(node.op, ast.Add)
+            and (
+                self._infer_type(node.left) == "string" or self._infer_type(node.right) == "string"
+            )
+        ):
+            return "string"
 
         return "int"  # Default
 

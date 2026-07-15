@@ -599,6 +599,99 @@ today it's a prototype demonstrating the fact-extraction approach works
 and the existing `RuleEngine` had a real, fixable gap, not a
 production-ready scanner.
 
+## Follow-up on RESEARCH_FINDINGS.md's direction (2026-07-15)
+
+After Fase 6's synthesis (`docs/RESEARCH_FINDINGS.md`), three concrete
+next steps were named: build repeated-run infrastructure, explore
+expanding the verifiable subset, and (implicitly) hold on any positioning
+that depends on either until measured. Both engineering items were
+started the same evening.
+
+### Repeated-run infrastructure, and a real same-day validation
+
+`src/verityai/evaluation/repetition.py` moves the ground-truth-agreement
+check from a one-off script computation (the original T2 analysis) into
+a tested library: `ground_truth_agreement` (the original pairwise check),
+`pairwise_agreement_summary` (generalizes it to N>=2 repeats), and
+`summarize_metric_variance` (mean/stdev of accuracy/precision/recall/F1
+across repeats). `scripts/run_repeat_validation.py` uses it for the
+**first same-day, same-script repeat this project has run** — every
+prior noise-floor comparison used two independently-run scripts on
+different days, which leaves environment/day as an uncontrolled variable.
+
+Real result (`hybrid_kg`, 10 tasks, 2 repeats, same day):
+ground-truth agreement between the two repeats was **60.0%**, close to
+the previously-established cross-day estimate of **69.2%** (difference:
+0.09) — the two different measurement methods roughly agree on how noisy
+this configuration is run-to-run, which is itself a useful cross-check
+on the original finding's reliability. Metric variance across just 2
+repeats was large (accuracy stdev 0.303, F1 stdev 0.236) — a blunt
+reminder that n=10-28 single-run comparisons, the norm throughout this
+project's real runs so far, sit well inside noise for any but the
+starkest effect sizes.
+
+### Verifiable subset expansion: basic Z3 String theory support
+
+T3 found only 6.1%/8.8% of HumanEval/MBPP fall inside the verifiable
+subset. The single largest lever available without a much larger
+engineering investment: `ast_to_smt.py` had zero string support at all
+(any string constant raised `VerifiableSubsetViolation` immediately).
+Added, minimally and additively:
+
+- String constants (`StringVal`) instead of rejection.
+- `+` concatenation and `==`/`!=` equality "for free" via Z3's own
+  operator overloading on `SeqRef` -- confirmed empirically before
+  relying on it, no special-casing needed in `_convert_expr`.
+- Type inference (`_infer_type`) recognizes string constants and
+  propagates "string" through concatenation expressions.
+- **The load-bearing fix, without which the above would barely matter
+  for real code**: `_bind_parameters` previously defaulted *every*
+  parameter to `"int"`, ignoring type annotations entirely. A
+  `str`-annotated parameter would have been silently bound as a Z3 Int
+  and then hit an unrelated failure the moment the body did anything
+  string-shaped. Now reads a simple `ast.Name` annotation (`s: str`) via
+  a small type map; unannotated or complex (`List[str]`) annotations
+  still default to `"int"`, unchanged from before.
+- `len()` on a string-typed variable now returns the real `Length()` of
+  that Z3 String, not the pre-existing disconnected symbolic int (still
+  used, unchanged, for untyped names like an array-bounds spec's array
+  parameter) -- so `assert len(s) == 5` now genuinely constrains `s`.
+
+Verified end-to-end through `verify_python_snippet` (not just internal
+converter state): a universally-true string property
+(`assert len(s) >= 0`) passes, a universally-false one
+(`assert s == 'a'` for a free parameter) correctly fails with a
+counterexample via ADR-0002's parameterized-validity path, and
+concatenation identity/forced-wrong-literal cases behave as expected.
+String method calls (`.upper()`) and f-strings remain explicitly
+unsupported and still degrade to `NOT_VERIFIED` -- this is basic
+equality/concatenation only, not the `str` API.
+
+**Measured impact, recomputed on the same HumanEval/MBPP evidence
+already fetched (`scripts/run_t3_subset_coverage.py --skip-fetch`, no
+new fetching needed)**:
+
+| Dataset | Before | After | Change |
+|---|---|---|---|
+| HumanEval | 6.1% (10/164) | 6.1% (10/164) | none |
+| MBPP | 8.8% (86/974) | 9.4% (92/974) | +6 problems |
+
+**Honest read**: real, but modest. HumanEval gained nothing --
+its problems tend to need indexing, slicing, string methods, or
+recursion, none of which this change touches. MBPP gained 6 problems
+out of 974, consistent with a corpus that has a handful of
+concatenation/equality-only string tasks and mostly needs the operations
+this change deliberately left out. This is direct evidence for
+`RESEARCH_FINDINGS.md`'s framing: moving the 6-9% number meaningfully
+would need string *indexing/slicing* and *method call* support (a much
+larger, riskier undertaking — Z3's own string theory is only "an
+incomplete heuristic solver" even for what it does support, per the
+evidence already fetched), not just equality/concatenation. Whether
+that further investment is worth it, versus explicitly repositioning
+VerityAI's scope, remains an open call — this result argues for
+tempering expectations either way, not for or against the investment on
+its own.
+
 ## Target threshold (confirmed before a real run, per the plan's hardened
 acceptance criterion)
 

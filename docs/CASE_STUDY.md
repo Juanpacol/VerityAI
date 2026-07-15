@@ -217,18 +217,48 @@ for as long as those two rules existed; it just had never been asked a
 question it could get wrong until real facts from real code were run
 through it.
 
+## Finding 7 — measuring an improvement instead of assuming one
+
+T3 found only 6.1%/8.8% of HumanEval/MBPP fall inside the verifiable
+subset — the project's most serious documented limitation. The obvious
+lever: `ast_to_smt.py` had zero string support at all, and real functions
+constantly take and return strings. Adding basic Z3 String theory
+(equality, concatenation, `len()`, and — the piece that actually made it
+matter — reading parameter type annotations instead of defaulting every
+parameter to `int` regardless of its declared type) was a real, tested,
+end-to-end-verified change: a universally-true string property passes, a
+universally-false one fails with a genuine counterexample, exactly as
+the existing int/bool machinery already behaved for its own types.
+
+The temptation at that point is to call it done and claim the coverage
+problem is meaningfully addressed. Instead, the same evidence already
+fetched for T3 (no new downloads) was re-classified with the improved
+converter, because the whole point of T3 was measuring instead of
+guessing, and an improvement built on the same converter deserves the
+same discipline. The result: HumanEval gained **zero** problems (still
+6.1%) and MBPP gained **six**, out of 974 (8.8% → 9.4%). Real, but small
+enough that reporting it as "we improved the verifiable subset" without
+the number attached would have been misleading in the same direction
+T2's original retry-loop claim was — a true statement in isolation that
+implies more than the data supports. The honest version is specific:
+closing this gap further needs string *indexing and method calls*, not
+more of what was just added, and that's a materially bigger and riskier
+piece of work than what shipped tonight.
+
 ## The pattern
 
-None of these six findings came from writing more tests against the
+None of these seven findings came from writing more tests against the
 existing fakes — they came from running the actual thing (or, in Finding
-5's case, re-checking a real run's own numbers harder, and in Finding 6's,
-finally connecting two pieces that had each looked fine in isolation) and
-dealing honestly with what happened, including retracting a prior claim,
-instead of defending it. That's the habit this case study is meant to
-name: a comprehensive offline test suite is a floor, not a ceiling. It
-proves the system does what the scripts told it to expect. It cannot
-prove the system does the right thing when something *unscripted*
-happens — and something unscripted is exactly what a real model, a real
-database, or a real user (or a second run of the same experiment, or
-finally wiring up a rule that had sat dormant since the beginning) will
-always eventually do.
+5's case, re-checking a real run's own numbers harder; in Finding 6's,
+finally connecting two pieces that had each looked fine in isolation; in
+Finding 7's, measuring an improvement instead of assuming its existence
+was the whole story) and dealing honestly with what happened, including
+retracting a prior claim, instead of defending it. That's the habit this
+case study is meant to name: a comprehensive offline test suite is a
+floor, not a ceiling. It proves the system does what the scripts told it
+to expect. It cannot prove the system does the right thing when something
+*unscripted* happens — and something unscripted is exactly what a real
+model, a real database, or a real user (or a second run of the same
+experiment, or finally wiring up a rule that had sat dormant since the
+beginning, or a fix that turns out to move the needle less than hoped)
+will always eventually do.

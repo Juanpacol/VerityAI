@@ -1,9 +1,12 @@
 """Unit tests for symbolic layer (Z3 + AST converter)."""
 
+import ast
+
 from z3 import And, Int
 
 from verityai.ontology.models import VerificationStatus
 from verityai.symbolic import ASTtoSMTConverter, Z3Engine
+from verityai.symbolic.verify import verify_python_snippet
 
 
 class TestZ3Engine:
@@ -182,6 +185,116 @@ for i in range(10):
         constraints, non_verifiable = converter.convert_code(code)
 
         # Loop marked as non-verifiable
+        assert len(non_verifiable) > 0
+
+
+class TestStringSupport:
+    """Z3 String theory support (ADR-0001 subset expansion, added after T3's
+    real-world coverage finding of 6.1%/8.8% on HumanEval/MBPP). Covers the
+    converter-level pieces (constant/type-inference/parameter-binding) and,
+    separately, full end-to-end verification through verify_python_snippet
+    -- the strongest validation, since it exercises the real Z3Engine and
+    (for string parameters) ADR-0002's parameterized-validity path, not
+    just internal converter state.
+    """
+
+    def test_string_constant_converts_without_violation(self):
+        converter = ASTtoSMTConverter()
+        constraints, non_verifiable = converter.convert_code("x = 'hello'")
+
+        assert "x" in converter.variables
+        assert non_verifiable == []
+
+    def test_infer_string_type_for_constant(self):
+        converter = ASTtoSMTConverter()
+        node = ast.Constant(value="hello")
+
+        assert converter._infer_type(node) == "string"
+
+    def test_string_annotated_parameter_binds_as_string_type(self):
+        converter = ASTtoSMTConverter()
+        converter.convert_code("def f(s: str) -> str:\n    return s\n")
+
+        assert converter._variable_types["s"] == "string"
+
+    def test_unannotated_parameter_still_defaults_to_int(self):
+        """Regression guard: adding annotation-based typing must not change
+        the pre-existing default for parameters with no annotation.
+        """
+        converter = ASTtoSMTConverter()
+        converter.convert_code("def f(x):\n    return x\n")
+
+        assert converter._variable_types["x"] == "int"
+
+    def test_concatenation_infers_string_type_for_assignment_target(self):
+        converter = ASTtoSMTConverter()
+        converter.convert_code(
+            "def f(a: str, b: str) -> str:\n    result = a + b\n    return result\n"
+        )
+
+        assert converter._variable_types["result"] == "string"
+
+    def test_len_on_string_parameter_uses_real_length_not_disconnected_symbol(self):
+        """Distinguishes the new real-length behavior from the pre-existing
+        disconnected-symbolic-int behavior still used for untyped names
+        (e.g. an array-bounds spec's array parameter).
+        """
+        converter = ASTtoSMTConverter()
+        converter.convert_code("def f(s: str) -> int:\n    return len(s)\n")
+
+        # The disconnected-symbol path would have created a variable named
+        # "len_s"; the real-Length path does not.
+        assert "len_s" not in converter.variables
+
+    def test_len_on_untyped_name_still_uses_disconnected_symbol(self):
+        """Regression guard for the pre-existing array-bounds idiom (see
+        ADR-0002 / the security benchmarks) -- untouched by string support.
+        """
+        converter = ASTtoSMTConverter()
+        converter.convert_code("def f(idx: int, n: int) -> bool:\n    return idx < len(arr)\n")
+
+        assert "len_arr" in converter.variables
+
+    def test_end_to_end_universal_true_string_property_passes(self):
+        code = "def f(s: str) -> int:\n    assert len(s) >= 0\n    return len(s)\n"
+        result = verify_python_snippet(code)
+
+        assert result.status == VerificationStatus.PASS
+
+    def test_end_to_end_universal_false_string_property_fails(self):
+        # "every string equals 'a'" is false (counterexample: any other
+        # string) -- exercises ADR-0002's validity-for-all-parameter-values
+        # check with a String-typed parameter, not just an Int one.
+        code = "def f(s: str) -> str:\n    assert s == 'a'\n    return s\n"
+        result = verify_python_snippet(code)
+
+        assert result.status == VerificationStatus.FAIL
+
+    def test_end_to_end_concatenation_identity_passes(self):
+        code = (
+            "def f(a: str, b: str) -> bool:\n"
+            "    result = a + b\n"
+            "    assert result == a + b\n"
+            "    return True\n"
+        )
+        result = verify_python_snippet(code)
+
+        assert result.status == VerificationStatus.PASS
+
+    def test_end_to_end_concatenation_forced_to_wrong_literal_fails(self):
+        code = "def f(a: str, b: str) -> str:\n    result = a + b\n    assert result == 'ab'\n    return result\n"
+        result = verify_python_snippet(code)
+
+        assert result.status == VerificationStatus.FAIL
+
+    def test_string_method_call_still_not_verifiable(self):
+        """Regression guard: adding basic String theory support must not be
+        mistaken for supporting the full str API -- method calls still hit
+        the pre-existing "Method calls not verifiable" path.
+        """
+        converter = ASTtoSMTConverter(allow_partial=True)
+        _, non_verifiable = converter.convert_code("def f(s: str) -> str:\n    return s.upper()\n")
+
         assert len(non_verifiable) > 0
 
 
