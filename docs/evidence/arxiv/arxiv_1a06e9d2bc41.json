@@ -41,12 +41,12 @@
       "T6": 0.0
     },
     "extracted_claims": [
-      "Trust is often cited as an essential criterion for the effective use and real-world deployment of AI.",
-      "Researchers argue that AI should be more transparent to increase trust, making transparency one of the main goals of XAI.",
-      "Properly distinguishing these two concepts provides a more comprehensive understanding of how transparency affects trust and reliance, benefiting future XAI research."
+      "The paper advocates for a clear distinction between behavioral (objective) measures of reliance and attitudinal (subjective) measures of trust.",
+      "Researchers sometimes use behavioral measures when intending to capture (attitudinal) trust, even though attitudinal measures would be more appropriate.",
+      "Properly distinguishing these two concepts provides a more comprehensive understanding of how transparency affects trust and reliance."
     ],
     "confidence": 0.8,
-    "classification_reviewed": false,
+    "classification_reviewed": true,
     "degraded_reason": null
   }
 }

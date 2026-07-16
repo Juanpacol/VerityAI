@@ -39,11 +39,11 @@
       "T6": 0.0
     },
     "extracted_claims": [
-      "LLMs rely on user input to generate code",
-      "Effective communication is key to increase confidence in generated code"
+      "The proposed system solicits clarifying user responses to refine LLM-generated code, rather than assuming LLMs inherently rely on user input.",
+      "Effective communication (via clarifying questions) is key to increasing confidence in generated code."
     ],
     "confidence": 0.7,
-    "classification_reviewed": false,
+    "classification_reviewed": true,
     "degraded_reason": null
   }
 }
