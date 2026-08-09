@@ -36,6 +36,53 @@ CRITICAL_MARKERS = (
     "requirement:",
 )
 
+# A monetary amount, requiring a currency symbol or ISO code -- never a bare
+# number. This is the deliberate line between "an exact figure worth
+# protecting" and "any number," which is most of what a dev-log or a piece
+# of code contains (line numbers, counts, versions). Matching bare digits
+# would make nearly everything CRITICAL and defeat pruning entirely.
+_CURRENCY_AMOUNT = re.compile(
+    r"(?:[$€£¥]\s?\d[\d,]*\.?\d*)"
+    r"|(?:\b(?:USD|EUR|GBP|MXN|COP|JPY)\s?\d[\d,]*\.?\d*)",
+)
+
+# An IBAN-shaped account number: two letters (country code), two check
+# digits, then 10-30 alphanumerics (BBAN) -- real IBANs run 15-34 characters
+# total, so the floor here stays close to that rather than accepting
+# anything vaguely shaped like one.
+#
+# The lookaround (not just \b) is load-bearing, found necessary by running
+# this against real data: a base64-ish blob such as
+# "...bsIT9IZ+CH78K2XZ+KRGYuWie..." matches `\b[A-Z]{2}\d{2}[A-Z0-9]{4,30}\b`
+# on the `CH78K2XZ` fragment, because regex `\b` treats `+` and `/` as word
+# boundaries even though they are plainly part of the same continuous blob,
+# not a boundary a human would recognize. Excluding base64's own alphabet
+# immediately before and after the match is what actually rules that out;
+# `\b` alone does not.
+_IBAN_SHAPED = re.compile(r"(?<![A-Za-z0-9+/=])[A-Z]{2}\d{2}[A-Z0-9]{10,30}(?![A-Za-z0-9+/=])")
+
+
+def extract_financial_figures(text: str) -> set[str]:
+    """Every monetary amount or account-number-shaped string in `text`.
+
+    Shared by the classifier (`_decide`, below) and `context/health.py`'s
+    `digit_retention` metric -- one pattern, two consumers, so protecting a
+    figure and measuring whether it survived can never quietly drift apart
+    from each other.
+
+    Deliberately narrow. Excluded on purpose: bare percentages (`92.4%` is
+    routine noise in this very codebase's own benchmark output), line
+    numbers, counts ("100 tests passed"), and generic digit runs (hashes,
+    IDs). A number is only "a financial figure" here if it carries a
+    currency marker or an IBAN's shape -- both signal precision worth
+    protecting; a bare integer does not.
+    """
+    figures: set[str] = set()
+    figures.update(match.group(0) for match in _CURRENCY_AMOUNT.finditer(text))
+    figures.update(match.group(0) for match in _IBAN_SHAPED.finditer(text))
+    return figures
+
+
 # Markers indicating an item has been explicitly retired.
 OBSOLETE_MARKERS = (
     "verity:obsolete",
@@ -166,6 +213,17 @@ def _decide(
     marker = _has_marker(text, CRITICAL_MARKERS)
     if marker:
         return Relevance.CRITICAL, f"explicit marker {marker!r}"
+
+    # 1b. Financial figures -- same precedence as an explicit marker, on
+    # purpose. A dollar amount or account number is exact-or-wrong with no
+    # middle ground, and nothing about it is safe to infer from a summary if
+    # lost. Checked before duplication (a repeated figure is still each
+    # independently worth protecting, same reasoning as CRITICAL_MARKERS)
+    # and before recency (a figure mentioned once, early, must not depend on
+    # still being "recent" to survive).
+    figures = extract_financial_figures(text)
+    if figures:
+        return Relevance.CRITICAL, "contains a financial figure (amount/account number)"
 
     # Memory records are what the harness itself decided to preserve; they
     # are already the distilled form and must survive any budget.

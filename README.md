@@ -36,7 +36,7 @@ environment those agents work in.
 ## Status
 
 **Phase 4 of 5.** All four engines -- Context, Memory, Knowledge Graph,
-Consistency and Reliability -- work, are covered by 485 tests, and are
+Consistency and Reliability -- work, are covered by 506 tests, and are
 reachable from both a CLI and an MCP server. Phase 5 (deeper agent
 integrations and a UI) has not started.
 
@@ -55,18 +55,21 @@ finding about that pilot's design, not a verdict that Verity has no effect.
 
 ---
 
-## First real measurement (2026-08-09)
+## First real measurement (2026-08-09, updated same day)
 
 Measured on 3 real Claude Code development sessions of this same project
 (session transcripts read directly from `~/.claude/projects/`, never
 committed — see [ADR-0009](docs/adr/0009-family-a-real-measurement.md)),
-3.25M tokens combined, `tiktoken:cl100k_base`. Every prior figure in this
-project's history was synthetic; this is the first that isn't.
+~3.48M tokens combined, `tiktoken:cl100k_base`. Every prior figure in this
+project's history was synthetic; this is the first that isn't. (The
+session count grew slightly and a new protection rule was added the same
+day — see [ADR-0012](docs/adr/0012-financial-figure-protection.md) — so
+these numbers are re-measured, not the original ADR-0009 figures.)
 
-| Configuration | Tokens before | Tokens after | Reduction | Critical retained |
-|---|---:|---:|---:|---:|
-| No budget (dedup + noise filter + compression only) | 3,255,931 | 3,215,766 | **1.1%** | 100% |
-| 30,000-token budget, ranked against the task | 3,255,931 | 1,456,908 | **55.2%** | 100% |
+| Configuration | Tokens before | Tokens after | Reduction | Critical retained | Digit retained |
+|---|---:|---:|---:|---:|---:|
+| No budget (dedup + noise filter + compression only) | 3,482,198 | 3,442,382 | **1.1%** | 100% | 100% |
+| 30,000-token budget, ranked against the task | 3,483,993 | 1,508,198 | **56.7%** | 100% | 100% |
 
 Two numbers, not one, because they answer different questions. The first is
 what pruning removes for free, with nothing forced out — real sessions
@@ -74,9 +77,19 @@ turned out to carry far less exact-duplicate/dead-noise content than the
 92.4% figure from the synthetic fixture that this project's own
 `docs/BENCHMARK_PROTOCOL.md` already flags as what not to publish. The
 second is what happens once a real budget forces a choice, and it is the
-number that matters for "can this fit in a smaller context" — with the one
-invariant that has to hold under that pressure (nothing marked critical is
-dropped) holding exactly at 100% in both real runs.
+number that matters for "can this fit in a smaller context" — with the two
+invariants that have to hold under that pressure (nothing marked critical
+is dropped; no financial figure — amount, account number — is dropped)
+holding exactly at 100% in both real runs. 21 distinct financial figures
+were present in this corpus; none were vacuous zero-figure runs.
+
+Stated honestly: this corpus is developer conversation, not a financial
+domain, and most of those 21 figures are example amounts inside this
+project's own docstrings and tests, not genuine user data. A 100% result
+here says the mechanism works on what this corpus contains — it is not yet
+evidence about a real adversarial case (one figure, once, amid heavy noise,
+with decoy numbers nearby). That is what the numeric-recall pilot below
+tests instead of assuming.
 
 Reproduce it yourself (only the aggregate counts leave your machine — see
 `tests/unit/test_bench_privacy.py` for what's enforced never to appear in
@@ -389,7 +402,7 @@ looks like. This is the rule that turned T2 from a result into a retraction.
 ## Development
 
 ```bash
-pytest tests/          # 485 tests, no network, no services
+pytest tests/          # 506 tests, no network, no services
 ruff check src/ tests/
 ruff format src/ tests/
 ```

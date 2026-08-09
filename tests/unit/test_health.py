@@ -8,7 +8,12 @@ and, in one configuration, inverted.
 """
 
 from verityai.context.classify import classify_all
-from verityai.context.health import compute_health, critical_retention, render_health
+from verityai.context.health import (
+    compute_health,
+    critical_retention,
+    digit_retention,
+    render_health,
+)
 from verityai.core.models import ContextHealth, ItemKind
 
 from ..conftest import FixedCounter, item
@@ -151,6 +156,43 @@ class TestCriticalRetention:
     def test_a_context_with_no_critical_items_retains_trivially(self):
         items = measured([item("just ordinary content here", index=0)])
         assert critical_retention(items, []) == 1.0
+
+
+class TestDigitRetention:
+    """Mirrors TestCriticalRetention, but for financial figures specifically."""
+
+    def test_full_retention_is_one(self):
+        items = measured([item("Total: $4,231.50", index=0)])
+
+        assert digit_retention(items, items) == 1.0
+
+    def test_a_dropped_figure_is_detected(self):
+        items = measured([item("Total: $4,231.50", index=0), item("ordinary", index=1)])
+        after = [i for i in items if "$" not in i.content]
+
+        assert digit_retention(items, after) < 1.0
+
+    def test_a_context_with_no_figures_retains_trivially(self):
+        items = measured([item("just ordinary content here", index=0)])
+
+        assert digit_retention(items, []) == 1.0
+
+    def test_a_partially_surviving_set_is_a_fraction_not_zero_or_one(self):
+        items = measured([item("Amount: $100", index=0), item("Amount: $200", index=1)])
+        after = [items[0]]
+
+        assert digit_retention(items, after) == 0.5
+
+    def test_retention_compares_the_figure_not_the_item(self):
+        """The same figure surviving in a DIFFERENT item still counts --
+        this measures whether the information survived, not whether a
+        specific item id did (that is critical_retention's job)."""
+        from verityai.core.models import ContextItem, ItemKind
+
+        before = measured([item("Total: $4,231.50", index=0)])
+        after = [ContextItem(kind=ItemKind.AGENT_MESSAGE, content="Recap: total was $4,231.50")]
+
+        assert digit_retention(before, after) == 1.0
 
 
 class TestScore:

@@ -44,6 +44,7 @@ class CaseResult:
     tokens_after: int
     token_method: str
     critical_retention: float
+    digit_retention: float
     budget: int | None
     budget_met: bool
     stages: list[dict] = field(default_factory=list)
@@ -111,7 +112,7 @@ def measure_case(
     counter: TokenCounter | None = None,
 ) -> CaseResult:
     """Run the pipeline over one transcript and measure it."""
-    from verityai.context.health import critical_retention
+    from verityai.context.health import critical_retention, digit_retention
 
     counter = counter or TokenCounter()
     pipeline = ContextPipeline(counter=counter)
@@ -157,6 +158,13 @@ def measure_case(
             "The budget stage dropped a protected item."
         )
 
+    figure_retention = digit_retention(classified_before, result.items)
+    if figure_retention < 1.0:
+        warnings.append(
+            f"BUG: digit retention is {figure_retention:.1%}, must be 100%. "
+            "A financial figure (amount/account number) was dropped."
+        )
+
     return CaseResult(
         name=name,
         items_before=len(items),
@@ -165,6 +173,7 @@ def measure_case(
         tokens_after=result.tokens_after,
         token_method=result.token_method,
         critical_retention=retention,
+        digit_retention=figure_retention,
         budget=budget,
         budget_met=result.budget_met,
         stages=[stage.model_dump() for stage in result.stages],
@@ -254,6 +263,8 @@ def render_report(report: CorpusReport) -> str:
             f"  Counting method: {report.token_method}",
             f"  Critical retention: {min((c.critical_retention for c in report.cases), default=1.0):.1%} "
             "(must be 100%)",
+            f"  Digit retention:    {min((c.digit_retention for c in report.cases), default=1.0):.1%} "
+            "(must be 100%)",
             "",
         ]
     )
@@ -298,6 +309,7 @@ def to_json(report: CorpusReport) -> str:
                     "tokens_saved": case.tokens_saved,
                     "reduction_ratio": case.reduction_ratio,
                     "critical_retention": case.critical_retention,
+                    "digit_retention": case.digit_retention,
                     "budget": case.budget,
                     "budget_met": case.budget_met,
                     "warnings": case.warnings,

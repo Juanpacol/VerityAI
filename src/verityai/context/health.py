@@ -15,6 +15,7 @@ be audited, and so its failures go unnoticed. `render_health` therefore prints
 the breakdown first and the score last.
 """
 
+from verityai.context.classify import extract_financial_figures
 from verityai.context.tokenizer import TokenCounter
 from verityai.core.models import ContextHealth, ContextItem, ItemKind, Relevance
 
@@ -103,6 +104,34 @@ def critical_retention(before: list[ContextItem], after: list[ContextItem]) -> f
         return 1.0
     surviving = {item.id for item in after} & critical_before
     return round(len(surviving) / len(critical_before), 4)
+
+
+def digit_retention(before: list[ContextItem], after: list[ContextItem]) -> float:
+    """Fraction of financial figures (amounts, account numbers) that survived.
+
+    Same shape as `critical_retention`, but comparing extracted figure
+    strings rather than item ids -- the classifier's financial-figure rule
+    (`classify.py::extract_financial_figures`) is what is *supposed* to make
+    this 1.0, but this checks the actual pipeline output, not the rule's
+    intent. A figure surviving requires both that the rule marked its item
+    CRITICAL *and* that no later stage (compress eliding tool output,
+    budget dropping a non-critical neighbor that happened to carry it)
+    undid that protection. Vacuously 1.0 when no figures were present, the
+    same "nothing to lose, nothing lost" convention `critical_retention`
+    already uses.
+    """
+    figures_before: set[str] = set()
+    for item in before:
+        figures_before |= extract_financial_figures(item.content)
+    if not figures_before:
+        return 1.0
+
+    figures_after: set[str] = set()
+    for item in after:
+        figures_after |= extract_financial_figures(item.content)
+
+    surviving = figures_after & figures_before
+    return round(len(surviving) / len(figures_before), 4)
 
 
 def _ratio(numerator: int, denominator: int) -> float:

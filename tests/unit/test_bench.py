@@ -69,6 +69,47 @@ class TestDuplicatedCriticalMarkers:
         assert case.critical_retention == 1.0
 
 
+class TestFinancialFigureRetention:
+    """The scenario Phase 2 of the numeric-precision plan exists to fix:
+    a financial figure mentioned once, with no explicit marker, must
+    survive real pruning pressure -- not just an unconstrained run.
+    """
+
+    def test_a_figure_survives_with_no_budget(self):
+        messages = [
+            {"role": "assistant", "content": f"padding message {n} with filler content here"}
+            for n in range(15)
+        ]
+        messages.insert(1, {"role": "user", "content": "The total owed is $4,231.50."})
+
+        case = measure_case("figures", json.dumps(messages), counter=FixedCounter())
+
+        assert case.digit_retention == 1.0
+        assert not any("BUG" in w for w in case.warnings)
+
+    def test_a_figure_survives_under_an_aggressive_budget(self):
+        """The figure carries no explicit marker -- only the financial-figure
+        rule protects it. A budget tight enough to force real drops must
+        still not be able to cut it."""
+        messages = [
+            {"role": "assistant", "content": f"padding message {n} with filler content here " * 5}
+            for n in range(30)
+        ]
+        messages.insert(
+            1, {"role": "user", "content": "Account DE89370400440532013000 total: $4,231.50"}
+        )
+
+        case = measure_case("figures", json.dumps(messages), budget=20, counter=FixedCounter())
+
+        assert case.digit_retention == 1.0
+        assert not any("BUG" in w for w in case.warnings)
+
+    def test_digit_retention_is_reported_on_every_case(self):
+        case = measure_case("plain", json.dumps([{"role": "user", "content": "hello"}]))
+
+        assert case.digit_retention == 1.0  # vacuous: no figures present
+
+
 class TestSelfDisqualification:
     def test_a_duplicate_heavy_corpus_is_flagged(self):
         case = measure_case("synthetic", transcript(duplicate=True), counter=FixedCounter())

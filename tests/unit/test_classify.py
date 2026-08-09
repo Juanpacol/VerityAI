@@ -7,7 +7,12 @@ that a short error message is noise and deleting the one line that explains
 what went wrong.
 """
 
-from verityai.context.classify import classify_all, classify_item, content_hash
+from verityai.context.classify import (
+    classify_all,
+    classify_item,
+    content_hash,
+    extract_financial_figures,
+)
 from verityai.core.models import ContextItem, ItemKind, Relevance
 
 from ..conftest import item
@@ -86,6 +91,93 @@ class TestProtectedKinds:
         result = classify_one("please add retries", kind=ItemKind.USER_MESSAGE)
 
         assert result.relevance is Relevance.CRITICAL
+
+
+class TestFinancialFigures:
+    """A dollar amount or account number is exact-or-wrong, no middle
+    ground -- and the rule must stay narrow enough that ordinary numbers
+    (line numbers, counts, percentages) never accidentally trigger it,
+    or pruning would be defeated by how many numbers real text contains.
+    """
+
+    def test_a_dollar_amount_is_critical(self):
+        result = classify_one("The total owed is $4,231.50 on that account.")
+
+        assert result.relevance is Relevance.CRITICAL
+        assert "financial figure" in result.relevance_reason
+
+    def test_an_iban_shaped_account_number_is_critical(self):
+        result = classify_one("Account: DE89370400440532013000")
+
+        assert result.relevance is Relevance.CRITICAL
+
+    def test_a_currency_code_amount_is_critical(self):
+        result = classify_one("EUR 1500 was refunded yesterday.")
+
+        assert result.relevance is Relevance.CRITICAL
+
+    def test_a_bare_percentage_is_not_critical(self):
+        """92.4% is routine noise in this very project's own benchmark
+        output -- it must never trigger this rule."""
+        result = classify_one("We saved 92.4% in this run.")
+
+        assert result.relevance is not Relevance.CRITICAL
+
+    def test_a_bare_count_is_not_critical(self):
+        result = classify_one("100 tests passed in 0.05s")
+
+        assert result.relevance is not Relevance.CRITICAL
+
+    def test_line_numbers_are_not_critical(self):
+        result = classify_one("see line 42, also line 108")
+
+        assert result.relevance is not Relevance.CRITICAL
+
+    def test_a_duplicated_figure_is_still_independently_critical(self):
+        """Same precedence as an explicit marker: an exact duplicate of a
+        financial figure is still, on its own, marked CRITICAL rather than
+        demoted to REDUNDANT by the duplicate-detection rule below it."""
+        items = [
+            item("Refund of $500.00 processed.", index=0),
+            item("Refund of $500.00 processed.", index=1),
+        ]
+
+        classified = classify_all(items)
+
+        assert all(c.relevance is Relevance.CRITICAL for c in classified)
+
+    def test_extract_financial_figures_finds_dollar_amounts(self):
+        assert extract_financial_figures("cost: $99.99") == {"$99.99"}
+
+    def test_extract_financial_figures_finds_iban_shapes(self):
+        figures = extract_financial_figures("IBAN GB29NWBK60161331926819 on file")
+
+        assert "GB29NWBK60161331926819" in figures
+
+    def test_extract_financial_figures_returns_empty_for_ordinary_text(self):
+        assert extract_financial_figures("no numbers of interest here") == set()
+
+    def test_extract_financial_figures_finds_multiple(self):
+        figures = extract_financial_figures("Paid $100 and refunded $50 separately.")
+
+        assert figures == {"$100", "$50"}
+
+    def test_a_base64_style_blob_is_not_mistaken_for_an_iban(self):
+        """A real false positive, found by running this against real Claude
+        Code session transcripts: a base64-ish blob contains a substring
+        shaped exactly like a short IBAN (`CH78K2XZ`), and `\\b` alone treats
+        the surrounding `+`/`/` as word boundaries even though they are
+        plainly part of the same continuous blob to a human reader."""
+        blob = "l34i3SGO7uRLKYzqTTEALk6QfbNt4wwZbsIT9IZ+CH78K2XZ+KRGYuWie+"
+
+        assert extract_financial_figures(blob) == set()
+
+    def test_a_real_short_iban_embedded_in_prose_is_still_found(self):
+        """The fix for the base64 false positive must not also blind the
+        extractor to a real IBAN just because it sits next to punctuation."""
+        figures = extract_financial_figures("wire it to DE89370400440532013000, please")
+
+        assert "DE89370400440532013000" in figures
 
 
 class TestDuplicateDetection:
