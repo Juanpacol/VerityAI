@@ -1,0 +1,14 @@
+
+This machine has the `verity` CLI installed globally (just run `verity <command>`
+from any directory). Before editing anything, consider using it to understand
+the codebase rather than relying only on grep and manual reading:
+
+  cd {repo_path} && verity init
+  verity graph build
+  verity graph context "<describe the bug in your own words>"
+  verity graph find <symbol_name>
+  verity graph deps <file_path>
+
+These are optional but are there specifically to help you find the actual
+code path involved (and avoid unrelated distractor code) faster than manual
+exploration alone.

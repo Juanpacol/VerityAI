@@ -1,0 +1,9 @@
+You are working in a small Python order-processing service at {repo_path}.
+
+There is a bug: when a customer's order has a discount code applied, the
+final total charged is wrong. Run `pytest tests/` from {repo_path} to see
+which test(s) fail and what behavior is actually expected.
+
+Fix the bug so that every test in `pytest tests/` passes. Do not modify any
+file under `tests/`. When you believe the fix is complete, run
+`pytest tests/` one final time from {repo_path} to confirm, then stop.

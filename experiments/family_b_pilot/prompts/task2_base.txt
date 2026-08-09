@@ -1,0 +1,10 @@
+You are working in a small Python order-processing service at {repo_path}.
+
+There is a bug: the system can oversell stock -- it sometimes allows more
+units of a SKU to be reserved across multiple orders than are actually
+available. Run `pytest tests/` from {repo_path} to see which test(s) fail
+and what behavior is actually expected.
+
+Fix the bug so that every test in `pytest tests/` passes. Do not modify any
+file under `tests/`. When you believe the fix is complete, run
+`pytest tests/` one final time from {repo_path} to confirm, then stop.
