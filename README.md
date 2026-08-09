@@ -48,10 +48,11 @@ integrations and a UI) has not started.
 | Consistency — hallucinated and contradictory claims | working |
 | Reliability — architecture, tests, security | working |
 
-**Both a Family A measurement and a Family B pilot exist now** (below). The
-Family B pilot's honest result is `indistinguishable_from_noise` — both
-tested tasks were too easy to tell the two conditions apart, which is a
-finding about that pilot's design, not a verdict that Verity has no effect.
+**A Family A measurement and two Family B pilots exist now** (below). The
+first Family B pilot's result was `indistinguishable_from_noise` — its
+tasks were too easy to tell the two conditions apart. The second, testing
+automatic financial-figure protection under a real budget constraint,
+found `likely_real_difference`: 0/5 vs 5/5 exact recall.
 
 ---
 
@@ -88,8 +89,8 @@ domain, and most of those 21 figures are example amounts inside this
 project's own docstrings and tests, not genuine user data. A 100% result
 here says the mechanism works on what this corpus contains — it is not yet
 evidence about a real adversarial case (one figure, once, amid heavy noise,
-with decoy numbers nearby). That is what the numeric-recall pilot below
-tests instead of assuming.
+with decoy numbers nearby). The numeric-recall pilot below tests exactly
+that instead of assuming it.
 
 Reproduce it yourself (only the aggregate counts leave your machine — see
 `tests/unit/test_bench_privacy.py` for what's enforced never to appear in
@@ -131,6 +132,31 @@ help with) was never the hard part. That is a finding about the pilot's
 task design, not a verdict that Verity has no effect — see the pilot's own
 README for what a task that could actually detect a difference needs to
 look like.
+
+**A second, corrected pilot has been run**
+(`experiments/family_b_pilot_2_numeric_recall/`, [ADR-0013](docs/adr/0013-numeric-recall-pilot.md)):
+a support-conversation log states a customer's account number and amount
+owed once, early, with no explicit marker; a decoy figure (a different,
+similarly-formatted account/amount) sits past the midpoint, attributed to
+a closed, unrelated case. The harness — not a live agent — prepares each
+condition's context to the *same* 800-token budget two ways: `naive`
+keeps the most recent messages (what an unmanaged context window actually
+does on overflow), `verity` runs `verity context --budget 800` (with the
+ADR-0012 rule active). 5 single-turn recall trials per condition, scored
+by exact match against ground truth:
+
+| Condition | Exact matches | Noise floor |
+|---|---|---|
+| `naive` | 0/5 | `[0.0, 0.0]` |
+| `verity` | 5/5 | `[1.0, 1.0]` |
+
+`likely_real_difference` in both directions — zero overlap between the
+floors. Every `naive` trial correctly said "insufficient information"
+rather than reporting the decoy; every `verity` trial reported the exact
+account number and amount. Stated limits (the pilot's own README has the
+full list): one fixture, one figure, one budget, one truncation strategy,
+and a single-turn task close enough to deterministic that neither
+condition's noise floor shows real spread.
 
 ---
 

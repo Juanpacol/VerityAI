@@ -7,15 +7,20 @@ variance, and the retry-loop improvement that had already been written up had
 to be **retracted** once same-configuration repeats were compared. This
 document exists so that does not happen twice.
 
-Status: **both families now have a real measurement.** Family A: README,
-"First real measurement" (methodology in ADR-0009). Family B: a 20-trial
-pilot (`experiments/family_b_pilot/`) ran the full 5-step procedure below
-end to end and reported `indistinguishable_from_noise` on both of its two
-tasks — not because Verity has no effect, but because both tasks hit a
-100% success ceiling in both conditions, which is itself the pilot's most
-useful finding (see its README's "Result" section). No Family B number
-claiming a *real* effect exists yet; the pilot's honest conclusion is about
-what the next one needs to test, not a verdict on Verity.
+Status: **both families now have a real measurement, and Family B has a
+real effect on record.** Family A: README, "First real measurement"
+(methodology in ADR-0009; extended with digit-level retention in ADR-0012).
+Family B, first pilot (`experiments/family_b_pilot/`, ADR-0011): 20 code-fix
+trials, `indistinguishable_from_noise` on both tasks — a 100% ceiling in
+both conditions, a finding about that pilot's task design, not a verdict on
+Verity. Family B, second pilot
+(`experiments/family_b_pilot_2_numeric_recall/`, ADR-0013), corrected that
+design: 10 numeric-recall trials under a shared token budget, naive
+tail-truncation vs. `verity context`, scored by exact match.
+`likely_real_difference` in both directions, 0/5 vs 5/5, zero overlap
+between noise floors. Both pilots' stated limits (small N, narrow task
+design, single fixture) still apply — see each pilot's own README before
+generalizing either result.
 
 ## The two families
 

@@ -1,0 +1,10 @@
+{
+  "ground_truth": {
+    "account_number": "DE89370400440532013000",
+    "total_amount": "$4,231.50"
+  },
+  "decoy": {
+    "account_number": "FR7630006000011234567890189",
+    "total_amount": "$500.00"
+  }
+}

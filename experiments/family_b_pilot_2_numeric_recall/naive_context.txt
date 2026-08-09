@@ -1,0 +1,39 @@
+[tool] [ticket-system] sync #22: status=open, queue=billing, last_touched_by=agent_2, sla_minutes_remaining=98
+
+[assistant] For reference, in the previous case #4521 the account was FR7630006000011234567890189 with $500.00 owed. That case is already closed and unrelated to #7788.
+
+[tool] [ticket-system] sync #23: status=open, queue=billing, last_touched_by=agent_3, sla_minutes_remaining=97
+
+[tool] [ticket-system] sync #24: status=open, queue=billing, last_touched_by=agent_4, sla_minutes_remaining=96
+
+[tool] [ticket-system] sync #25: status=open, queue=billing, last_touched_by=agent_0, sla_minutes_remaining=95
+
+[tool] [ticket-system] sync #26: status=open, queue=billing, last_touched_by=agent_1, sla_minutes_remaining=94
+
+[tool] [ticket-system] sync #27: status=open, queue=billing, last_touched_by=agent_2, sla_minutes_remaining=93
+
+[tool] [ticket-system] sync #28: status=open, queue=billing, last_touched_by=agent_3, sla_minutes_remaining=92
+
+[tool] [ticket-system] sync #29: status=open, queue=billing, last_touched_by=agent_4, sla_minutes_remaining=91
+
+[tool] [ticket-system] sync #30: status=open, queue=billing, last_touched_by=agent_0, sla_minutes_remaining=90
+
+[tool] [ticket-system] sync #31: status=open, queue=billing, last_touched_by=agent_1, sla_minutes_remaining=89
+
+[tool] [ticket-system] sync #32: status=open, queue=billing, last_touched_by=agent_2, sla_minutes_remaining=88
+
+[tool] [ticket-system] sync #33: status=open, queue=billing, last_touched_by=agent_3, sla_minutes_remaining=87
+
+[tool] [ticket-system] sync #34: status=open, queue=billing, last_touched_by=agent_4, sla_minutes_remaining=86
+
+[tool] [ticket-system] sync #35: status=open, queue=billing, last_touched_by=agent_0, sla_minutes_remaining=85
+
+[tool] [ticket-system] sync #36: status=open, queue=billing, last_touched_by=agent_1, sla_minutes_remaining=84
+
+[tool] [ticket-system] sync #37: status=open, queue=billing, last_touched_by=agent_2, sla_minutes_remaining=83
+
+[tool] [ticket-system] sync #38: status=open, queue=billing, last_touched_by=agent_3, sla_minutes_remaining=82
+
+[tool] [ticket-system] sync #39: status=open, queue=billing, last_touched_by=agent_4, sla_minutes_remaining=81
+
+[user] Before you hand this off: what is the exact account number and total amount owed for the CURRENT case (#7788) -- not any previously referenced case?

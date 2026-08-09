@@ -1,0 +1,182 @@
+[
+  {
+    "role": "system",
+    "content": "You are a support assistant reviewing a customer billing case."
+  },
+  {
+    "role": "user",
+    "content": "Please review case #7788 and get it ready for the next agent."
+  },
+  {
+    "role": "assistant",
+    "content": "Looking up case #7788 now. Customer's account number is DE89370400440532013000 and the total amount currently owed is $4,231.50."
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #0: status=open, queue=billing, last_touched_by=agent_0, sla_minutes_remaining=120"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #1: status=open, queue=billing, last_touched_by=agent_1, sla_minutes_remaining=119"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #2: status=open, queue=billing, last_touched_by=agent_2, sla_minutes_remaining=118"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #3: status=open, queue=billing, last_touched_by=agent_3, sla_minutes_remaining=117"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #4: status=open, queue=billing, last_touched_by=agent_4, sla_minutes_remaining=116"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #5: status=open, queue=billing, last_touched_by=agent_0, sla_minutes_remaining=115"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #6: status=open, queue=billing, last_touched_by=agent_1, sla_minutes_remaining=114"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #7: status=open, queue=billing, last_touched_by=agent_2, sla_minutes_remaining=113"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #8: status=open, queue=billing, last_touched_by=agent_3, sla_minutes_remaining=112"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #9: status=open, queue=billing, last_touched_by=agent_4, sla_minutes_remaining=111"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #10: status=open, queue=billing, last_touched_by=agent_0, sla_minutes_remaining=110"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #11: status=open, queue=billing, last_touched_by=agent_1, sla_minutes_remaining=109"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #12: status=open, queue=billing, last_touched_by=agent_2, sla_minutes_remaining=108"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #13: status=open, queue=billing, last_touched_by=agent_3, sla_minutes_remaining=107"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #14: status=open, queue=billing, last_touched_by=agent_4, sla_minutes_remaining=106"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #15: status=open, queue=billing, last_touched_by=agent_0, sla_minutes_remaining=105"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #16: status=open, queue=billing, last_touched_by=agent_1, sla_minutes_remaining=104"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #17: status=open, queue=billing, last_touched_by=agent_2, sla_minutes_remaining=103"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #18: status=open, queue=billing, last_touched_by=agent_3, sla_minutes_remaining=102"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #19: status=open, queue=billing, last_touched_by=agent_4, sla_minutes_remaining=101"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #20: status=open, queue=billing, last_touched_by=agent_0, sla_minutes_remaining=100"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #21: status=open, queue=billing, last_touched_by=agent_1, sla_minutes_remaining=99"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #22: status=open, queue=billing, last_touched_by=agent_2, sla_minutes_remaining=98"
+  },
+  {
+    "role": "assistant",
+    "content": "For reference, in the previous case #4521 the account was FR7630006000011234567890189 with $500.00 owed. That case is already closed and unrelated to #7788."
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #23: status=open, queue=billing, last_touched_by=agent_3, sla_minutes_remaining=97"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #24: status=open, queue=billing, last_touched_by=agent_4, sla_minutes_remaining=96"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #25: status=open, queue=billing, last_touched_by=agent_0, sla_minutes_remaining=95"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #26: status=open, queue=billing, last_touched_by=agent_1, sla_minutes_remaining=94"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #27: status=open, queue=billing, last_touched_by=agent_2, sla_minutes_remaining=93"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #28: status=open, queue=billing, last_touched_by=agent_3, sla_minutes_remaining=92"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #29: status=open, queue=billing, last_touched_by=agent_4, sla_minutes_remaining=91"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #30: status=open, queue=billing, last_touched_by=agent_0, sla_minutes_remaining=90"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #31: status=open, queue=billing, last_touched_by=agent_1, sla_minutes_remaining=89"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #32: status=open, queue=billing, last_touched_by=agent_2, sla_minutes_remaining=88"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #33: status=open, queue=billing, last_touched_by=agent_3, sla_minutes_remaining=87"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #34: status=open, queue=billing, last_touched_by=agent_4, sla_minutes_remaining=86"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #35: status=open, queue=billing, last_touched_by=agent_0, sla_minutes_remaining=85"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #36: status=open, queue=billing, last_touched_by=agent_1, sla_minutes_remaining=84"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #37: status=open, queue=billing, last_touched_by=agent_2, sla_minutes_remaining=83"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #38: status=open, queue=billing, last_touched_by=agent_3, sla_minutes_remaining=82"
+  },
+  {
+    "role": "tool",
+    "content": "[ticket-system] sync #39: status=open, queue=billing, last_touched_by=agent_4, sla_minutes_remaining=81"
+  },
+  {
+    "role": "user",
+    "content": "Before you hand this off: what is the exact account number and total amount owed for the CURRENT case (#7788) -- not any previously referenced case?"
+  }
+]
