@@ -33,9 +33,15 @@ judge: a two-hop bug, a fabricated prior investigation recovered via
 ceilinged at 5/5 for both conditions (`indistinguishable_from_noise`) — the
 bug still wasn't hard enough to fail cold — but tool-call cost per trial
 showed `likely_real_difference`: `verity` (mean 4.8) fell below `naive`'s
-own noise floor (`[5, 8]`). All four pilots' stated limits (small N, narrow
-task design, single fixture) still apply — see each pilot's own README
-before generalizing any result.
+own noise floor (`[5, 8]`). Family B, fifth pilot
+(`experiments/family_b_pilot_5_harder_recovery/`, ADR-0016), raised the
+difficulty further (two structurally identical subsystems, one a healthy
+decoy) specifically to see whether success itself would ever move. It
+didn't — a third ceiling in the series, 5/5 both conditions — but the cost
+effect reproduced and grew: `verity` (mean 5.2) below `naive`'s floor
+(`[7, 10]`), a larger gap than the fourth pilot's. All five pilots' stated
+limits (small N, narrow task design, single fixture) still apply — see each
+pilot's own README before generalizing any result.
 
 ## The two families
 

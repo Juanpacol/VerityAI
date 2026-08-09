@@ -48,17 +48,18 @@ integrations and a UI) has not started.
 | Consistency — hallucinated and contradictory claims | working |
 | Reliability — architecture, tests, security | working |
 
-**A Family A measurement and four Family B pilots exist now** (below). The
+**A Family A measurement and five Family B pilots exist now** (below). The
 first Family B pilot's result was `indistinguishable_from_noise` — its
 tasks were too easy to tell the two conditions apart. The second, testing
 automatic financial-figure protection under a real budget constraint,
 found `likely_real_difference`: 0/5 vs 5/5 exact recall. The third, testing
 whether an agent *managing its own context across turns* uses a memory tool
-unprompted, found the same verdict: 0/5 vs 5/5. The fourth, testing
-recovery after a context reset, hit another success-rate ceiling (10/10
-both conditions fixed the bug) but found `likely_real_difference` on cost:
-recovering a handoff took fewer tool calls than reconstructing the same
-investigation from scratch.
+unprompted, found the same verdict: 0/5 vs 5/5. The fourth and fifth, testing
+recovery after a context reset at two difficulty levels, both hit a
+success-rate ceiling (10/10 both conditions fixed the bug, even on a harder,
+two-subsystem fixture) but found `likely_real_difference` on cost, both
+times: recovering a handoff took fewer tool calls than reconstructing the
+same investigation from scratch, and the saving grew with task difficulty.
 
 ---
 
@@ -209,6 +210,31 @@ recovery made the *same* successful outcome cheaper: every `verity` trial
 read the handoff and went nearly straight to the fix; every `naive` trial
 spent extra tool calls re-deriving the call chain the handoff had already
 named. See the pilot's own README and ADR-0015 for the full caveats.
+
+**A fifth pilot raised the difficulty further**
+(`experiments/family_b_pilot_5_harder_recovery/`, [ADR-0016](docs/adr/0016-harder-recovery-pilot.md))
+to test whether success itself, not just cost, would ever move: two
+structurally identical subsystems, one healthy (a decoy) and one broken,
+so a cold agent has to rule out a plausible dead end, not just trace one
+chain. Result: **still a ceiling**, the third in this series (after
+ADR-0011 and ADR-0015) — 10/10 both conditions found the real bug, none
+touched the decoy or the test. But the cost effect held and grew:
+
+| Metric | `naive` | `verity` | Verdict |
+|---|---|---|---|
+| Task success (5 trials) | 5/5 | 5/5 | `indistinguishable_from_noise` (ceiling) |
+| Tool calls per trial | mean 8.0, floor `[7, 10]` | mean 5.2 | `likely_real_difference` |
+
+A fixture bug was caught before this result could be trusted: the first
+draft's source had an explicit `# BUG: ...` comment left over from writing
+it, and all 10 trials of that run "found" it by reading the comment. Caught
+because several trial reports cited "a comment in the source," removed, and
+every trial re-run from a verified-clean fixture. Across pilots 4 and 5,
+recovery now has two reproductions of the same pattern: it makes an
+already-achievable outcome cheaper, and the saving grows with how much
+investigation a reset would have thrown away — see ADR-0016 for the full
+discussion of why success itself may need a qualitatively different kind of
+bug (runtime reasoning, not static tracing) to move.
 
 ---
 

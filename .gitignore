@@ -92,3 +92,4 @@ Thumbs.db
 # commit; a team wanting shared state would commit it instead.
 .verity/
 experiments/family_b_pilot_4_recovery_after_reset/trials/
+experiments/family_b_pilot_5_harder_recovery/trials/
