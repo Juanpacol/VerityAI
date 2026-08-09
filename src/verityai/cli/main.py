@@ -247,10 +247,22 @@ def task(
     title: str = typer.Argument(..., help="What you are working on."),
     description: str = typer.Option("", "--description", "-d"),
     next_action: str = typer.Option("", "--next", "-n", help="The immediate next step."),
+    # Added after the first real handoff came out with RELEVANT FILES empty
+    # and no way to fill it -- found by using the tool on its own development.
+    files: list[str] = typer.Option(
+        [], "--file", "-f", help="A file this task touches. Repeatable."
+    ),
 ) -> None:
     """Set the current task."""
     store = _require_store()
-    store.set_task(Task(title=title, description=description, next_action=next_action or None))
+    store.set_task(
+        Task(
+            title=title,
+            description=description,
+            next_action=next_action or None,
+            relevant_files=list(files),
+        )
+    )
     typer.secho(f"Task set: {title}", fg=typer.colors.GREEN)
 
 
@@ -324,6 +336,182 @@ def bench(
         # Non-zero exit so this cannot pass silently in CI and have the number
         # scraped out of the log as if it were a result.
         raise typer.Exit(1)
+
+
+graph_app = typer.Typer(help="Build and query the code graph.")
+app.add_typer(graph_app, name="graph")
+
+
+def _open_graph():
+    """Open the graph belonging to the nearest `.verity/`."""
+    from verityai.graph.store import GraphStore
+
+    return GraphStore.for_verity_dir(_require_store().root)
+
+
+@graph_app.command("build")
+def graph_build(
+    root: Path | None = typer.Argument(None, help="Repository root. Defaults to cwd."),
+    force: bool = typer.Option(False, "--force", help="Re-parse every file."),
+) -> None:
+    """Ingest the repository into the code graph.
+
+    Incremental by content hash, so re-running after a small change is cheap.
+    """
+    from verityai.graph.ingest import ingest_repo
+
+    store = _require_store()
+    target = Path(root) if root else store.root.parent
+
+    with _open_graph() as graph:
+        report = ingest_repo(target, graph, force=force)
+        stats = graph.stats()
+
+    typer.secho(f"\n  {report.coverage_note}", fg=typer.colors.GREEN)
+    typer.echo(
+        f"  {stats['nodes.total']:,} nodes, {stats['edges.total']:,} edges "
+        f"in {report.duration_seconds}s"
+    )
+    typer.echo(
+        f"  {stats['edges.unresolved']:,} calls could not be resolved to a definition "
+        "(mostly builtins and methods on locals; kept, not discarded)"
+    )
+    if report.failed:
+        typer.secho(f"\n  {report.failed} file(s) failed to parse:", fg=typer.colors.YELLOW)
+        for path, reason in report.skipped.items():
+            if "syntax error" in reason or "unreadable" in reason:
+                typer.echo(f"    {path}: {reason}")
+
+
+@graph_app.command("stats")
+def graph_stats() -> None:
+    """Show what is in the graph."""
+    with _open_graph() as graph:
+        stats = graph.stats()
+
+    if not stats.get("nodes.total"):
+        typer.secho("Graph is empty. Run `verity graph build`.", fg=typer.colors.YELLOW)
+        raise typer.Exit(1)
+
+    for key in sorted(stats):
+        typer.echo(f"  {key:<22} {stats[key]:>8,}")
+
+
+@graph_app.command("find")
+def graph_find(
+    name: str = typer.Argument(..., help="Symbol name to locate."),
+) -> None:
+    """Find where a symbol is defined.
+
+    Reports every match rather than guessing between them.
+    """
+    from verityai.graph.query import GraphQuery
+
+    with _open_graph() as graph:
+        matches = GraphQuery(graph).define(name)
+
+    if not matches:
+        typer.secho(f"No definition of {name!r} in the graph.", fg=typer.colors.YELLOW)
+        raise typer.Exit(1)
+
+    for node in matches:
+        typer.echo(f"  {node.kind.value:<9} {node.qualname or node.name}")
+        typer.echo(f"            {node.path}:{node.line}")
+        if node.signature:
+            typer.echo(f"            {node.signature}")
+
+
+@graph_app.command("context")
+def graph_context(
+    task_text: str = typer.Argument(..., help="What you are working on."),
+    limit: int = typer.Option(15, "--limit", "-n"),
+    depth: int = typer.Option(2, "--depth", help="How many hops to expand."),
+) -> None:
+    """Find code relevant to a task, by relationship as well as by text.
+
+    Seeds lexically, then walks the graph. Code that shares no vocabulary with
+    the task still surfaces when an edge connects it to something that does —
+    which is the thing text search structurally cannot do.
+    """
+    from verityai.graph.query import GraphQuery, render_relevant
+
+    with _open_graph() as graph:
+        results = GraphQuery(graph).context_for(task_text, limit=limit, max_depth=depth)
+
+    typer.echo("")
+    typer.echo(render_relevant(results))
+
+
+@graph_app.command("deps")
+def graph_deps(
+    path: str = typer.Argument(..., help="File path, relative to the repo root."),
+) -> None:
+    """Show what a file imports and what imports it."""
+    from verityai.graph.query import GraphQuery
+
+    with _open_graph() as graph:
+        deps = GraphQuery(graph).file_dependencies(path)
+
+    typer.echo(f"\n  {path}\n")
+    typer.echo("  imports:")
+    for name in deps["imports"] or ["    (none)"]:
+        typer.echo(f"    {name}")
+    typer.echo("\n  imported by:")
+    for name in deps["imported_by"] or ["    (none)"]:
+        typer.echo(f"    {name}")
+
+
+@graph_app.command("cycles")
+def graph_cycles() -> None:
+    """Report circular imports as full paths.
+
+    A graph algorithm, never a model call. Exits non-zero when any cycle
+    exists, so this is usable as a CI check.
+    """
+    from verityai.graph.query import GraphQuery
+
+    with _open_graph() as graph:
+        cycles = GraphQuery(graph).import_cycles()
+
+    if not cycles:
+        typer.secho("  No circular imports.", fg=typer.colors.GREEN)
+        return
+
+    for cycle in cycles:
+        typer.secho("  cycle:", fg=typer.colors.RED)
+        for node in cycle:
+            typer.echo(f"    {node.path or node.qualname}")
+    raise typer.Exit(1)
+
+
+@graph_app.command("untested")
+def graph_untested(
+    limit: int = typer.Option(30, "--limit", "-n"),
+) -> None:
+    """List public symbols no test edge reaches. Over-reports, by construction.
+
+    Only sees calls the ingester could resolve, so code exercised indirectly
+    shows up here despite being tested. The caveat is printed with the result;
+    this is a place to start looking, not a coverage measurement.
+    """
+    from verityai.graph.query import GraphQuery
+
+    with _open_graph() as graph:
+        query = GraphQuery(graph)
+        untested = query.untested()
+        caveat = query.untested_caveat()
+
+    if not untested:
+        typer.secho("  No public symbol lacks a direct test edge.", fg=typer.colors.GREEN)
+        return
+
+    typer.echo(f"\n  {len(untested)} public symbols with no direct test edge:\n")
+    for node in untested[:limit]:
+        typer.echo(f"    {node.kind.value:<9} {node.qualname or node.name}  ({node.path})")
+    if len(untested) > limit:
+        typer.echo(f"\n    ... and {len(untested) - limit} more")
+
+    typer.secho(f"\n  {caveat}", fg=typer.colors.YELLOW)
 
 
 def main() -> None:

@@ -34,9 +34,14 @@ def server(tmp_path, monkeypatch):
     return build_server()
 
 
-async def call(server, name, **kwargs):
-    """Invoke a tool the way an MCP client would."""
-    result = await server.call_tool(name, kwargs)
+async def call(server, tool_name, /, **kwargs):
+    """Invoke a tool the way an MCP client would.
+
+    The helper's own parameters are positional-only: several tools take an
+    argument literally called `name`, which would otherwise collide with this
+    signature rather than being forwarded.
+    """
+    result = await server.call_tool(tool_name, kwargs)
     # FastMCP returns (content_blocks, raw) across versions; normalize to text.
     blocks = result[0] if isinstance(result, tuple) else result
     return "\n".join(getattr(block, "text", str(block)) for block in blocks)
@@ -60,6 +65,10 @@ class TestToolSurface:
             "snapshot",
             "restore",
             "list_snapshots",
+            "build_code_graph",
+            "find_relevant_code",
+            "check_symbol_exists",
+            "impact_of_changing",
         }
 
     @pytest.mark.asyncio
@@ -146,6 +155,80 @@ class TestMemoryTools:
         output = await call(server, "handoff", budget=30)
 
         assert "dropped to fit budget" in output
+
+
+class TestGraphTools:
+    @pytest.fixture
+    def with_code(self, tmp_path, server):
+        """A tiny project in the server's working directory."""
+        (tmp_path / "app.py").write_text(
+            '"""App."""\n\n\n'
+            "def apply_ceiling(n, cap):\n    return min(n, cap)\n\n\n"
+            "def rate_limit_request(key, n):\n"
+            '    """Rate limiting."""\n'
+            "    return apply_ceiling(n, 100)\n"
+        )
+        return server
+
+    @pytest.mark.asyncio
+    async def test_graph_tools_say_when_the_graph_is_empty(self, server):
+        """Better than returning nothing and letting the agent infer absence."""
+        output = await call(server, "check_symbol_exists", name="anything")
+
+        assert "empty" in output.lower()
+        assert "build_code_graph" in output
+
+    @pytest.mark.asyncio
+    async def test_building_reports_coverage(self, with_code):
+        output = await call(with_code, "build_code_graph")
+
+        assert "Python files in the graph" in output
+        assert "nodes" in output and "edges" in output
+
+    @pytest.mark.asyncio
+    async def test_a_real_symbol_is_found_with_its_location(self, with_code):
+        await call(with_code, "build_code_graph")
+
+        output = await call(with_code, "check_symbol_exists", name="rate_limit_request")
+
+        assert "FOUND" in output
+        assert "app.py" in output
+
+    @pytest.mark.asyncio
+    async def test_an_invented_symbol_is_reported_as_absent(self, with_code):
+        """The tool an agent should call before asserting an API exists."""
+        await call(with_code, "build_code_graph")
+
+        output = await call(with_code, "check_symbol_exists", name="refresh_token_nonexistent")
+
+        assert "NOT FOUND" in output
+        assert "Do not assume it exists" in output
+
+    @pytest.mark.asyncio
+    async def test_relevant_code_expands_beyond_lexical_matches(self, with_code):
+        await call(with_code, "build_code_graph")
+
+        output = await call(with_code, "find_relevant_code", task="rate limiting")
+
+        assert "rate_limit_request" in output
+        assert "apply_ceiling" in output, "should be reached via the call edge"
+
+    @pytest.mark.asyncio
+    async def test_impact_lists_callers(self, with_code):
+        await call(with_code, "build_code_graph")
+
+        output = await call(with_code, "impact_of_changing", name="apply_ceiling")
+
+        assert "Called by" in output
+        assert "rate_limit_request" in output
+
+    @pytest.mark.asyncio
+    async def test_impact_flags_that_missing_tests_over_report(self, with_code):
+        await call(with_code, "build_code_graph")
+
+        output = await call(with_code, "impact_of_changing", name="apply_ceiling")
+
+        assert "over-reports" in output
 
 
 class TestSnapshotTools:

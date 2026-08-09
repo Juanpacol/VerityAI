@@ -29,7 +29,7 @@ output.
 ├──────────────────────────────────────────────┤
 │ CONSISTENCY   → claims vs evidence           │  (Phase 3)
 ├──────────────────────────────────────────────┤
-│ KNOWLEDGE     → code graph                   │  (Phase 2)
+│ KNOWLEDGE     → code graph                   │  working
 ├──────────────────────────────────────────────┤
 │ MEMORY        → .verity/ append-only state   │  working
 ├──────────────────────────────────────────────┤
@@ -50,7 +50,7 @@ between the KG and the symbolic layer. Same principle, different contents.
 core/                        (no deps)
   ├─ context/   (core)
   ├─ memory/    (core)
-  ├─ graph/     (core)            — Phase 2
+  ├─ graph/     (core, context.rank)
   ├─ consistency/ (core, graph)   — Phase 3
   ├─ reliability/ (core, graph)   — Phase 4
   ├─ bench/     (core, context)
@@ -82,6 +82,10 @@ src/verityai/
 │   ├── store.py          append-only JSONL under .verity/
 │   ├── snapshot.py       numbered captures; context only, never code
 │   └── handoff.py        the structured handoff document
+├── graph/
+│   ├── store.py          SQLite; hand-written traversal, no networkx
+│   ├── ingest.py         repo walk + AST; Python only, scope declared
+│   └── query.py          relationship retrieval; context_for is the point
 ├── bench/deterministic.py Family A benchmarks, self-disqualifying
 ├── analysis/facts.py     AST fact extraction (rescued from T6)
 ├── observability/        StageEvent + thread-safe run registry
@@ -148,7 +152,7 @@ has the detail; the short version:
 ## Development
 
 ```bash
-pytest tests/           # 206 tests, no network, no services, no fixtures needed
+pytest tests/           # 315 tests, no network, no services, no fixtures needed
 ruff check src/ tests/
 ruff format src/ tests/
 ```

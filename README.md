@@ -35,15 +35,16 @@ environment those agents work in.
 
 ## Status
 
-**Phase 1 of 5.** The Context and Memory engines work and are covered by 206
-tests, and both are reachable from a CLI and an MCP server. The Knowledge Graph, Consistency and Reliability engines are not built
-yet, and this README does not pretend otherwise.
+**Phase 2 of 5.** The Context, Memory and Knowledge Graph engines work, are
+covered by 315 tests, and are reachable from both a CLI and an MCP server. The
+Consistency and Reliability engines are not built yet, and this README does not
+pretend otherwise.
 
 | Engine | State |
 |---|---|
 | Context — token accounting, classification, pruning, health | working |
 | Memory / Handoff — persistent state, snapshots, handoff docs | working |
-| Knowledge Graph — real code structure | not started |
+| Knowledge Graph — real code structure | working |
 | Consistency — hallucinated and contradictory claims | not started |
 | Reliability — architecture, tests, security | not started |
 
@@ -149,6 +150,42 @@ VERITY CONTEXT HEALTH
   Health                45.8%
 ```
 
+### The code graph
+
+```bash
+verity graph build                          # index the repo (incremental)
+verity graph context "rate limiting"        # relevant code, by relationship
+verity graph find ContextPipeline           # where is this defined
+verity graph deps src/verityai/graph/query.py
+verity graph cycles                         # circular imports; exits 1 if any
+verity graph untested                       # symbols with no direct test edge
+```
+
+`graph context` is the part worth explaining. It seeds on text, then walks
+call, containment, inheritance and test edges. Asked about "rate limiting" in
+this repository it returns `ContextPipeline.run` — which does not contain the
+phrase — because `run` calls `_enforce_budget`, which does. It returns
+`critical_retention` because tests reach it. Those are edges, and edges are
+what text similarity structurally cannot see.
+
+Every result says why it was included:
+
+```
+  method    ContextPipeline.run
+            src/verityai/context/prune.py:62
+            run(self, items: list[ContextItem], task: str, budget: int | None)
+            why: calls _enforce_budget; called by test_critical_items_survive...
+```
+
+Scope is declared rather than implied. Python only, for now; every other file
+is reported as not read, and vendored subprojects (a directory with its own
+`pyproject.toml`) are excluded and counted separately:
+
+```
+50/50 Python files in the graph (100%); 9 in nested projects (vendored, not
+yours); 1,266 non-Python files not read (Phase 2 is Python-only)
+```
+
 ---
 
 ## Use it from an agent (MCP)
@@ -158,10 +195,19 @@ pip install -e ".[mcp]"
 claude mcp add verity -- verity-mcp
 ```
 
-Twelve tools, each a thin wrapper over the same functions the CLI calls:
-`optimize_context`, `context_health`, `set_task`, `save_decision`,
-`save_constraint`, `save_discovery`, `save_failure`, `get_state`, `handoff`,
-`snapshot`, `restore`, `list_snapshots`.
+Sixteen tools, each a thin wrapper over the same functions the CLI calls:
+
+- **context** — `optimize_context`, `context_health`
+- **memory** — `set_task`, `save_decision`, `save_constraint`, `save_discovery`,
+  `save_failure`, `get_state`, `handoff`
+- **graph** — `build_code_graph`, `find_relevant_code`, `check_symbol_exists`,
+  `impact_of_changing`
+- **snapshots** — `snapshot`, `restore`, `list_snapshots`
+
+`check_symbol_exists` is the one to reach for before asserting an API is
+available. It answers `NOT FOUND: no definition of 'refresh_token' in this
+repository. Do not assume it exists.` — far cheaper than opening files, and the
+difference between believing and knowing.
 
 **What this can and cannot do**, stated plainly because it bounds every claim
 this project makes:
@@ -208,7 +254,7 @@ looks like. This is the rule that turned T2 from a result into a retraction.
 ## Development
 
 ```bash
-pytest tests/          # 206 tests, no network, no services
+pytest tests/          # 315 tests, no network, no services
 ruff check src/ tests/
 ruff format src/ tests/
 ```

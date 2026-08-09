@@ -87,3 +87,7 @@ Thumbs.db
 *.tmp
 *.temp
 *.bak
+
+# Harness state. Ignored while dogfooding so it does not add noise to every
+# commit; a team wanting shared state would commit it instead.
+.verity/

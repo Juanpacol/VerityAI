@@ -215,6 +215,132 @@ def build_server(name: str = "verity"):
         )
         return f"{document}\n[{report['tokens']:,} tokens, {report['token_method']}]{dropped}"
 
+    # --- code graph --------------------------------------------------------
+
+    def _graph():
+        from verityai.graph.store import GraphStore
+
+        return GraphStore.for_verity_dir(_store().root)
+
+    @server.tool()
+    def find_relevant_code(task: str, limit: int = 15) -> str:
+        """Find code related to a task, by relationship as well as by name.
+
+        Call this before reading files, whenever you need to know what parts
+        of the codebase a piece of work touches. It seeds on text and then
+        follows call, containment, inheritance and test edges — so it surfaces
+        the function that has nothing to do with your search terms but is
+        called by one that does, which grep and embedding search both miss.
+
+        Every result says why it was included. Requires `build_code_graph`
+        to have been run.
+        """
+        from verityai.graph.query import GraphQuery, render_relevant
+
+        with _graph() as graph:
+            if not graph.stats().get("nodes.total"):
+                return "The code graph is empty. Call build_code_graph first."
+            return render_relevant(GraphQuery(graph).context_for(task, limit=limit))
+
+    @server.tool()
+    def check_symbol_exists(name: str) -> str:
+        """Check whether a function, class or method actually exists.
+
+        Call this before asserting that some API is available, and whenever
+        you are about to act on a memory of the codebase rather than something
+        you just read. It is far cheaper than opening files, and it is the
+        difference between "I believe there is a refresh_token method" and
+        knowing.
+        """
+        from verityai.graph.query import GraphQuery
+
+        with _graph() as graph:
+            if not graph.stats().get("nodes.total"):
+                return "The code graph is empty. Call build_code_graph first."
+
+            matches = GraphQuery(graph).define(name)
+            if not matches:
+                return (
+                    f"NOT FOUND: no definition of {name!r} in this repository. "
+                    "Do not assume it exists."
+                )
+
+            lines = [f"FOUND: {len(matches)} definition(s) of {name!r}."]
+            for node in matches[:10]:
+                lines.append(f"  {node.kind.value} {node.qualname or node.name}")
+                lines.append(f"    {node.path}:{node.line}")
+                if node.signature:
+                    lines.append(f"    {node.signature}")
+            return "\n".join(lines)
+
+    @server.tool()
+    def impact_of_changing(name: str) -> str:
+        """See what depends on a symbol before you change it.
+
+        Call this before editing any shared function or class. Returns what
+        calls it and which tests exercise it — the blast radius, derived from
+        edges rather than from a text search for the name.
+        """
+        from verityai.graph.query import GraphQuery
+
+        with _graph() as graph:
+            if not graph.stats().get("nodes.total"):
+                return "The code graph is empty. Call build_code_graph first."
+
+            query = GraphQuery(graph)
+            matches = query.define(name)
+            if not matches:
+                return f"No definition of {name!r} found."
+
+            node = matches[0]
+            callers = query.callers(node.id)
+            tests = query.tests_for(node.id)
+
+            lines = [
+                f"{node.kind.value} {node.qualname or node.name} ({node.path}:{node.line})",
+                "",
+            ]
+            lines.append(f"Called by ({len(callers)}):")
+            lines.extend(f"  {c.qualname or c.name}  ({c.path})" for c in callers[:20] or [])
+            if not callers:
+                lines.append("  nothing -- it may be dead code, or reached indirectly")
+            lines.append("")
+            lines.append(f"Tested by ({len(tests)}):")
+            lines.extend(f"  {t.qualname or t.name}  ({t.path})" for t in tests[:20] or [])
+            if not tests:
+                lines.append(
+                    "  no direct test edge. Note this over-reports: a test driving this "
+                    "indirectly would not show up here."
+                )
+            return "\n".join(lines)
+
+    @server.tool()
+    def build_code_graph(force: bool = False) -> str:
+        """Index the repository into a queryable code graph.
+
+        Call this once at the start of a session, and again after substantial
+        edits. It is incremental — unchanged files are skipped — so re-running
+        it is cheap.
+
+        The response states how much of the tree is actually represented.
+        Python only in this version; other languages are reported as not read
+        rather than silently missing.
+        """
+        from verityai.graph.ingest import ingest_repo
+
+        store = _store()
+        with _graph() as graph:
+            report = ingest_repo(store.root.parent, graph, force=force)
+            stats = graph.stats()
+
+        return (
+            f"{report.coverage_note}\n"
+            f"{stats['nodes.total']:,} nodes, {stats['edges.total']:,} edges "
+            f"in {report.duration_seconds}s.\n"
+            f"{stats['edges.unresolved']:,} calls unresolved (builtins, methods on "
+            "untyped locals) -- kept, not discarded."
+        )
+
     # --- snapshots ---------------------------------------------------------
 
     @server.tool()

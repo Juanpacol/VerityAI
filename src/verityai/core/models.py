@@ -371,3 +371,157 @@ class Snapshot(BaseModel):
     facts: list[Fact] = Field(default_factory=list)
     created_at: datetime = Field(default_factory=_now)
     git_sha: str | None = None
+
+
+# --- Knowledge graph -----------------------------------------------------
+
+
+class NodeKind(str, Enum):
+    """What a graph node represents.
+
+    `EXTERNAL` is the one that earns its place. When a module imports
+    `requests`, that import is real structural information even though no file
+    in the repository defines it. Dropping it would leave the graph unable to
+    answer "what third-party code does this depend on", and would make an
+    agent's claim about an external API impossible to check in Phase 3.
+    """
+
+    FILE = "file"
+    MODULE = "module"
+    CLASS = "class"
+    FUNCTION = "function"
+    METHOD = "method"
+    TEST = "test"
+    EXTERNAL = "external"
+
+
+class EdgeKind(str, Enum):
+    """How two nodes relate.
+
+    All edges are directed and read source-to-target: `CONTAINS` runs from the
+    container to the contained, `CALLS` from caller to callee, `TESTS` from
+    the test to what it exercises.
+    """
+
+    CONTAINS = "contains"
+    IMPORTS = "imports"
+    CALLS = "calls"
+    INHERITS = "inherits"
+    TESTS = "tests"
+
+
+class GraphNode(BaseModel):
+    """One entity in the code graph.
+
+    `id` is derived, not random: `kind:path:qualname`. That makes re-ingestion
+    an upsert rather than a duplication, and it means a node id is a *readable*
+    address a human can reason about in a query result. A UUID here would be
+    correct and useless.
+    """
+
+    id: str
+    kind: NodeKind
+    name: str
+    qualname: str = ""
+    path: str = ""
+    line: int | None = None
+    end_line: int | None = None
+    # Signature for callables, base list for classes -- enough to answer
+    # "does this function take the argument the agent thinks it does" without
+    # re-reading the file.
+    signature: str = ""
+    docstring: str = ""
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+    @staticmethod
+    def make_id(kind: "NodeKind", path: str, qualname: str = "") -> str:
+        """Build the deterministic id for a node."""
+        return f"{kind.value}:{path}:{qualname}" if qualname else f"{kind.value}:{path}"
+
+
+class GraphEdge(BaseModel):
+    """A directed relationship between two nodes.
+
+    `resolved` is the field that matters. A call to a name the ingester could
+    not tie to a definition is recorded with `resolved=False` and a `target`
+    holding the raw name, rather than being dropped. Discarding them would
+    throw away precisely the signal Phase 3 needs — a call to something that
+    does not exist is what a hallucinated API looks like from the graph's side.
+    """
+
+    source: str
+    target: str
+    kind: EdgeKind
+    resolved: bool = True
+    line: int | None = None
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+
+class IngestReport(BaseModel):
+    """What one ingestion run did, and what it deliberately did not do.
+
+    `skipped` is not an error log. Phase 2 ingests Python only, so every other
+    file is recorded as out of scope with a reason — the same discipline as
+    the pre-pivot `NOT_VERIFIED` status (ADR-0001), which existed because
+    "we did not check this" and "this is fine" must never look alike.
+    """
+
+    files_scanned: int = 0
+    # Files the ingester was willing to attempt -- i.e. this project's own
+    # Python. The denominator for the coverage figure that means something.
+    files_eligible: int = 0
+    # Python files belonging to a nested project (vendored dependency, cloned
+    # reference repo). Counted apart from non-Python files because "we do not
+    # read Rust" and "we chose not to read this Python" are different facts.
+    files_vendored: int = 0
+    files_ingested: int = 0
+    files_unchanged: int = 0
+    nodes: int = 0
+    edges: int = 0
+    unresolved_edges: int = 0
+    # path -> reason. Non-Python files, syntax errors, unreadable files.
+    skipped: dict[str, str] = Field(default_factory=dict)
+    duration_seconds: float = 0.0
+
+    @property
+    def files_in_graph(self) -> int:
+        return self.files_ingested + self.files_unchanged
+
+    @property
+    def out_of_scope(self) -> int:
+        """Files skipped for being a language this phase does not read."""
+        return self.files_scanned - self.files_eligible - self.files_vendored
+
+    @property
+    def failed(self) -> int:
+        """Eligible files that could not be parsed. These are real problems."""
+        return self.files_eligible - self.files_in_graph
+
+    @property
+    def coverage_note(self) -> str:
+        """One line stating how much of what it *could* read is in the graph.
+
+        The denominator is eligible files, not every file in the tree. An
+        earlier version divided by the whole tree and reported "4% coverage"
+        on this repository — technically true, wildly misleading, since every
+        Python file was in fact ingested and the other 1,266 files were JSON
+        evidence records the ingester was never going to read.
+
+        Out-of-scope files are still reported, separately, because a graph
+        covering all the Python in a repo that is mostly TypeScript is a fact
+        the user needs stated plainly.
+        """
+        if self.files_eligible == 0:
+            return f"no Python files found among {self.files_scanned:,} scanned"
+
+        note = (
+            f"{self.files_in_graph}/{self.files_eligible} Python files in the graph "
+            f"({self.files_in_graph / self.files_eligible:.0%})"
+        )
+        if self.failed:
+            note += f"; {self.failed} failed to parse"
+        if self.files_vendored:
+            note += f"; {self.files_vendored} in nested projects (vendored, not yours)"
+        if self.out_of_scope:
+            note += f"; {self.out_of_scope:,} non-Python files not read (Phase 2 is Python-only)"
+        return note
