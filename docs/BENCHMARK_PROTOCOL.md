@@ -56,10 +56,13 @@ detection/`, ADR-0018) — not a Family A/B comparison, but the same
 "real data before publishing" discipline applied to a different engine.
 Real agents, shown only one file of a small codebase, produced a genuine
 mix of true and hallucinated claims about it. Result: 100% recall on
-invented symbol names (14/14 caught), a confirmed blind spot on
-function-to-file relation claims (0% caught, structurally invisible to the
-extractor), and a real bug in decision resurfacing — a corpus of one or two
-decisions always normalized its closest match to 100% confidence regardless
+invented symbol names (14/14 caught); a blind spot on function-to-file
+relation claims (0% caught at the time, structurally invisible to the
+extractor), closed the same day by extending the relation target pattern
+to accept file paths and checking such claims against the file-level
+IMPORTS graph instead of a symbol-level CALLS edge; and a real bug in
+decision resurfacing — a corpus of one or two decisions always normalized
+its closest match to 100% confidence regardless
 of actual relevance — found, fixed, and regression-tested.
 
 ## The two families

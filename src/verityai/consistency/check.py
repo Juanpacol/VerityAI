@@ -24,7 +24,7 @@ a false contradiction.
 
 from pathlib import Path
 
-from verityai.consistency.claims import extract_claims
+from verityai.consistency.claims import extract_claims, looks_like_path
 from verityai.context.rank import bm25_rank
 from verityai.core.models import (
     CheckStatus,
@@ -34,6 +34,8 @@ from verityai.core.models import (
     ConsistencyReport,
     DecisionStatus,
     Evidence,
+    GraphNode,
+    NodeKind,
 )
 from verityai.graph.query import GraphQuery
 from verityai.graph.store import EdgeKind
@@ -73,8 +75,62 @@ def check_symbol_exists(claim: Claim, query: GraphQuery) -> ClaimCheck:
     )
 
 
+def check_symbol_calls_file(claim: Claim, query: GraphQuery) -> ClaimCheck:
+    """Does the file defining `claim.subject` actually import `claim.target`?
+
+    A relation claim whose target is a file, not a function, asserts a
+    module-level dependency, not a call edge -- there is no CALLS edge to a
+    file node. Checked instead against the file-level IMPORTS graph
+    (`GraphQuery.file_dependencies` uses the same edges). This closes the
+    blind spot found in ADR-0018: "`apply_tax` calls `billing/tax_rates.py`"
+    used to decompose into two independent, both-true existence checks and
+    vanish -- neither symbol/file existence check has any way to see that
+    the claimed relationship between them is false.
+    """
+    subject_nodes = query.define(claim.subject)
+    if not subject_nodes:
+        return ClaimCheck(
+            claim=claim,
+            status=CheckStatus.CONTRADICTED,
+            confidence=1.0,
+            explanation=f"no definition of {claim.subject!r} found",
+        )
+
+    target_path = claim.target or ""
+    target_file = query.store.get_node(GraphNode.make_id(NodeKind.FILE, target_path))
+    if target_file is None:
+        return ClaimCheck(
+            claim=claim,
+            status=CheckStatus.CONTRADICTED,
+            confidence=1.0,
+            explanation=f"no file at {target_path!r} found in the graph",
+        )
+
+    for subject_node in subject_nodes:
+        subject_file_id = GraphNode.make_id(NodeKind.FILE, subject_node.path)
+        imports = query.store.neighbours(subject_file_id, kinds=[EdgeKind.IMPORTS], direction="out")
+        if any(node.id == target_file.id for node in imports):
+            return ClaimCheck(
+                claim=claim,
+                status=CheckStatus.SUPPORTED,
+                confidence=1.0,
+                explanation=f"{subject_node.path!r} imports {target_path!r}",
+                evidence=[Evidence(kind="file", locator=subject_node.path)],
+            )
+
+    return ClaimCheck(
+        claim=claim,
+        status=CheckStatus.CONTRADICTED,
+        confidence=0.9,
+        explanation=(f"the file defining {claim.subject!r} does not import {target_path!r}"),
+    )
+
+
 def check_symbol_relation(claim: Claim, query: GraphQuery) -> ClaimCheck:
     """Does the graph actually contain the claimed relationship?"""
+    if looks_like_path(claim.target or ""):
+        return check_symbol_calls_file(claim, query)
+
     edge_kind = _RELATION_EDGE_KINDS.get(claim.relation or "")
     if edge_kind is None:
         return ClaimCheck(

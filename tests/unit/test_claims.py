@@ -105,6 +105,20 @@ class TestRelationExtraction:
         relation = next(c for c in claims if c.kind is ClaimKind.SYMBOL_RELATION)
         assert relation.relation == "inherits"
 
+    def test_a_file_path_target_is_recognised_as_a_relation(self):
+        """Regression (ADR-0018): a claim that a function calls INTO a file,
+        not another function, used to fall outside the target pattern
+        entirely and silently decompose into two independent, both-true
+        existence claims -- the false relation itself went unchecked."""
+        claims = extract_claims("`apply_tax` calls `billing/tax_rates.py` to resolve the rate.")
+
+        relation = next(c for c in claims if c.kind is ClaimKind.SYMBOL_RELATION)
+        assert relation.subject == "apply_tax"
+        assert relation.target == "billing/tax_rates.py"
+        # And it must not ALSO appear as a bare FILE_EXISTS claim -- same
+        # subsumption rule as a symbol-to-symbol relation.
+        assert not any(c.kind is ClaimKind.FILE_EXISTS for c in claims)
+
     def test_an_unmapped_verb_is_not_extracted_as_a_relation(self):
         """'depends on' and 'uses' are ambiguous about which edge kind they
         mean, so they are left unrecognised rather than mapped to a guess."""

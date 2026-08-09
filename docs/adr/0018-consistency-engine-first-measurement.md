@@ -92,11 +92,26 @@ synthetic-fixture trap's blind spots.
 - **Symbol-existence checking has a clean, confirmed 100% recall** on
   invented function names in this pilot — the engine's strongest result so
   far.
-- **The function-to-file relation blind spot is real and unfixed.** Closing
-  it would mean extending `claims.py`'s relation extraction to recognize
-  file targets and to tolerate explanatory text between the relation verb
-  and its arguments — a real change to the extractor's scope, deliberately
-  left for a future pilot/ADR rather than rushed into this one.
+- **The function-to-file relation blind spot is fixed** (same-day
+  follow-up): `claims.py`'s relation target pattern now accepts file paths
+  (`[\w./-]+` instead of `[\w.]+`), and `check.py` gained
+  `check_symbol_calls_file`, which checks a file-targeted relation claim
+  against the file-level `IMPORTS` graph instead of a symbol-level `CALLS`
+  edge. Verified against the exact probe this ADR used to demonstrate the
+  gap: `` `apply_tax` calls `billing/tax_rates.py` `` now reports
+  `CONTRADICTED` ("the file defining 'apply_tax' does not import
+  'billing/tax_rates.py'") instead of silently vanishing into two
+  independent existence checks. Regression tests added in both
+  `test_claims.py` and `test_consistency_check.py`
+  (`TestSymbolCallsFileRelation`). One residual, honestly-stated limitation:
+  the fix's accuracy is bounded by how completely the ingester resolves
+  imports — `from package import submodule`-style imports were observed, in
+  the real `billing/tax.py` fixture, to register only an edge to the
+  package's `__init__.py`, not to the submodule file. That is a pre-existing
+  ingester limitation, not introduced by this fix, and is not addressed
+  here. The extractor's other named gap (tolerating explanatory text
+  between the relation verb and its arguments, e.g. "likely calls a helper
+  in") remains open, deliberately out of scope for this pass.
 - **Backtick-quoted local variable names are a genuine nuisance-false-
   positive source** in real usage — anyone writing a normal technical
   summary with `` `some_var` `` for readability will trigger a false

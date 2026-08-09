@@ -70,13 +70,24 @@ _RELATIONS = {
 _RELATION_PATTERN = re.compile(
     r"`(?P<subject>[\w.]+)`\s*(?:class|function|method|object)?\s+(?P<relation>"
     + "|".join(re.escape(phrase) for phrase in _RELATIONS)
-    + r")\s+`(?P<target>[\w.]+)`",
+    # The target may be a symbol (`[\w.]+`) or a file path -- `/` and `-`
+    # are needed for the latter (e.g. `billing/tax_rates.py`). Without them
+    # a claim like "`apply_tax` calls `billing/tax_rates.py`" never matches
+    # at all and silently decomposes into two independent, both-true
+    # existence checks -- see ADR-0018.
+    + r")\s+`(?P<target>[\w./-]+)`",
     re.IGNORECASE,
 )
 
 
-def _looks_like_path(token: str) -> bool:
+def looks_like_path(token: str) -> bool:
     return "/" in token or token.lower().endswith(_FILE_EXTENSIONS)
+
+
+# Kept as an alias: this was private until check.py needed the same test to
+# route a relation claim to the file-import checker instead of the
+# symbol-relation checker (ADR-0018's fix).
+_looks_like_path = looks_like_path
 
 
 def _looks_like_symbol(token: str) -> bool:

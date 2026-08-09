@@ -146,6 +146,62 @@ class TestSymbolRelation:
         store.close()
 
 
+class TestSymbolCallsFileRelation:
+    """ADR-0018 found that a relation claim targeting a FILE, not a function,
+    silently decomposed into two independent, both-true existence checks and
+    vanished. These reproduce the exact real-world case: a function whose
+    file does not import the file it's claimed to "call into"."""
+
+    @pytest.fixture
+    def two_file_project(self, tmp_path):
+        (tmp_path / "rates.py").write_text("REGION_RATES = {}\n")
+        (tmp_path / "policy.py").write_text("ACTIVE_POLICY = {}\n")
+        (tmp_path / "tax.py").write_text(
+            "from rates import REGION_RATES\n\n\ndef apply_tax(subtotal, region):\n    return subtotal\n"
+        )
+        return tmp_path
+
+    @pytest.fixture
+    def two_file_query(self, two_file_project):
+        store = GraphStore()
+        ingest_repo(two_file_project, store)
+        yield GraphQuery(store)
+        store.close()
+
+    def test_an_actual_import_is_supported(self, two_file_query):
+        result = check_symbol_relation(
+            relation_claim("apply_tax", "calls", "rates.py"), two_file_query
+        )
+
+        assert result.status is CheckStatus.SUPPORTED
+
+    def test_a_file_never_imported_is_contradicted(self, two_file_query):
+        """apply_tax's file (tax.py) never imports policy.py -- the exact
+        shape of hallucination ADR-0018 found real agents producing."""
+        result = check_symbol_relation(
+            relation_claim("apply_tax", "calls", "policy.py"), two_file_query
+        )
+
+        assert result.status is CheckStatus.CONTRADICTED
+        assert "does not import" in result.explanation
+
+    def test_a_nonexistent_target_file_is_contradicted(self, two_file_query):
+        result = check_symbol_relation(
+            relation_claim("apply_tax", "calls", "nonexistent.py"), two_file_query
+        )
+
+        assert result.status is CheckStatus.CONTRADICTED
+        assert "no file at" in result.explanation.lower()
+
+    def test_missing_subject_is_still_contradicted(self, two_file_query):
+        result = check_symbol_relation(
+            relation_claim("nonexistent_fn", "calls", "rates.py"), two_file_query
+        )
+
+        assert result.status is CheckStatus.CONTRADICTED
+        assert "nonexistent_fn" in result.explanation
+
+
 class TestFileExistence:
     def test_an_existing_file_is_supported(self, project):
         result = check_file_exists(file_claim("src/limits.py"), project)

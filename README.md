@@ -271,7 +271,7 @@ producing a genuine mix of true and hallucinated claims:
 | Claim class | Result |
 |---|---|
 | Invented function names (14 across 5 trials) | **100% caught** |
-| Function-to-file relation hallucinations (~6) | **0% caught** — structurally invisible to the relation extractor |
+| Function-to-file relation hallucinations (~6) | **0% caught at the time** — structurally invisible to the relation extractor |
 | Backtick-quoted local variable names (8) | False positives — real names, just not graph-indexed |
 
 A real bug was also found and fixed in decision resurfacing: with only one
@@ -280,10 +280,18 @@ always normalized to 100% confidence regardless of actual relevance — a
 genuinely unrelated proposal "resembled" an unrelated rejected decision just
 as strongly as an actual paraphrase of it. Confirmed with an isolated probe,
 fixed by normalizing against the checked text's own best-possible score
-instead of the in-corpus max, and locked in with a regression test. See
-ADR-0018 for the full write-up, including what's still an open, unfixed
-blind spot (the relation-extraction gap) versus what got fixed this pass
-(the resurfacing bug).
+instead of the in-corpus max, and locked in with a regression test.
+
+**The function-to-file relation blind spot was closed the same day**: the
+relation target pattern now accepts file paths, and a new check
+(`check_symbol_calls_file`) verifies the claim against the file-level
+`IMPORTS` graph instead of a symbol-level `CALLS` edge. The exact probe
+this measurement used to demonstrate the gap —
+`` `apply_tax` calls `billing/tax_rates.py` `` — now correctly reports
+`CONTRADICTED` instead of vanishing. See ADR-0018 for the full write-up,
+including the residual limitations that remain open (loose relation
+phrasing, and accuracy bounded by how completely the ingester resolves
+`from package import submodule`-style imports).
 
 ---
 
