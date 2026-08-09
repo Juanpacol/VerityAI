@@ -91,6 +91,28 @@ class TestSymbolExistence:
 
         assert result.status is CheckStatus.SUPPORTED
 
+    def test_a_bare_snake_case_miss_gets_a_caveat_not_a_softer_verdict(self, query):
+        """Regression (ADR-0018): `with_tax` backtick-quoted for emphasis in
+        ordinary prose is lexically identical to an invented function name.
+        The verdict must stay CONTRADICTED at full confidence -- softening
+        it would have silently cost the 14/14 recall the real pilot
+        measured -- but the explanation should say the evidence is weaker
+        here than for a clearly code-shaped miss."""
+        result = check_symbol_exists(symbol_claim("with_tax"), query)
+
+        assert result.status is CheckStatus.CONTRADICTED
+        assert result.confidence == 1.0
+        assert "local variable" in result.explanation
+
+    def test_a_clearly_code_shaped_miss_gets_no_caveat(self, query):
+        """`TotallyMadeUpClass` (CamelCase) isn't the shape a bare local
+        variable name would take, so the caveat would be misleading noise
+        here -- the evidence really is as strong as the confidence claims."""
+        result = check_symbol_exists(symbol_claim("TotallyMadeUpClass"), query)
+
+        assert result.status is CheckStatus.CONTRADICTED
+        assert "local variable" not in result.explanation
+
 
 class TestSymbolRelation:
     def test_a_real_relation_is_supported(self, query):

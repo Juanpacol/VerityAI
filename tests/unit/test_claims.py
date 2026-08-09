@@ -8,7 +8,7 @@ relation verb ("`GraphStore` class inherits from `Base`") must not be captured
 as the subject instead of the actual symbol.
 """
 
-from verityai.consistency.claims import extract_claims
+from verityai.consistency.claims import extract_claims, looks_like_bare_name
 from verityai.core.models import ClaimKind
 
 
@@ -131,6 +131,24 @@ class TestRelationExtraction:
         claims = extract_claims("`A` calls `B`.")
 
         assert len(claims) == 1
+
+
+class TestLooksLikeBareName:
+    """A caveat signal only -- see check_symbol_exists. Never used to change
+    a verdict, since the same shape (plain snake_case) is exactly what
+    ADR-0018's real hallucinated function names looked like too."""
+
+    def test_plain_snake_case_is_a_bare_name(self):
+        assert looks_like_bare_name("with_tax", "`with_tax`") is True
+
+    def test_a_dotted_qualname_is_not_bare(self):
+        assert looks_like_bare_name("Service.run", "`Service.run`") is False
+
+    def test_a_call_marker_means_not_bare(self):
+        assert looks_like_bare_name("get_tax_rate", "`get_tax_rate()`") is False
+
+    def test_camel_case_is_not_bare(self):
+        assert looks_like_bare_name("SomeClass", "`SomeClass`") is False
 
 
 class TestNoExtraction:

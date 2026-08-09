@@ -112,13 +112,23 @@ synthetic-fixture trap's blind spots.
   here. The extractor's other named gap (tolerating explanatory text
   between the relation verb and its arguments, e.g. "likely calls a helper
   in") remains open, deliberately out of scope for this pass.
-- **Backtick-quoted local variable names are a genuine nuisance-false-
-  positive source** in real usage — anyone writing a normal technical
-  summary with `` `some_var` `` for readability will trigger a false
-  contradiction today. Worth a narrower fix (distinguishing "this claims a
-  codebase symbol" from "this is emphasis") in a future pass; not attempted
-  here to keep this pilot's scope to measurement plus the one clear,
-  high-confidence bug it found.
+- **Backtick-quoted local variable names — addressed, deliberately without
+  changing any verdict** (same-day follow-up). Investigating a fix
+  surfaced a harder fact: a real local variable name (`with_tax`) and a
+  real hallucinated function name (`get_tax_rate`) are lexically
+  identical — plain snake_case, no dot, no parens, no capital letter. All
+  14 invented names this pilot caught had exactly that shape. Any
+  heuristic that softened the verdict or confidence for that shape would
+  have silently cost the 14/14 recall this ADR reports. Instead,
+  `check_symbol_exists` now adds an honest caveat to the *explanation*
+  when a missed symbol has no marker distinguishing it from a plain
+  variable name (`looks_like_bare_name` in `claims.py`) — status and
+  confidence are unchanged, `CONTRADICTED` at 1.0 either way. The caveat
+  necessarily appears on both `with_tax` and `get_tax_rate`, since nothing
+  in the text tells them apart; this is stated plainly rather than
+  pretended away. Regression tests confirm a clearly code-shaped miss
+  (`TotallyMadeUpClass`) gets no caveat, since there the evidence really is
+  as strong as the confidence claims.
 - **The resurfacing fix is a real improvement, not a complete solution.**
   BM25's IDF is inherently unstable with 1-2 documents; a small residual
   false-positive risk remains for very small decision corpora. Stated

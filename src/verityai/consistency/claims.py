@@ -90,6 +90,23 @@ def looks_like_path(token: str) -> bool:
 _looks_like_path = looks_like_path
 
 
+def looks_like_bare_name(subject: str, raw_text: str) -> bool:
+    """True if this token carries no marker distinguishing it from an
+    ordinary local variable name -- no call parens, no dotted/qualified
+    path, no CamelCase.
+
+    This is deliberately the *same* shape a hallucinated bare function name
+    has (ADR-0018's pilot caught 14/14 invented names, all in exactly this
+    shape: plain snake_case, no punctuation, no parens). There is no
+    lexical signal that separates "someone backtick-quoted a local variable
+    for emphasis" from "someone invented a function name" -- so this is a
+    caveat signal for the checker's explanation text, never a reason to
+    change a verdict or confidence. Doing that would have silently traded
+    away the very recall ADR-0018 measured.
+    """
+    return "." not in subject and "()" not in raw_text and not any(c.isupper() for c in subject)
+
+
 def _looks_like_symbol(token: str) -> bool:
     return bool(_SYMBOL.match(token)) and (
         "." in token or "_" in token or token.endswith("()") or any(c.isupper() for c in token[1:])

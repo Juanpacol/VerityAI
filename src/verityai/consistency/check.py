@@ -24,7 +24,7 @@ a false contradiction.
 
 from pathlib import Path
 
-from verityai.consistency.claims import extract_claims, looks_like_path
+from verityai.consistency.claims import extract_claims, looks_like_bare_name, looks_like_path
 from verityai.context.rank import bm25_rank
 from verityai.core.models import (
     CheckStatus,
@@ -67,11 +67,21 @@ def check_symbol_exists(claim: Claim, query: GraphQuery) -> ClaimCheck:
                 for m in matches[:5]
             ],
         )
+    explanation = f"no definition of {claim.subject!r} found anywhere in the graph"
+    if looks_like_bare_name(claim.subject, claim.raw_text):
+        # Same status and confidence as any other miss -- the verdict does
+        # not change. Only the explanation gets more honest: this token's
+        # shape cannot be distinguished from an ordinary local variable
+        # name backtick-quoted for emphasis (ADR-0018).
+        explanation += (
+            " (note: this could also be a local variable name, which the graph "
+            "does not track, rather than a hallucinated symbol)"
+        )
     return ClaimCheck(
         claim=claim,
         status=CheckStatus.CONTRADICTED,
         confidence=1.0,
-        explanation=f"no definition of {claim.subject!r} found anywhere in the graph",
+        explanation=explanation,
     )
 
 
