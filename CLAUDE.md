@@ -1,260 +1,176 @@
-# VerityAI — Architecture Documentation
+# VerityAI — Architecture
 
-## Overview
+## What this is
 
-VerityAI is a neuro-symbolic code verification system that:
-1. Generates code using Ollama (model-agnostic; `llama3.2` is the local default, `llama2:13b` the original aspirational target — see README's "Model-agnostic by design") with dynamic context from a Knowledge Graph
-2. Verifies it formally using Z3 Theorem Prover + symbolic reasoning
-3. Retries up to 3 times if verification fails (injecting the failure reason into the prompt)
-4. Returns code + reasoning trace + confidence score
+A **model-agnostic agentic harness**: a context, memory and verification layer
+around AI coding agents (Claude Code, Codex, Cursor, Aider). It does not
+generate code. It manages the environment an agent generates code in.
 
-**Business Problem**: Enterprises don't trust AI-generated code because they can't see WHY it's correct. VerityAI solves this by showing formal proof + explanation, not just code.
+The problem: agents on long tasks lose context, forget decisions, re-walk dead
+ends, hallucinate APIs, and drift from the architecture — and no amount of
+model capability fixes a context window that has filled with duplicated tool
+output.
 
----
-
-## Architecture (6 Logical Layers)
-
-```
-┌─────────────────────────────────────────────────────┐
-│ 6. INTERFACE   → CLI + REST API + Web Dashboard      │
-├─────────────────────────────────────────────────────┤
-│ 5. ORCHESTRATION → LangChain Agent (loop)            │
-├─────────────────────────────────────────────────────┤
-│ 4. VERIFICATION → confidence score + explanation     │
-├─────────────────────────────────────────────────────┤
-│ 3. SYMBOLIC    → Z3 + rule engine                    │
-├─────────────────────────────────────────────────────┤
-│ 2. KNOWLEDGE   → Neo4j (patterns, rules, examples)   │
-├─────────────────────────────────────────────────────┤
-│ 1. NEURAL      → Ollama (model-agnostic) + prompts   │
-└─────────────────────────────────────────────────────┘
-```
-
-### Request Flow
-1. User asks for code → Agent queries KG for relevant rules/patterns
-2. Ollama generates code + step-by-step reasoning (with KG context injected)
-3. Verification layer runs Z3 + symbolic rules
-4. If fail → Agent retries with failure reason (max 3 attempts)
-5. If pass → return code + trace + confidence
+> **This repository changed shape on 2026-08-09.** It used to generate code and
+> verify it with Z3. Read [ADR-0005](docs/adr/0005-agentic-harness-pivot.md)
+> before assuming anything about the old architecture still applies — most of
+> it does not, and `docs/PHASE_*.md` describe a system that no longer exists.
+> The pre-pivot tree is at tag `pre-harness-pivot`.
 
 ---
 
-## Module Dependency Graph
-
-**Critical Rule**: `ontology/` has ZERO dependencies on neo4j/z3/llm — it's pure Pydantic models.
-This breaks the circular dependency: KG needs to validate rules against symbolic (Continuous Learning),
-while symbolic needs KG schema.
+## Layers
 
 ```
-ontology/ (no deps)
-  ├─ neural/ (depends: ontology)
-  ├─ kg/ (depends: ontology, neo4j)
-  ├─ symbolic/ (depends: ontology, z3)
-  └─ agent/ (depends: neural, kg, symbolic, langchain)
-       ├─ evaluation/
-       ├─ compliance/
-       ├─ api/
-       └─ cli/
+┌──────────────────────────────────────────────┐
+│ INTERFACE     → CLI + MCP server             │
+├──────────────────────────────────────────────┤
+│ RELIABILITY   → architecture, tests, security│  (Phase 4)
+├──────────────────────────────────────────────┤
+│ CONSISTENCY   → claims vs evidence           │  (Phase 3)
+├──────────────────────────────────────────────┤
+│ KNOWLEDGE     → code graph                   │  (Phase 2)
+├──────────────────────────────────────────────┤
+│ MEMORY        → .verity/ append-only state   │  working
+├──────────────────────────────────────────────┤
+│ CONTEXT       → count, classify, prune, rank │  working
+├──────────────────────────────────────────────┤
+│ CORE          → models, zero dependencies    │  working
+└──────────────────────────────────────────────┘
 ```
 
-**`kg/` must never import `neural/`.** `kg/retrieval.py`'s `HybridRetriever` needs
-an embedding function for semantic ranking, but getting one straightforwardly would
-mean constructing an `OllamaClient` — a `neural/` dependency — inside `kg/`. Instead
-it takes `embed_fn: Optional[Callable[[str], list[float]]]` as a constructor
-parameter; the `agent/` orchestration layer (which already legitimately depends on
-both `neural/` and `kg/`) is the one that wires `orchestrator.llm_client.embed` in
-as `embed_fn`. This keeps `kg/` fully testable with a plain Python callable standing
-in for the embedder — no Ollama mocking required — and preserves the dependency
-graph above without exception. See [ADR-0003](docs/adr/0003-hybrid-retrieval.md).
+## Dependency rule
+
+`core/` depends on nothing but Pydantic. Every engine depends on `core/` and
+none depends on another. This is the one architectural rule carried over from
+the pre-pivot codebase, where a neutral `ontology/` broke a circular dependency
+between the KG and the symbolic layer. Same principle, different contents.
+
+```
+core/                        (no deps)
+  ├─ context/   (core)
+  ├─ memory/    (core)
+  ├─ graph/     (core)            — Phase 2
+  ├─ consistency/ (core, graph)   — Phase 3
+  ├─ reliability/ (core, graph)   — Phase 4
+  ├─ bench/     (core, context)
+  ├─ cli/       (everything)
+  └─ mcp/       (everything)
+```
+
+`context/` must never import `memory/`. Ranking a context and persisting a
+decision are independent operations, and keeping them independent is what lets
+each be tested with a plain object instead of a fixture.
 
 ---
 
-## Key Design Decisions
-
-### 1. No Fine-tuning
-- Instead: dynamic context injection in prompts
-- Rules from KG are injected into the prompt at runtime
-- Allows rule updates without retraining
-- Cost: $0/month vs. $52K/year for fine-tuned model
-
-### 2. Single Python Package (not 5 separate packages)
-- Avoids semver burden for one developer
-- Breaks circular dependency via neutral `ontology/`
-- Can split into separate packages in Phase 4 if needed
-
-### 3. "Verifiable Python Subset" (ADR-0001)
-- Z3 can't automatically infer loop invariants or handle recursion
-- Define what IS verifiable upfront (linear code + bounded loops with explicit invariants + types)
-- Mark code outside subset as "not verified" (degradation), not "verification failed"
-- Prevents silent scope creep in the AST→Z3 converter
-
-### 4. Walking Skeleton First (not waterfall)
-- Build end-to-end pipeline with 1 algorithm + 3 rules first
-- Then scale seed data in lotes with regression testing
-- This validates the shape of data before writing 50+ rules
-
----
-
-## Directory Structure
+## Layout
 
 ```
-VerityAI/
-├── pyproject.toml                       # Python dependencies
-├── docker-compose.yml                   # Services: Neo4j, Postgres, Redis, Ollama
-├── .env.example                         # Config template
-├── CLAUDE.md                            # This file
-├── docs/
-│   └── adr/
-│       └── 0001-verifiable-python-subset.md
-├── research/                            # Cloned reference repos (non-importable)
-│   ├── neuro-symbolic-ai-toolkit/
-│   ├── kg-deductive-reasoner/
-│   ├── truthfulqa/
-│   ├── neuralkg/
-│   └── sccipher/
-├── src/verityai/
-│   ├── ontology/models.py               # Pydantic: Rule, Pattern, Algorithm, etc. (NO DEPS)
-│   ├── neural/
-│   │   ├── ollama_client.py
-│   │   ├── prompt_builder.py
-│   │   └── model_config.py
-│   ├── kg/
-│   │   ├── neo4j_client.py
-│   │   ├── schema.py
-│   │   ├── nl_to_cypher.py
-│   │   ├── ingestion/
-│   │   └── seed_data/
-│   ├── symbolic/
-│   │   ├── z3_engine.py
-│   │   ├── ast_to_smt.py
-│   │   ├── rule_engine.py
-│   │   ├── counterexample.py
-│   │   └── debugger.py
-│   ├── agent/
-│   │   ├── orchestrator.py
-│   │   ├── state.py
-│   │   ├── confidence.py
-│   │   ├── trace.py
-│   │   ├── session.py
-│   │   ├── refinement.py
-│   │   ├── continuous_learning.py
-│   │   ├── events.py                # StageEvent: live pipeline events
-│   │   └── event_narration.py       # plain-language templates (no LLM)
-│   ├── evaluation/
-│   ├── compliance/
-│   ├── study/                       # T5 human-eval response storage + export
-│   ├── api/
-│   │   ├── rest.py
-│   │   ├── run_view.py              # post-hoc trace view + panel fragments
-│   │   ├── dashboard.py
-│   │   ├── live_page.py             # GET /live: watch a run happen
-│   │   ├── live_runs.py             # in-memory registry, sync->SSE bridge
-│   │   ├── live_fragments.py        # event -> HTML panel + T5 masking
-│   │   └── rate_limit.py
-│   └── cli/verityai_cli.py
-├── tests/
-│   ├── unit/
-│   ├── integration/
-│   └── e2e/
-└── scripts/
-    └── setup.py
+src/verityai/
+├── core/models.py        Task, Decision, Constraint, Discovery, Failure,
+│                         Fact, Evidence, ContextItem, ContextHealth,
+│                         PruneResult, Snapshot
+├── context/
+│   ├── tokenizer.py      TokenCounter — always reports its method
+│   ├── ingest.py         transcript (JSON or text) -> ContextItem[]
+│   ├── classify.py       five relevance buckets, each with a reason
+│   ├── rank.py           BM25 + optional embeddings, fused with RRF
+│   ├── prune.py          the 7-stage pipeline
+│   └── health.py         multi-dimensional health + rendering
+├── memory/
+│   ├── store.py          append-only JSONL under .verity/
+│   ├── snapshot.py       numbered captures; context only, never code
+│   └── handoff.py        the structured handoff document
+├── bench/deterministic.py Family A benchmarks, self-disqualifying
+├── analysis/facts.py     AST fact extraction (rescued from T6)
+├── observability/        StageEvent + thread-safe run registry
+├── cli/main.py           the verity command
+├── mcp/                  MCP server                      — not built yet
+└── _quarantine/          rescued code with broken imports; see its README
 ```
 
----
+### `.verity/` on disk
 
-## Integrated Improvements (4 of 10)
+```
+.verity/
+├── config.toml
+├── state/{task.json,decisions,constraints,discoveries,failures}.jsonl
+├── memory/facts.jsonl
+└── snapshots/NNN/snapshot.json
+```
 
-### Mejora 2 — Continuous Learning Loop (Phase 2)
-- Production feedback (accept/reject/correct) updates KG with new rules
-- No retraining needed
-- Rules validated against Z3 before ingestion
-
-### Mejora 4 — Interactive Refinement Mode (Phase 2)
-- Multi-turn conversation: "make it thread-safe", "show me the proof"
-- Incremental verification (only re-verify changed code)
-- Session state preserved
-
-### Mejora 5 — Compliance & Audit Trail Reports (Phase 4)
-- PDF/SARIF exports showing security rules applied, confidence, verification proof
-- Audit log: who generated, when, what changed
-- Enterprise sales enabler
-
-### Mejora 8 — Symbolic Debugging Mode (Phase 1/2)
-- When verification fails, extract minimal counterexample
-- Map back to source line + suggest fix
-- "Teach the user why code is wrong, not just 'it's wrong'"
+JSONL and append-only: it diffs under git, survives without the tool
+installed, and keeps superseded decisions readable — which is the only way to
+notice an agent re-proposing something already rejected.
 
 ---
 
-## Getting Started (Phase 0)
+## Invariants
 
-### Prerequisites
-- Docker + Docker Compose
-- Python 3.9+ (`pyproject.toml`'s `requires-python` and `[tool.mypy]`
-  both pin 3.9 — write 3.9-compatible code: `Optional[X]`, not `X | None`)
-- Ollama installed locally (`brew install ollama` on macOS)
+Enforced in tests, not by convention. Breaking one is a bug.
 
-### Quick Start
+1. **Critical context is never dropped.** Not by any budget. If the protected
+   set exceeds the budget, `PruneResult.budget_met` is `False` and the items
+   stay. `critical_retention()` must return `1.0`; the CLI prints `BUG:` if it
+   does not.
+2. **Every stage records its own token ledger.** `PruneStage` entries must
+   chain — each stage's `tokens_before` equals the previous stage's
+   `tokens_after`. A gap means a stage changed tokens without recording it.
+3. **Every count carries its method.** `TokenCount` is a pair, never an int.
+4. **No composite score without its components.** `render_health` prints the
+   breakdown first and the score last.
+5. **Every degraded path says why.** `RetrievalResult.degraded_reason`,
+   `ContextHealth.notes`, `PruneResult.dropped_critical`.
+6. **Parsing never loses input.** The parts must sum to the whole, or every
+   downstream token figure is wrong at the source.
+
+---
+
+## Where the invariants come from
+
+Each is a research result, not a preference. `docs/RESEARCH_FINDINGS_LEGACY.md`
+has the detail; the short version:
+
+- **T3** — the verifiable subset covered 6.1% of HumanEval. Scope creep in a
+  converter is invisible until someone measures the whole population.
+- **T2** — an improvement was published, then retracted, because
+  same-configuration runs disagreed as much as the treatment did. Hence: no
+  A/B claim without a noise floor. See `docs/BENCHMARK_PROTOCOL.md`.
+- **T1** — the confidence score was uncalibrated and inverted. Hence: no lone
+  composite number.
+- **T6** — deterministic AST analysis caught what Z3 could not, and exposed a
+  function that could never return `FAIL`. Hence: deterministic first, and be
+  suspicious of a checker that has never failed anything.
+
+---
+
+## Development
+
 ```bash
-# 1. Clone the repo (already done)
-cd /Users/juanpablo/VerityAI
-
-# 2. Copy environment config
-cp .env.example .env
-
-# 3. Start services
-docker-compose -f docker/docker-compose.yml up -d
-
-# 4. Pull a model -- llama3.2 is small/fast and needs no special hardware;
-#    swap for llama2:13b or any other Ollama model (this project is
-#    model-agnostic, see README)
-docker-compose -f docker/docker-compose.yml exec ollama ollama pull llama3.2
-
-# 5. Verify services are healthy
-docker-compose -f docker/docker-compose.yml ps
-
-# 6. Run the setup script (Phase 0 deliverable)
-python scripts/setup.py
+pytest tests/           # 192 tests, no network, no services, no fixtures needed
+ruff check src/ tests/
+ruff format src/ tests/
 ```
 
----
+- Python 3.9. `Optional[X]`, never `X | None` — the latter is a runtime
+  TypeError under 3.9 for Pydantic models. `dict[str, int]` is fine (PEP 585).
+- Line length 100, ruff format.
+- Tests use plain objects and `tmp_path`. There is nothing to mock — that is a
+  property worth protecting when adding engines.
 
-## Development Notes
+### Adding an engine
 
-### Coding Style
-- Black (line length 100)
-- Type hints required for public APIs
-- Tests in `tests/{unit,integration,e2e}/` with pytest
-
-### Before Committing
-```bash
-black src/ tests/
-isort src/ tests/
-pytest tests/
-```
-
-### Key Files to Watch During Development
-- `/src/verityai/ontology/models.py` — the schema that everything depends on
-- `/src/verityai/symbolic/ast_to_smt.py` — the hardest piece (ADR-0001 defines its scope)
-- `/src/verityai/agent/orchestrator.py` — the retry loop that ties everything together
+1. Models go in `core/models.py`, with no new dependencies.
+2. The engine imports `core/` and nothing else from `verityai/`.
+3. Deterministic first. If it needs a model call, justify why the question is
+   genuinely semantic, and make the model injectable so tests pass a lambda.
+4. Any degraded path reports why it degraded.
+5. Wire it into `cli/` before `mcp/` — the CLI is how a human reproduces what
+   an agent saw.
 
 ---
 
-## References
+## Contact
 
-- Plan: `/Users/juanpablo/.claude/plans/playful-plotting-lollipop.md`
-- Source repos (in `research/`):
-  - IBM Neuro-Symbolic Toolkit → patterns for rule_engine + LLM integration
-  - kg-deductive-reasoner → counterexample generation
-  - TruthfulQA → benchmark methodology
-  - NeuralKG → KG design patterns
-  - scCIPHER → ETL pipeline inspiration
-
----
-
-## Contact / Questions
-
-Juan Pablo Botero Espinosa
-juanpabloboteroespinosa@gmail.com
-
-Generated with Claude Code (Claude Fable + Sonnet for architecture review)
+Juan Pablo Botero Espinosa · juanpabloboteroespinosa@gmail.com

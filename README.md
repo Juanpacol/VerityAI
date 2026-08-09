@@ -1,273 +1,198 @@
 # VerityAI
 
-Neuro-symbolic code verification: **LLM-generated code + formal proofs + explainability**.
+**Give AI agents the right context. Verify what they do.**
 
-<!--
-Once this repo is pushed to GitHub, replace OWNER/REPO below to activate
-these badges (they currently point nowhere on purpose -- a badge pointing
-at a URL that doesn't exist yet would be worse than no badge).
--->
-[![CI](https://github.com/OWNER/REPO/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](pyproject.toml)
+VerityAI is a model-agnostic agentic harness for AI-assisted software
+engineering. It provides context management, persistent structured memory,
+consistency checking, and engineering verification around AI coding agents.
 
-## Problem Statement
+Verity does not replace Claude, Codex, Gemini or Cursor. It controls the
+environment those agents work in.
 
-Enterprises don't trust AI-generated code because they can't see **why** it's correct.
+```
+                    USER
+                     │
+                     ▼
+                AI AGENT
+          Claude / Codex / Gemini
+                     │
+                     ▼
+          ┌─────────────────────┐
+          │       VERITY        │
+          │   AGENTIC HARNESS   │
+          └──────────┬──────────┘
+                     │
+          ┌──────────┼──────────┐
+          ▼          ▼          ▼
+       CONTEXT    MEMORY   CONSISTENCY
+          │          │          │
+          └──────────┼──────────┘
+                     ▼
+                 CODEBASE
+```
 
-VerityAI addresses this with a neuro-symbolic pipeline:
-1. **Generate** — an LLM produces code, with Knowledge Graph rules/patterns injected into the prompt (no fine-tuning)
-2. **Verify** — Z3 Theorem Prover checks the code's own assertions for internal consistency, within a deliberately-scoped verifiable subset (see [`docs/VERIFICATION_SCOPE.md`](docs/VERIFICATION_SCOPE.md) for exactly what does/doesn't verify, with worked examples, and [ADR-0001](docs/adr/0001-verifiable-python-subset.md) for the original scope decision)
-3. **Retry** — up to 3 attempts, with the specific verification failure fed back into the next prompt
-4. **Explain** — a human-readable reasoning trace + weighted confidence score, exportable as a compliance report (PDF/SARIF)
+---
 
-Result: code that comes with a formal proof of what was actually checked, not just a claim that it works.
+## Status
 
-**Model-agnostic by design**: the LLM layer (`neural/ollama_client.py`) talks to any Ollama-served model. This repo defaults to `llama3.2` (small, fully local, no download required beyond the base image) and the evaluation harness is built to cross-check results across multiple models (e.g. `llama3.2` vs `qwen3:8b`) rather than being tuned to one. See [`docs/PHASE_3_METHODOLOGY.md`](docs/PHASE_3_METHODOLOGY.md) for what's actually been measured, model by model, including where results were *not* what the architecture predicted.
+**Phase 1 of 5.** The Context and Memory engines work and are covered by 192
+tests. The Knowledge Graph, Consistency and Reliability engines are not built
+yet, and this README does not pretend otherwise.
 
-## Honest Limitations
+| Engine | State |
+|---|---|
+| Context — token accounting, classification, pruning, health | working |
+| Memory / Handoff — persistent state, snapshots, handoff docs | working |
+| Knowledge Graph — real code structure | not started |
+| Consistency — hallucinated and contradictory claims | not started |
+| Reliability — architecture, tests, security | not started |
 
-This project is built and documented with the same rigor it asks of the code it verifies — including admitting where it falls short:
+**No performance figure is published anywhere in this repository.** The
+benchmark harness exists and refuses to call its own results publishable until
+they meet the bar in [`docs/BENCHMARK_PROTOCOL.md`](docs/BENCHMARK_PROTOCOL.md).
+That is deliberate — see below.
 
-- **The verifiable subset is intentionally narrow.** Z3 checks work over `int`/`bool`/`float`, `if`/`else` (with correct phi-merging), bounded `for` loops (as "one arbitrary iteration," not full induction), function parameters (validity-checked per [ADR-0002](docs/adr/0002-parameterized-verification.md)), and `assert`/docstring `PRE:` contracts. It does **not** cover strings, real list/dict operations, recursion, or exceptions — code using those degrades explicitly to `NOT_VERIFIED`, never a silent false pass.
-- **No code-execution sandbox yet.** `symbolic/security_scan.py` is a static AST blocklist (blocks `os.system`, `eval`, `subprocess`, `pickle.loads`, etc.) — it does not run generated code in an isolated environment, so it can be evaded by patterns not on the list. See `docs/PHASE_4_PART_D.md`.
-- **Real bugs were found, not just theoretical ones.** A live run against `llama3.2` crashed the orchestrator on malformed generated code (fixed), and the evaluation's exact-string ground truth reported 100% "novel" against real model output (fixed with an execution-based oracle) — see `docs/PHASE_3_METHODOLOGY.md`'s "Real run #1" and "Real run #2".
-- **Cross-model evaluation surfaced a hardware limit, not just a software one.** `llama3.2` (3B) ran cleanly end-to-end (28/28 benchmark tasks); `qwen3:8b` (8B) was not reliably runnable on this machine — most calls timed out and the Ollama server crashed once. The architecture is model-agnostic by design (any Ollama model works through the same client interface); "works through the interface" and "runs reliably on available hardware" turned out to be different claims, and the gap is documented rather than hidden. See `docs/PHASE_3_METHODOLOGY.md`'s "Real run #2".
-- **The retry loop's value isn't a clean win yet.** Against `llama3.2`, the full generate→verify→retry loop abstains less and is more precise when it commits than single-shot verification, but doesn't clearly beat single-shot on raw accuracy, at ~12x the latency. That's a real, nuanced result — not the straightforward "retry always helps" story the architecture doc might suggest — and it's tracked as an open follow-up, not glossed over.
+---
 
-## Quick Start
+## Why this project changed shape
 
-### Prerequisites
-- Docker + Docker Compose
-- Python 3.9+ (developed and tested primarily on 3.9; CI also runs 3.11)
-- [Ollama](https://ollama.com) installed locally, or use the `ollama` service in `docker/docker-compose.yml`
+VerityAI used to generate code with an LLM and prove it correct with Z3. A
+research programme (T1–T6, recorded in
+[`docs/RESEARCH_FINDINGS_LEGACY.md`](docs/RESEARCH_FINDINGS_LEGACY.md)) was run
+to find out whether that worked. Mostly it did not:
 
-### 1. Start services
+- **T3** measured the verifiable Python subset across all of HumanEval and
+  MBPP with the real converter: **6.1% and 9.4% coverage.** Formal proof over
+  arbitrary generated code does not reach most real programs.
+- **T2** *retracted* a previously written-up improvement. Same-configuration
+  runs on different days disagreed 50% of the time — indistinguishable from
+  sampling noise.
+- **T1** found the confidence score uncalibrated, and inverted in one
+  configuration: its least-confident verdicts were its most accurate.
+- **T6** found what does work. Deterministic AST fact extraction plus a rule
+  engine caught vulnerabilities Z3 structurally cannot, and exposed a real bug
+  in the process — a function that could never return `FAIL`, and had been
+  reporting `PASS` on genuinely vulnerable code.
+
+T3 and T6 together say the differentiator was never the theorem prover. It is
+deterministic analysis over project structure, with the model confined to
+questions that are genuinely semantic.
+
+The full reasoning is in
+[ADR-0005](docs/adr/0005-agentic-harness-pivot.md). The negative results are
+the most valuable thing this project has produced, and they are why the bar
+for publishing a number here is set where it is.
+
+---
+
+## Install
 
 ```bash
-cp .env.example .env
-docker compose -f docker/docker-compose.yml up -d
-docker compose -f docker/docker-compose.yml ps   # wait for all services healthy
-
-# Pull a model (llama3.2 is small and fast; swap for any Ollama model)
-docker compose -f docker/docker-compose.yml exec ollama ollama pull llama3.2
+git clone https://github.com/yourname/VerityAI
+cd VerityAI
+pip install -e ".[dev,tokenizers]"
 ```
 
-### 2. Install
+The core depends on `pydantic`, `typer`, `rich` and `python-dotenv` — nothing
+else. A harness that manages someone else's context has no business dragging in
+an LLM SDK, a graph database or a solver.
+
+`tokenizers` adds `tiktoken` for exact counts. Without it everything still
+works on a chars/4 estimate, and every report says so.
+
+---
+
+## Use
 
 ```bash
-pip install -e ".[dev]"
-pre-commit install   # optional but recommended
+verity init                    # create .verity/ in your repo
+
+# Measure a context without changing it
+verity ingest transcript.json
+
+# Prune toward a budget, with a full stage-by-stage ledger
+verity context transcript.json --budget 20000 --task "add rate limiting"
+
+# Multi-dimensional health, not just "73% full"
+verity health transcript.json
+
+# Record state that must survive a context reset
+verity task "add rate limiting" --next "write the burst test"
+verity remember decision "token bucket per key" --why "fixed window rejected bursts"
+verity remember constraint "no new Redis dependency"
+verity remember failure "fixed window counter" --error "rejected legitimate bursts"
+
+# Generate a handoff for a cold session
+verity handoff --budget 2000
+
+verity snapshot "before the refactor"
+verity restore 1
 ```
 
-### 3. Verify the setup
+### What `verity health` shows
 
-```bash
-make test        # full test suite (421 tests, offline/faked by default)
-make lint         # ruff check + format check
-make typecheck    # mypy
-```
-
-### 4. Try it
-
-```bash
-# CLI: generate + verify against a live Ollama instance
-verityai generate "write a function that returns the max of two numbers"
-
-# CLI: verify a file you already have, no LLM involved
-verityai verify path/to/file.py
-
-# API: run the FastAPI server
-make serve
-# then: curl localhost:8000/health, or open localhost:8000/dashboard
-```
-
-## Architecture
-
-Six layers, each depending only on the ones below it (`ontology/` has zero infrastructure dependencies, breaking what would otherwise be a KG ↔ Symbolic circular dependency — see `CLAUDE.md` for the full rationale):
-
-<img src="docs/assets/architecture.svg" alt="VerityAI's 6-layer architecture (Interface, Orchestration, Verification, Symbolic, Knowledge, Neural) and its request flow: prompt in, KG context injected, code generated, Z3-verified, retried on failure, code + trace + confidence returned." width="820">
-
-<details>
-<summary>Plain-text fallback</summary>
+Not a fullness percentage — that measures the container, not the contents:
 
 ```
-┌─────────────────────────────────────────────────────┐
-│ 6. INTERFACE      CLI · REST API · Web Dashboard     │
-├─────────────────────────────────────────────────────┤
-│ 5. ORCHESTRATION  Retry loop (generate→verify→retry) │
-├─────────────────────────────────────────────────────┤
-│ 4. VERIFICATION   Confidence score + explanation     │
-├─────────────────────────────────────────────────────┤
-│ 3. SYMBOLIC       Z3 + AST→SMT converter + rules     │
-├─────────────────────────────────────────────────────┤
-│ 2. KNOWLEDGE      Neo4j (patterns, rules, examples)  │
-├─────────────────────────────────────────────────────┤
-│ 1. NEURAL         Ollama client + prompt builder     │
-└─────────────────────────────────────────────────────┘
+VERITY CONTEXT HEALTH
+
+  Window usage          41.1%
+  Relevant context       9.2%
+  Critical retained    100.0%
+  Redundancy            90.8%
+  Tool noise            92.0%
+  Stale facts               0
+  Contradictions            0
+
+  Total tokens         52,648  [tiktoken:cl100k_base]
+
+  Health                45.8%
 ```
 
-</details>
+---
 
-**Request flow**: user prompt → Agent queries the KG for relevant rules/patterns → LLM generates code with that context injected → Z3 statically verifies the code's own assertions → on failure, the specific reason is fed back into a retry (max 3) → final code + full reasoning trace + confidence score, exportable as a compliance report.
+## Design rules
 
-Full architecture documentation, module dependency graph, and key design decisions: [`CLAUDE.md`](CLAUDE.md).
+These are not style preferences. Each one is a lesson with a research result
+behind it.
 
-## Explainable retrieval + reasoning trace view
+**Deterministic first, the model only when necessary.** Nothing in the Phase 1
+pipeline calls an LLM. Partly principle, mostly measurement: if pruning spent
+tokens to decide what to prune, the savings figure would be fiction.
 
-KG rule retrieval can run in two modes, controlled by `VERITYAI_RETRIEVAL_STRATEGY`:
+**Every count carries its method.** An exact tiktoken count and a chars/4
+estimate are different kinds of number. They never appear as the same number.
 
-- **`legacy`** (default) — fetches all rules in two hardcoded categories, no ranking.
-- **`hybrid`** — `kg/retrieval.py`'s `HybridRetriever` ranks rules against the actual
-  prompt via BM25 (lexical) + cosine similarity over embeddings (semantic), fused with
-  Reciprocal Rank Fusion. Semantic scoring is optional by design: if no embedding
-  function is configured, it raises, or no rule has a stored embedding, retrieval
-  degrades to lexical-only — reported honestly in `RetrievalResult.mode`/`degraded_reason`,
-  never silently. See [ADR-0003](docs/adr/0003-hybrid-retrieval.md) for the full
-  rationale, including a real finding from testing this against a live Ollama
-  instance: `llama3.2` cannot serve embeddings on the Ollama version tested (HTTP 501),
-  so `OLLAMA_EMBED_MODEL` needs to point at a real embedding model
-  (`nomic-embed-text` confirmed working) for hybrid mode's semantic half to engage.
+**No composite score without its components.** `ContextHealth.score` exists
+because people ask for one number, and it is never printed alone. T1 is what a
+lone authoritative-looking number does when nobody can audit it.
 
-KG context reaching `/generate` at all is opt-in via `VERITYAI_ENABLE_KG_CONTEXT=1`
-(previously `/generate` never connected a `kg_client` in the first place — a real
-gap this closes, kept opt-in so upgrading doesn't silently change existing
-deployments' behavior).
+**Every degraded path says why.** When semantic ranking is unavailable, the
+result carries `degraded_reason` rather than quietly returning worse output.
 
-Every generation request gets a `request_id` grouping all its retry attempts.
-`GET /runs/{request_id}` returns the full attempt timeline as JSON;
-`GET /runs/{request_id}/view` renders it as a self-contained HTML page: pipeline
-stepper with real per-attempt timing, KG retrieval provenance (which rules were
-retrieved, by which method, with what score), the attempt-by-attempt code +
-verification history, a recomputed Z3 counterexample panel, and a confidence
-factor breakdown (verification/pattern similarity/complexity/test coverage).
+**Critical context is never dropped.** Not by any budget. If the protected set
+exceeds the budget, the pipeline goes over and reports it. A harness that
+quietly discards a hard constraint to hit a number is worse than no harness.
 
-### Watching a run happen: `GET /live`
+**No claim without a noise floor.** No A/B number is published until the same
+configuration has been repeated enough times to know what its own variance
+looks like. This is the rule that turned T2 from a result into a retraction.
 
-`POST /generate` holds the HTTP connection open for the 65-125s a real run
-takes and shows nothing until it finishes. `GET /live` is the same pipeline
-with the process made visible: submit a prompt, and each stage streams back
-over Server-Sent Events as it completes — which rules were retrieved from the
-KG, what the model produced, what Z3 concluded (including the counterexample
-that made it fail), how the confidence score decomposed, and why a retry was
-triggered. Each step arrives with a plain-language sentence generated from
-fixed templates, never from a second LLM call: the point of this project is
-that what it shows you is checkable.
-
-Mechanically it is a two-call handshake — `POST /live/runs` returns a
-`run_id` and a stream URL immediately and starts the work on a background
-thread; `GET /live/runs/{run_id}/events` streams it. The `run_id` *is* the
-`request_id`, so `/runs/{id}` and `/runs/{id}/view` work on the same id
-afterwards, and traces are persisted per attempt rather than only at the end,
-so the post-hoc view is usable even if the stream drops mid-run.
-
-The page also serves as a vehicle for the T5 human-evaluation study
-(`docs/T5_HUMAN_EVAL_PROTOCOL.md`): it gates on consent, assigns a
-panel-visibility condition server-side, and collects both a stated-trust and
-a separate behavioural-intent answer. `VERITYAI_STUDY_TOKEN` gates the
-`GET /study/responses.csv` export; with it unset, the export 404s.
-
-## Project Structure
-
-```
-VerityAI/
-├── src/verityai/
-│   ├── ontology/        # Pydantic models — zero infrastructure deps
-│   ├── neural/          # Ollama client + prompt construction
-│   ├── kg/               # Neo4j client + seed data ingestion
-│   ├── symbolic/        # AST→Z3 converter, rule engine, security scanner
-│   ├── agent/            # Orchestrator (retry loop), sessions, continuous learning
-│   ├── evaluation/      # Baseline comparison harness + benchmarks + dashboard
-│   ├── compliance/      # PDF/SARIF report generation, audit log
-│   ├── api/              # FastAPI (REST + web dashboard + rate limiting)
-│   ├── cli/              # Typer CLI
-│   ├── sdk.py            # `from verityai import Verifier`
-│   └── db/               # Shared SQLAlchemy declarative base
-├── tests/                # 421 tests: unit + integration, offline by default
-├── docs/                 # Phase reviews, methodology, ADRs
-├── docker/                # docker-compose.yml (Neo4j, Postgres, Redis, Ollama, API)
-└── scripts/               # Phase 0 setup validation, seed data ingestion
-```
+---
 
 ## Development
 
 ```bash
-make test          # pytest tests/ --cov=verityai --cov-fail-under=85
-make lint           # ruff check + ruff format --check
-make typecheck      # mypy src/verityai
-make docker-build   # docker build -t verityai:latest .
-make serve          # uvicorn verityai.api.rest:app --reload
+pytest tests/          # 192 tests, no network, no services
+ruff check src/ tests/
+ruff format src/ tests/
 ```
 
-`pre-commit install` runs ruff + mypy + basic hygiene checks (trailing whitespace, large files, merge conflicts) on every commit — the same checks CI runs in `.github/workflows/ci.yml`.
+Python 3.9+. Use `Optional[X]`, not `X | None` — the latter is a runtime error
+under 3.9 for Pydantic models.
 
-## Key Design Decisions
-
-1. **No fine-tuning** — rules injected as dynamic prompt context, so rule updates don't require retraining.
-2. **Single package, not five** — a neutral `ontology/` module breaks what would otherwise be a real circular dependency between `kg/` and `symbolic/`.
-3. **Verifiable Python subset, defined upfront** (ADR-0001) — code outside the subset degrades explicitly to `NOT_VERIFIED`, never a silent pass.
-4. **Walking skeleton first** — one algorithm + three rules built end-to-end before scaling seed data, so the shape of the system is validated before its size.
-5. **Continuous Learning + Interactive Refinement + Compliance Reports** built in, not bolted on later — see `CLAUDE.md`'s "Integrated Improvements."
-
-Full rationale: [`CLAUDE.md`](CLAUDE.md).
-
-## Status
-
-All 4 phases of the original build plan are complete (Foundation → Core Infrastructure → Agentic Loop → Productization), followed by a portfolio-hardening pass (CI, type-checking, an execution-based evaluation oracle, and the honest accounting above). See `docs/PHASE_*.md` for a phase-by-phase record of what shipped, what was found along the way, and what's still open.
-
-## Docker Compose Services
-
-```
-neo4j       localhost:7687   Knowledge Graph
-postgres    localhost:5432   Trace storage, audit logs
-redis       localhost:6379   Caching, sessions
-ollama      localhost:11434  LLM inference
-app         localhost:8000   VerityAI API + dashboard (verityai:latest)
-```
-
-```bash
-docker compose -f docker/docker-compose.yml logs -f <service>
-docker compose -f docker/docker-compose.yml down
-```
-
-## Troubleshooting
-
-**Ollama not responding**
-```bash
-docker compose -f docker/docker-compose.yml ps ollama
-docker compose -f docker/docker-compose.yml logs ollama
-docker compose -f docker/docker-compose.yml exec ollama ollama pull llama3.2
-```
-
-**Neo4j won't connect** — check the container is healthy (`docker compose ps neo4j`); if data looks corrupted, `docker compose down` and remove the `neo4j_data` volume before recreating.
-
-**Import errors** — `pip install -e ".[dev]"` again; the package is installed in editable mode so `src/verityai` changes take effect immediately.
-
-## Contributing
-
-1. `git checkout -b feature/xyz`
-2. Write code + tests (`make test` should stay green, coverage ≥ 85%)
-3. `make lint && make typecheck`
-4. `git commit` (pre-commit hooks run automatically if installed)
-5. Open a PR
-
-## References
-
-- Architecture: [`CLAUDE.md`](CLAUDE.md)
-- Verification scope reference (what verifies vs. not, with examples): [`docs/VERIFICATION_SCOPE.md`](docs/VERIFICATION_SCOPE.md)
-- Verifiable subset scope decision: [`docs/adr/0001-verifiable-python-subset.md`](docs/adr/0001-verifiable-python-subset.md)
-- Parameterized verification: [`docs/adr/0002-parameterized-verification.md`](docs/adr/0002-parameterized-verification.md)
-- Hybrid KG retrieval decision: [`docs/adr/0003-hybrid-retrieval.md`](docs/adr/0003-hybrid-retrieval.md)
-- Evaluation methodology + real-run findings: [`docs/PHASE_3_METHODOLOGY.md`](docs/PHASE_3_METHODOLOGY.md)
-- What testing against a real model actually found: [`docs/CASE_STUDY.md`](docs/CASE_STUDY.md)
-- T1-T6 research synthesis (what to say / not say about this project right now): [`docs/RESEARCH_FINDINGS.md`](docs/RESEARCH_FINDINGS.md)
-- Phase-by-phase build record: `docs/PHASE_*.md`
-
-## License
-
-MIT — see [`LICENSE`](LICENSE).
+---
 
 ## Contact
 
-Juan Pablo Botero Espinosa
-juanpabloboteroespinosa@gmail.com
+Juan Pablo Botero Espinosa · juanpabloboteroespinosa@gmail.com

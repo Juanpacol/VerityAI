@@ -294,6 +294,39 @@ def remember_failure(
     typer.secho("Failure recorded", fg=typer.colors.GREEN)
 
 
+@app.command()
+def bench(
+    paths: list[Path] = typer.Argument(..., help="Transcript files to measure."),
+    budget: Optional[int] = typer.Option(None, "--budget", "-b"),
+    task: str = typer.Option("", "--task", "-t"),
+    model: Optional[str] = typer.Option(None, "--model"),
+    json_out: Optional[Path] = typer.Option(None, "--json", help="Write the report as JSON."),
+) -> None:
+    """Run the deterministic (Family A) benchmark over a corpus.
+
+    Reports token savings with no model in the measured path, and refuses to
+    call the result publishable when the corpus cannot support a claim. See
+    docs/BENCHMARK_PROTOCOL.md.
+    """
+    from verityai.bench.deterministic import measure_corpus, render_report, to_json
+
+    report = measure_corpus(
+        list(paths), task=task, budget=budget, counter=TokenCounter(model=model)
+    )
+
+    typer.echo("")
+    typer.echo(render_report(report))
+
+    if json_out:
+        json_out.write_text(to_json(report), encoding="utf-8")
+        typer.echo(f"\n  JSON written to {json_out}")
+
+    if not report.is_publishable:
+        # Non-zero exit so this cannot pass silently in CI and have the number
+        # scraped out of the log as if it were a result.
+        raise typer.Exit(1)
+
+
 def main() -> None:
     app()
 
