@@ -13,7 +13,6 @@ a number without its provenance invites more confidence than it earned.
 
 import sys
 from pathlib import Path
-from typing import Optional
 
 import typer
 
@@ -51,7 +50,7 @@ def _require_store() -> MemoryStore:
     return store
 
 
-def _read_input(source: Optional[str]) -> str:
+def _read_input(source: str | None) -> str:
     """Read from a file, or from stdin when `source` is '-' or omitted."""
     if source and source != "-":
         path = Path(source)
@@ -72,7 +71,7 @@ def _read_input(source: Optional[str]) -> str:
 
 @app.command()
 def init(
-    path: Optional[Path] = typer.Argument(None, help="Repository root. Defaults to cwd."),
+    path: Path | None = typer.Argument(None, help="Repository root. Defaults to cwd."),
 ) -> None:
     """Create the .verity/ state directory."""
     store = MemoryStore.init(path)
@@ -82,8 +81,8 @@ def init(
 
 @app.command()
 def ingest(
-    source: Optional[str] = typer.Argument(None, help="Transcript file, or - for stdin."),
-    model: Optional[str] = typer.Option(None, "--model", help="Model, for window sizing."),
+    source: str | None = typer.Argument(None, help="Transcript file, or - for stdin."),
+    model: str | None = typer.Option(None, "--model", help="Model, for window sizing."),
 ) -> None:
     """Measure and classify a context without modifying it."""
     from verityai.context.classify import classify_all
@@ -111,11 +110,11 @@ def ingest(
 
 @app.command()
 def context(
-    source: Optional[str] = typer.Argument(None, help="Transcript file, or - for stdin."),
-    budget: Optional[int] = typer.Option(None, "--budget", "-b", help="Target token count."),
+    source: str | None = typer.Argument(None, help="Transcript file, or - for stdin."),
+    budget: int | None = typer.Option(None, "--budget", "-b", help="Target token count."),
     task: str = typer.Option("", "--task", "-t", help="Task description, for ranking."),
-    model: Optional[str] = typer.Option(None, "--model", help="Model, for window sizing."),
-    out: Optional[Path] = typer.Option(None, "--out", "-o", help="Write pruned context here."),
+    model: str | None = typer.Option(None, "--model", help="Model, for window sizing."),
+    out: Path | None = typer.Option(None, "--out", "-o", help="Write pruned context here."),
 ) -> None:
     """Prune a context toward a budget and report what it cost."""
     raw = _read_input(source)
@@ -163,8 +162,8 @@ def context(
 
 @app.command()
 def health(
-    source: Optional[str] = typer.Argument(None, help="Transcript file, or - for stdin."),
-    model: Optional[str] = typer.Option(None, "--model", help="Model, for window sizing."),
+    source: str | None = typer.Argument(None, help="Transcript file, or - for stdin."),
+    model: str | None = typer.Option(None, "--model", help="Model, for window sizing."),
 ) -> None:
     """Report multi-dimensional context health."""
     from verityai.context.classify import classify_all
@@ -184,8 +183,8 @@ def health(
 
 @app.command()
 def handoff(
-    budget: Optional[int] = typer.Option(None, "--budget", "-b", help="Token ceiling."),
-    out: Optional[Path] = typer.Option(None, "--out", "-o", help="Write the document here."),
+    budget: int | None = typer.Option(None, "--budget", "-b", help="Token ceiling."),
+    out: Path | None = typer.Option(None, "--out", "-o", help="Write the document here."),
 ) -> None:
     """Generate a structured handoff document from persisted state."""
     store = _require_store()
@@ -297,10 +296,10 @@ def remember_failure(
 @app.command()
 def bench(
     paths: list[Path] = typer.Argument(..., help="Transcript files to measure."),
-    budget: Optional[int] = typer.Option(None, "--budget", "-b"),
+    budget: int | None = typer.Option(None, "--budget", "-b"),
     task: str = typer.Option("", "--task", "-t"),
-    model: Optional[str] = typer.Option(None, "--model"),
-    json_out: Optional[Path] = typer.Option(None, "--json", help="Write the report as JSON."),
+    model: str | None = typer.Option(None, "--model"),
+    json_out: Path | None = typer.Option(None, "--json", help="Write the report as JSON."),
 ) -> None:
     """Run the deterministic (Family A) benchmark over a corpus.
 

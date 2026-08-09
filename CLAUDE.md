@@ -86,7 +86,7 @@ src/verityai/
 ├── analysis/facts.py     AST fact extraction (rescued from T6)
 ├── observability/        StageEvent + thread-safe run registry
 ├── cli/main.py           the verity command
-├── mcp/                  MCP server                      — not built yet
+├── mcp/server.py         MCP server — 12 tools over the same core
 └── _quarantine/          rescued code with broken imports; see its README
 ```
 
@@ -148,13 +148,13 @@ has the detail; the short version:
 ## Development
 
 ```bash
-pytest tests/           # 192 tests, no network, no services, no fixtures needed
+pytest tests/           # 206 tests, no network, no services, no fixtures needed
 ruff check src/ tests/
 ruff format src/ tests/
 ```
 
-- Python 3.9. `Optional[X]`, never `X | None` — the latter is a runtime
-  TypeError under 3.9 for Pydantic models. `dict[str, int]` is fine (PEP 585).
+- Python 3.10+. `X | None` is fine (PEP 604). The old 3.9 pin -- and its ban
+  on that syntax in Pydantic annotations -- is gone with the code that forced it.
 - Line length 100, ruff format.
 - Tests use plain objects and `tmp_path`. There is nothing to mock — that is a
   property worth protecting when adding engines.

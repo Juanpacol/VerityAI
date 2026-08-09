@@ -70,7 +70,7 @@ class MemoryStore:
     # --- lifecycle -------------------------------------------------------
 
     @classmethod
-    def discover(cls, start: Optional[Path] = None) -> Optional["MemoryStore"]:
+    def discover(cls, start: Path | None = None) -> Optional["MemoryStore"]:
         """Find the nearest `.verity/` by walking up from `start`.
 
         Mirrors how git finds its own directory, so running `verity` from a
@@ -84,7 +84,7 @@ class MemoryStore:
         return None
 
     @classmethod
-    def init(cls, repo_root: Optional[Path] = None) -> "MemoryStore":
+    def init(cls, repo_root: Path | None = None) -> "MemoryStore":
         """Create `.verity/` and its subdirectories. Idempotent."""
         root = (Path(repo_root) if repo_root else Path.cwd()).resolve() / VERITY_DIR
         (root / "state").mkdir(parents=True, exist_ok=True)
@@ -193,7 +193,7 @@ class MemoryStore:
     def _task_path(self) -> Path:
         return self.root / "state" / "task.json"
 
-    def task(self) -> Optional[Task]:
+    def task(self) -> Task | None:
         """The current task, or None if none has been set."""
         path = self._task_path
         if not path.exists():

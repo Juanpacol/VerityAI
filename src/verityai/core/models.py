@@ -24,7 +24,7 @@ Two modelling decisions carry weight downstream:
 
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field
@@ -111,8 +111,8 @@ class Evidence(BaseModel):
 
     kind: str  # "file" | "commit" | "command" | "test" | "config"
     locator: str
-    excerpt: Optional[str] = None
-    content_hash: Optional[str] = None
+    excerpt: str | None = None
+    content_hash: str | None = None
     captured_at: datetime = Field(default_factory=_now)
 
 
@@ -147,7 +147,7 @@ class Task(BaseModel):
     title: str
     description: str = ""
     status: str = "active"  # active | done | abandoned
-    next_action: Optional[str] = None
+    next_action: str | None = None
     relevant_files: list[str] = Field(default_factory=list)
     created_at: datetime = Field(default_factory=_now)
     updated_at: datetime = Field(default_factory=_now)
@@ -165,7 +165,7 @@ class Decision(Record):
     statement: str
     rationale: str = ""
     status: DecisionStatus = DecisionStatus.ACTIVE
-    supersedes: Optional[UUID] = None
+    supersedes: UUID | None = None
 
 
 class Constraint(Record):
@@ -243,7 +243,7 @@ class ContextItem(BaseModel):
     content: str
     token_count: int = 0
     token_method: str = "unmeasured"
-    relevance: Optional[Relevance] = None
+    relevance: Relevance | None = None
     # Why the classifier landed on that relevance. Populated by
     # `context/classify.py`; always human-auditable, never a bare score.
     relevance_reason: str = ""
@@ -334,7 +334,7 @@ class PruneResult(BaseModel):
     tokens_before: int = 0
     tokens_after: int = 0
     token_method: str = "unmeasured"
-    budget: Optional[int] = None
+    budget: int | None = None
     budget_met: bool = True
     dropped_critical: list[UUID] = Field(default_factory=list)
 
@@ -363,11 +363,11 @@ class Snapshot(BaseModel):
 
     number: int
     label: str = ""
-    task: Optional[Task] = None
+    task: Task | None = None
     decisions: list[Decision] = Field(default_factory=list)
     constraints: list[Constraint] = Field(default_factory=list)
     discoveries: list[Discovery] = Field(default_factory=list)
     failures: list[Failure] = Field(default_factory=list)
     facts: list[Fact] = Field(default_factory=list)
     created_at: datetime = Field(default_factory=_now)
-    git_sha: Optional[str] = None
+    git_sha: str | None = None

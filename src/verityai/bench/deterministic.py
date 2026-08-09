@@ -16,7 +16,6 @@ than below.
 import json
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional
 
 from verityai.context.classify import classify_all
 from verityai.context.ingest import load
@@ -45,7 +44,7 @@ class CaseResult:
     tokens_after: int
     token_method: str
     critical_retention: float
-    budget: Optional[int]
+    budget: int | None
     budget_met: bool
     stages: list[dict] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
@@ -108,8 +107,8 @@ def measure_case(
     name: str,
     raw: str,
     task: str = "",
-    budget: Optional[int] = None,
-    counter: Optional[TokenCounter] = None,
+    budget: int | None = None,
+    counter: TokenCounter | None = None,
 ) -> CaseResult:
     """Run the pipeline over one transcript and measure it."""
     from verityai.context.health import critical_retention
@@ -176,8 +175,8 @@ def _duplicate_share(items) -> float:
 def measure_corpus(
     paths: list[Path],
     task: str = "",
-    budget: Optional[int] = None,
-    counter: Optional[TokenCounter] = None,
+    budget: int | None = None,
+    counter: TokenCounter | None = None,
 ) -> CorpusReport:
     """Measure every transcript in `paths` with one consistent counter.
 

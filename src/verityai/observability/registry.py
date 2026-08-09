@@ -23,7 +23,6 @@ import threading
 import time
 from collections import deque
 from dataclasses import dataclass, field
-from typing import Optional
 from uuid import UUID, uuid4
 
 from verityai.observability.events import StageEvent
@@ -58,8 +57,8 @@ class LiveRun:
     tick: threading.Event = field(default_factory=threading.Event)
     next_sequence: int = 1
     finished: bool = False
-    finished_at: Optional[float] = None
-    error: Optional[str] = None
+    finished_at: float | None = None
+    error: str | None = None
 
 
 class LiveRunRegistry:
@@ -69,7 +68,7 @@ class LiveRunRegistry:
         self._runs: dict[UUID, LiveRun] = {}
         self._lock = threading.Lock()
 
-    def create(self, condition: str, run_id: Optional[UUID] = None) -> LiveRun:
+    def create(self, condition: str, run_id: UUID | None = None) -> LiveRun:
         """Register a new run. Sweeps expired entries as a side effect."""
         if condition not in VALID_CONDITIONS:
             raise ValueError(f"condition must be one of {VALID_CONDITIONS}, got {condition!r}")
@@ -79,7 +78,7 @@ class LiveRunRegistry:
             self._runs[run.run_id] = run
         return run
 
-    def get(self, run_id: UUID) -> Optional[LiveRun]:
+    def get(self, run_id: UUID) -> LiveRun | None:
         with self._lock:
             return self._runs.get(run_id)
 
@@ -99,7 +98,7 @@ class LiveRunRegistry:
             run.events.append(event)
             run.tick.set()
 
-    def finish(self, run_id: UUID, error: Optional[str] = None) -> None:
+    def finish(self, run_id: UUID, error: str | None = None) -> None:
         with self._lock:
             run = self._runs.get(run_id)
             if run is None:
@@ -122,7 +121,7 @@ class LiveRunRegistry:
         with self._lock:
             return sum(1 for run in self._runs.values() if not run.finished)
 
-    def sweep(self, now: Optional[float] = None) -> int:
+    def sweep(self, now: float | None = None) -> int:
         """Evict expired runs. Returns how many were dropped."""
         current = time.monotonic() if now is None else now
         with self._lock:

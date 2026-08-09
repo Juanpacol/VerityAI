@@ -15,7 +15,6 @@ history would destroy the evidence needed to understand why it was necessary.
 import json
 import subprocess
 from pathlib import Path
-from typing import Optional
 
 from verityai.core.models import (
     Constraint,
@@ -28,7 +27,7 @@ from verityai.core.models import (
 from verityai.memory.store import MemoryStore
 
 
-def _git_sha(repo_root: Path) -> Optional[str]:
+def _git_sha(repo_root: Path) -> str | None:
     """Current HEAD sha, or None outside a repo.
 
     Recorded so a restored context can be paired with the code state it was
@@ -100,7 +99,7 @@ class SnapshotManager:
         )
         return snapshot
 
-    def get(self, number: int) -> Optional[Snapshot]:
+    def get(self, number: int) -> Snapshot | None:
         path = self._dir_for(number) / "snapshot.json"
         if not path.exists():
             return None
@@ -121,7 +120,7 @@ class SnapshotManager:
                     snapshots.append(snapshot)
         return snapshots
 
-    def restore(self, number: int) -> Optional[Snapshot]:
+    def restore(self, number: int) -> Snapshot | None:
         """Re-apply a snapshot's state by appending it forward.
 
         Records already present (matched by id) are not duplicated, so

@@ -19,8 +19,6 @@ last among the droppable ones — a repeated dead end is expensive, and a
 violated hard constraint invalidates the work outright.
 """
 
-from typing import Optional
-
 from verityai.context.tokenizer import TokenCounter
 from verityai.core.models import (
     Constraint,
@@ -40,8 +38,8 @@ _CUT_ORDER = ("discoveries", "decisions_rationale", "failures", "constraints", "
 
 def build_handoff(
     store: MemoryStore,
-    budget: Optional[int] = None,
-    counter: Optional[TokenCounter] = None,
+    budget: int | None = None,
+    counter: TokenCounter | None = None,
 ) -> tuple[str, dict]:
     """Build the handoff document from persisted state.
 
@@ -109,7 +107,7 @@ def build_handoff(
 
 
 def _render(
-    task: Optional[Task],
+    task: Task | None,
     decisions: list[Decision],
     constraints: list[Constraint],
     discoveries: list[Discovery],

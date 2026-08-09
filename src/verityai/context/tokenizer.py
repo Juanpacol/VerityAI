@@ -22,7 +22,6 @@ they surface.
 
 import re
 from dataclasses import dataclass
-from typing import Optional
 
 # tiktoken is an optional dependency. The harness must work without it —
 # degraded, and saying so — rather than refusing to start.
@@ -79,7 +78,7 @@ MODEL_WINDOWS: dict[str, int] = {
 DEFAULT_WINDOW = 128_000
 
 
-def window_for_model(model: Optional[str]) -> int:
+def window_for_model(model: str | None) -> int:
     """Context window for `model`, or a conservative default.
 
     Matches on prefix so dated model ids (`claude-haiku-4-5-20251001`)
@@ -103,7 +102,7 @@ class TokenCounter:
     would produce a savings number that is pure artefact.
     """
 
-    def __init__(self, model: Optional[str] = None, encoding: str = DEFAULT_ENCODING):
+    def __init__(self, model: str | None = None, encoding: str = DEFAULT_ENCODING):
         self.model = model
         self.encoding_name = encoding
         self._encoder = None

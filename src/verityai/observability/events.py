@@ -21,8 +21,9 @@ Two rules that the rest of the codebase relies on:
    inverts the dependency graph.
 """
 
+from collections.abc import Callable
 from datetime import datetime
-from typing import Any, Callable, Optional
+from typing import Any
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -78,14 +79,14 @@ class StageEvent(BaseModel):
     # what makes EventSource's Last-Event-ID reconnect work.
     sequence: int = 0
     type: str
-    attempt_number: Optional[int] = None
+    attempt_number: int | None = None
     # Human-readable, from agent/event_narration.py. Deterministic
     # templates only -- never LLM-generated text.
     message: str = ""
     data: dict[str, Any] = Field(default_factory=dict)
     # Server-rendered HTML fragment, attached by api/live_fragments.py.
     # None for events that have no panel of their own.
-    html: Optional[str] = None
+    html: str | None = None
     elapsed_seconds: float = 0.0
     created_at: datetime = Field(default_factory=datetime.utcnow)
 

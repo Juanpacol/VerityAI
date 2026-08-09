@@ -134,7 +134,9 @@ class TestTokenAccounting:
         items = [item(f"content number {n} " * 10, index=n) for n in range(20)]
         result = pipeline.run(items, task="content", budget=100)
 
-        for earlier, later in zip(result.stages, result.stages[1:]):
+        # strict=False: pairing a list with its own tail is deliberately
+        # uneven -- the last stage has no successor to compare against.
+        for earlier, later in zip(result.stages, result.stages[1:], strict=False):
             assert earlier.tokens_after == later.tokens_before
             assert earlier.items_after == later.items_before
 

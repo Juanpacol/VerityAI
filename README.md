@@ -35,8 +35,8 @@ environment those agents work in.
 
 ## Status
 
-**Phase 1 of 5.** The Context and Memory engines work and are covered by 192
-tests. The Knowledge Graph, Consistency and Reliability engines are not built
+**Phase 1 of 5.** The Context and Memory engines work and are covered by 206
+tests, and both are reachable from a CLI and an MCP server. The Knowledge Graph, Consistency and Reliability engines are not built
 yet, and this README does not pretend otherwise.
 
 | Engine | State |
@@ -151,6 +151,31 @@ VERITY CONTEXT HEALTH
 
 ---
 
+## Use it from an agent (MCP)
+
+```bash
+pip install -e ".[mcp]"
+claude mcp add verity -- verity-mcp
+```
+
+Twelve tools, each a thin wrapper over the same functions the CLI calls:
+`optimize_context`, `context_health`, `set_task`, `save_decision`,
+`save_constraint`, `save_discovery`, `save_failure`, `get_state`, `handoff`,
+`snapshot`, `restore`, `list_snapshots`.
+
+**What this can and cannot do**, stated plainly because it bounds every claim
+this project makes:
+
+- Verity **cannot see the agent's real context window.** MCP is cooperative —
+  the agent calls a tool and gets an answer, and there is no interception
+  point. "We pruned your context" is only true of context the agent chose to
+  hand over.
+- Verity **can** hold state the agent would otherwise lose and hand back a
+  reconstruction after a reset. That does not require seeing the window, and
+  it is the part that is genuinely hard to do without a harness.
+
+---
+
 ## Design rules
 
 These are not style preferences. Each one is a lesson with a research result
@@ -183,13 +208,13 @@ looks like. This is the rule that turned T2 from a result into a retraction.
 ## Development
 
 ```bash
-pytest tests/          # 192 tests, no network, no services
+pytest tests/          # 206 tests, no network, no services
 ruff check src/ tests/
 ruff format src/ tests/
 ```
 
-Python 3.9+. Use `Optional[X]`, not `X | None` — the latter is a runtime error
-under 3.9 for Pydantic models.
+Python 3.10+. Raised from 3.9 on 2026-08-09: 3.9 has been end-of-life since
+October 2025 and the MCP SDK requires 3.10.
 
 ---
 

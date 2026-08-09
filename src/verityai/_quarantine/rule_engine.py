@@ -1,7 +1,7 @@
 """Deductive rule engine for symbolic reasoning (IBM NSTK pattern adapted)."""
 
 import logging
-from typing import Any, Optional
+from typing import Any
 
 from verityai.ontology.models import Rule, VerificationStatus
 
@@ -122,7 +122,7 @@ class RuleEngine:
         # All preconditions must be in current facts
         return all(not precond or precond in self.facts for precond in precondition_facts)
 
-    def _derive_consequence(self, rule: Rule) -> Optional[str]:
+    def _derive_consequence(self, rule: Rule) -> str | None:
         """Extract consequence from rule formal_spec.
 
         Args:
@@ -148,7 +148,7 @@ class RuleEngine:
         self,
         rule: Rule,
         code_facts: dict[str, Any],
-    ) -> tuple[VerificationStatus, Optional[str]]:
+    ) -> tuple[VerificationStatus, str | None]:
         """Apply a single rule to code facts.
 
         Args:
@@ -175,7 +175,7 @@ class RuleEngine:
 
     def check_for_violation(
         self, rule: Rule, code_facts: dict[str, Any]
-    ) -> tuple[VerificationStatus, Optional[str]]:
+    ) -> tuple[VerificationStatus, str | None]:
         """Checks whether `code_facts` indicates a VIOLATION of `rule`, not
         whether the rule's derivation fires -- the opposite framing from
         `apply_rule_to_code`.

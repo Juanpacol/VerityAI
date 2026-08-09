@@ -20,7 +20,6 @@ duplicate is obsolete, and a critical item stays critical even if duplicated.
 import hashlib
 import re
 from collections.abc import Iterable
-from typing import Optional
 
 from verityai.core.models import ContextItem, ItemKind, Relevance
 
@@ -98,7 +97,7 @@ def content_hash(text: str) -> str:
     return hashlib.sha256(normalized.encode("utf-8")).hexdigest()[:16]
 
 
-def _has_marker(text: str, markers: Iterable[str]) -> Optional[str]:
+def _has_marker(text: str, markers: Iterable[str]) -> str | None:
     lowered = text.lower()
     for marker in markers:
         if marker in lowered:
@@ -123,8 +122,8 @@ def _is_noise(text: str) -> bool:
 
 def classify_item(
     item: ContextItem,
-    seen_hashes: Optional[dict[str, int]] = None,
-    total_items: Optional[int] = None,
+    seen_hashes: dict[str, int] | None = None,
+    total_items: int | None = None,
 ) -> ContextItem:
     """Assign a relevance bucket to one item, with the reason recorded.
 
@@ -158,8 +157,8 @@ def _decide(
     item: ContextItem,
     text: str,
     digest: str,
-    seen_hashes: Optional[dict[str, int]],
-    total_items: Optional[int],
+    seen_hashes: dict[str, int] | None,
+    total_items: int | None,
 ) -> tuple[Relevance, str]:
     """The rule cascade. Returns (bucket, human-readable reason)."""
 

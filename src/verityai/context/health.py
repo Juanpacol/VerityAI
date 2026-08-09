@@ -15,16 +15,14 @@ be audited, and so its failures go unnoticed. `render_health` therefore prints
 the breakdown first and the score last.
 """
 
-from typing import Optional
-
 from verityai.context.tokenizer import TokenCounter
 from verityai.core.models import ContextHealth, ContextItem, ItemKind, Relevance
 
 
 def compute_health(
     items: list[ContextItem],
-    window: Optional[int] = None,
-    counter: Optional[TokenCounter] = None,
+    window: int | None = None,
+    counter: TokenCounter | None = None,
     stale_count: int = 0,
     contradiction_count: int = 0,
 ) -> ContextHealth:

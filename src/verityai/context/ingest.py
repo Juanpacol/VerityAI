@@ -20,7 +20,7 @@ the sum of the parts equals the whole it started from.
 
 import json
 import re
-from typing import Any, Optional
+from typing import Any
 
 from verityai.core.models import ContextItem, ItemKind
 
@@ -45,7 +45,7 @@ _ROLE_TO_KIND = {
 }
 
 
-def kind_for_role(role: Optional[str]) -> ItemKind:
+def kind_for_role(role: str | None) -> ItemKind:
     """Map a transcript role to an item kind, defaulting to agent message."""
     if not role:
         return ItemKind.AGENT_MESSAGE

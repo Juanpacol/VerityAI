@@ -17,8 +17,9 @@ rankings on small corpora. A single conversation's context is a small corpus.
 
 import math
 import re
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable, Optional
+from typing import Any
 
 from verityai.core.models import ContextItem
 
@@ -45,7 +46,7 @@ class RankingResult:
 
     items: list[ScoredItem]
     mode: str  # "hybrid" | "lexical_only"
-    degraded_reason: Optional[str] = None
+    degraded_reason: str | None = None
 
 
 def _tokenize(text: str) -> list[str]:
@@ -62,7 +63,10 @@ def _cosine_similarity(a: list[float], b: list[float]) -> float:
     """Cosine similarity; 0.0 for empty, mismatched, or zero-norm vectors."""
     if not a or not b or len(a) != len(b):
         return 0.0
-    dot = sum(x * y for x, y in zip(a, b))
+    # strict=True is safe and desirable: the length guard above already
+    # returned for mismatched vectors, so a raise here would mean that guard
+    # was bypassed -- a bug worth surfacing rather than silently truncating.
+    dot = sum(x * y for x, y in zip(a, b, strict=True))
     norm_a = math.sqrt(sum(x * x for x in a))
     norm_b = math.sqrt(sum(y * y for y in b))
     if norm_a == 0.0 or norm_b == 0.0:
@@ -135,7 +139,7 @@ class ContextRanker:
 
     def __init__(
         self,
-        embed_fn: Optional[Callable[[str], list[float]]] = None,
+        embed_fn: Callable[[str], list[float]] | None = None,
         rrf_k: int = DEFAULT_RRF_K,
     ):
         self.embed_fn = embed_fn
@@ -199,7 +203,7 @@ class ContextRanker:
 
     def _semantic_rank(
         self, query: str, documents: list[str]
-    ) -> tuple[dict[int, int], dict[int, float], str, Optional[str]]:
+    ) -> tuple[dict[int, int], dict[int, float], str, str | None]:
         """Cosine ranking, or a stated reason why it could not run."""
         if self.embed_fn is None:
             return {}, {}, "lexical_only", "no embed_fn configured"

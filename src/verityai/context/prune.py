@@ -30,7 +30,6 @@ own benchmark.
 """
 
 import time
-from typing import Optional
 
 from verityai.context.classify import classify_all, content_hash
 from verityai.context.rank import ContextRanker
@@ -54,8 +53,8 @@ class ContextPipeline:
 
     def __init__(
         self,
-        counter: Optional[TokenCounter] = None,
-        ranker: Optional[ContextRanker] = None,
+        counter: TokenCounter | None = None,
+        ranker: ContextRanker | None = None,
     ):
         self.counter = counter or TokenCounter()
         self.ranker = ranker or ContextRanker()
@@ -64,7 +63,7 @@ class ContextPipeline:
         self,
         items: list[ContextItem],
         task: str = "",
-        budget: Optional[int] = None,
+        budget: int | None = None,
     ) -> PruneResult:
         """Prune `items` toward `budget`, keeping what matters for `task`.
 
