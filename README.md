@@ -35,10 +35,10 @@ environment those agents work in.
 
 ## Status
 
-**Phase 3 of 5.** The Context, Memory, Knowledge Graph and Consistency engines
-work, are covered by 375 tests, and are reachable from both a CLI and an MCP
-server. The Reliability engine is not built yet, and this README does not
-pretend otherwise.
+**Phase 4 of 5.** All four engines -- Context, Memory, Knowledge Graph,
+Consistency and Reliability -- work, are covered by 435 tests, and are
+reachable from both a CLI and an MCP server. Phase 5 (deeper agent
+integrations and a UI) has not started.
 
 | Engine | State |
 |---|---|
@@ -46,7 +46,7 @@ pretend otherwise.
 | Memory / Handoff — persistent state, snapshots, handoff docs | working |
 | Knowledge Graph — real code structure | working |
 | Consistency — hallucinated and contradictory claims | working |
-| Reliability — architecture, tests, security | not started |
+| Reliability — architecture, tests, security | working |
 
 **No performance figure is published anywhere in this repository.** The
 benchmark harness exists and refuses to call its own results publishable until
@@ -215,6 +215,39 @@ check. Decision-resurfacing confidence is capped below 1.0 always — it is a
 lexical-overlap heuristic, not a graph lookup, and must never read as more
 certain than one.
 
+### Reliability: security and architecture
+
+```bash
+verity reliability security                 # SQL injection, check-then-act races
+verity reliability architecture             # import policy vs. the real graph
+```
+
+Both are pattern-matching and graph algorithms — no model, no solver. A
+security finding means "worth a human look," never a proof; a clean scan
+means "not this exact shape," never "no vulnerabilities." Every rule that
+fires prints its own documented blind spot alongside the result:
+
+```
+SECURITY
+
+  [MEDIUM] No Check-Then-Act Race  (src/verityai/graph/query.py)
+           Rule No Check-Then-Act Race violated: precondition present, ...
+
+  1 violation(s) across 61 files scanned
+
+  note: This rule matches a syntactic shape (check membership, then mutate
+  the same container, unguarded) -- it cannot tell whether the container is
+  actually shared across threads/processes.
+```
+
+`architecture` checks every import against a declared policy — which
+top-level package may depend on which — against the real graph, not a
+snapshot in someone's head. Running it against this repository for the first
+time found real drift: `memory/handoff.py` imports `context.tokenizer` for
+its token budget, which the architecture diagram in `CLAUDE.md` didn't list.
+The import was legitimate; the diagram was stale. See
+[ADR-0008](docs/adr/0008-reliability-engine.md).
+
 ---
 
 ## Use it from an agent (MCP)
@@ -224,7 +257,7 @@ pip install -e ".[mcp]"
 claude mcp add verity -- verity-mcp
 ```
 
-Seventeen tools, each a thin wrapper over the same functions the CLI calls:
+Nineteen tools, each a thin wrapper over the same functions the CLI calls:
 
 - **context** — `optimize_context`, `context_health`
 - **memory** — `set_task`, `save_decision`, `save_constraint`, `save_discovery`,
@@ -232,6 +265,7 @@ Seventeen tools, each a thin wrapper over the same functions the CLI calls:
 - **graph** — `build_code_graph`, `find_relevant_code`, `check_symbol_exists`,
   `impact_of_changing`
 - **consistency** — `check_claims`
+- **reliability** — `check_security`, `check_architecture`
 - **snapshots** — `snapshot`, `restore`, `list_snapshots`
 
 `check_symbol_exists` is the one to reach for before asserting an API is
@@ -289,7 +323,7 @@ looks like. This is the rule that turned T2 from a result into a retraction.
 ## Development
 
 ```bash
-pytest tests/          # 375 tests, no network, no services
+pytest tests/          # 435 tests, no network, no services
 ruff check src/ tests/
 ruff format src/ tests/
 ```

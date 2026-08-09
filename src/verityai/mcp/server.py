@@ -377,6 +377,41 @@ def build_server(name: str = "verity"):
             return f"FOUND {len(report.contradictions)} CONTRADICTION(S):\n\n{result}"
         return f"All claims check out.\n\n{result}"
 
+    @server.tool()
+    def check_security() -> str:
+        """Scan the repository for SQL injection and check-then-act races.
+
+        Call this before finishing a task that touches database queries or
+        shared mutable state (caches, in-memory counters, session stores).
+        Deterministic AST pattern matching, not a model and not a proof -- a
+        finding means "worth a human look," a clean scan means "not this
+        exact shape," neither is a soundness guarantee. See the returned
+        caveats for exactly what each rule can and cannot see.
+        """
+        from verityai.reliability.report import render_report
+        from verityai.reliability.security import caveats_for, scan_repo
+
+        store = _store()
+        report = scan_repo(store.root.parent)
+        return render_report(report, title="SECURITY", caveats=caveats_for(report.violations))
+
+    @server.tool()
+    def check_architecture() -> str:
+        """Check every import against the project's declared dependency policy.
+
+        Call this after adding a new cross-module import, especially one
+        connecting two different top-level packages under `verityai/` (or
+        this project's own package). A graph algorithm, not a model call --
+        it answers "does this specific import go somewhere the architecture
+        says it shouldn't," which is stronger than just checking for cycles.
+        """
+        from verityai.reliability.architecture import check_architecture_at
+        from verityai.reliability.report import render_report
+
+        store = _store()
+        report = check_architecture_at(store.root.parent)
+        return render_report(report, title="ARCHITECTURE")
+
     # --- snapshots ---------------------------------------------------------
 
     @server.tool()

@@ -1,9 +1,20 @@
-"""Deductive rule engine for symbolic reasoning (IBM NSTK pattern adapted)."""
+"""Deductive rule engine for symbolic reasoning (IBM NSTK pattern adapted).
+
+Rescued from the pre-pivot `symbolic/rule_engine.py`, unchanged apart from
+the import — `Rule` and `VerificationStatus` moved to `core/models.py` as
+part of the pivot, but the class itself is the one piece of the old codebase
+T6 actually proved useful. It forward-chains over a set of fact strings, and
+`check_for_violation` is the corrected inversion of a real bug in the
+original `apply_rule_to_code`: that method can structurally only ever return
+PASS or UNKNOWN, so fed a rule whose precondition names a dangerous pattern,
+it reported PASS on genuinely vulnerable code. See its docstring for the
+full story — it is kept because losing it would mean re-discovering the bug.
+"""
 
 import logging
 from typing import Any
 
-from verityai.ontology.models import Rule, VerificationStatus
+from verityai.core.models import Rule, VerificationStatus
 
 logger = logging.getLogger(__name__)
 
@@ -191,7 +202,7 @@ class RuleEngine:
         snippet's own extracted facts satisfy that PRE, `apply_rule_to_code`
         derives the POST and reports PASS -- an inverted, actively
         misleading verdict on genuinely vulnerable code. Found via T6's
-        real prototype (`symbolic/security_facts.py`), not by inspection.
+        real prototype (`analysis/facts.py`), not by inspection.
 
         This method treats PRE as "the trigger condition to check for" and
         POST as "the required mitigating fact" instead: FAIL if the

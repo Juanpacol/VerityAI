@@ -613,3 +613,96 @@ class ConsistencyReport(BaseModel):
     @property
     def is_clean(self) -> bool:
         return not self.contradictions
+
+
+# --- Reliability -----------------------------------------------------------
+
+
+class VerificationStatus(str, Enum):
+    """Outcome of checking one rule against one piece of evidence.
+
+    Rescued from the pre-pivot `ontology.models`, where it named a Z3
+    verdict. Its meaning here is narrower and more honest: a forward-chaining
+    rule engine over fact strings, not a proof. `FAIL` requires the rule's
+    trigger condition to be present and its required mitigation to be absent
+    — see `Rule.formal_spec` and `check_for_violation` in
+    `reliability/rule_engine.py` for exactly what that means.
+    """
+
+    PASS = "pass"
+    FAIL = "fail"
+    UNKNOWN = "unknown"
+
+
+class Rule(BaseModel):
+    """A checkable rule, expressed as a PRE/POST fact relationship.
+
+    `formal_spec` uses the small string grammar `rule_engine.py` parses:
+    `"PRE: fact_a, fact_b; POST: fact_c"`. This is not a general expression
+    language — it is exactly expressive enough for "if this trigger pattern
+    is present in the code and this mitigating pattern is absent, that is a
+    violation," which is what T6 found pattern-matching could catch that Z3
+    structurally cannot (SQL injection, check-then-act races). A rule needing
+    more than that needs a different engine, not a richer spec string here.
+    """
+
+    id: str
+    name: str
+    description: str = ""
+    category: str = ""  # "security" | "architecture" | ...
+    severity: str = "medium"
+    formal_spec: str
+    applies_to: list[str] = Field(default_factory=lambda: ["python"])
+
+
+class Finding(BaseModel):
+    """One reliability check's verdict on one piece of code.
+
+    Only `FAIL` findings are normally surfaced to a human — `PASS` and
+    `UNKNOWN` are kept internally auditable (a rule engine that has never
+    produced anything but `FAIL` is as suspicious as one that has never
+    produced anything but `PASS`, per T6) but are not findings in the sense
+    of "something to act on."
+    """
+
+    rule_id: str
+    rule_name: str
+    status: VerificationStatus
+    severity: str = "medium"
+    message: str
+    path: str = ""
+    line: int | None = None
+
+
+class ReliabilityReport(BaseModel):
+    """Every finding from one reliability run, plus what was and wasn't checked.
+
+    `degraded_reason` follows the same rule as `ConsistencyReport`: a report
+    with zero findings must be distinguishable from a report that couldn't
+    check anything at all.
+    """
+
+    findings: list[Finding] = Field(default_factory=list)
+    files_scanned: int = 0
+    degraded_reason: str | None = None
+
+    @property
+    def violations(self) -> list[Finding]:
+        return [f for f in self.findings if f.status is VerificationStatus.FAIL]
+
+    @property
+    def is_clean(self) -> bool:
+        return not self.violations
+
+
+class ArchitecturePolicy(BaseModel):
+    """A declarative statement of which top-level packages may import which.
+
+    This operationalizes the "Dependency rule" section of CLAUDE.md as
+    something checkable rather than something hoped for. `"core"` is always
+    implicitly allowed as an import target for everyone and never needs
+    listing; `"*"` in a package's allowed list means "may import anything"
+    (used for `cli` and `mcp`, which by design sit above every engine).
+    """
+
+    allowed_imports: dict[str, list[str]] = Field(default_factory=dict)

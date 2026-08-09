@@ -25,7 +25,7 @@ output.
 ┌──────────────────────────────────────────────┐
 │ INTERFACE     → CLI + MCP server             │
 ├──────────────────────────────────────────────┤
-│ RELIABILITY   → architecture, tests, security│  (Phase 4)
+│ RELIABILITY   → architecture, tests, security│  working
 ├──────────────────────────────────────────────┤
 │ CONSISTENCY   → claims vs evidence           │  working
 ├──────────────────────────────────────────────┤
@@ -41,22 +41,32 @@ output.
 
 ## Dependency rule
 
-`core/` depends on nothing but Pydantic. Every engine depends on `core/` and
-none depends on another. This is the one architectural rule carried over from
-the pre-pivot codebase, where a neutral `ontology/` broke a circular dependency
-between the KG and the symbolic layer. Same principle, different contents.
+`core/` depends on nothing but Pydantic, and every engine depends on `core/`.
+Beyond that, an engine may depend on another only when the need is real and
+declared here — not "nothing depends on anything," but "every cross-engine
+edge is a deliberate exception, checked, not accumulated by accident." This
+is the one architectural rule carried over from the pre-pivot codebase, where
+a neutral `ontology/` broke a circular dependency between the KG and the
+symbolic layer. Same principle, different contents.
 
 ```
 core/                        (no deps)
   ├─ context/   (core)
-  ├─ memory/    (core)
-  ├─ graph/     (core, context.rank)
-  ├─ consistency/ (core, graph, context.rank)
-  ├─ reliability/ (core, graph)   — Phase 4
+  ├─ memory/    (core, context.tokenizer)   -- handoff needs a token budget
+  ├─ graph/     (core, context.rank)        -- query.py reuses the BM25 ranker
+  ├─ consistency/ (core, graph, context.rank, memory)
+  ├─ reliability/ (core, graph, analysis)
   ├─ bench/     (core, context)
   ├─ cli/       (everything)
   └─ mcp/       (everything)
 ```
+
+`reliability/architecture.py` checks exactly this table against the real
+graph, every time — see ADR-0008. The `memory -> context` edge above was
+undocumented until that check found it: the diagram said `memory` depended on
+`core` alone, but `handoff.py` had already, legitimately, started importing
+`context.tokenizer` to fit a document to a token budget. The code was right
+and the diagram was stale; the fix was to correct the table, not the import.
 
 `context/` must never import `memory/`. Ranking a context and persisting a
 decision are independent operations, and keeping them independent is what lets
@@ -89,6 +99,11 @@ src/verityai/
 ├── consistency/
 │   ├── claims.py         backtick-quoted spans + closed relation phrases
 │   └── check.py          symbol/relation/file checks + decision resurfacing
+├── reliability/
+│   ├── rule_engine.py    forward-chaining engine (rescued from T6/quarantine)
+│   ├── security.py       SQLi + check-then-act races; every rule states its blind spot
+│   ├── architecture.py   import-policy check against the real graph
+│   └── report.py         shared renderer for both
 ├── bench/deterministic.py Family A benchmarks, self-disqualifying
 ├── analysis/facts.py     AST fact extraction (rescued from T6)
 ├── observability/        StageEvent + thread-safe run registry
@@ -155,7 +170,7 @@ has the detail; the short version:
 ## Development
 
 ```bash
-pytest tests/           # 375 tests, no network, no services, no fixtures needed
+pytest tests/           # 435 tests, no network, no services, no fixtures needed
 ruff check src/ tests/
 ruff format src/ tests/
 ```

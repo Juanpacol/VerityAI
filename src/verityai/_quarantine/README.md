@@ -11,19 +11,12 @@ means: fix the imports, add tests, move it to its real home, delete it here.
 
 | File | Origin | Waiting on | Needs |
 |---|---|---|---|
-| `rule_engine.py` | `symbolic/rule_engine.py` | Phase 4 — Reliability Engine | Depends on `ontology.models.Rule` / `VerificationStatus`, both deleted. Needs a rule model in `core/models.py` first. |
 | `repetition.py` | `evaluation/repetition.py` | Phase 1 benchmark | Depends on `evaluation.metrics.BenchmarkOutcome`, deleted. Needs generalizing from a classification-metrics shape to arbitrary metric dicts. |
 
-## Why these two specifically
+`rule_engine.py` left quarantine in Phase 4 — see `reliability/rule_engine.py`.
+`Rule` and `VerificationStatus` now live in `core/models.py`.
 
-**`rule_engine.py`** is the deterministic half of T6, the one research result
-that survived the pivot intact. It forward-chains over a set of fact strings
-to a fixed point, and its `check_for_violation` is the corrected inversion of
-a real bug: the original `apply_rule_to_code` was structurally incapable of
-returning `FAIL`, so it reported `PASS` on genuinely vulnerable code. That fix
-is worth more than the code around it and must not be lost.
-Its companion, `analysis/facts.py`, has no broken imports and is already in
-place.
+## Why it's kept
 
 **`repetition.py`** implements the standing rule from `docs/RESEARCH_FINDINGS.md`:
 never attribute a metric difference to a mechanism without a same-configuration

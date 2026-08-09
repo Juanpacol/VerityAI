@@ -70,6 +70,8 @@ class TestToolSurface:
             "check_symbol_exists",
             "impact_of_changing",
             "check_claims",
+            "check_security",
+            "check_architecture",
         }
 
     @pytest.mark.asyncio
@@ -290,6 +292,43 @@ class TestConsistencyTools:
 
         # An ACTIVE (never-rejected) decision must not be flagged.
         assert "CONTRADICTION" not in output
+
+
+class TestReliabilityTools:
+    @pytest.fixture
+    def with_vulnerable_code(self, tmp_path, server):
+        (tmp_path / "db.py").write_text(
+            "def get_user(conn, name):\n"
+            '    query = "SELECT * FROM users WHERE name = " + name\n'
+            "    return conn.execute(query)\n"
+        )
+        return server
+
+    @pytest.mark.asyncio
+    async def test_check_security_finds_a_real_vulnerability(self, with_vulnerable_code):
+        output = await call(with_vulnerable_code, "check_security")
+
+        assert "SQL Injection" in output
+        assert "1 violation" in output
+
+    @pytest.mark.asyncio
+    async def test_check_security_is_clean_on_safe_code(self, tmp_path, server):
+        (tmp_path / "db.py").write_text(
+            "def get_user(conn, name):\n"
+            '    return conn.execute("SELECT * FROM users WHERE name = ?", (name,))\n'
+        )
+
+        output = await call(server, "check_security")
+
+        assert "No violations found" in output
+
+    @pytest.mark.asyncio
+    async def test_check_architecture_is_clean_on_a_small_project(self, tmp_path, server):
+        (tmp_path / "app.py").write_text("x = 1\n")
+
+        output = await call(server, "check_architecture")
+
+        assert "No violations found" in output
 
 
 class TestSnapshotTools:

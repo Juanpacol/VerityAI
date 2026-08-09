@@ -552,6 +552,58 @@ def check(
         raise typer.Exit(1)
 
 
+reliability_app = typer.Typer(help="Architecture and security checks over the codebase.")
+app.add_typer(reliability_app, name="reliability")
+
+
+@reliability_app.command("security")
+def reliability_security(
+    root: Path | None = typer.Argument(None, help="Repository root. Defaults to cwd."),
+) -> None:
+    """Scan for the built-in security patterns: SQL injection, check-then-act races.
+
+    Deterministic pattern matching over AST facts, not a model and not a
+    solver -- narrow by design, see `reliability/security.py`. A hit means
+    "worth a human look," not a proof; a miss means "not this exact shape,"
+    not "no vulnerabilities." Exits non-zero on any finding.
+    """
+    from verityai.reliability.report import render_report
+    from verityai.reliability.security import caveats_for, scan_repo
+
+    target = Path(root) if root else Path.cwd()
+    report = scan_repo(target)
+
+    typer.echo("")
+    typer.echo(render_report(report, title="SECURITY", caveats=caveats_for(report.violations)))
+
+    if report.violations:
+        raise typer.Exit(1)
+
+
+@reliability_app.command("architecture")
+def reliability_architecture(
+    root: Path | None = typer.Argument(None, help="Repository root. Defaults to cwd."),
+) -> None:
+    """Check that every import respects the declared dependency policy.
+
+    A graph algorithm, not a model call -- see CLAUDE.md's "Dependency rule"
+    for the policy this checks and ADR-0008 for why it exists. Exits non-zero
+    on any violation, so this is usable as a CI gate against architecture
+    drift.
+    """
+    from verityai.reliability.architecture import check_architecture_at
+    from verityai.reliability.report import render_report
+
+    target = Path(root) if root else Path.cwd()
+    report = check_architecture_at(target)
+
+    typer.echo("")
+    typer.echo(render_report(report, title="ARCHITECTURE"))
+
+    if report.violations:
+        raise typer.Exit(1)
+
+
 def main() -> None:
     app()
 
