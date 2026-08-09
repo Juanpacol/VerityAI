@@ -1,70 +1,49 @@
-"""Shared pytest fixtures for the whole test suite.
+"""Shared fixtures.
 
-Centralizes patterns that were previously copy-pasted (with drift) across
-multiple test files: an in-memory sqlite session (StaticPool, so FastAPI's
-worker-thread execution doesn't see a fresh blank database -- see
-api/rest.py's `_get_engine` for why), the rate-limit reset, and a fully
-wired API TestClient.
+Kept deliberately small. The pre-pivot suite needed heavy fixtures because
+every test path ran through Ollama, Neo4j and a database; the harness core is
+pure functions over in-memory objects and a directory of text files, so most
+tests need nothing but `tmp_path`.
 """
 
 import pytest
-from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
-from sqlalchemy.engine import Engine
-from sqlalchemy.orm import Session, sessionmaker
-from sqlalchemy.pool import StaticPool
 
-from verityai.agent.trace import TraceStore
-from verityai.api.rate_limit import reset_rate_limit_state
-from verityai.api.rest import app, get_audit_log_store, get_trace_store
-from verityai.compliance.audit_log import AuditLogStore
-from verityai.db.base import Base
+from verityai.context.tokenizer import TokenCounter
+from verityai.core.models import ContextItem, ItemKind
+from verityai.memory.store import MemoryStore
 
 
-@pytest.fixture(autouse=True)
-def _reset_rate_limit():
-    """Every API test shares one pseudo client IP through TestClient, so
-    without this, request counts would accumulate across the whole test
-    session and eventually trip 429s unrelated to what a given test is
-    actually checking."""
-    reset_rate_limit_state()
-    yield
+class FixedCounter(TokenCounter):
+    """A counter with one token per whitespace-separated word.
 
-
-@pytest.fixture
-def sqlite_engine() -> Engine:
-    """A fresh in-memory sqlite engine with every ORM table created.
-
-    StaticPool + check_same_thread=False: a plain sqlite in-memory DB is
-    otherwise per-connection, and FastAPI runs sync endpoints in a worker
-    thread -- without this, that thread would see a fresh, table-less
-    database instead of the one this fixture just set up.
+    Used wherever a test asserts on exact token arithmetic. Real tokenizers
+    are an implementation detail that would make those assertions brittle and,
+    worse, would make a test fail differently depending on whether tiktoken
+    happens to be installed.
     """
-    engine = create_engine(
-        "sqlite:///:memory:", connect_args={"check_same_thread": False}, poolclass=StaticPool
-    )
-    Base.metadata.create_all(engine)
-    return engine
+
+    def __init__(self):
+        super().__init__()
+        self._encoder = None
+        self.method = "fixed:words"
+
+    def count(self, text: str):
+        from verityai.context.tokenizer import TokenCount
+
+        return TokenCount(len(text.split()), self.method)
 
 
 @pytest.fixture
-def db_session(sqlite_engine: Engine) -> Session:
-    session = sessionmaker(bind=sqlite_engine)()
-    yield session
-    session.close()
+def counter():
+    return FixedCounter()
 
 
 @pytest.fixture
-def api_client(db_session: Session):
-    """A TestClient wired to `db_session` for trace/audit-log storage.
+def store(tmp_path):
+    """An initialized `.verity/` in a temporary directory."""
+    return MemoryStore.init(tmp_path)
 
-    Orchestrator/KG dependencies are intentionally left un-overridden here
-    -- tests that call /generate or /kg/* still need to override
-    get_orchestrator / get_kg_client themselves with a FakeLLMClient or
-    fake Neo4j driver, since what LLM/KG behavior to simulate is
-    test-specific, not shared setup.
-    """
-    app.dependency_overrides[get_trace_store] = lambda: TraceStore(db_session)
-    app.dependency_overrides[get_audit_log_store] = lambda: AuditLogStore(db_session)
-    yield TestClient(app)
-    app.dependency_overrides.clear()
+
+def item(content, kind=ItemKind.AGENT_MESSAGE, index=0):
+    """Terse `ContextItem` constructor for tests."""
+    return ContextItem(kind=kind, content=content, original_index=index)

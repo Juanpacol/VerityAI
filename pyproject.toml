@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "verityai"
-version = "0.0.1"
-description = "Neuro-symbolic code verification: LLM-generated code + formal proofs + explainability"
+version = "0.1.0"
+description = "Model-agnostic agentic harness: context management, persistent memory, and verification around AI coding agents"
 readme = "README.md"
 requires-python = ">=3.9"
 license = {text = "MIT"}
@@ -13,44 +13,22 @@ authors = [
     {name = "Juan Pablo Botero Espinosa", email = "juanpabloboteroespinosa@gmail.com"}
 ]
 
+# The core deliberately depends on almost nothing. A harness that manages
+# someone else's context must be installable next to any agent without
+# dragging in an LLM SDK, a graph database, or a solver -- the pre-pivot
+# dependency list (langchain, neo4j, z3, ollama, reportlab, psycopg2) belonged
+# to a system that generated and formally verified code, which this no longer
+# does. Optional extras below carry anything heavier.
 dependencies = [
-    # LLM + Orchestration
-    "langchain>=0.1.0",
-    "langchain-community>=0.0.20",
-    "ollama>=0.0.1",
-
-    # Knowledge Graph
-    "neo4j>=5.15.0",
-
-    # Symbolic verification
-    "z3-solver>=4.12.2",
-
     # Data models
     "pydantic>=2.0.0",
 
-    # Web API
-    "fastapi>=0.100.0",
-    "uvicorn>=0.23.0",
-
-    # Compliance report PDF export
-    "reportlab>=4.0.0",
-
-    # Database ORM
-    "sqlalchemy>=2.0.0",
-    "psycopg2-binary>=2.9.0",
-
-    # Caching
-    "redis>=5.0.0",
-
     # CLI
-    "click>=8.1.0",
     "typer>=0.9.0",
     "rich>=13.0.0",
 
     # Utilities
     "python-dotenv>=1.0.0",
-    "pyyaml>=6.0.0",
-    "requests>=2.32.0",
 ]
 
 [project.optional-dependencies]
@@ -64,6 +42,17 @@ dev = [
     "pre-commit>=3.7.0",
 ]
 
+# Exact token counting. Optional because the harness must run without it --
+# degraded to a chars/4 estimate, and saying so in every report.
+tokenizers = [
+    "tiktoken>=0.7.0",
+]
+
+# MCP server, for agents to call the harness directly.
+mcp = [
+    "mcp>=1.0.0",
+]
+
 research = [
     "jupyter>=1.0.0",
     "notebook>=6.5.0",
@@ -73,7 +62,7 @@ research = [
 ]
 
 [project.scripts]
-verityai = "verityai.cli:main"
+verity = "verityai.cli.main:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
@@ -100,10 +89,10 @@ ignore = ["E501"]  # line length is enforced by the formatter, not the linter
 known-first-party = ["verityai"]
 
 [tool.ruff.lint.flake8-bugbear]
-# FastAPI's dependency injection idiom is `param: T = Depends(get_t)` --
-# the call is intentional and cached per-request by FastAPI, not a mutable
-# default trap. Same for Header(). Without this, B008 flags every endpoint.
-extend-immutable-calls = ["fastapi.Depends", "fastapi.Header"]
+# Typer's option idiom is `param: T = typer.Option(...)` -- the call is
+# intentional and evaluated once by Typer to build the parser, not a mutable
+# default trap. Without this, B008 flags every CLI command.
+extend-immutable-calls = ["typer.Option", "typer.Argument"]
 
 [tool.mypy]
 python_version = "3.9"  # matches requires-python and the actual interpreter this runs under
