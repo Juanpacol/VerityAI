@@ -48,18 +48,19 @@ integrations and a UI) has not started.
 | Consistency — hallucinated and contradictory claims | working |
 | Reliability — architecture, tests, security | working |
 
-**A Family A measurement and five Family B pilots exist now** (below). The
+**A Family A measurement and six Family B pilots exist now** (below). The
 first Family B pilot's result was `indistinguishable_from_noise` — its
 tasks were too easy to tell the two conditions apart. The second, testing
 automatic financial-figure protection under a real budget constraint,
 found `likely_real_difference`: 0/5 vs 5/5 exact recall. The third, testing
 whether an agent *managing its own context across turns* uses a memory tool
-unprompted, found the same verdict: 0/5 vs 5/5. The fourth and fifth, testing
-recovery after a context reset at two difficulty levels, both hit a
-success-rate ceiling (10/10 both conditions fixed the bug, even on a harder,
-two-subsystem fixture) but found `likely_real_difference` on cost, both
-times: recovering a handoff took fewer tool calls than reconstructing the
-same investigation from scratch, and the saving grew with task difficulty.
+unprompted, found the same verdict: 0/5 vs 5/5. The fourth, fifth, and
+sixth, testing recovery after a context reset across three different bug
+designs (a config swap, a two-subsystem decoy, a call-sequence-dependent
+cache bug), all hit a success-rate ceiling (5/5 or 10/10 both conditions)
+but found `likely_real_difference` on cost every time: recovering a handoff
+took fewer tool calls than reconstructing the same investigation from
+scratch, consistently, across all three designs.
 
 ---
 
@@ -235,6 +236,29 @@ already-achievable outcome cheaper, and the saving grows with how much
 investigation a reset would have thrown away — see ADR-0016 for the full
 discussion of why success itself may need a qualitatively different kind of
 bug (runtime reasoning, not static tracing) to move.
+
+**A sixth pilot changed the bug's shape entirely**
+(`experiments/family_b_pilot_6_runtime_bug/`, [ADR-0017](docs/adr/0017-runtime-bug-pilot.md)):
+instead of a wrong-but-plausible constant, a cache keyed only by `item`
+that silently returns a stale price when the same item is requested under
+a different `tier` — invisible from reading the function in isolation,
+only found by tracing the actual sequence of calls. Result: **a fourth
+ceiling**, 5/5 both conditions, but the cost effect reproduced a third
+time:
+
+| Metric | `naive` | `verity` | Verdict |
+|---|---|---|---|
+| Task success (5 trials) | 5/5 | 5/5 | `indistinguishable_from_noise` (ceiling) |
+| Tool calls per trial | mean 8.0, floor `[7, 9]` | mean 4.2 | `likely_real_difference` |
+
+Four ceilings across four different bug designs is now a pattern, not a
+fluke: current models rarely fail cold on a single-agent-turn, statically
+traceable bug in a small repo, regardless of whether it's a config swap, a
+two-subsystem decoy, or a call-sequence dependency. ADR-0017 argues success
+itself may need a fundamentally different kind of difficulty (or a much
+larger trial budget) to move — while the cost effect is now this project's
+most consistently reproduced Family B result, across three separate
+pilots and bug designs.
 
 ---
 

@@ -39,7 +39,14 @@ difficulty further (two structurally identical subsystems, one a healthy
 decoy) specifically to see whether success itself would ever move. It
 didn't — a third ceiling in the series, 5/5 both conditions — but the cost
 effect reproduced and grew: `verity` (mean 5.2) below `naive`'s floor
-(`[7, 10]`), a larger gap than the fourth pilot's. All five pilots' stated
+(`[7, 10]`), a larger gap than the fourth pilot's. Family B, sixth pilot
+(`experiments/family_b_pilot_6_runtime_bug/`, ADR-0017), changed the bug's
+shape entirely — a cache keyed on the wrong thing, invisible from reading
+the function in isolation, only found by tracing the actual sequence of
+calls, deliberately deterministic (no real race condition, to avoid
+contaminating the noise floor itself). Still a ceiling, the fourth in the
+series, 5/5 both conditions — but the cost effect reproduced a third time:
+`verity` (mean 4.2) below `naive`'s floor (`[7, 9]`). All six pilots' stated
 limits (small N, narrow task design, single fixture) still apply — see each
 pilot's own README before generalizing any result.
 
