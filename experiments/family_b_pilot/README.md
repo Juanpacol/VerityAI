@@ -6,9 +6,12 @@ answered "how many tokens does pruning remove." This pilot asks a different
 question: does having Verity's tools available change whether an agent
 actually fixes a bug correctly.
 
-**Status: designed and validated, trials in progress.** No comparison
-number is final until every step below has run — see the publication rule
-in `docs/BENCHMARK_PROTOCOL.md`.
+**Status: complete.** 20 real trials run (5 per task × condition), each
+scored independently by running `pytest` directly against the trial's
+working directory — never by trusting the agent's own report of success.
+Result: **indistinguishable from noise on both tasks**, because both
+conditions hit a 100% success ceiling. See "Result" below for what that
+does and does not mean.
 
 ## The fixture
 
@@ -85,6 +88,44 @@ two conditions are compared against each other, using
 that floor is `likely_real_difference`; inside it is
 `indistinguishable_from_noise` — reported as such, not as "a small effect,"
 per the protocol's own wording.
+
+## Result
+
+| Task | `alone` | `verity` | Noise floor | Between-config mean | Conclusion |
+|---|---|---|---|---|---|
+| 1 (pricing) | 5/5 | 5/5 | [1.0, 1.0] | 1.0 | `indistinguishable_from_noise` |
+| 2 (inventory) | 5/5 | 5/5 | [1.0, 1.0] | 1.0 | `indistinguishable_from_noise` |
+
+All 20 trials independently verified (this harness ran `pytest` itself in
+every trial directory after the agent stopped — it did not trust any
+agent's self-report), and none touched a file under `tests/`. Raw data:
+`results/task{1,2}_{alone,verity}.json`. Reproduce the verdict directly:
+
+```bash
+verity noise-floor results/task1_alone.json results/task1_verity.json --metric success
+verity noise-floor results/task2_alone.json results/task2_verity.json --metric success
+```
+
+**What this does not mean**: that Verity has no effect on task outcomes.
+**What it does mean**: this pilot's two tasks were not hard enough to
+tell the two conditions apart. Both seeded bugs are single-line, and
+`pytest`'s own failure output names the exact wrong value (`assert 118.8
+== 97.2`; `DID NOT RAISE ValueError`) — closing that gap needed no
+codebase-wide exploration for either condition, so `verity graph
+context`/`find`/`deps` had nothing to contribute that reading the
+failing assertion didn't already supply. A ceiling effect, not a null
+result: when both arms score 5/5, the noise floor is `[1.0, 1.0]` by
+construction and *any* between-config mean of 1.0 reports
+`indistinguishable_from_noise`, regardless of whether a real effect
+exists — the task simply never gave one room to appear.
+
+The honest, useful conclusion from running this pilot is about the pilot's
+*design*, not about Verity: a Family B task worth running needs either a
+larger, unfamiliar codebase (where locating the right code is itself the
+hard part `graph context`/`find`/`deps` target) or a bug whose test
+failure doesn't already name the fix. Both bugs here failed that bar. A
+follow-up pilot should replace these with tasks sized to that lesson
+before spending more trials on this same shape.
 
 ## Known limitations of this pilot, stated up front
 

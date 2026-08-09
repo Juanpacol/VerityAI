@@ -48,8 +48,10 @@ integrations and a UI) has not started.
 | Consistency — hallucinated and contradictory claims | working |
 | Reliability — architecture, tests, security | working |
 
-**The first honest Family A number exists now** (below). Family B (does it
-change task outcomes, not just token counts) has not been measured yet.
+**Both a Family A measurement and a Family B pilot exist now** (below). The
+Family B pilot's honest result is `indistinguishable_from_noise` — both
+tested tasks were too easy to tell the two conditions apart, which is a
+finding about that pilot's design, not a verdict that Verity has no effect.
 
 ---
 
@@ -102,9 +104,20 @@ Each file is a JSON array of `{"metric": value}` objects, one per repeat.
 `within.json` is N repeats of a single configuration (the floor);
 `between.json` is the configuration being compared against it. Fewer than 2
 within-repeats is `insufficient_data`, reported as such and never silently
-upgraded to a verdict. No Family B pilot has been run yet — this is the tool
-it will be run with, in place before the first trial rather than reached for
-afterward.
+upgraded to a verdict.
+
+**A 20-trial pilot has been run** (`experiments/family_b_pilot/`): two
+seeded bugs in a small order-processing service, 5 real agent trials per
+(task, condition), each scored by running `pytest` directly — never by
+trusting the agent's own report. Result on both tasks:
+`indistinguishable_from_noise`, floor `[1.0, 1.0]`. Both conditions hit a
+**100% success ceiling** — 20/20 trials fixed the bug — because both seeded
+bugs are single-line and `pytest`'s own failure output names the exact
+wrong value, so locating the fix (what `verity graph context`/`find`/`deps`
+help with) was never the hard part. That is a finding about the pilot's
+task design, not a verdict that Verity has no effect — see the pilot's own
+README for what a task that could actually detect a difference needs to
+look like.
 
 ---
 

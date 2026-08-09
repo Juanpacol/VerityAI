@@ -7,10 +7,15 @@ variance, and the retry-loop improvement that had already been written up had
 to be **retracted** once same-configuration repeats were compared. This
 document exists so that does not happen twice.
 
-Status: **the first real Family A measurement exists** (README, "First real
-measurement"; methodology in ADR-0009). **Family B has not been run.** No
-figure describing whether Verity changes a task's outcome — as opposed to a
-token count — exists anywhere in this repository or any external material.
+Status: **both families now have a real measurement.** Family A: README,
+"First real measurement" (methodology in ADR-0009). Family B: a 20-trial
+pilot (`experiments/family_b_pilot/`) ran the full 5-step procedure below
+end to end and reported `indistinguishable_from_noise` on both of its two
+tasks — not because Verity has no effect, but because both tasks hit a
+100% success ceiling in both conditions, which is itself the pilot's most
+useful finding (see its README's "Result" section). No Family B number
+claiming a *real* effect exists yet; the pilot's honest conclusion is about
+what the next one needs to test, not a verdict on Verity.
 
 ## The two families
 
