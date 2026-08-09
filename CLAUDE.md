@@ -104,12 +104,13 @@ src/verityai/
 │   ├── security.py       SQLi + check-then-act races; every rule states its blind spot
 │   ├── architecture.py   import-policy check against the real graph
 │   └── report.py         shared renderer for both
-├── bench/deterministic.py Family A benchmarks, self-disqualifying
+├── bench/
+│   ├── deterministic.py  Family A benchmarks, self-disqualifying
+│   └── repetition.py     noise floor / Family B statistics (rescued, generalized)
 ├── analysis/facts.py     AST fact extraction (rescued from T6)
 ├── observability/        StageEvent + thread-safe run registry
 ├── cli/main.py           the verity command
 ├── mcp/server.py         MCP server — 12 tools over the same core
-└── _quarantine/          rescued code with broken imports; see its README
 ```
 
 ### `.verity/` on disk
@@ -170,7 +171,7 @@ has the detail; the short version:
 ## Development
 
 ```bash
-pytest tests/           # 465 tests, no network, no services, no fixtures needed
+pytest tests/           # 485 tests, no network, no services, no fixtures needed
 ruff check src/ tests/
 ruff format src/ tests/
 ```

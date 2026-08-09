@@ -11,6 +11,7 @@ degraded path says why it degraded. Both rules come from the same lesson —
 a number without its provenance invites more confidence than it earned.
 """
 
+import json
 import sys
 from pathlib import Path
 
@@ -336,6 +337,58 @@ def bench(
         # Non-zero exit so this cannot pass silently in CI and have the number
         # scraped out of the log as if it were a result.
         raise typer.Exit(1)
+
+
+@app.command(name="noise-floor")
+def noise_floor(
+    within: Path = typer.Argument(
+        ..., help="JSON list of repeat metric dicts, all from ONE configuration."
+    ),
+    between: Path = typer.Argument(
+        ..., help="JSON list of repeat metric dicts from the OTHER configuration."
+    ),
+    metric: str = typer.Option(..., "--metric", "-m", help="Metric key to compare."),
+) -> None:
+    """Family B, step by step: is a between-config difference real, or noise?
+
+    Each input file is a JSON array of objects like `{"success": 1.0}` --
+    one object per repeat of a fixed task under a fixed configuration. Never
+    compares on a single repeat: the whole point of
+    docs/BENCHMARK_PROTOCOL.md's procedure is that a noise floor needs
+    repeats of the SAME configuration before any cross-configuration
+    comparison means anything.
+    """
+    from verityai.bench.repetition import compare_to_noise_floor, summarize_metric_variance
+
+    within_repeats = json.loads(within.read_text(encoding="utf-8"))
+    between_repeats = json.loads(between.read_text(encoding="utf-8"))
+
+    typer.echo(f"\nWITHIN  ({within.name}, {len(within_repeats)} repeat(s))")
+    within_summary = summarize_metric_variance(within_repeats)
+    if metric in within_summary:
+        stats = within_summary[metric]
+        typer.echo(
+            f"  {metric}: mean={stats['mean']} stdev={stats['stdev']} "
+            f"range=[{stats['min']}, {stats['max']}] (n={stats['n']})"
+        )
+
+    typer.echo(f"\nBETWEEN ({between.name}, {len(between_repeats)} repeat(s))")
+    between_summary = summarize_metric_variance(between_repeats)
+    if metric in between_summary:
+        stats = between_summary[metric]
+        typer.echo(f"  {metric}: mean={stats['mean']} (n={stats['n']})")
+
+    result = compare_to_noise_floor(within_repeats, between_repeats, metric)
+
+    typer.echo("")
+    if result["conclusion"] == "insufficient_data":
+        typer.secho(f"  insufficient_data: {result['reason']}", fg=typer.colors.YELLOW)
+        raise typer.Exit(1)
+
+    typer.echo(f"  noise floor: [{result['noise_floor_min']}, {result['noise_floor_max']}]")
+    typer.echo(f"  between-config mean: {result['between_config_mean']}")
+    color = typer.colors.GREEN if result["outside_noise_floor"] else typer.colors.YELLOW
+    typer.secho(f"  conclusion: {result['conclusion']}", fg=color)
 
 
 graph_app = typer.Typer(help="Build and query the code graph.")

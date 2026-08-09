@@ -7,8 +7,10 @@ variance, and the retry-loop improvement that had already been written up had
 to be **retracted** once same-configuration repeats were compared. This
 document exists so that does not happen twice.
 
-Status: **no benchmark has been run.** No figure in this repository, the
-README, or any external material describes measured harness performance.
+Status: **the first real Family A measurement exists** (README, "First real
+measurement"; methodology in ADR-0009). **Family B has not been run.** No
+figure describing whether Verity changes a task's outcome — as opposed to a
+token count — exists anywhere in this repository or any external material.
 
 ## The two families
 
@@ -30,8 +32,8 @@ same number every time. `n=1` is sufficient and a repeat is only a smoke test.
 | Handoff cost | Tokens in the generated document, plus sections dropped |
 | Wall-clock | Pipeline duration, excluding any model call |
 
-Family A is what Phase 1 can honestly claim. It is real, it is auditable
-stage by stage, and it needs no statistics.
+Family A is what the Context Engine can honestly claim. It is real, it is
+auditable stage by stage, and it needs no statistics.
 
 ### Family B — stochastic
 
@@ -66,10 +68,10 @@ Non-negotiable, in this order:
 5. **Report N, the floor range, and the comparison together.** A delta without
    its noise floor is not a result and must not be quoted alone.
 
-`_quarantine/repetition.py` implements steps 1–4 and must be used rather than
+`bench/repetition.py` implements this and must be used rather than
 reimplemented — the point of a standing rule is that it is applied the same
-way every time. It needs generalizing from its classification-metrics shape to
-arbitrary metric dicts before it can leave quarantine.
+way every time. See ADR-0010 for its generalization from a classification-
+metrics shape to arbitrary metric dicts.
 
 ## What "Agent alone vs Agent + Verity" actually requires
 
@@ -107,5 +109,11 @@ here only as an example of what not to publish: the transcript contained ~90%
 exact duplicates by construction, so the figure measures the fixture, not the
 tool. Real transcripts do not look like that.
 
-The first honest measurement will come from real agent sessions on this
-repository — including the sessions that build the harness itself.
+The first honest measurement did come from real agent sessions on this
+repository — including sessions that built the harness itself — and it looked
+nothing like 92.4%: 1.1% with no budget forced, 55.2% with one. See the
+README and ADR-0009. Running the real measurement also found a genuine
+methodology bug in `bench/deterministic.py` itself (a critical-retention
+false positive from classifying a duplicated marker before dedup) — proof
+that "run it on something real" catches things synthetic fixtures cannot,
+which is the entire reason this protocol insists on it.

@@ -36,7 +36,7 @@ environment those agents work in.
 ## Status
 
 **Phase 4 of 5.** All four engines -- Context, Memory, Knowledge Graph,
-Consistency and Reliability -- work, are covered by 465 tests, and are
+Consistency and Reliability -- work, are covered by 485 tests, and are
 reachable from both a CLI and an MCP server. Phase 5 (deeper agent
 integrations and a UI) has not started.
 
@@ -84,6 +84,27 @@ the output):
 verity bench ~/.claude/projects/-Your-Project-Path/*.jsonl
 verity bench ~/.claude/projects/-Your-Project-Path/*.jsonl --budget 30000 --task "..."
 ```
+
+### Family B: is a difference real, or noise?
+
+Family A never answers "does Verity change a task's outcome" — only "how
+many tokens did this transform." For that, `bench/repetition.py` (rescued
+and generalized from the pre-pivot research programme, see
+[ADR-0010](docs/adr/0010-repetition-rescued.md)) implements the protocol's
+non-negotiable procedure: establish the noise floor by repeating ONE
+configuration N times before ever comparing it to another.
+
+```bash
+verity noise-floor within.json between.json --metric success
+```
+
+Each file is a JSON array of `{"metric": value}` objects, one per repeat.
+`within.json` is N repeats of a single configuration (the floor);
+`between.json` is the configuration being compared against it. Fewer than 2
+within-repeats is `insufficient_data`, reported as such and never silently
+upgraded to a verdict. No Family B pilot has been run yet — this is the tool
+it will be run with, in place before the first trial rather than reached for
+afterward.
 
 ---
 
@@ -355,7 +376,7 @@ looks like. This is the rule that turned T2 from a result into a retraction.
 ## Development
 
 ```bash
-pytest tests/          # 465 tests, no network, no services
+pytest tests/          # 485 tests, no network, no services
 ruff check src/ tests/
 ruff format src/ tests/
 ```
