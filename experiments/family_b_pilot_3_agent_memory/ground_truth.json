@@ -1,0 +1,8 @@
+{
+  "ground_truth": {
+    "total_amount": "$4,231.50"
+  },
+  "decoy": {
+    "total_amount": "$500.00"
+  }
+}

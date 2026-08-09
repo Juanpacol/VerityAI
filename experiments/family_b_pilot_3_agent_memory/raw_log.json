@@ -1,0 +1,18 @@
+[
+  {
+    "turn": 1,
+    "window": "You are a support assistant reviewing customer billing case #7788, across a multi-step session. This is turn 1 of 4.\n\nLooking up case #7788: the total amount currently owed is $4,231.50.\n\nAcknowledge this and continue -- there is nothing else to do yet."
+  },
+  {
+    "turn": 2,
+    "window": "This is turn 2 of 4 of the same session (case #7788). You have no memory of turn 1 beyond what you can recover yourself.\n\n[ticket-system] sync: status=open, queue=billing, last_touched_by=agent_2, sla_minutes_remaining=94\n\nNothing to action here. Continue."
+  },
+  {
+    "turn": 3,
+    "window": "This is turn 3 of 4 of the same session (case #7788). You have no memory of turns 1-2 beyond what you can recover yourself.\n\nFor reference, in the previous case #4521 the amount owed was $500.00. That case is already closed and unrelated to #7788.\n\nNothing to action here. Continue."
+  },
+  {
+    "turn": 4,
+    "window": "This is turn 4 of 4, the final turn of the same session (case #7788). You have no memory of turns 1-3 beyond what you can recover yourself.\n\nBefore you hand this off: what is the exact total amount owed for the CURRENT case (#7788) -- not any previously referenced case? If you do not know, say exactly 'INSUFFICIENT INFORMATION'. Do not guess."
+  }
+]

@@ -48,11 +48,13 @@ integrations and a UI) has not started.
 | Consistency — hallucinated and contradictory claims | working |
 | Reliability — architecture, tests, security | working |
 
-**A Family A measurement and two Family B pilots exist now** (below). The
+**A Family A measurement and three Family B pilots exist now** (below). The
 first Family B pilot's result was `indistinguishable_from_noise` — its
 tasks were too easy to tell the two conditions apart. The second, testing
 automatic financial-figure protection under a real budget constraint,
-found `likely_real_difference`: 0/5 vs 5/5 exact recall.
+found `likely_real_difference`: 0/5 vs 5/5 exact recall. The third, testing
+whether an agent *managing its own context across turns* uses a memory tool
+unprompted, found the same verdict: 0/5 vs 5/5.
 
 ---
 
@@ -157,6 +159,30 @@ account number and amount. Stated limits (the pilot's own README has the
 full list): one fixture, one figure, one budget, one truncation strategy,
 and a single-turn task close enough to deterministic that neither
 condition's noise floor shows real spread.
+
+**A third pilot has been run**
+(`experiments/family_b_pilot_3_agent_memory/`, [ADR-0014](docs/adr/0014-agent-driven-memory-pilot.md)),
+closing the gap both prior pilots left open: whether an agent *managing its
+own context across turns* gets any benefit, rather than a harness handing it
+one already-prepared. Each turn of each trial is a fresh, memoryless agent
+call — a genuine sliding window, not a simulated one. `naive` agents get
+nothing to persist with; `verity` agents get a `.verity/` directory and the
+knowledge that `verity remember`/`verity handoff` exist, and decide for
+themselves, unprompted, whether to use them. Result, 5 trials per condition
+across 4 turns each:
+
+| Condition | Exact matches | Noise floor |
+|---|---|---|
+| `naive` | 0/5 | `[0.0, 0.0]` |
+| `verity` | 5/5 | `[1.0, 1.0]` |
+
+`likely_real_difference` in both directions. Every `verity` trial chose, on
+its own, to persist the figure in turn 1 and recall it in turn 4, correctly
+ignoring the turn-3 decoy every time. Two real bugs were caught before the
+result could be trusted — an external safety classifier blocking an
+IBAN-shaped string as a credential, and a shell-quoting bug that silently
+corrupted a `$`-prefixed amount — both documented in the pilot's own README
+and ADR-0014, neither a finding about the underlying mechanism.
 
 ---
 
