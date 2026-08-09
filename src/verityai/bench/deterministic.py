@@ -117,12 +117,28 @@ def measure_case(
     pipeline = ContextPipeline(counter=counter)
 
     items = load(raw)
-    classified_before = classify_all([pipeline.measure(i, n) for n, i in enumerate(items)])
+    measured = [pipeline.measure(i, n) for n, i in enumerate(items)]
+    # Two distinct classification passes, over two distinct item sets, each
+    # answering a different question. Conflating them produced a real false
+    # positive: measuring the pipeline over 5 real session transcripts
+    # (see docs/BENCHMARK_PROTOCOL.md) reported "critical retention < 100%"
+    # on three of them, which looked like the pipeline silently dropping
+    # protected content -- the single invariant this whole engine exists to
+    # guarantee. It wasn't. The lost items were exact duplicates of an
+    # earlier critical item: an explicit marker's precedence over the
+    # duplicate check (`classify.py`) means BOTH copies independently
+    # classify CRITICAL when classified on the raw, pre-dedup list, but the
+    # real pipeline dedups before classifying and correctly keeps only the
+    # first copy -- the information survives once, which is the point of
+    # deduplication. Classifying the raw list here counted both copies as
+    # something the pipeline was obligated to keep twice.
+    classified_raw = classify_all(measured)  # for the duplicate-share corpus check below
+    classified_before = classify_all(pipeline.dedup(measured))  # ground truth for retention
     result: PruneResult = pipeline.run(items, task=task, budget=budget)
 
     warnings: list[str] = []
 
-    duplicate_share = _duplicate_share(classified_before)
+    duplicate_share = _duplicate_share(classified_raw)
     if duplicate_share > _SUSPICIOUS_DUPLICATE_SHARE:
         warnings.append(
             f"{duplicate_share:.0%} of tokens are exact duplicates -- this measures "

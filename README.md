@@ -36,7 +36,7 @@ environment those agents work in.
 ## Status
 
 **Phase 4 of 5.** All four engines -- Context, Memory, Knowledge Graph,
-Consistency and Reliability -- work, are covered by 435 tests, and are
+Consistency and Reliability -- work, are covered by 465 tests, and are
 reachable from both a CLI and an MCP server. Phase 5 (deeper agent
 integrations and a UI) has not started.
 
@@ -48,10 +48,42 @@ integrations and a UI) has not started.
 | Consistency — hallucinated and contradictory claims | working |
 | Reliability — architecture, tests, security | working |
 
-**No performance figure is published anywhere in this repository.** The
-benchmark harness exists and refuses to call its own results publishable until
-they meet the bar in [`docs/BENCHMARK_PROTOCOL.md`](docs/BENCHMARK_PROTOCOL.md).
-That is deliberate — see below.
+**The first honest Family A number exists now** (below). Family B (does it
+change task outcomes, not just token counts) has not been measured yet.
+
+---
+
+## First real measurement (2026-08-09)
+
+Measured on 3 real Claude Code development sessions of this same project
+(session transcripts read directly from `~/.claude/projects/`, never
+committed — see [ADR-0009](docs/adr/0009-family-a-real-measurement.md)),
+3.25M tokens combined, `tiktoken:cl100k_base`. Every prior figure in this
+project's history was synthetic; this is the first that isn't.
+
+| Configuration | Tokens before | Tokens after | Reduction | Critical retained |
+|---|---:|---:|---:|---:|
+| No budget (dedup + noise filter + compression only) | 3,255,931 | 3,215,766 | **1.1%** | 100% |
+| 30,000-token budget, ranked against the task | 3,255,931 | 1,456,908 | **55.2%** | 100% |
+
+Two numbers, not one, because they answer different questions. The first is
+what pruning removes for free, with nothing forced out — real sessions
+turned out to carry far less exact-duplicate/dead-noise content than the
+92.4% figure from the synthetic fixture that this project's own
+`docs/BENCHMARK_PROTOCOL.md` already flags as what not to publish. The
+second is what happens once a real budget forces a choice, and it is the
+number that matters for "can this fit in a smaller context" — with the one
+invariant that has to hold under that pressure (nothing marked critical is
+dropped) holding exactly at 100% in both real runs.
+
+Reproduce it yourself (only the aggregate counts leave your machine — see
+`tests/unit/test_bench_privacy.py` for what's enforced never to appear in
+the output):
+
+```bash
+verity bench ~/.claude/projects/-Your-Project-Path/*.jsonl
+verity bench ~/.claude/projects/-Your-Project-Path/*.jsonl --budget 30000 --task "..."
+```
 
 ---
 
@@ -323,7 +355,7 @@ looks like. This is the rule that turned T2 from a result into a retraction.
 ## Development
 
 ```bash
-pytest tests/          # 435 tests, no network, no services
+pytest tests/          # 465 tests, no network, no services
 ruff check src/ tests/
 ruff format src/ tests/
 ```

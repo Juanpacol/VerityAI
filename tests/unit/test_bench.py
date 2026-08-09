@@ -31,6 +31,44 @@ def transcript(n_items=30, duplicate=False):
     return json.dumps(messages)
 
 
+class TestDuplicatedCriticalMarkers:
+    """A real false positive found by running this over real session data.
+
+    An explicit marker's precedence over the duplicate check (`classify.py`)
+    means a critical item and its exact duplicate both classify CRITICAL
+    when classified on the raw, pre-dedup list -- but the real pipeline
+    dedups first and correctly keeps only the first copy. Measuring against
+    the raw classification as ground truth made three real transcripts
+    falsely report "critical retention < 100%", which reads as the one
+    invariant this engine exists to guarantee being silently violated.
+    """
+
+    def test_a_duplicated_critical_marker_does_not_trigger_a_false_bug_warning(self):
+        messages = [
+            {"role": "assistant", "content": f"padding message number {n} with some content"}
+            for n in range(15)
+        ]
+        messages.insert(2, {"role": "user", "content": "DECISION: do not touch the schema"})
+        # An exact duplicate of the critical marker, elsewhere in the transcript.
+        messages.append({"role": "user", "content": "DECISION: do not touch the schema"})
+
+        case = measure_case("dupes", json.dumps(messages), counter=FixedCounter())
+
+        assert case.critical_retention == 1.0
+        assert not any("BUG" in w for w in case.warnings)
+
+    def test_the_surviving_copy_of_the_critical_marker_is_still_present(self):
+        messages = [{"role": "user", "content": "DECISION: do not touch the schema"}] * 2
+        messages += [
+            {"role": "assistant", "content": f"padding {n} with distinct content here"}
+            for n in range(15)
+        ]
+
+        case = measure_case("dupes", json.dumps(messages), counter=FixedCounter())
+
+        assert case.critical_retention == 1.0
+
+
 class TestSelfDisqualification:
     def test_a_duplicate_heavy_corpus_is_flagged(self):
         case = measure_case("synthetic", transcript(duplicate=True), counter=FixedCounter())

@@ -2,11 +2,15 @@
 
 Everything downstream operates on items, so this is where an opaque blob of
 text becomes something that can be counted, classified and dropped
-individually. Two input shapes are supported:
+individually. Three input shapes are supported:
 
 - **JSON** — a list of `{"role": ..., "content": ...}` messages, the shape
   every agent framework already speaks. Preferred, because role information is
   explicit rather than guessed.
+- **Claude Code session JSONL** — one JSON event per line, as Claude Code
+  writes real session transcripts to disk. See `ingest_claude_code.py` for
+  the schema and why it needs its own parser rather than stretching this
+  module's generic one.
 - **Plain text** — split on blank lines and on common role markers. A
   best-effort fallback for pasted terminal scrollback, and it says so: items
   it could not confidently attribute are marked `ItemKind.AGENT_MESSAGE` with
@@ -22,6 +26,7 @@ import json
 import re
 from typing import Any
 
+from verityai.context.ingest_claude_code import is_claude_code_jsonl, parse_jsonl
 from verityai.core.models import ContextItem, ItemKind
 
 # Role markers common to agent transcripts and terminal scrollback. Matched at
@@ -157,12 +162,27 @@ def load(raw: str) -> list[ContextItem]:
     Tries the structured path first and falls back silently, because a caller
     piping in a transcript should not have to declare its format. Whether the
     structured path was taken is recoverable from `metadata["kind_inferred"]`.
+
+    A single JSON array/object and a Claude Code session both start with `[`
+    or `{`, so the two are disambiguated by trying to parse the *whole* input
+    as one JSON value first — a real session file is many JSON objects
+    (one per line), so that parse fails, and `is_claude_code_jsonl` is the
+    tiebreaker before falling further back to the plain-text path.
+
+    Session bookkeeping lines get silently dropped here (their counts are not
+    surfaced through this return type) — a caller who needs that breakdown
+    should call `ingest_claude_code.parse_jsonl` directly, the way
+    `graph/ingest.py`'s `IngestReport.skipped` is only available from the
+    function that actually walks the repo, not from a generic loader.
     """
     stripped = raw.strip()
     if stripped.startswith("[") or stripped.startswith("{"):
         try:
             parsed = json.loads(stripped)
         except json.JSONDecodeError:
+            if is_claude_code_jsonl(raw):
+                items, _skipped = parse_jsonl(raw)
+                return items
             return from_text(raw)
 
         if isinstance(parsed, list):

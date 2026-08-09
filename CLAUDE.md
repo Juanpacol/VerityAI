@@ -170,7 +170,7 @@ has the detail; the short version:
 ## Development
 
 ```bash
-pytest tests/           # 435 tests, no network, no services, no fixtures needed
+pytest tests/           # 465 tests, no network, no services, no fixtures needed
 ruff check src/ tests/
 ruff format src/ tests/
 ```

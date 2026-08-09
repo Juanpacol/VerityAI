@@ -82,7 +82,7 @@ class ContextPipeline:
         stages: list[PruneStage] = []
         current = measured
 
-        current = self._stage(stages, "dedup", current, self._dedup)
+        current = self._stage(stages, "dedup", current, self.dedup)
         current = self._stage(stages, "classify", current, lambda xs: classify_all(xs))
         if task:
             current = self._stage(stages, "rank", current, lambda xs: self._rank(xs, task))
@@ -157,12 +157,23 @@ class ContextPipeline:
 
     # --- stages ----------------------------------------------------------
 
-    def _dedup(self, items: list[ContextItem]) -> list[ContextItem]:
+    def dedup(self, items: list[ContextItem]) -> list[ContextItem]:
         """Drop exact duplicates, keeping the first occurrence.
 
         First rather than last: the earliest appearance is the one later
         items refer back to, and keeping the last would break those
         references while saving exactly the same number of tokens.
+
+        Public for the same reason `measure` is: a caller establishing a
+        classification baseline to compare the pipeline's output against
+        (see `bench/deterministic.py::measure_case`) must dedup *before*
+        classifying, or it double-counts an exact duplicate of a critical
+        item as something the pipeline was obligated to keep twice. An
+        explicit marker's precedence over the duplicate check (see
+        `classify.py`) means both copies independently classify as
+        `CRITICAL` when classified before dedup has run — even though
+        keeping one surviving copy already preserves the information, which
+        is the whole point of deduplication.
         """
         seen: set[str] = set()
         kept: list[ContextItem] = []

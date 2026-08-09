@@ -1,0 +1,18 @@
+{"type": "mode", "sessionId": "sample-session", "mode": "default"}
+{"type": "permission-mode", "sessionId": "sample-session", "permissionMode": "default"}
+{"type": "file-history-snapshot", "isSnapshotUpdate": false, "messageId": "m0", "snapshot": {}}
+{"type": "system", "sessionId": "sample-session", "content": "system init"}
+{"type": "user", "message": {"role": "user", "content": "Please add a health check endpoint."}}
+{"type": "ai-title", "title": "Add health check endpoint"}
+{"type": "assistant", "message": {"role": "assistant", "content": [{"type": "text", "text": "Sure, let me look at the routes file first."}]}}
+{"type": "assistant", "message": {"role": "assistant", "content": [{"type": "tool_use", "name": "Read", "input": {"file_path": "src/app/routes.py"}}]}}
+{"type": "user", "message": {"role": "user", "content": [{"type": "tool_result", "tool_use_id": "t1", "content": [{"type": "text", "text": "def index():\n    return 'ok'\n"}]}]}}
+{"type": "user", "message": {"role": "user", "content": [{"type": "tool_result", "tool_use_id": "t2", "content": "plain string tool result"}]}}
+{"type": "agent-name", "name": "general-purpose"}
+{"type": "last-prompt", "prompt": "add a health check endpoint"}
+{"type": "attachment", "path": "screenshot.png"}
+{"type": "assistant", "message": {"role": "assistant", "content": [{"type": "text", "text": "Added the /health endpoint and a test."}]}}
+{"type": "unknown-future-event", "some": "field"}
+not even valid json on this line
+{"type": "user"}
+{"type": "user", "message": {"role": "user", "content": "   "}}
