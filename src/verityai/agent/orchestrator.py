@@ -13,9 +13,13 @@ tracked as follow-up work, not implemented in this MVP loop.
 
 import logging
 import time
-from typing import Optional
+from typing import Any, Optional
+from uuid import UUID, uuid4
 
+from verityai.agent import events
 from verityai.agent.confidence import explain_confidence
+from verityai.agent.event_narration import narrate
+from verityai.agent.events import EventEmitter, StageEvent, null_emitter
 from verityai.agent.state import AgentState
 from verityai.kg.client import KGClient
 from verityai.kg.retrieval import HybridRetriever
@@ -70,27 +74,103 @@ class Orchestrator:
         self.retrieval_strategy = retrieval_strategy
         self.retrieval_top_k = retrieval_top_k
 
-    def run(self, request: GenerationRequest) -> GenerationResponse:
+    def _emit(
+        self,
+        emit: EventEmitter,
+        run_id: UUID,
+        started: float,
+        event_type: str,
+        attempt_number: Optional[int] = None,
+        **data: Any,
+    ) -> None:
+        """Build, narrate and hand off one stage event.
+
+        Swallows everything. A broken or slow UI listener must never be able
+        to fail a code generation -- the run is the product, the live view is
+        a window onto it.
+        """
+        try:
+            emit(
+                StageEvent(
+                    run_id=run_id,
+                    type=event_type,
+                    attempt_number=attempt_number,
+                    message=narrate(event_type, data),
+                    data=data,
+                    elapsed_seconds=time.monotonic() - started,
+                )
+            )
+        except Exception as e:  # pragma: no cover - defensive
+            logger.warning(f"Event emitter raised on {event_type}, continuing run: {e}")
+
+    def run(
+        self,
+        request: GenerationRequest,
+        emit: Optional[EventEmitter] = None,
+        request_id: Optional[UUID] = None,
+    ) -> GenerationResponse:
         """Execute the full generate-verify-retry loop for one request.
 
         Args:
             request: What to generate, language, and max retry budget
+            emit: Optional listener for stage events, so a caller can watch
+                the loop progress instead of waiting on the return value.
+                Defaults to discarding events, which is why every existing
+                caller is unaffected.
+            request_id: Optional caller-supplied id for this run. The live
+                UI needs a stream URL *before* the run starts, so it
+                allocates the id up front and passes it in here; leaving it
+                None keeps the previous behaviour of generating one.
 
         Returns:
             GenerationResponse with the final code, full attempt history,
             and a human-readable explanation of the outcome
         """
+        emit = emit or null_emitter
         state = AgentState(
             user_prompt=request.prompt,
             language=request.language,
             max_attempts=max(1, request.max_attempts),
+            request_id=request_id or uuid4(),
+        )
+        run_id = state.request_id
+        started = time.monotonic()
+
+        self._emit(
+            emit,
+            run_id,
+            started,
+            events.RUN_STARTED,
+            prompt=request.prompt,
+            language=request.language,
+            max_attempts=state.max_attempts,
         )
 
+        self._emit(
+            emit, run_id, started, events.RETRIEVAL_STARTED, strategy=self.retrieval_strategy
+        )
         kg_context = self._fetch_kg_context(request)
         pattern_similarity = self._extract_pattern_similarity(kg_context)
+        self._emit(
+            emit,
+            run_id,
+            started,
+            events.RETRIEVAL_COMPLETED,
+            **self._retrieval_event_data(kg_context),
+        )
 
         while not state.is_exhausted:
             attempt_started = time.monotonic()
+            next_attempt = state.attempt_number + 1
+            self._emit(
+                emit,
+                run_id,
+                started,
+                events.ATTEMPT_STARTED,
+                attempt_number=next_attempt,
+                has_retry_context=state.last_failure_reason is not None,
+                previous_failure=state.last_failure_reason,
+            )
             try:
                 code, reasoning = self.generate_once(
                     state.user_prompt, kg_context, state.last_failure_reason
@@ -99,16 +179,59 @@ class Orchestrator:
                 # LLM is unreachable/failing — no point burning remaining
                 # attempts on requests that will fail identically.
                 logger.error(f"Generation failed, aborting retry loop: {e}")
+                self._emit(
+                    emit,
+                    run_id,
+                    started,
+                    events.RUN_FAILED,
+                    attempt_number=next_attempt,
+                    error=str(e),
+                )
                 return self._build_error_response(state, str(e))
 
+            self._emit(
+                emit,
+                run_id,
+                started,
+                events.GENERATION_COMPLETED,
+                attempt_number=next_attempt,
+                code=code,
+                reasoning=reasoning,
+                code_lines=len(code.splitlines()),
+            )
+
+            self._emit(
+                emit,
+                run_id,
+                started,
+                events.VERIFICATION_STARTED,
+                attempt_number=next_attempt,
+            )
             verification_result = self.verify_code(code)
             generation_seconds = time.monotonic() - attempt_started
+            self._emit(
+                emit,
+                run_id,
+                started,
+                events.VERIFICATION_COMPLETED,
+                attempt_number=next_attempt,
+                **self._verification_event_data(verification_result, code),
+            )
+
             confidence_breakdown = explain_confidence(
                 verification_result, pattern_similarity=pattern_similarity
             )
             confidence = confidence_breakdown["total"]
+            self._emit(
+                emit,
+                run_id,
+                started,
+                events.CONFIDENCE_COMPUTED,
+                attempt_number=next_attempt,
+                **confidence_breakdown,
+            )
 
-            state.record_attempt(
+            trace = state.record_attempt(
                 code=code,
                 kg_context=kg_context,
                 llm_reasoning=reasoning,
@@ -123,10 +246,92 @@ class Orchestrator:
                 f"status={verification_result.status.value} confidence={confidence:.2f}"
             )
 
+            self._emit(
+                emit,
+                run_id,
+                started,
+                events.ATTEMPT_COMPLETED,
+                attempt_number=state.attempt_number,
+                status=verification_result.status.value,
+                confidence=confidence,
+                generation_seconds=generation_seconds,
+                trace_id=str(trace.id),
+                # Serialized so the API layer can persist the attempt
+                # mid-run without reaching back into AgentState.
+                trace=trace.model_dump(mode="json"),
+            )
+
             if state.is_verified:
                 break
 
-        return self._build_response(state)
+            if not state.is_exhausted:
+                self._emit(
+                    emit,
+                    run_id,
+                    started,
+                    events.RETRY_SCHEDULED,
+                    next_attempt_number=state.attempt_number + 1,
+                    failure_reason=state.last_failure_reason,
+                )
+
+        response = self._build_response(state)
+        self._emit(
+            emit,
+            run_id,
+            started,
+            events.RUN_COMPLETED,
+            status=response.status,
+            confidence=response.confidence,
+            attempt_count=len(state.history),
+            explanation=response.explanation,
+        )
+        return response
+
+    @staticmethod
+    def _retrieval_event_data(kg_context: dict) -> dict:
+        """Flatten kg_context into JSON-safe fields for a retrieval event."""
+        rules = kg_context.get("rules") or []
+        retrieval_meta = kg_context.get("retrieval")
+        data: dict[str, Any] = {
+            "strategy": "legacy",
+            "rule_count": len(rules),
+            "rules": rules,
+        }
+        if isinstance(retrieval_meta, dict):
+            data.update(
+                strategy=retrieval_meta.get("strategy", "hybrid"),
+                mode=retrieval_meta.get("mode"),
+                degraded_reason=retrieval_meta.get("degraded_reason"),
+                top_semantic_similarity=retrieval_meta.get("top_semantic_similarity"),
+            )
+        return data
+
+    @staticmethod
+    def _verification_event_data(result: VerificationResult, code: str) -> dict:
+        """Flatten a VerificationResult into JSON-safe fields for an event.
+
+        Counterexamples are resolved here rather than in the API layer
+        because `narrate()` runs at emit time and needs them to say "Z3
+        found a case where this fails: x=-1" instead of a generic sentence.
+        `agent/` may depend on `symbolic/` (see CLAUDE.md), so running the
+        debugger here costs nothing structurally.
+        """
+        non_verifiable = result.metadata.get("non_verifiable_nodes") or []
+        counterexamples: list = []
+        if result.violations:
+            try:
+                counterexamples = SymbolicDebugger(code).debug(result).get("violations", [])
+            except Exception as e:  # pragma: no cover - defensive
+                logger.warning(f"Could not build counterexample detail for event: {e}")
+        return {
+            "status": result.status.value,
+            "solver_confidence": result.confidence,
+            "violation_count": len(result.violations),
+            "counterexamples": counterexamples,
+            "non_verifiable_count": len(non_verifiable) if isinstance(non_verifiable, list) else 0,
+            "duration_seconds": result.duration_seconds,
+            "verification_result": result.model_dump(mode="json"),
+        }
 
     def _fetch_kg_context(self, request: GenerationRequest) -> dict:
         """Fetch relevant rules from the KG for prompt injection.

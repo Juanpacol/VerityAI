@@ -142,6 +142,31 @@ retrieved, by which method, with what score), the attempt-by-attempt code +
 verification history, a recomputed Z3 counterexample panel, and a confidence
 factor breakdown (verification/pattern similarity/complexity/test coverage).
 
+### Watching a run happen: `GET /live`
+
+`POST /generate` holds the HTTP connection open for the 65-125s a real run
+takes and shows nothing until it finishes. `GET /live` is the same pipeline
+with the process made visible: submit a prompt, and each stage streams back
+over Server-Sent Events as it completes — which rules were retrieved from the
+KG, what the model produced, what Z3 concluded (including the counterexample
+that made it fail), how the confidence score decomposed, and why a retry was
+triggered. Each step arrives with a plain-language sentence generated from
+fixed templates, never from a second LLM call: the point of this project is
+that what it shows you is checkable.
+
+Mechanically it is a two-call handshake — `POST /live/runs` returns a
+`run_id` and a stream URL immediately and starts the work on a background
+thread; `GET /live/runs/{run_id}/events` streams it. The `run_id` *is* the
+`request_id`, so `/runs/{id}` and `/runs/{id}/view` work on the same id
+afterwards, and traces are persisted per attempt rather than only at the end,
+so the post-hoc view is usable even if the stream drops mid-run.
+
+The page also serves as a vehicle for the T5 human-evaluation study
+(`docs/T5_HUMAN_EVAL_PROTOCOL.md`): it gates on consent, assigns a
+panel-visibility condition server-side, and collects both a stated-trust and
+a separate behavioural-intent answer. `VERITYAI_STUDY_TOKEN` gates the
+`GET /study/responses.csv` export; with it unset, the export 404s.
+
 ## Project Structure
 
 ```

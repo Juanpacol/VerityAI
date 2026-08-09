@@ -137,10 +137,20 @@ VerityAI/
 │   │   ├── trace.py
 │   │   ├── session.py
 │   │   ├── refinement.py
-│   │   └── continuous_learning.py
+│   │   ├── continuous_learning.py
+│   │   ├── events.py                # StageEvent: live pipeline events
+│   │   └── event_narration.py       # plain-language templates (no LLM)
 │   ├── evaluation/
 │   ├── compliance/
-│   ├── api/rest.py
+│   ├── study/                       # T5 human-eval response storage + export
+│   ├── api/
+│   │   ├── rest.py
+│   │   ├── run_view.py              # post-hoc trace view + panel fragments
+│   │   ├── dashboard.py
+│   │   ├── live_page.py             # GET /live: watch a run happen
+│   │   ├── live_runs.py             # in-memory registry, sync->SSE bridge
+│   │   ├── live_fragments.py        # event -> HTML panel + T5 masking
+│   │   └── rate_limit.py
 │   └── cli/verityai_cli.py
 ├── tests/
 │   ├── unit/
@@ -180,7 +190,8 @@ VerityAI/
 
 ### Prerequisites
 - Docker + Docker Compose
-- Python 3.11+
+- Python 3.9+ (`pyproject.toml`'s `requires-python` and `[tool.mypy]`
+  both pin 3.9 — write 3.9-compatible code: `Optional[X]`, not `X | None`)
 - Ollama installed locally (`brew install ollama` on macOS)
 
 ### Quick Start

@@ -22,25 +22,47 @@ not more real throughput. A genuine fix needs an async job queue
 so the API layer stops holding an HTTP connection open for the entire
 generation -- tracked as follow-up, not implemented here to avoid
 building a queueing/worker subsystem this project doesn't otherwise need.
+
+`POST /live/runs` (see the live-run section at the bottom of this module)
+does implement the "return immediately, watch it separately" half of that
+idea: it allocates a run id, starts the work on a daemon thread and
+returns 202 in milliseconds, with progress delivered over SSE rather than
+polled. It is *not* the general fix, though -- there is no durable queue,
+no retry on worker death, and no cross-process state, so runs are capped
+at VERITYAI_MAX_LIVE_RUNS and live only in this process's memory.
+`/generate` deliberately keeps its simple synchronous contract.
 """
 
+import logging
 import os
+import random
+import threading
+import time
 from contextlib import asynccontextmanager
-from typing import Optional
-from uuid import UUID
+from typing import AsyncIterator, Optional
+from uuid import UUID, uuid4
 
 import anyio
 from fastapi import Depends, FastAPI, Header, HTTPException, Response
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, StreamingResponse
 from neo4j import GraphDatabase
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
+from verityai.agent import events as stage_events
+from verityai.agent.events import StageEvent
 from verityai.agent.orchestrator import Orchestrator
 from verityai.agent.trace import TraceStore
 from verityai.api.dashboard import render_dashboard
+from verityai.api.live_fragments import apply_condition, build_html
+from verityai.api.live_page import render_live_page
+from verityai.api.live_runs import (
+    VALID_CONDITIONS,
+    LiveRunRegistry,
+    get_live_run_registry,
+)
 from verityai.api.rate_limit import RateLimitMiddleware
 from verityai.api.run_view import render_run_view
 from verityai.compliance.audit_log import AuditLogStore
@@ -64,7 +86,27 @@ from verityai.ontology.models import (
     VerificationResult,
     VerificationStatus,
 )
+from verityai.study.models import StudyResponse, StudyResponseSubmission
+from verityai.study.store import StudyResponseStore, to_csv
 from verityai.symbolic.verify import verify_python_snippet
+
+logger = logging.getLogger(__name__)
+
+# --- Live-run tuning -----------------------------------------------------
+# The only backpressure on Ollama: live runs execute on daemon threads,
+# which bypass anyio's threadpool limiter entirely. There is one Ollama
+# instance behind this, so keep it small.
+MAX_LIVE_RUNS = int(os.environ.get("VERITYAI_MAX_LIVE_RUNS", "4"))
+# Wall-clock ceiling on one SSE connection, so a wedged run cannot pin a
+# connection open forever. A real run is 65-125s; 600s is generous.
+MAX_STREAM_SECONDS = float(os.environ.get("VERITYAI_MAX_STREAM_SECONDS", "600"))
+# How often the async generator drains the (thread-owned) event buffer.
+# The buffer's threading.Event wakes it sooner whenever an event lands, so
+# this is only the ceiling on latency, not the typical case.
+STREAM_POLL_SECONDS = 0.15
+# SSE comment frames keep proxies from closing an idle connection during
+# the long silent stretch of an LLM generation.
+STREAM_KEEPALIVE_SECONDS = 15.0
 
 
 @asynccontextmanager
@@ -189,6 +231,20 @@ def get_kg_client() -> KGClient:
 
 def get_trace_store(db: Session = Depends(get_db_session)) -> TraceStore:
     return TraceStore(db)
+
+
+def get_background_session_factory():
+    """Session factory for work that outlives the request that started it.
+
+    A live run keeps writing traces long after POST /live/runs has
+    returned its 202, by which point the request-scoped session from
+    get_db_session is closed. This is a FastAPI dependency (rather than
+    calling _get_engine() inside the worker thread) purely so tests can
+    point background writes at the same in-memory database the rest of
+    their assertions read from.
+    """
+    _, session_factory = _get_engine()
+    return session_factory
 
 
 def get_audit_log_store(db: Session = Depends(get_db_session)) -> AuditLogStore:
@@ -381,6 +437,288 @@ def get_run_view(request_id: UUID, trace_store: TraceStore = Depends(get_trace_s
     if not traces:
         raise HTTPException(status_code=404, detail=f"Run {request_id} not found")
     return render_run_view(traces)
+
+
+# --- Live run: watch the pipeline execute --------------------------------
+# Two-call handshake. POST /live/runs allocates the run id, starts the work
+# on a worker thread and returns in milliseconds; the client then opens the
+# SSE stream. The id is allocated *before* the run starts precisely so the
+# client has a stream URL to connect to -- it is passed into the
+# orchestrator as request_id, which is why run_id == request_id and every
+# existing /runs/{id} route works on the same id afterwards.
+
+
+class LiveRunRequest(BaseModel):
+    prompt: str
+    language: str = "python"
+    max_attempts: int = Field(default=3, ge=1, le=5)
+    # Study participation is the default use of this page; see
+    # docs/T5_HUMAN_EVAL_PROTOCOL.md. Rejected below if not explicitly true.
+    consent: bool = False
+
+
+class LiveRunCreated(BaseModel):
+    run_id: UUID
+    stream_url: str
+    condition: str
+
+
+def _pick_condition() -> str:
+    """Assign a T5 panel-masking condition, server-side.
+
+    Per-run rather than per-session: the protocol wants within-subject
+    variation across conditions, and a run is the unit a participant
+    actually judges.
+
+    VERITYAI_FORCE_CONDITION exists so the page can be developed and
+    demoed deterministically. It must be unset while collecting real study
+    data -- a fixed condition would silently destroy the manipulation.
+    """
+    forced = os.environ.get("VERITYAI_FORCE_CONDITION")
+    if forced in VALID_CONDITIONS:
+        return forced
+    return random.choice(VALID_CONDITIONS)
+
+
+def _run_and_publish(
+    orchestrator: Orchestrator,
+    request: GenerationRequest,
+    run_id: UUID,
+    condition: str,
+    registry: LiveRunRegistry,
+    session_factory,
+) -> None:
+    """Execute one run on a worker thread, publishing events as it goes.
+
+    Opens its own DB session from `session_factory`. The request-scoped
+    session from Depends(get_db_session) is already closed by the time this
+    starts -- POST /live/runs returned its 202 long before.
+    """
+    session = session_factory()
+    trace_store = TraceStore(session)
+    ctx: dict = {}
+
+    def emit(event: StageEvent) -> None:
+        # Render before masking: build_html also stashes per-run state in
+        # ctx (notably the generated code the Z3 panel needs).
+        event.html = build_html(event, ctx)
+
+        # Persist each attempt as it lands, so /runs/{id}/view is usable
+        # mid-run and survives a dropped stream. save_trace upserts by id,
+        # so the save_traces below is idempotent. Persistence is the
+        # server's own record and is deliberately *not* condition-masked.
+        if event.type == stage_events.ATTEMPT_COMPLETED and event.data.get("trace"):
+            try:
+                trace_store.save_trace(ReasoningTrace.model_validate(event.data["trace"]))
+            except Exception as e:
+                logger.warning(f"Could not persist attempt mid-run: {e}")
+
+        apply_condition(event, condition)
+        registry.append(run_id, event)
+
+    try:
+        response = orchestrator.run(request, emit=emit, request_id=run_id)
+        trace_store.save_traces(response.traces)
+        registry.finish(run_id)
+    except Exception as e:
+        logger.exception(f"Live run {run_id} failed")
+        registry.finish(run_id, error=str(e))
+    finally:
+        session.close()
+
+
+@app.post("/live/runs", response_model=LiveRunCreated, status_code=202)
+def create_live_run(
+    body: LiveRunRequest,
+    orchestrator: Orchestrator = Depends(get_orchestrator),
+    registry: LiveRunRegistry = Depends(get_live_run_registry),
+    session_factory=Depends(get_background_session_factory),
+) -> LiveRunCreated:
+    """Start a run in the background and hand back a URL to watch it on."""
+    if not body.consent:
+        raise HTTPException(
+            status_code=400,
+            detail="Consent is required before starting a run on this page.",
+        )
+
+    registry.sweep()
+    if registry.active_count() >= MAX_LIVE_RUNS:
+        raise HTTPException(
+            status_code=429,
+            detail="Too many runs in progress right now. Please try again in a minute.",
+        )
+
+    run = registry.create(_pick_condition(), run_id=uuid4())
+    request = GenerationRequest(
+        prompt=body.prompt, language=body.language, max_attempts=body.max_attempts
+    )
+    threading.Thread(
+        target=_run_and_publish,
+        args=(orchestrator, request, run.run_id, run.condition, registry, session_factory),
+        daemon=True,
+    ).start()
+
+    return LiveRunCreated(
+        run_id=run.run_id,
+        stream_url=f"/live/runs/{run.run_id}/events",
+        condition=run.condition,
+    )
+
+
+async def _event_stream(
+    registry: LiveRunRegistry, run_id: UUID, last_sequence: int
+) -> AsyncIterator[str]:
+    """Yield SSE frames for one run until it finishes (or the guard trips)."""
+    started = time.monotonic()
+    last_output = started
+
+    while True:
+        run = registry.get(run_id)
+        if run is None:
+            # Swept out from under us -- nothing more will ever arrive.
+            yield "event: done\ndata: {}\n\n"
+            return
+
+        pending = registry.events_since(run_id, last_sequence)
+        for event in pending:
+            last_sequence = event.sequence
+            # `id:` is what makes EventSource's Last-Event-ID reconnect
+            # resume exactly where it left off.
+            yield (
+                f"id: {event.sequence}\n"
+                f"event: {event.type}\n"
+                f"data: {event.model_dump_json()}\n\n"
+            )
+            last_output = time.monotonic()
+
+        if run.finished and not registry.events_since(run_id, last_sequence):
+            yield "event: done\ndata: {}\n\n"
+            return
+
+        if time.monotonic() - started > MAX_STREAM_SECONDS:
+            yield "event: done\ndata: {}\n\n"
+            return
+
+        now = time.monotonic()
+        if now - last_output > STREAM_KEEPALIVE_SECONDS:
+            yield ": keepalive\n\n"
+            last_output = now
+
+        run.tick.clear()
+        await anyio.sleep(STREAM_POLL_SECONDS)
+
+
+@app.get("/live/runs/{run_id}/events")
+async def stream_live_run(
+    run_id: UUID,
+    last_event_id: Optional[str] = Header(default=None, alias="Last-Event-ID"),
+    registry: LiveRunRegistry = Depends(get_live_run_registry),
+) -> StreamingResponse:
+    """Server-sent events for one live run.
+
+    The only async route in this module: it holds a connection open for the
+    length of a run, which a sync endpoint would do by occupying a
+    threadpool worker the whole time.
+
+    Every event the run has emitted is replayed before tailing, so a client
+    that connects late (or reconnects) never misses a step. Rate limiting
+    exempts this path -- see api/rate_limit.py.
+    """
+    if registry.get(run_id) is None:
+        raise HTTPException(status_code=404, detail=f"Live run {run_id} not found")
+
+    try:
+        last_sequence = int(last_event_id) if last_event_id else 0
+    except ValueError:
+        last_sequence = 0
+
+    return StreamingResponse(
+        _event_stream(registry, run_id, last_sequence),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            # Tells nginx not to buffer the stream into uselessness.
+            "X-Accel-Buffering": "no",
+        },
+    )
+
+
+@app.get("/live", response_class=HTMLResponse)
+def live_page() -> str:
+    """The live pipeline view: submit a prompt, watch verification happen."""
+    return render_live_page()
+
+
+# --- T5 study: response collection --------------------------------------
+
+
+def get_study_store(db: Session = Depends(get_db_session)) -> StudyResponseStore:
+    return StudyResponseStore(db)
+
+
+@app.post("/study/responses", response_model=StudyResponse, status_code=201)
+def submit_study_response(
+    submission: StudyResponseSubmission,
+    registry: LiveRunRegistry = Depends(get_live_run_registry),
+    store: StudyResponseStore = Depends(get_study_store),
+    trace_store: TraceStore = Depends(get_trace_store),
+) -> StudyResponse:
+    """Record one participant's answers about one run.
+
+    The panel-masking condition is read from the run registry, never from
+    the request body -- see study/models.py. If the run has already been
+    swept out of memory we cannot establish which condition the participant
+    actually saw, and a response with an unknown condition is unusable for
+    the analysis, so it is refused rather than stored with a guess.
+    """
+    run = registry.get(submission.run_id)
+    if run is None:
+        if trace_store.get_traces_by_request(submission.run_id):
+            raise HTTPException(
+                status_code=409,
+                detail=(
+                    "This run has expired from the live registry, so the display "
+                    "condition it was shown under can no longer be established. "
+                    "The response was not recorded."
+                ),
+            )
+        raise HTTPException(status_code=404, detail=f"Run {submission.run_id} not found")
+
+    response = StudyResponse(condition=run.condition, **submission.model_dump())
+    store.save(response)
+    return response
+
+
+def _require_study_token(provided: Optional[str]) -> None:
+    """Gate the exports. Verbatim answers are participant data, not public.
+
+    With VERITYAI_STUDY_TOKEN unset the endpoints 404 rather than 401: an
+    unconfigured deployment should look like it has no export endpoints at
+    all, so a missed env var can never become an open dump of free-text
+    responses.
+    """
+    expected = os.environ.get("VERITYAI_STUDY_TOKEN")
+    if not expected or provided != expected:
+        raise HTTPException(status_code=404, detail="Not found")
+
+
+@app.get("/study/responses.json")
+def export_study_responses_json(
+    x_study_token: Optional[str] = Header(default=None, alias="X-Study-Token"),
+    store: StudyResponseStore = Depends(get_study_store),
+) -> list[StudyResponse]:
+    _require_study_token(x_study_token)
+    return store.list_all()
+
+
+@app.get("/study/responses.csv")
+def export_study_responses_csv(
+    x_study_token: Optional[str] = Header(default=None, alias="X-Study-Token"),
+    store: StudyResponseStore = Depends(get_study_store),
+) -> Response:
+    _require_study_token(x_study_token)
+    return Response(content=to_csv(store.list_all()), media_type="text/csv")
 
 
 @app.post("/verify", response_model=VerificationResult)

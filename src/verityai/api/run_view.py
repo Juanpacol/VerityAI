@@ -140,6 +140,40 @@ def _render_stepper(traces: list[ReasoningTrace]) -> str:
     return '<div class="stepper">' + '<span class="arrow">&rarr;</span>'.join(steps) + "</div>"
 
 
+# --- Public fragment wrappers -------------------------------------------
+# The live view (api/live_page.py) streams these panels one at a time as a
+# run progresses, rather than rendering the whole document at the end. They
+# are thin delegations on purpose: the private renderers below stay the
+# single source of truth for how a panel looks, so the live view and the
+# post-hoc view can never drift -- notably the fixed _FACTOR_ORDER the
+# module docstring pins down.
+
+
+def render_retrieval_fragment(trace: ReasoningTrace) -> str:
+    """KG retrieval provenance panel, as an HTML fragment."""
+    return _render_retrieval(trace)
+
+
+def render_z3_fragment(trace: ReasoningTrace) -> str:
+    """Symbolic verification panel (runs SymbolicDebugger), as an HTML fragment."""
+    return _render_z3_panel(trace)
+
+
+def render_confidence_fragment(trace: ReasoningTrace) -> str:
+    """Confidence factor breakdown bar, as an HTML fragment."""
+    return _render_confidence_breakdown(trace)
+
+
+def render_attempt_fragment(trace: ReasoningTrace) -> str:
+    """A single attempt card (code + retry context), as an HTML fragment."""
+    return _render_attempts([trace])
+
+
+def live_css() -> str:
+    """The page stylesheet, so streamed fragments style identically to the run view."""
+    return _CSS
+
+
 def _render_retrieval(trace: ReasoningTrace) -> str:
     kg_context = trace.kg_context or {}
     if not kg_context:

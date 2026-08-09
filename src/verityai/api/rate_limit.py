@@ -6,16 +6,29 @@ API). Not distributed-safe: each worker process keeps its own counters,
 which is fine for this project's current single-instance deployment. A
 real multi-instance deployment would need a shared store (Redis is
 already a planned dependency per docker-compose.yml) instead of this.
+
+Implemented as a raw ASGI middleware rather than a BaseHTTPMiddleware
+subclass. BaseHTTPMiddleware pumps *every* response through an anyio
+task group and memory stream, which interferes with long-lived streaming
+responses -- and GET /live/runs/{id}/events holds an SSE connection open
+for the whole 65-125s of a run. Exempting that one path would not have
+helped: the wrapping happens regardless of what the middleware decides.
+A plain ASGI callable short-circuits over-limit requests and is otherwise
+a transparent pass-through of (scope, receive, send).
 """
 
 import time
 from threading import Lock
 
-from fastapi import Request
-from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse
 
 DEFAULT_EXEMPT_PATHS = frozenset({"/health"})
+
+# Prefix-matched exemptions. The SSE stream is one long-lived connection
+# that an EventSource reconnects automatically on any network blip --
+# charging each reconnect against a 60/minute budget would cut off a
+# participant mid-run for doing nothing wrong.
+DEFAULT_EXEMPT_PREFIXES = ("/live/runs",)
 
 # Module-level (not per-middleware-instance) state: Starlette builds the
 # actual middleware instance lazily and doesn't expose it for easy
@@ -36,7 +49,7 @@ def reset_rate_limit_state() -> None:
         _counters.clear()
 
 
-class RateLimitMiddleware(BaseHTTPMiddleware):
+class RateLimitMiddleware:
     """Fixed-window rate limiter: at most `limit` requests per `window_seconds` per client IP."""
 
     def __init__(
@@ -45,17 +58,29 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         limit: int = 60,
         window_seconds: float = 60.0,
         exempt_paths: frozenset = DEFAULT_EXEMPT_PATHS,
+        exempt_prefixes: tuple = DEFAULT_EXEMPT_PREFIXES,
     ):
-        super().__init__(app)
+        self.app = app
         self.limit = limit
         self.window_seconds = window_seconds
         self.exempt_paths = exempt_paths
+        self.exempt_prefixes = exempt_prefixes
 
-    async def dispatch(self, request: Request, call_next):
-        if request.url.path in self.exempt_paths:
-            return await call_next(request)
+    def _is_exempt(self, path: str) -> bool:
+        return path in self.exempt_paths or path.startswith(self.exempt_prefixes)
 
-        client_ip = request.client.host if request.client else "unknown"
+    async def __call__(self, scope, receive, send):
+        # Lifespan and websocket scopes have no path/client to limit on.
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+
+        if self._is_exempt(scope.get("path", "")):
+            await self.app(scope, receive, send)
+            return
+
+        client = scope.get("client")
+        client_ip = client[0] if client else "unknown"
         now = time.monotonic()
 
         with _lock:
@@ -68,10 +93,12 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
 
         if exceeded:
             retry_after = max(0.0, self.window_seconds - (now - window_start))
-            return JSONResponse(
+            response = JSONResponse(
                 status_code=429,
                 content={"detail": "Rate limit exceeded. Try again later."},
                 headers={"Retry-After": str(int(retry_after) + 1)},
             )
+            await response(scope, receive, send)
+            return
 
-        return await call_next(request)
+        await self.app(scope, receive, send)

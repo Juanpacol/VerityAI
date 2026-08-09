@@ -1,6 +1,21 @@
 # T5 — What Actually Builds Developer Trust in AI-Generated Code
 
-## Status: protocol designed and materials generated; NOT yet executed
+## Status: two vehicles ready; NO sessions run, NO responses collected yet
+
+There are now **two** ways to run this study. Neither has been executed.
+
+1. **The moderated 6-sample protocol** described in this document
+   (materials in `docs/human_eval/materials/`). Higher internal validity:
+   every participant judges the same six pieces of code, so trust rates are
+   directly comparable across people, and the A/B/C panel conditions are
+   applied to a fixed stimulus. Costs one scheduled call per participant.
+2. **The live self-serve variant** at `GET /live` (see "Live-UI variant"
+   below). Lower internal validity, higher reach.
+
+They answer the same research question with different trade-offs and can
+be run in either order. The moderated protocol remains the reference
+design; the live variant does not replace or supersede it, and this
+document is not being trimmed down to the live version.
 
 This is the one item in the T1-T6 research roadmap that fundamentally
 requires real human participants — something no amount of automated
@@ -197,9 +212,58 @@ analyzable:
   room/call). Where possible, have someone else run the sessions, or at
   minimum disclose this limitation alongside any results reported later.
 
+## Live-UI variant (`GET /live`)
+
+The same study, self-serve. A participant opens one page, consents, types
+their own prompt, watches the pipeline execute step by step (narrated in
+plain language by deterministic templates — no LLM narrator), and answers
+the questionnaire inline. Responses land in the `study_responses` table and
+export via `GET /study/responses.csv` with the `X-Study-Token` header (with
+that env var unset the export 404s, so a misconfigured deployment cannot
+leak verbatims).
+
+**What carries over from the moderated design**
+
+- The A/B/C manipulation. A condition is drawn per run, server-side, and
+  enforced server-side: events for a suppressed panel arrive with no HTML,
+  no underlying numbers, and a neutral narration string. Hiding panels with
+  CSS would have been defeated by opening dev tools; this cannot be.
+- Both trust measures, asked separately and stored in separate columns:
+  attitudinal (`trusts_code` plus verbatim reason) and behavioural
+  (`merge_intent`: merge as-is / merge after a skim / insist on full
+  review). The attitudinal/behavioural gap rate is still the headline
+  number to report.
+- The "keep only one element" closing question, the reduced-trust question,
+  the comparison question, and AI-tool experience as a recorded covariate
+  rather than a screening filter.
+- The builder-bias disclosure, stated on the consent card.
+
+**What is lost, and it is not a small thing**
+
+Participants choose their own prompts, so **no two participants judge the
+same code**. Per-sample trust rates across participants — analysis item 1
+above — are simply not available in this variant. Condition comparisons
+become between-subject on non-identical stimuli rather than within-subject
+on a fixed set, which at this N is a real weakening, not a technicality.
+
+**What is gained**
+
+No scheduling, so a larger N is reachable; no researcher in the room, which
+removes the softening effect the moderated design has to caveat; and real
+self-chosen tasks rather than six prompts picked by the person being
+evaluated.
+
+**Recommendation**: run the moderated protocol with 5-10 people first, for
+the comparable per-sample data, then open the live page more widely for
+volume and for the tasks people actually bring. Report them separately —
+pooling responses from two different designs under one N would misrepresent
+both.
+
 ## Next step
 
-Recruit real participants and run this. Do not write findings into
-`docs/RESEARCH_FINDINGS.md`'s T5 section until real sessions have
-happened — until then, that section should say exactly what this
-document's Status line says: protocol ready, not yet executed.
+Recruit real participants and run one of the two vehicles above. Do not
+write findings into `docs/RESEARCH_FINDINGS.md`'s T5 section until real
+sessions have happened — until then, that section should say exactly what
+this document's Status line says: vehicles ready, nothing executed, no
+responses collected. Shipping the live UI is not evidence about trust; only
+running it is.
