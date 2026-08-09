@@ -25,9 +25,17 @@ turns* — not a harness handing it a prepared one — uses a memory tool
 unprompted. Each turn is a fresh, memoryless agent call, a real sliding
 window rather than a simulated one; only the `verity` condition has a
 `.verity/` directory and knowledge the memory CLI exists. Same verdict,
-0/5 vs 5/5, `likely_real_difference` in both directions. All three pilots'
-stated limits (small N, narrow task design, single fixture) still apply —
-see each pilot's own README before generalizing any result.
+0/5 vs 5/5, `likely_real_difference` in both directions. Family B, fourth
+pilot (`experiments/family_b_pilot_4_recovery_after_reset/`, ADR-0015),
+measured the "Recovery quality after reset" row below without a subjective
+judge: a two-hop bug, a fabricated prior investigation recovered via
+`verity handoff`, scored by an independent `pytest` run. Task success
+ceilinged at 5/5 for both conditions (`indistinguishable_from_noise`) — the
+bug still wasn't hard enough to fail cold — but tool-call cost per trial
+showed `likely_real_difference`: `verity` (mean 4.8) fell below `naive`'s
+own noise floor (`[5, 8]`). All four pilots' stated limits (small N, narrow
+task design, single fixture) still apply — see each pilot's own README
+before generalizing any result.
 
 ## The two families
 
@@ -67,6 +75,12 @@ configuration and a noise floor established before any comparison.**
 
 Family B is **out of scope for Phase 1** and no such number will be published
 until the procedure below has been executed.
+
+*Update:* "Recovery quality after reset" has since been measured
+(`experiments/family_b_pilot_4_recovery_after_reset/`, ADR-0015) without the
+judged score this table assumed — by designing the task so an objective
+proxy (pytest pass/fail on a genuine fix, plus tool-call count) stands in
+for "recovery quality" instead. See the status paragraph above.
 
 ## Procedure for Family B
 

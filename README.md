@@ -48,13 +48,17 @@ integrations and a UI) has not started.
 | Consistency — hallucinated and contradictory claims | working |
 | Reliability — architecture, tests, security | working |
 
-**A Family A measurement and three Family B pilots exist now** (below). The
+**A Family A measurement and four Family B pilots exist now** (below). The
 first Family B pilot's result was `indistinguishable_from_noise` — its
 tasks were too easy to tell the two conditions apart. The second, testing
 automatic financial-figure protection under a real budget constraint,
 found `likely_real_difference`: 0/5 vs 5/5 exact recall. The third, testing
 whether an agent *managing its own context across turns* uses a memory tool
-unprompted, found the same verdict: 0/5 vs 5/5.
+unprompted, found the same verdict: 0/5 vs 5/5. The fourth, testing
+recovery after a context reset, hit another success-rate ceiling (10/10
+both conditions fixed the bug) but found `likely_real_difference` on cost:
+recovering a handoff took fewer tool calls than reconstructing the same
+investigation from scratch.
 
 ---
 
@@ -183,6 +187,28 @@ result could be trusted — an external safety classifier blocking an
 IBAN-shaped string as a credential, and a shell-quoting bug that silently
 corrupted a `$`-prefixed amount — both documented in the pilot's own README
 and ADR-0014, neither a finding about the underlying mechanism.
+
+**A fourth pilot has been run**
+(`experiments/family_b_pilot_4_recovery_after_reset/`, [ADR-0015](docs/adr/0015-recovery-after-reset-pilot.md)),
+testing `docs/BENCHMARK_PROTOCOL.md`'s still-unmeasured "recovery after
+reset" claim without a subjective judge: a two-hop bug (harder than the
+first pilot's single-line one) in a small repo, a fabricated prior
+investigation persisted via `verity task`/`remember`, and a fresh agent
+that either has nothing to recover from (`naive`) or runs `verity handoff`
+first (`verity`). Both scored by an independent `pytest` run, never the
+agent's own report:
+
+| Metric | `naive` | `verity` | Verdict |
+|---|---|---|---|
+| Task success (5 trials) | 5/5 | 5/5 | `indistinguishable_from_noise` (ceiling) |
+| Tool calls per trial | mean 6.6, floor `[5, 8]` | mean 4.8 | `likely_real_difference` |
+
+Another ceiling on raw success — the bug, while harder than the first
+pilot's, still wasn't hard enough for a capable agent to fail cold. But
+recovery made the *same* successful outcome cheaper: every `verity` trial
+read the handoff and went nearly straight to the fix; every `naive` trial
+spent extra tool calls re-deriving the call chain the handoff had already
+named. See the pilot's own README and ADR-0015 for the full caveats.
 
 ---
 

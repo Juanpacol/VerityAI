@@ -91,3 +91,4 @@ Thumbs.db
 # Harness state. Ignored while dogfooding so it does not add noise to every
 # commit; a team wanting shared state would commit it instead.
 .verity/
+experiments/family_b_pilot_4_recovery_after_reset/trials/
