@@ -108,7 +108,6 @@ src/verityai/
 │   ├── deterministic.py  Family A benchmarks, self-disqualifying
 │   └── repetition.py     noise floor / Family B statistics (rescued, generalized)
 ├── analysis/facts.py     AST fact extraction (rescued from T6)
-├── observability/        StageEvent + thread-safe run registry
 ├── cli/main.py           the verity command
 ├── mcp/server.py         MCP server — 12 tools over the same core
 ```

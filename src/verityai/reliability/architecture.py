@@ -49,7 +49,6 @@ DEFAULT_POLICY = ArchitecturePolicy(
         "reliability": ["graph", "analysis"],
         "bench": ["context"],
         "analysis": [],
-        "observability": [],
         "cli": ["*"],
         "mcp": ["*"],
     }

@@ -12,36 +12,50 @@ in `docs/BENCHMARK_PROTOCOL.md`.
 
 ## The fixture
 
-`fixture_repo/` is a small, self-contained, real (not toy-trivial) Python
-order-processing service — models, pricing, inventory, a service layer
-tying them together, and a deliberate distractor (`pricing_legacy.py`, an
-unused module with a function of the *same name* as the one that actually
-needs fixing, so a plain grep for the symbol finds two candidates and only
-one is wired into `checkout`).
+Both `fixture_repo_task1/` and `fixture_repo_task2/` are copies of the same
+small, self-contained, real (not toy-trivial) Python order-processing
+service — models, pricing, inventory, a service layer tying them together,
+and a deliberate distractor (`pricing_legacy.py`, an unused module with a
+function of the *same name* as the one that actually needs fixing, so a
+plain grep for the symbol finds two candidates and only one is wired into
+`checkout`).
 
-Two bugs are seeded, each with its own objective, deterministic pass/fail
-check — `pytest`, never a subjective judgment call:
+Two bugs exist in the service, each with its own objective, deterministic
+pass/fail check (`pytest`, never a subjective judgment call):
 
 - **Task 1 (pricing)**: `apply_discount` in `src/orders/pricing.py` adds
   the discount instead of subtracting it, so a discount code *raises* the
-  total. `tests/test_pricing.py::test_discount_reduces_the_total` fails on
-  the fixture as shipped, passes once fixed.
+  total. `tests/test_pricing.py::test_discount_reduces_the_total` fails.
 - **Task 2 (inventory)**: `reserve_stock` in `src/orders/inventory.py`
   overwrites `_reserved[sku]` on each call instead of accumulating, so
   reservations from an earlier order silently vanish and the same stock can
   be oversold. `tests/test_inventory.py::
-  test_reservations_accumulate_across_orders_for_the_same_sku` fails as
-  shipped, passes once fixed.
+  test_reservations_accumulate_across_orders_for_the_same_sku` fails.
 
-Both bugs were verified by hand before any trial ran: the fixture as
-committed fails exactly these two tests and no others (`2 failed, 4
-passed`), and hand-applying the correct one-line fix to each makes all six
-tests pass. `git log` in this directory has no history beyond the seeded
-bug — every trial starts from the same commit.
+**Each fixture directory has only ONE of the two bugs active** — the other
+is already fixed. `fixture_repo_task1/` fails exactly
+`test_pricing.py::test_discount_reduces_the_total` (`1 failed, 5 passed`);
+`fixture_repo_task2/` fails exactly the inventory test, same shape. This
+was not the first design: an earlier version shared one fixture with both
+bugs live and pointed each task's prompt at the same directory. Every one
+of the first 4 validation trials (run to test the *mechanism*, not to
+produce real Family B data) fixed *both* bugs regardless of which task it
+was given, because the prompt said "make `pytest tests/` pass" and the
+agent — reasonably — ran the whole suite and fixed everything failing in
+it. That collapsed the two intended tasks into one and would have made
+every trial in both conditions succeed by construction, telling us nothing
+about a difference between them. Splitting the fixture per task is the
+fix; those 4 trials' transcripts still usefully confirmed the *mechanism*
+(isolated working directories, `pytest`-based scoring, no cross-trial
+contamination) — they are not used as data.
+
+Both single-bug fixtures were verified by hand before any real trial ran:
+each fails exactly its one target test and no others, and hand-applying the
+correct one-line fix makes all six tests in that fixture pass.
 
 ## The two conditions
 
-Identical task prompt, identical model, identical starting commit. The only
+Identical task prompt, identical model, identical starting file state. The only
 variable:
 
 - **`alone`**: the prompt makes no mention of Verity. The agent investigates
@@ -58,7 +72,7 @@ Neither is told the bug's nature beyond what the failing test already says.
 ## Method
 
 For each (task, condition) pair: 5 independent trials, each starting from a
-fresh copy of `fixture_repo` at its seed commit, each run in isolation (no
+fresh copy of that task's fixture directory, each run in isolation (no
 trial can see another's changes). A trial's outcome is `{"success": 1.0}`
 if `pytest tests/` passes completely afterward, `{"success": 0.0}`
 otherwise — evaluated by the harness running pytest directly, never by
