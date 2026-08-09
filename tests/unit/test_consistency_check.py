@@ -209,6 +209,36 @@ class TestDecisionResurfacing:
 
         assert checks == []
 
+    def test_a_single_rejected_decision_does_not_swallow_unrelated_text(self, store):
+        """Regression: with only one or two decisions on record, normalizing
+        against the corpus's own max score made the closest-of-the-available
+        matches always land at 1.0, even sharing no real content with the
+        checked text -- a genuinely unrelated proposal always "resembled"
+        the one decision on file. Found via a real pilot
+        (experiments/consistency_pilot_1_hallucination_detection/), not by
+        this test suite -- the pre-existing unrelated-text fixture had zero
+        token overlap and never exercised the near-zero-but-nonzero BM25
+        regime where this bug actually lived. See docs/adr/0018."""
+        store.append(
+            Decision(
+                statement=(
+                    "Apply the late fee using DEPRECATED_POLICY directly for all "
+                    "regions, skipping the per-tier ACTIVE_POLICY lookup, to keep "
+                    "the calculation simpler."
+                ),
+                status=DecisionStatus.REJECTED,
+                rationale="DEPRECATED_POLICY has stale grace periods.",
+            )
+        )
+
+        checks = check_decision_resurfacing(
+            "I'd like to add a caching layer for tax rate lookups, since rates "
+            "rarely change within a business day, to cut down on repeated work.",
+            store,
+        )
+
+        assert checks == []
+
     def test_active_decisions_are_never_flagged(self, store_with_rejected):
         """Resurfacing an ACTIVE decision is not a problem -- it is agreement."""
         checks = check_decision_resurfacing(

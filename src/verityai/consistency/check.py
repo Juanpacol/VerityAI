@@ -197,17 +197,25 @@ def check_decision_resurfacing(text: str, store: MemoryStore) -> list[ClaimCheck
 
     documents = [d.statement for d in inactive]
     ranks, scores = bm25_rank(text, documents)
-    # Normalize against the best possible score in this small corpus so the
-    # threshold means the same thing regardless of corpus size or wording.
     if not scores:
         return []
-    max_score = max(scores.values())
-    if max_score <= 0:
+    # Normalize against `text`'s own best-possible score (matched against
+    # itself), not against the max among the stored decisions. With only
+    # one or two decisions on record, whichever is *relatively* the closest
+    # match always scored 1.0 under corpus-relative normalization even when
+    # it shares almost no real overlap with `text` -- a small, common corpus
+    # (a solo project with one rejected decision) made every check a
+    # guaranteed false positive. Found by testing against a genuinely
+    # unrelated proposal, which still "resembled" the one decision on
+    # file (see docs/adr/0018).
+    _, self_scores = bm25_rank(text, [text])
+    self_score = self_scores.get(0, 0.0)
+    if self_score <= 0:
         return []
 
     checks: list[ClaimCheck] = []
     for idx, score in scores.items():
-        normalized = score / max_score
+        normalized = score / self_score
         if normalized < _RESURFACING_THRESHOLD:
             continue
         decision = inactive[idx]

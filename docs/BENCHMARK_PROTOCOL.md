@@ -50,6 +50,18 @@ series, 5/5 both conditions — but the cost effect reproduced a third time:
 limits (small N, narrow task design, single fixture) still apply — see each
 pilot's own README before generalizing any result.
 
+Separately, the Consistency Engine (`consistency/`, ADR-0007) got its own
+first real measurement (`experiments/consistency_pilot_1_hallucination_
+detection/`, ADR-0018) — not a Family A/B comparison, but the same
+"real data before publishing" discipline applied to a different engine.
+Real agents, shown only one file of a small codebase, produced a genuine
+mix of true and hallucinated claims about it. Result: 100% recall on
+invented symbol names (14/14 caught), a confirmed blind spot on
+function-to-file relation claims (0% caught, structurally invisible to the
+extractor), and a real bug in decision resurfacing — a corpus of one or two
+decisions always normalized its closest match to 100% confidence regardless
+of actual relevance — found, fixed, and regression-tested.
+
 ## The two families
 
 Metrics are split by whether an LLM is in the loop, and the two families are
@@ -126,8 +138,13 @@ rows are Family B, and the honest position today is:
 - **Tokens and cost per task**: Family A for the pipeline itself. Becomes
   Family B the moment task success enters the denominator, because a cheaper
   run that fails is not cheaper.
-- **Hallucinations, contradictions, regressions**: Family B, and additionally
-  blocked on the Consistency Engine existing at all (Phase 3).
+- **Hallucinations, contradictions, regressions**: Family B. The
+  Consistency Engine (`consistency/`, ADR-0007) exists and has a first real
+  measurement (ADR-0018): 100% recall on invented symbol names in real
+  agent-generated text, a confirmed blind spot on function-to-file relation
+  claims, and a real decision-resurfacing bug found and fixed. Not yet
+  measured: recall/precision at scale, or on hallucinations about relations
+  between two real symbols phrased loosely.
 - **Technical debt**: not yet operationally defined. No metric until it is.
 - **Recovery after reset**: Family B, and the most valuable row in the table.
   It is the one thing the harness does that an agent cannot do for itself.

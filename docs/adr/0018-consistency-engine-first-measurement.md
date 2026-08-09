@@ -1,0 +1,110 @@
+# ADR-0018: First real measurement of the Consistency Engine -- and a real bug it found
+
+- **Status**: Accepted
+- **Date**: 2026-08-09
+- **Context**: `docs/BENCHMARK_PROTOCOL.md` describes hallucination and
+  contradiction detection as blocked on "the Consistency Engine existing at
+  all (Phase 3)." Before planning that as new work, the actual state of
+  `src/verityai/consistency/` was checked: the engine already exists,
+  already has tests, and was accepted in ADR-0007. The real gap was a
+  measurement against genuine (not hand-authored) input — the same gap
+  Context Engine had before ADR-0009.
+
+## Part A: inducing real hallucinations
+
+Writing false claims by hand to test the checker would measure the
+fixture, not the checker — the synthetic-fixture trap this project has
+avoided since ADR-0009. Instead, five independent live-agent trials were
+shown only `billing/invoice.py` (from the pilot 5 fixture, with a real
+code graph built via `verity graph build`) and asked to describe the full
+call chain anyway, including functions they could not see. Ground truth was
+written from the real source files before running any checker output.
+
+### Result
+
+98 claims checked, 23 flagged:
+
+| Class | Count | Outcome |
+|---|---|---|
+| Invented helper-function names | 14 | 100% caught |
+| Backtick-quoted local variable names (`with_tax`, `days_overdue`) | 8 | False positives — real names, just not graph-indexed |
+| A genuine path inaccuracy | 1 | Correctly caught |
+| Fabricated function-to-file relation claims | ~6 | **0% caught — structurally invisible**, not even counted among the 98 |
+
+Confirmed with isolated probes, not just inferred: `` `apply_tax` calls
+`billing/tax_rates.py` `` produces zero contradictions (decomposes into two
+independent, both-true existence checks), while `` `apply_tax` calls
+`get_tax_rate` `` — an equally fabricated relation but with a function-shaped
+target — is correctly caught as a relation-level failure. The relation
+extractor (`consistency/claims.py`) only recognizes symbol-to-symbol
+`calls`/`inherits from`/`extends` phrases; a claim of a function calling
+into a *file* — a very natural way to describe a module dependency — never
+parses as a relation claim at all.
+
+## Part B: a real bug in decision resurfacing
+
+A `REJECTED` decision was fabricated, then two proposals were checked: a
+genuine paraphrase of it (should trigger resurfacing) and a completely
+unrelated one (should not). **Both triggered resurfacing.**
+
+Root cause, in `check_decision_resurfacing`
+(`src/verityai/consistency/check.py`): each candidate decision's BM25 score
+was normalized against `max(scores.values())` — the maximum *among the
+stored decisions*, not an absolute scale. With one or two decisions on
+record (not an edge case — the common case for an early or solo project),
+whichever decision is relatively closest to the checked text always
+normalizes to a perfect 1.0, regardless of whether it shares any real
+content with it. Confirmed directly: adding a second, obviously unrelated
+rejected decision ("store passwords in plaintext") caused *both* to be
+flagged against a caching proposal that resembled neither.
+
+### Fix
+
+Normalize against the checked text's own best-possible score (BM25-matched
+against itself) instead of the in-corpus max:
+
+```python
+_, self_scores = bm25_rank(text, [text])
+self_score = self_scores.get(0, 0.0)
+if self_score <= 0:
+    return []
+...
+normalized = score / self_score
+```
+
+This dropped the unrelated proposal's confidence from 85% (always-maximal,
+regardless of content) to 16%, and the genuine paraphrase's from an
+identically-maximal 85% to a more proportionate 43% — both directionally
+correct. A regression test was added
+(`test_a_single_rejected_decision_does_not_swallow_unrelated_text`); the
+pre-existing "unrelated text" test never caught this bug because its
+fixture text had zero token overlap with the stored decision, never
+exercising the near-zero-but-nonzero BM25 score regime where the bug
+actually lived — a reminder that a test suite's own fixtures can share the
+synthetic-fixture trap's blind spots.
+
+## Consequences
+
+- `docs/BENCHMARK_PROTOCOL.md`'s "blocked on Consistency Engine existing"
+  language is now corrected — the engine exists, has a first real
+  measurement, and that measurement found and fixed a genuine bug, the same
+  pattern ADR-0009 and ADR-0016 established for other engines.
+- **Symbol-existence checking has a clean, confirmed 100% recall** on
+  invented function names in this pilot — the engine's strongest result so
+  far.
+- **The function-to-file relation blind spot is real and unfixed.** Closing
+  it would mean extending `claims.py`'s relation extraction to recognize
+  file targets and to tolerate explanatory text between the relation verb
+  and its arguments — a real change to the extractor's scope, deliberately
+  left for a future pilot/ADR rather than rushed into this one.
+- **Backtick-quoted local variable names are a genuine nuisance-false-
+  positive source** in real usage — anyone writing a normal technical
+  summary with `` `some_var` `` for readability will trigger a false
+  contradiction today. Worth a narrower fix (distinguishing "this claims a
+  codebase symbol" from "this is emphasis") in a future pass; not attempted
+  here to keep this pilot's scope to measurement plus the one clear,
+  high-confidence bug it found.
+- **The resurfacing fix is a real improvement, not a complete solution.**
+  BM25's IDF is inherently unstable with 1-2 documents; a small residual
+  false-positive risk remains for very small decision corpora. Stated
+  honestly rather than oversold, per this project's standing practice (T1).

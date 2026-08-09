@@ -260,6 +260,31 @@ larger trial budget) to move — while the cost effect is now this project's
 most consistently reproduced Family B result, across three separate
 pilots and bug designs.
 
+**The Consistency Engine got its own first real measurement**
+(`experiments/consistency_pilot_1_hallucination_detection/`, [ADR-0018](docs/adr/0018-consistency-engine-first-measurement.md)),
+closing a stale claim in `docs/BENCHMARK_PROTOCOL.md` that this engine was
+still "blocked on existing at all" — it already existed (ADR-0007) and just
+lacked a measurement against real, not hand-authored, claims. Real agents,
+shown only one file of a small codebase, were asked to describe it anyway,
+producing a genuine mix of true and hallucinated claims:
+
+| Claim class | Result |
+|---|---|
+| Invented function names (14 across 5 trials) | **100% caught** |
+| Function-to-file relation hallucinations (~6) | **0% caught** — structurally invisible to the relation extractor |
+| Backtick-quoted local variable names (8) | False positives — real names, just not graph-indexed |
+
+A real bug was also found and fixed in decision resurfacing: with only one
+or two rejected decisions on record, the closest-of-the-available matches
+always normalized to 100% confidence regardless of actual relevance — a
+genuinely unrelated proposal "resembled" an unrelated rejected decision just
+as strongly as an actual paraphrase of it. Confirmed with an isolated probe,
+fixed by normalizing against the checked text's own best-possible score
+instead of the in-corpus max, and locked in with a regression test. See
+ADR-0018 for the full write-up, including what's still an open, unfixed
+blind spot (the relation-extraction gap) versus what got fixed this pass
+(the resurfacing bug).
+
 ---
 
 ## Why this project changed shape
