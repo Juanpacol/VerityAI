@@ -525,3 +525,91 @@ class IngestReport(BaseModel):
         if self.out_of_scope:
             note += f"; {self.out_of_scope:,} non-Python files not read (Phase 2 is Python-only)"
         return note
+
+
+# --- Consistency -----------------------------------------------------------
+
+
+class ClaimKind(str, Enum):
+    """What kind of checkable statement a claim is.
+
+    Each kind maps to exactly one deterministic check in `consistency/check.py`
+    — there is no kind here that requires a model to verify. A claim the
+    extractor cannot categorize this way is not extracted at all, rather than
+    forced into the nearest kind and checked wrongly.
+
+    `DECISION_ALIGNMENT` is the one kind never produced by `extract_claims` —
+    it is synthesized directly by `check_decision_resurfacing` against
+    `.verity/` memory rather than pulled from a text span, because "does this
+    resemble a rejected decision" is a whole-text comparison, not something
+    with a single matching substring. It still gets its own kind rather than
+    borrowing another one, so a report never mislabels a resurfacing warning
+    as a symbol-existence claim.
+    """
+
+    SYMBOL_EXISTS = "symbol_exists"
+    SYMBOL_RELATION = "symbol_relation"
+    FILE_EXISTS = "file_exists"
+    DECISION_ALIGNMENT = "decision_alignment"
+
+
+class Claim(BaseModel):
+    """One checkable assertion pulled out of agent-produced text.
+
+    `raw_text` is kept verbatim so a human reviewing a flagged claim can see
+    exactly what triggered it, rather than trusting the extractor's summary of
+    its own output — the same reasoning as keeping `excerpt` on `Evidence`.
+    """
+
+    kind: ClaimKind
+    subject: str
+    relation: str | None = None
+    target: str | None = None
+    raw_text: str = ""
+
+
+class CheckStatus(str, Enum):
+    """Outcome of checking one claim against the graph or memory."""
+
+    SUPPORTED = "supported"
+    CONTRADICTED = "contradicted"
+    UNVERIFIABLE = "unverifiable"
+
+
+class ClaimCheck(BaseModel):
+    """The verdict on one claim, with the evidence that produced it.
+
+    `confidence` here is the check's own certainty in its verdict, not a
+    calibrated probability the claim is true — the distinction T1 exists to
+    enforce. A hallucinated-symbol check is binary and reports 1.0; a
+    decision-resurfacing check is a lexical-overlap heuristic and must report
+    something less than certain, because it can be wrong in both directions.
+    """
+
+    claim: Claim
+    status: CheckStatus
+    confidence: float = Field(ge=0.0, le=1.0)
+    explanation: str
+    evidence: list[Evidence] = Field(default_factory=list)
+
+
+class ConsistencyReport(BaseModel):
+    """Every claim checked in one pass, plus what could not be checked at all.
+
+    `degraded_reason` follows the same rule as `RetrievalResult` in Phase 1:
+    if the graph has not been built, or a claim's kind has no checker, that is
+    stated rather than silently producing zero findings that look like a
+    clean bill of health.
+    """
+
+    checks: list[ClaimCheck] = Field(default_factory=list)
+    claims_extracted: int = 0
+    degraded_reason: str | None = None
+
+    @property
+    def contradictions(self) -> list[ClaimCheck]:
+        return [c for c in self.checks if c.status is CheckStatus.CONTRADICTED]
+
+    @property
+    def is_clean(self) -> bool:
+        return not self.contradictions

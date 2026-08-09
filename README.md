@@ -35,9 +35,9 @@ environment those agents work in.
 
 ## Status
 
-**Phase 2 of 5.** The Context, Memory and Knowledge Graph engines work, are
-covered by 315 tests, and are reachable from both a CLI and an MCP server. The
-Consistency and Reliability engines are not built yet, and this README does not
+**Phase 3 of 5.** The Context, Memory, Knowledge Graph and Consistency engines
+work, are covered by 375 tests, and are reachable from both a CLI and an MCP
+server. The Reliability engine is not built yet, and this README does not
 pretend otherwise.
 
 | Engine | State |
@@ -45,7 +45,7 @@ pretend otherwise.
 | Context — token accounting, classification, pruning, health | working |
 | Memory / Handoff — persistent state, snapshots, handoff docs | working |
 | Knowledge Graph — real code structure | working |
-| Consistency — hallucinated and contradictory claims | not started |
+| Consistency — hallucinated and contradictory claims | working |
 | Reliability — architecture, tests, security | not started |
 
 **No performance figure is published anywhere in this repository.** The
@@ -186,6 +186,35 @@ is reported as not read, and vendored subprojects (a directory with its own
 yours); 1,266 non-Python files not read (Phase 2 is Python-only)
 ```
 
+### Checking claims
+
+```bash
+verity check response.md      # or pipe text on stdin with -
+```
+
+Extracts checkable assertions from backtick-quoted spans and a closed set of
+relation phrases (`` `A` calls `B` ``), then checks each against the code
+graph and against decisions already rejected or superseded in `.verity/`. No
+model is involved — a claim it cannot extract this way is not checked, never
+guessed at, the same discipline ADR-0001 applied to formal verification.
+
+```
+  [OK  ] ContextPipeline.run calls _enforce_budget
+         a resolved calls edge connects them (confidence 100%)
+  [FAIL] AuthService.refresh_token
+         no definition of 'AuthService.refresh_token' found anywhere in the graph
+  [FAIL] use a global mutable cache for session state
+         resembles a rejected decision: 'use a global mutable cache for session
+         state' (caused race conditions under concurrent requests) (confidence 85%)
+
+  2 contradiction(s) of 3 checked claim(s)
+```
+
+Exits non-zero on any contradiction, so it is usable as a pre-merge or CI
+check. Decision-resurfacing confidence is capped below 1.0 always — it is a
+lexical-overlap heuristic, not a graph lookup, and must never read as more
+certain than one.
+
 ---
 
 ## Use it from an agent (MCP)
@@ -195,19 +224,25 @@ pip install -e ".[mcp]"
 claude mcp add verity -- verity-mcp
 ```
 
-Sixteen tools, each a thin wrapper over the same functions the CLI calls:
+Seventeen tools, each a thin wrapper over the same functions the CLI calls:
 
 - **context** — `optimize_context`, `context_health`
 - **memory** — `set_task`, `save_decision`, `save_constraint`, `save_discovery`,
   `save_failure`, `get_state`, `handoff`
 - **graph** — `build_code_graph`, `find_relevant_code`, `check_symbol_exists`,
   `impact_of_changing`
+- **consistency** — `check_claims`
 - **snapshots** — `snapshot`, `restore`, `list_snapshots`
 
 `check_symbol_exists` is the one to reach for before asserting an API is
 available. It answers `NOT FOUND: no definition of 'refresh_token' in this
 repository. Do not assume it exists.` — far cheaper than opening files, and the
 difference between believing and knowing.
+
+`check_claims` is the same idea applied to a whole draft response: call it on
+your own output before sending it, and it flags every backtick-quoted
+assertion the graph or memory actually contradicts, plus anything that
+resembles a decision already ruled out.
 
 **What this can and cannot do**, stated plainly because it bounds every claim
 this project makes:
@@ -254,7 +289,7 @@ looks like. This is the rule that turned T2 from a result into a retraction.
 ## Development
 
 ```bash
-pytest tests/          # 315 tests, no network, no services
+pytest tests/          # 375 tests, no network, no services
 ruff check src/ tests/
 ruff format src/ tests/
 ```

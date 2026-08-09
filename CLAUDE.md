@@ -27,7 +27,7 @@ output.
 ├──────────────────────────────────────────────┤
 │ RELIABILITY   → architecture, tests, security│  (Phase 4)
 ├──────────────────────────────────────────────┤
-│ CONSISTENCY   → claims vs evidence           │  (Phase 3)
+│ CONSISTENCY   → claims vs evidence           │  working
 ├──────────────────────────────────────────────┤
 │ KNOWLEDGE     → code graph                   │  working
 ├──────────────────────────────────────────────┤
@@ -51,7 +51,7 @@ core/                        (no deps)
   ├─ context/   (core)
   ├─ memory/    (core)
   ├─ graph/     (core, context.rank)
-  ├─ consistency/ (core, graph)   — Phase 3
+  ├─ consistency/ (core, graph, context.rank)
   ├─ reliability/ (core, graph)   — Phase 4
   ├─ bench/     (core, context)
   ├─ cli/       (everything)
@@ -86,6 +86,9 @@ src/verityai/
 │   ├── store.py          SQLite; hand-written traversal, no networkx
 │   ├── ingest.py         repo walk + AST; Python only, scope declared
 │   └── query.py          relationship retrieval; context_for is the point
+├── consistency/
+│   ├── claims.py         backtick-quoted spans + closed relation phrases
+│   └── check.py          symbol/relation/file checks + decision resurfacing
 ├── bench/deterministic.py Family A benchmarks, self-disqualifying
 ├── analysis/facts.py     AST fact extraction (rescued from T6)
 ├── observability/        StageEvent + thread-safe run registry
@@ -152,7 +155,7 @@ has the detail; the short version:
 ## Development
 
 ```bash
-pytest tests/           # 315 tests, no network, no services, no fixtures needed
+pytest tests/           # 375 tests, no network, no services, no fixtures needed
 ruff check src/ tests/
 ruff format src/ tests/
 ```

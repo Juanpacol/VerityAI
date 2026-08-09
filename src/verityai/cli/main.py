@@ -514,6 +514,44 @@ def graph_untested(
     typer.secho(f"\n  {caveat}", fg=typer.colors.YELLOW)
 
 
+@app.command()
+def check(
+    source: str | None = typer.Argument(None, help="Text file to check, or - for stdin."),
+) -> None:
+    """Check agent-produced text against the code graph and memory.
+
+    Extracts checkable claims from backtick-quoted spans and relation
+    phrases ("`A` calls `B`"), then checks each against the code graph
+    (`verity graph build` first) and rejected/superseded decisions in
+    `.verity/`. No model is involved -- a claim this cannot extract is
+    simply not checked, never guessed at. Exits non-zero on any
+    contradiction, so this is usable as a CI or pre-merge check.
+    """
+    from verityai.consistency.check import render_report, run_consistency_check
+    from verityai.graph.query import GraphQuery
+    from verityai.graph.store import GraphStore
+
+    text = _read_input(source)
+    store = MemoryStore.discover()
+    repo_root = store.root.parent if store else Path.cwd()
+
+    graph = GraphStore.for_verity_dir(store.root) if store is not None else None
+    try:
+        query = (
+            GraphQuery(graph) if graph is not None and graph.stats().get("nodes.total") else None
+        )
+        report = run_consistency_check(text, query=query, store=store, repo_root=repo_root)
+    finally:
+        if graph is not None:
+            graph.close()
+
+    typer.echo("")
+    typer.echo(render_report(report))
+
+    if report.contradictions:
+        raise typer.Exit(1)
+
+
 def main() -> None:
     app()
 

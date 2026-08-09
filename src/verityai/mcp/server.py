@@ -341,6 +341,42 @@ def build_server(name: str = "verity"):
             "untyped locals) -- kept, not discarded."
         )
 
+    @server.tool()
+    def check_claims(text: str) -> str:
+        """Check your own claims against the code graph before stating them.
+
+        Call this on your own draft response before sending it, whenever it
+        asserts something checkable about the codebase -- that a symbol
+        exists, that one function calls another, that a file is at some path.
+        Write the claims in backticks the way you normally format code
+        references (`` `ClassName.method` ``, `` `A` calls `B` ``) and this
+        will tell you which ones the graph or memory actually contradicts.
+
+        Also flags text that resembles a decision already rejected or
+        superseded, so you do not re-propose something already ruled out.
+
+        No model is involved in the checking -- a claim it cannot extract is
+        simply not checked, never guessed at. Requires `build_code_graph` for
+        the symbol and relation checks; decision checks work regardless.
+        """
+        from verityai.consistency.check import render_report, run_consistency_check
+        from verityai.graph.query import GraphQuery
+
+        store = _store()
+        with _graph() as graph:
+            query = GraphQuery(graph) if graph.stats().get("nodes.total") else None
+            report = run_consistency_check(
+                text, query=query, store=store, repo_root=store.root.parent
+            )
+
+        if not report.checks:
+            return f"No checkable claims found in that text ({report.claims_extracted} extracted)."
+
+        result = render_report(report)
+        if report.contradictions:
+            return f"FOUND {len(report.contradictions)} CONTRADICTION(S):\n\n{result}"
+        return f"All claims check out.\n\n{result}"
+
     # --- snapshots ---------------------------------------------------------
 
     @server.tool()

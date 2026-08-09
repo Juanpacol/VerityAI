@@ -69,6 +69,7 @@ class TestToolSurface:
             "find_relevant_code",
             "check_symbol_exists",
             "impact_of_changing",
+            "check_claims",
         }
 
     @pytest.mark.asyncio
@@ -229,6 +230,66 @@ class TestGraphTools:
         output = await call(with_code, "impact_of_changing", name="apply_ceiling")
 
         assert "over-reports" in output
+
+
+class TestConsistencyTools:
+    @pytest.fixture
+    def with_code(self, tmp_path, server):
+        (tmp_path / "app.py").write_text(
+            "def apply_ceiling(n, cap):\n    return min(n, cap)\n\n\n"
+            "def rate_limit_request(key, n):\n    return apply_ceiling(n, 100)\n"
+        )
+        return server
+
+    @pytest.mark.asyncio
+    async def test_a_hallucinated_symbol_is_flagged(self, with_code):
+        await call(with_code, "build_code_graph")
+
+        output = await call(
+            with_code, "check_claims", text="I used `TotallyInventedSymbolXYZ` for this."
+        )
+
+        assert "CONTRADICTION" in output
+        assert "no definition" in output
+
+    @pytest.mark.asyncio
+    async def test_a_real_symbol_is_not_flagged(self, with_code):
+        await call(with_code, "build_code_graph")
+
+        output = await call(with_code, "check_claims", text="`apply_ceiling` clamps the value.")
+
+        assert "All claims check out" in output
+
+    @pytest.mark.asyncio
+    async def test_a_real_relation_is_verified(self, with_code):
+        await call(with_code, "build_code_graph")
+
+        output = await call(
+            with_code,
+            "check_claims",
+            text="`rate_limit_request` calls `apply_ceiling` to clamp the count.",
+        )
+
+        assert "All claims check out" in output
+
+    @pytest.mark.asyncio
+    async def test_no_checkable_claims_is_reported_plainly(self, with_code):
+        output = await call(with_code, "check_claims", text="Just a plain sentence.")
+
+        assert "No checkable claims" in output
+
+    @pytest.mark.asyncio
+    async def test_decision_checks_work_without_a_graph(self, server):
+        """Decision checks read .verity/ memory, not the code graph, and
+        must work even before build_code_graph has ever been called."""
+        await call(server, "save_decision", statement="use a fixed window counter")
+
+        output = await call(
+            server, "check_claims", text="I'll use a fixed window counter for rate limiting."
+        )
+
+        # An ACTIVE (never-rejected) decision must not be flagged.
+        assert "CONTRADICTION" not in output
 
 
 class TestSnapshotTools:
