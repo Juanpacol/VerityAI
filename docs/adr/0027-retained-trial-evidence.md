@@ -117,7 +117,33 @@ $ VERITY_SPEC_DIR=... python3 .../score_pilot8.py
 ```
 
 `tests/unit/test_bench_evidence.py::test_the_retained_diff_re_derives_the_metric`
-does this for all 10 trials on every run of the suite.
+does this for all 10 trials on every run of the suite, and **`verity verify
+<evidence-root>`** does it on demand for any committed evidence directory:
+
+```
+$ verity verify experiments/family_b_pilot_8_arbitrary_tiebreak/evidence
+  ok    naive_1   success=1 tie_correct=0 visible_pass=1
+  ...
+  ok    verity_5  success=1 tie_correct=1 visible_pass=1
+  All 10 trial(s) re-derived from the retained artifact.
+```
+
+**That command found two real defects the moment it first ran**, which is the
+argument for it existing rather than leaving the property to a test:
+
+1. The evidence was not self-describing. A scorer reached through
+   `$VERITY_SPEC_DIR` cannot be re-run unless the evidence records where that
+   directory was; nothing did, so every trial failed to locate its scorer.
+   `report.json` now records `spec_dir` relative to the evidence root.
+2. `git apply` resolves paths against the enclosing work tree's root, not the
+   cwd. Run inside a repository -- which the default work root under
+   `.verity/` is -- it matched nothing and **exited 0 having changed
+   nothing**, so every trial was scored against an unmodified fixture and the
+   reported reason (a scorer exit code) had nothing to do with the cause. The
+   replay directory is now `git init`-ed so it is its own toplevel.
+
+The second is the same shape as the findings this ADR and 0028/0029 record: a
+collaborator reported success while doing less than asked.
 
 ## Consequences
 

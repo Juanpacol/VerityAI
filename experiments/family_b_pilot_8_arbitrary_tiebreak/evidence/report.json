@@ -168,5 +168,6 @@
       "artifact_hash": "sha256:4b2c13bb5f8290631ed143f9117ce1ff684771c746a88c6f89a17615742657d6",
       "failure_mode": null
     }
-  ]
+  ],
+  "spec_dir": ".."
 }

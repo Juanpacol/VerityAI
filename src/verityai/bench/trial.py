@@ -28,7 +28,6 @@ every prior pilot.
 
 from __future__ import annotations
 
-import json
 import os
 import shutil
 import subprocess
@@ -39,64 +38,10 @@ from uuid import uuid4
 from verityai.bench.evidence import (
     EXCLUDE_DIRS,
     hash_tree,
+    parse_metrics,
     write_trial_evidence,
 )
 from verityai.core.models import FailureMode, TrialRecord, TrialSpec
-
-
-def parse_metrics(stdout: str, exit_code: int) -> tuple[dict[str, float], str, str | None]:
-    """Metrics for one trial, plus where they came from and why.
-
-    Returns `(metrics, source, reason)`. Three sources, in precedence order
-    -- `metric_fn` is handled by the caller, so this covers the two the CLI
-    can reach:
-
-    - **`scorer_json`** -- the scorer printed a JSON object on stdout. This
-      exists because the CLI previously could not express any metric except
-      `success`: `run_eval` was called without a `metric_fn`, so a spec
-      asking for `tie_correct` got `insufficient_data` and a report that
-      still looked publishable (ADR-0027). A scorer already runs as a real
-      subprocess and is already ground truth for pass/fail; letting it also
-      report *what* it measured keeps scoring out of the agent's hands.
-    - **`exit_code`** -- the fallback, `success = exit_code == 0`.
-
-    `success` is always seeded first so it cannot vanish from a run just
-    because a scorer reported other keys. When stdout looked like JSON but
-    was rejected, the reason is returned rather than discarded -- invariant
-    5: every degraded path says why.
-    """
-    metrics: dict[str, float] = {"success": 1.0 if exit_code == 0 else 0.0}
-
-    candidate = next(
-        (line for line in reversed(stdout.strip().splitlines()) if line.strip()),
-        "",
-    ).strip()
-    if not candidate.startswith("{"):
-        return metrics, "exit_code", None
-
-    try:
-        parsed = json.loads(candidate)
-    except json.JSONDecodeError as exc:
-        return metrics, "exit_code", f"scorer stdout looked like JSON but did not parse: {exc}"
-
-    if not isinstance(parsed, dict):
-        return metrics, "exit_code", "scorer stdout parsed as JSON but was not an object"
-
-    rejected = {
-        key: value
-        for key, value in parsed.items()
-        if not isinstance(value, (int, float, bool)) or isinstance(value, str)
-    }
-    if rejected:
-        return (
-            metrics,
-            "exit_code",
-            f"scorer stdout had non-numeric values for {sorted(rejected)}; "
-            "a metric must be a number a noise floor can be computed over",
-        )
-
-    metrics.update({key: float(value) for key, value in parsed.items()})
-    return metrics, "scorer_json", None
 
 
 def _scorer_env(

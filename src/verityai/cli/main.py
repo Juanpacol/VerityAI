@@ -561,6 +561,63 @@ def eval_command(
         raise typer.Exit(1)
 
 
+@app.command(name="verify")
+def verify_command(
+    evidence_root: Path = typer.Argument(..., help="An experiments/<name>/evidence directory."),
+    work_root: Path = typer.Option(
+        Path(".verity/verify"), "--work-root", help="Scratch space for the replays."
+    ),
+) -> None:
+    """Re-derive every published number from its retained evidence.
+
+    Invariant 7 as an operation rather than a promise. For each trial in the
+    manifest: copy the fixture, apply the retained `changes.diff`, run the
+    spec's own scorer, and compare what comes back against what was
+    published. Exits non-zero if anything disagrees.
+
+    This is the check a skeptical reader would perform, and until it existed
+    the property was only ever demonstrated inside a test, on a fixture the
+    test itself had built. Needs `git` (to apply the diffs) and the fixture
+    still present at the hash the manifest recorded -- if the fixture has
+    drifted, that is reported as drift rather than as a failed check, since
+    the diff may be perfectly valid against the base it was made from.
+    """
+    from verityai.bench.evidence import verify_evidence
+
+    results = verify_evidence(evidence_root, work_root)
+    if not results:
+        typer.secho(
+            f"  No manifest found under {evidence_root}. Nothing to verify.",
+            fg=typer.colors.YELLOW,
+            err=True,
+        )
+        raise typer.Exit(2)
+
+    typer.echo(f"\nVERIFY: {evidence_root}\n")
+    failed = [r for r in results if not r["ok"]]
+    for result in results:
+        if result["ok"]:
+            metrics = " ".join(f"{k}={v:g}" for k, v in sorted(result["metrics"].items()))
+            typer.secho(f"  ok    {result['trial_id']:<14} {metrics}", fg=typer.colors.GREEN)
+        else:
+            typer.secho(f"  FAIL  {result['trial_id']:<14} {result['reason']}", fg=typer.colors.RED)
+
+    typer.echo("")
+    if failed:
+        typer.secho(
+            f"  {len(failed)} of {len(results)} trial(s) could not be re-derived. "
+            "The published numbers for those trials are not currently checkable.",
+            fg=typer.colors.RED,
+        )
+        raise typer.Exit(1)
+
+    typer.secho(
+        f"  All {len(results)} trial(s) re-derived from the retained artifact "
+        "(invariant 7 holds for this run).",
+        fg=typer.colors.GREEN,
+    )
+
+
 graph_app = typer.Typer(help="Build and query the code graph.")
 app.add_typer(graph_app, name="graph")
 

@@ -38,7 +38,9 @@ from __future__ import annotations
 import difflib
 import hashlib
 import json
+import os
 import shutil
+import subprocess
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
@@ -223,6 +225,61 @@ def tree_diff(fixture: Path, trial_dir: Path) -> tuple[str, list[dict[str, str]]
     return "".join(chunks), unreproducible
 
 
+def parse_metrics(stdout: str, exit_code: int) -> tuple[dict[str, float], str, str | None]:
+    """Metrics for one trial, plus where they came from and why.
+
+    Returns `(metrics, source, reason)`. Three sources, in precedence order
+    -- `metric_fn` is handled by the caller, so this covers the two the CLI
+    can reach:
+
+    - **`scorer_json`** -- the scorer printed a JSON object on stdout. This
+      exists because the CLI previously could not express any metric except
+      `success`: `run_eval` was called without a `metric_fn`, so a spec
+      asking for `tie_correct` got `insufficient_data` and a report that
+      still looked publishable (ADR-0027). A scorer already runs as a real
+      subprocess and is already ground truth for pass/fail; letting it also
+      report *what* it measured keeps scoring out of the agent's hands.
+    - **`exit_code`** -- the fallback, `success = exit_code == 0`.
+
+    `success` is always seeded first so it cannot vanish from a run just
+    because a scorer reported other keys. When stdout looked like JSON but
+    was rejected, the reason is returned rather than discarded -- invariant
+    5: every degraded path says why.
+    """
+    metrics: dict[str, float] = {"success": 1.0 if exit_code == 0 else 0.0}
+
+    candidate = next(
+        (line for line in reversed(stdout.strip().splitlines()) if line.strip()),
+        "",
+    ).strip()
+    if not candidate.startswith("{"):
+        return metrics, "exit_code", None
+
+    try:
+        parsed = json.loads(candidate)
+    except json.JSONDecodeError as exc:
+        return metrics, "exit_code", f"scorer stdout looked like JSON but did not parse: {exc}"
+
+    if not isinstance(parsed, dict):
+        return metrics, "exit_code", "scorer stdout parsed as JSON but was not an object"
+
+    rejected = {
+        key: value
+        for key, value in parsed.items()
+        if not isinstance(value, (int, float, bool)) or isinstance(value, str)
+    }
+    if rejected:
+        return (
+            metrics,
+            "exit_code",
+            f"scorer stdout had non-numeric values for {sorted(rejected)}; "
+            "a metric must be a number a noise floor can be computed over",
+        )
+
+    metrics.update({key: float(value) for key, value in parsed.items()})
+    return metrics, "scorer_json", None
+
+
 def _scorer_log(stdout: str, stderr: str) -> str:
     return f"--- scorer stdout ---\n{stdout}\n--- scorer stderr ---\n{stderr}\n"
 
@@ -289,7 +346,12 @@ def write_trial_evidence(
     return entry
 
 
-def write_run_evidence(evidence_root: Path, spec: TrialSpec, report_json: dict[str, Any]) -> None:
+def write_run_evidence(
+    evidence_root: Path,
+    spec: TrialSpec,
+    report_json: dict[str, Any],
+    spec_dir: Path | None = None,
+) -> None:
     """Retain the spec that produced a run, and the run's own report.
 
     Unconditional, not behind a `--json` flag. ADR-0022 stated that
@@ -302,9 +364,182 @@ def write_run_evidence(evidence_root: Path, spec: TrialSpec, report_json: dict[s
     (evidence_root / SPEC_NAME).write_text(
         json.dumps(json.loads(spec.model_dump_json()), indent=2) + "\n", encoding="utf-8"
     )
-    (evidence_root / REPORT_NAME).write_text(
-        json.dumps(report_json, indent=2) + "\n", encoding="utf-8"
+    # Recorded relative to the evidence root, so the artifact stays portable
+    # and self-describing. A scorer reached through `$VERITY_SPEC_DIR` cannot
+    # be re-run later unless the evidence says where that directory was --
+    # `verity verify` found this the first time it ran, by failing on a
+    # scorer it could not locate.
+    payload = dict(report_json)
+    if spec_dir is not None:
+        payload["spec_dir"] = os.path.relpath(spec_dir.resolve(), evidence_root.resolve())
+    (evidence_root / REPORT_NAME).write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+
+
+def verify_evidence(
+    evidence_root: Path, work_root: Path, run_id: str | None = None
+) -> list[dict[str, Any]]:
+    """Re-derive every trial's metrics from what was retained.
+
+    This is invariant 7 as an operation rather than a promise: take the
+    fixture, apply the retained diff, run the spec's own scorer, and compare
+    what comes back with what the manifest published. A third party with only
+    this repository can run it, which is the whole point -- until now the
+    property was demonstrated once, in a test, on a fixture the test built.
+
+    Returns one result per manifest entry with `ok` plus the specific
+    mismatch. Never raises on a bad trial: a verification tool that dies on
+    the first discrepancy cannot tell you how many there are.
+    """
+    entries = read_manifest(evidence_root)
+    if not entries:
+        return []
+
+    # The manifest is append-only, so re-running a spec leaves several runs
+    # in it. Verifying all of them would re-check superseded trials against
+    # the current fixture and report failures that are really just history.
+    target = run_id or entries[-1].get("run_id")
+    if target is not None:
+        entries = [e for e in entries if e.get("run_id") == target]
+
+    spec_path = evidence_root / SPEC_NAME
+    if not spec_path.exists():
+        return [
+            {
+                "trial_id": entry["trial_id"],
+                "ok": False,
+                "reason": f"no {SPEC_NAME} beside the manifest -- the fixture and scorer "
+                "that produced these numbers were not retained, so nothing can be re-run",
+            }
+            for entry in entries
+        ]
+
+    spec = TrialSpec.model_validate_json(spec_path.read_text(encoding="utf-8"))
+    fixture = Path(spec.fixture_path)
+    scorer_dir = _recorded_spec_dir(evidence_root)
+    results: list[dict[str, Any]] = []
+
+    fixture_now = hash_tree(fixture) if fixture.is_dir() else None
+    work_root.mkdir(parents=True, exist_ok=True)
+
+    for entry in entries:
+        trial_id = entry["trial_id"]
+        result: dict[str, Any] = {"trial_id": trial_id, "ok": False, "reason": ""}
+
+        if fixture_now is None:
+            result["reason"] = f"fixture {spec.fixture_path!r} no longer exists"
+            results.append(result)
+            continue
+        if fixture_now != entry.get("fixture_hash"):
+            # Not a failed check -- a moved base. Saying which it is matters:
+            # the diff may be perfectly valid against the fixture it was made
+            # from, and applying it to a drifted one would mislead.
+            result["reason"] = (
+                "the fixture has changed since this trial ran "
+                f"(recorded {str(entry.get('fixture_hash'))[:23]}..., "
+                f"now {fixture_now[:23]}...), so the retained diff no longer "
+                "describes a reachable state"
+            )
+            results.append(result)
+            continue
+
+        replay = work_root / trial_id
+        if replay.exists():
+            shutil.rmtree(replay)
+        shutil.copytree(fixture, replay, ignore=shutil.ignore_patterns(*EXCLUDE_DIRS))
+        # `git apply` resolves paths against the enclosing work tree's root,
+        # not the cwd. Run inside a repository -- which the default work root
+        # under `.verity/` is -- it finds nothing matching and exits **0 having
+        # changed nothing**. Making the replay its own toplevel is what keeps
+        # verification independent of where the caller put its scratch.
+        subprocess.run(["git", "init", "-q"], cwd=replay, capture_output=True)
+
+        diff = (evidence_root / entry["diff_path"]).read_text(encoding="utf-8")
+        if diff.strip():
+            applied = subprocess.run(
+                ["git", "apply", "-p1"],
+                cwd=replay,
+                input=diff,
+                capture_output=True,
+                text=True,
+            )
+            if applied.returncode != 0:
+                result["reason"] = (
+                    f"the retained diff does not apply: {applied.stderr.strip().splitlines()[0]}"
+                    if applied.stderr.strip()
+                    else "the retained diff does not apply"
+                )
+                results.append(result)
+                continue
+
+        rerun = subprocess.run(
+            spec.scorer_command,
+            shell=True,
+            cwd=replay,
+            capture_output=True,
+            text=True,
+            env=_verify_env(replay, fixture, scorer_dir, entry),
+        )
+        metrics, _, _ = parse_metrics(rerun.stdout, rerun.returncode)
+
+        published = entry.get("metrics", {})
+        differing = {
+            key: (published[key], metrics.get(key))
+            for key in published
+            if key in metrics and published[key] != metrics[key]
+        }
+        missing = [key for key in published if key not in metrics]
+
+        if rerun.returncode != entry["scorer_exit_code"]:
+            result["reason"] = (
+                f"scorer exited {rerun.returncode}, manifest published {entry['scorer_exit_code']}"
+            )
+        elif differing:
+            result["reason"] = "; ".join(
+                f"{key}: re-derived {got}, manifest published {want}"
+                for key, (want, got) in sorted(differing.items())
+            )
+        elif missing:
+            result["reason"] = f"scorer no longer reports {', '.join(sorted(missing))}"
+        else:
+            result["ok"] = True
+            result["metrics"] = metrics
+
+        results.append(result)
+
+    return results
+
+
+def _recorded_spec_dir(evidence_root: Path) -> Path:
+    """Where the spec lived when the run happened.
+
+    `$VERITY_SPEC_DIR` is how a hidden scorer is reached, so evidence that
+    does not record it cannot be re-verified -- the scorer is simply not
+    found and every trial fails for a reason that has nothing to do with the
+    numbers. Falls back to the evidence root's parent, which is the layout
+    `verity eval` defaults to (`experiments/<name>/evidence`).
+    """
+    report = evidence_root / REPORT_NAME
+    if report.exists():
+        recorded = json.loads(report.read_text(encoding="utf-8")).get("spec_dir")
+        if recorded:
+            return (evidence_root / recorded).resolve()
+    return evidence_root.parent.resolve()
+
+
+def _verify_env(
+    replay: Path, fixture: Path, spec_dir: Path, entry: dict[str, Any]
+) -> dict[str, str]:
+    env = dict(os.environ)
+    env.update(
+        {
+            "VERITY_TRIAL_DIR": str(replay.resolve()),
+            "VERITY_FIXTURE": str(fixture.resolve()),
+            "VERITY_CONDITION": str(entry.get("condition", "")),
+            "VERITY_TRIAL_INDEX": str(entry.get("trial_id", "")).rsplit("_", 1)[-1],
+            "VERITY_SPEC_DIR": str(spec_dir.resolve()),
+        }
     )
+    return env
 
 
 def read_manifest(evidence_root: Path) -> list[dict[str, Any]]:

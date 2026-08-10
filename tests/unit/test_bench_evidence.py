@@ -22,7 +22,7 @@ from pathlib import Path
 import pytest
 
 from verityai.bench.eval import run_eval
-from verityai.bench.evidence import hash_tree, read_manifest, tree_diff
+from verityai.bench.evidence import hash_tree, read_manifest, tree_diff, verify_evidence
 from verityai.core.models import TrialSpec
 
 
@@ -296,3 +296,116 @@ class TestFixtureDrift:
         (fixture / "pkg" / "calc.py").write_text("def value():\n    return 99\n")
 
         assert hash_tree(fixture) != recorded, "fixture drift must change the hash"
+
+
+class TestVerifyEvidence:
+    """`verity verify` -- invariant 7 as an operation anyone can run, rather
+    than a property demonstrated once inside a test on a fixture the test
+    itself built."""
+
+    def _run(self, tmp_path, spec_dir=None):
+        fixture = _fixture(tmp_path)
+        evidence = tmp_path / "evidence"
+        run_eval(
+            _spec(fixture),
+            _invoke,
+            work_root=tmp_path / "work",
+            evidence_root=evidence,
+            spec_dir=spec_dir,
+        )
+        return evidence
+
+    @requires_git
+    def test_every_trial_re_derives(self, tmp_path):
+        evidence = self._run(tmp_path)
+
+        results = verify_evidence(evidence, tmp_path / "replay")
+
+        assert len(results) == 10
+        assert all(r["ok"] for r in results), [r for r in results if not r["ok"]]
+
+    @requires_git
+    def test_verification_works_when_the_work_root_is_inside_a_git_repo(self, tmp_path):
+        """The defect `verity verify` hit on its first real run.
+
+        `git apply` resolves paths against the enclosing work tree's root,
+        not the cwd. Inside a repository it finds nothing matching the patch
+        and exits **0 having changed nothing** -- so every trial "verified"
+        against an unmodified fixture and reported a mismatch whose stated
+        reason (a scorer exit code) had nothing to do with the cause. The
+        default work root lives under `.verity/`, inside this repository, so
+        this was the normal case rather than an edge one.
+        """
+        subprocess.run(["git", "init", "-q"], cwd=tmp_path, capture_output=True)
+        evidence = self._run(tmp_path)
+
+        results = verify_evidence(evidence, tmp_path / "inside_repo_replay")
+
+        assert all(r["ok"] for r in results), (
+            "verification must not depend on whether the scratch directory "
+            "happens to sit inside a git work tree"
+        )
+
+    @requires_git
+    def test_a_tampered_diff_is_caught(self, tmp_path):
+        """The property that makes verification worth running at all."""
+        evidence = self._run(tmp_path)
+        target = evidence / "trials" / "verity_1" / "changes.diff"
+        target.write_text(target.read_text().replace("return 1", "return 7"))
+
+        results = verify_evidence(evidence, tmp_path / "replay")
+
+        bad = [r for r in results if r["trial_id"] == "verity_1"]
+        assert bad and not bad[0]["ok"]
+        assert "correct" in bad[0]["reason"] or "exited" in bad[0]["reason"]
+
+    def test_a_drifted_fixture_is_reported_as_drift_not_as_a_failed_check(self, tmp_path):
+        """A diff may be perfectly valid against the base it was made from.
+        Reporting that as a failed metric would blame the wrong thing."""
+        fixture = _fixture(tmp_path)
+        evidence = tmp_path / "evidence"
+        run_eval(_spec(fixture), _invoke, work_root=tmp_path / "work", evidence_root=evidence)
+
+        (fixture / "pkg" / "calc.py").write_text("def value():\n    return 42\n")
+        results = verify_evidence(evidence, tmp_path / "replay")
+
+        assert all(not r["ok"] for r in results)
+        assert all("fixture has changed" in r["reason"] for r in results)
+
+    def test_evidence_without_a_spec_cannot_be_verified_and_says_so(self, tmp_path):
+        evidence = self._run(tmp_path)
+        (evidence / "spec.json").unlink()
+
+        results = verify_evidence(evidence, tmp_path / "replay")
+
+        assert all(not r["ok"] for r in results)
+        assert "not retained" in results[0]["reason"]
+
+    @requires_git
+    def test_only_the_latest_run_is_verified(self, tmp_path):
+        """The manifest is append-only, so re-running a spec leaves several
+        runs in it. Verifying all of them would re-check superseded trials
+        against the current fixture and report history as failure."""
+        evidence = self._run(tmp_path)
+        run_eval(
+            _spec(fixture=Path(json.loads((evidence / "spec.json").read_text())["fixture_path"])),
+            _invoke,
+            work_root=tmp_path / "work2",
+            evidence_root=evidence,
+        )
+
+        assert len(read_manifest(evidence)) == 20
+        assert len(verify_evidence(evidence, tmp_path / "replay")) == 10
+
+    @requires_git
+    def test_the_recorded_spec_dir_is_used_for_the_scorer(self, tmp_path):
+        """`$VERITY_SPEC_DIR` is how a hidden scorer is reached, so evidence
+        that does not record where the spec lived cannot be re-verified."""
+        spec_home = tmp_path / "spec_home"
+        spec_home.mkdir()
+        evidence = self._run(tmp_path, spec_dir=spec_home)
+
+        recorded = json.loads((evidence / "report.json").read_text())["spec_dir"]
+
+        assert recorded
+        assert (evidence / recorded).resolve() == spec_home.resolve()

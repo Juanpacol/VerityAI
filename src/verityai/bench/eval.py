@@ -175,7 +175,7 @@ def run_eval(
     # the per-trial evidence, or a reader has the numbers without the thing
     # that produced them.
     if evidence_root is not None:
-        write_run_evidence(evidence_root, spec, to_json(report))
+        write_run_evidence(evidence_root, spec, to_json(report), spec_dir=spec_dir)
 
     return report
 
