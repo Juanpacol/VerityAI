@@ -102,11 +102,14 @@ class TestKnownFalsePositive:
         assert "local dict" in caveat or "cannot tell" in caveat
 
     def test_caveats_for_surfaces_only_rules_that_actually_fired(self):
+        """Phase 5 (ADR-0026) backfilled a caveat for sql-injection, which
+        previously had none -- this now asserts the caveat that DOES fire,
+        rather than asserting the gap that used to exist."""
         sql_findings = scan_code(VULNERABLE_SQL)
 
         caveats = caveats_for(sql_findings)
 
-        assert caveats == []  # sql-injection has no documented caveat
+        assert caveats == [RULE_CAVEATS["sql-injection"]]
 
     def test_caveats_for_surfaces_the_race_caveat_when_it_fires(self):
         race_findings = scan_code(VULNERABLE_RACE)

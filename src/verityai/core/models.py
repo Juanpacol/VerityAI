@@ -666,6 +666,14 @@ class Rule(BaseModel):
     description: str = ""
     category: str = ""  # "security" | "architecture" | ...
     severity: str = "medium"
+    # Which risk tier a changed file needs to reach before this rule is
+    # worth running against it -- "low" | "medium" | "high". Display/gating
+    # metadata only, the same status `severity` already has: nothing in
+    # `rule_engine.py` branches on it. The gate lives entirely in the
+    # caller -- `reliability/risk.py::rules_for_tier` filters
+    # `BUILTIN_SECURITY_RULES` by this field before scan_code/scan_file/
+    # scan_repo's already-injectable `rules=` ever sees them (ADR-0026).
+    risk_tier: str = "low"
     formal_spec: str
     applies_to: list[str] = Field(default_factory=lambda: ["python"])
 

@@ -35,6 +35,7 @@ BUILTIN_SECURITY_RULES: list[Rule] = [
         name="SQL Injection Prevention",
         category="security",
         severity="high",
+        risk_tier="high",
         formal_spec="PRE: sql_query_built_dynamically; POST: uses_parameterized_query",
         description=(
             "A query string built by concatenation, f-string, %-format or .format() "
@@ -47,6 +48,7 @@ BUILTIN_SECURITY_RULES: list[Rule] = [
         name="No Check-Then-Act Race",
         category="security",
         severity="medium",
+        risk_tier="medium",
         formal_spec="PRE: check_then_act_on_shared_resource; POST: check_and_act_combined_atomically",
         description=(
             "A containment check followed by a mutation of the same container, with "
@@ -66,6 +68,15 @@ BUILTIN_SECURITY_RULES: list[Rule] = [
 # this plainly ("treat a hit as worth a human look, never as proof"), but that
 # caveat lived only in a docstring nobody reading a scan's output would see.
 RULE_CAVEATS: dict[str, str] = {
+    "sql-injection": (
+        "This rule matches a syntactic shape (a dynamically built query string "
+        "reaching execute()/executemany()/executescript() with no parameterized "
+        "query alongside it in the same function) -- it has no data-flow analysis, "
+        "so it cannot tell whether the dynamic portion actually originates from "
+        "untrusted input or is built entirely from hardcoded, trusted values. A "
+        "hit on a query built from constants is a false positive by this "
+        "definition, not evidence of an injectable query."
+    ),
     "check-then-act-race": (
         "This rule matches a syntactic shape (check membership, then mutate the "
         "same container, unguarded) -- it cannot tell whether the container is "
