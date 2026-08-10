@@ -150,3 +150,61 @@ class TestBudget:
         _, report = build_handoff(populate(store), budget=1, counter=FixedCounter())
 
         assert report["budget_met"] is False
+
+
+class TestSurfacingLog:
+    """Phase 2 (ADR-0023): every prior write to `.verity/` recorded when
+    something was decided, never when it was surfaced back to an agent.
+    `build_handoff` is the highest-value place to close that gap -- it
+    already computes everything a `Surfacing` record needs."""
+
+    def test_build_handoff_appends_a_surfacing_record(self, store):
+        build_handoff(populate(store), counter=FixedCounter())
+
+        surfacings = store.surfacings()
+        assert len(surfacings) == 1
+        assert surfacings[0].surfaced_via == "handoff"
+
+    def test_surfacing_record_names_what_was_surfaced_and_dropped(self, store):
+        populate(store)
+        decision = store.decisions()[0]
+
+        _, report = build_handoff(store, budget=30, counter=FixedCounter())
+
+        surfacing = store.surfacings()[0]
+        assert surfacing.dropped == report["dropped_sections"]
+        assert surfacing.budget_met == report["budget_met"]
+        assert surfacing.token_count == report["tokens"]
+        # A dropped section's records are correctly absent from what was
+        # actually surfaced -- the record reflects the post-cut document,
+        # not the full state.
+        if "decisions" in surfacing.dropped:
+            assert decision.id not in surfacing.record_ids
+        else:
+            assert decision.id in surfacing.record_ids
+
+    def test_used_is_unset_because_usage_is_not_observable_here(self, store):
+        build_handoff(populate(store), counter=FixedCounter())
+
+        assert store.surfacings()[0].used is None
+
+    def test_surfacing_is_never_restored_by_a_snapshot(self, store):
+        """An observation stream, not restorable task state (ADR-0023) --
+        confirmed against the real restore path, not just by omission."""
+        from verityai.memory.snapshot import SnapshotManager
+
+        populate(store)
+        build_handoff(store, counter=FixedCounter())
+        manager = SnapshotManager(store)
+        snap = manager.create(label="pre-restore")
+
+        assert not hasattr(snap, "surfacings")
+
+        # Appending another surfacing, then restoring the snapshot, must not
+        # touch surfacings.jsonl at all -- restore only replays the five
+        # types Snapshot actually carries.
+        before = len(store.surfacings())
+        build_handoff(store, counter=FixedCounter())
+        assert len(store.surfacings()) == before + 1
+        manager.restore(snap.number)
+        assert len(store.surfacings()) == before + 1

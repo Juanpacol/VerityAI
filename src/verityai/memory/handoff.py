@@ -25,6 +25,7 @@ from verityai.core.models import (
     Decision,
     Discovery,
     Failure,
+    Surfacing,
     Task,
 )
 from verityai.memory.store import MemoryStore
@@ -91,11 +92,32 @@ def build_handoff(
             )
             count = counter.count(document)
 
+    budget_met = budget is None or count.tokens <= budget
+
+    # Phase 2 (ADR-0023): the one place this project could answer "was this
+    # memory surfaced, and when" and never did. Everything needed is already
+    # in scope at this point -- the post-cut record ids, what was dropped to
+    # fit, and the budget outcome -- so this costs nothing extra to compute.
+    # `used` stays unset: whether the reader acted on it is not observable
+    # from here.
+    surfaced_ids = [r.id for r in (*decisions, *constraints, *discoveries, *failures)]
+    store.append(
+        Surfacing(
+            surfaced_via="handoff",
+            record_ids=surfaced_ids,
+            dropped=list(dropped),
+            budget_met=budget_met,
+            token_count=count.tokens,
+            token_method=count.method,
+            source="memory.handoff",
+        )
+    )
+
     return document, {
         "tokens": count.tokens,
         "token_method": count.method,
         "budget": budget,
-        "budget_met": budget is None or count.tokens <= budget,
+        "budget_met": budget_met,
         "dropped_sections": dropped,
         "counts": {
             "decisions": len(decisions),

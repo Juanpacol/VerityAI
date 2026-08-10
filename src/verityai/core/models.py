@@ -192,6 +192,31 @@ class Failure(Record):
     resolved: bool = False
 
 
+class Surfacing(Record):
+    """An observation that memory was surfaced to an agent -- when, what,
+    and under what constraint.
+
+    Every timestamp elsewhere in this module is write-time (`created_at` on
+    other `Record`s, `Evidence.captured_at`): nothing records when
+    something was *retrieved*. For `Surfacing`, `created_at` means
+    retrieval time -- the one record type where that reading is correct.
+
+    Deliberately an observation stream, not restorable task state: kept out
+    of `Snapshot` and `SnapshotManager.restore` for that reason (ADR-0023).
+    `used` stays `None` rather than `False` by default, because "was this
+    actually used" is often not observable at write time -- an unresolved
+    `None` is honest; a false `False` is not.
+    """
+
+    surfaced_via: str  # "handoff" | "decision_resurfacing" | ...
+    record_ids: list[UUID] = Field(default_factory=list)
+    dropped: list[str] = Field(default_factory=list)
+    budget_met: bool | None = None
+    token_count: int | None = None
+    token_method: str = "unmeasured"
+    used: bool | None = None
+
+
 class Fact(Record):
     """A claim about the project, with its grounding kept explicit.
 

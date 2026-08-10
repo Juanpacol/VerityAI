@@ -40,6 +40,7 @@ from verityai.core.models import (
     Fact,
     Failure,
     Record,
+    Surfacing,
     Task,
 )
 
@@ -60,6 +61,10 @@ _FILES: dict[type, tuple[str, str]] = {
     Discovery: ("state", "discoveries.jsonl"),
     Failure: ("state", "failures.jsonl"),
     Fact: ("memory", "facts.jsonl"),
+    # An observation stream (ADR-0023), not restorable task state -- kept
+    # under memory/ alongside facts.jsonl, deliberately absent from
+    # Snapshot/SnapshotManager.restore.
+    Surfacing: ("memory", "surfacings.jsonl"),
 }
 
 
@@ -181,6 +186,16 @@ class MemoryStore:
     def facts(self) -> list[Fact]:
         return self.read(Fact)
 
+    def surfacings(self) -> list[Surfacing]:
+        """Every recorded surfacing event, oldest first.
+
+        Read-only from the outside on purpose: nothing besides
+        `memory/handoff.py` and `consistency/check.py`'s resurfacing check
+        writes here (ADR-0023) -- this accessor is for measurement, not for
+        a caller to append through directly.
+        """
+        return self.read(Surfacing)
+
     def supersede(self, decision_id: UUID, replacement: Decision) -> Decision:
         """Record `replacement` as superseding an earlier decision.
 
@@ -235,4 +250,5 @@ class MemoryStore:
             "failures": len(self.failures(include_resolved=False)),
             "failures_total": len(self.read(Failure)),
             "facts": len(self.facts()),
+            "surfacings": len(self.surfacings()),
         }

@@ -40,6 +40,7 @@ verdict was "this pilot could not have detected an effect."
 | [0020](0020-arbitrary-tiebreak-pilot.md) | Does an ambiguity with no linguistic convention finally break it? | **Yes** — `likely_real_difference`, 0/5 vs 5/5, the first success-rate split in the series |
 | [0021](0021-consistency-relation-inversion.md) | Did ADR-0018's fix actually close the relation blind spot? | No — it flipped a silent false negative into an asserted false positive; corrected to `UNVERIFIABLE` |
 | [0022](0022-verity-eval-harness.md) | Can a real trial harness replace hand-run, hand-scored pilots? | Yes — `verity eval` retains a content-hashed artifact per trial and flags degenerate noise floors instead of hiding them; reproduced pilot 8's result exactly |
+| [0023](0023-memory-surfacing-log.md) | Can this project measure *when* memory was surfaced, not just when it was written? | Yes, narrowly — a new `Surfacing` record, emitted from `build_handoff` and decision resurfacing; "was it used" stays honestly unresolved except one negative signal |
 
 ## Pre-pivot (superseded)
 

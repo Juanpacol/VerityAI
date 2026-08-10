@@ -36,6 +36,7 @@ from verityai.core.models import (
     Evidence,
     GraphNode,
     NodeKind,
+    Surfacing,
 )
 from verityai.graph.query import GraphQuery
 from verityai.graph.store import EdgeKind
@@ -307,6 +308,20 @@ def check_decision_resurfacing(text: str, store: MemoryStore) -> list[ClaimCheck
                     f"resembles a {decision.status.value} decision: {decision.statement!r}"
                     + (f" ({decision.rationale})" if decision.rationale else "")
                 ),
+            )
+        )
+        # Phase 2 (ADR-0023): a resurfacing warning is itself evidence that
+        # this decision was surfaced -- and, since the checked text still
+        # proposed it again, evidence that it was surfaced and not acted on.
+        # `used=False` here is a real signal, not a guess: the only way this
+        # branch fires is that `text` resembles a decision explicitly
+        # rejected or superseded, i.e. the opposite of using it correctly.
+        store.append(
+            Surfacing(
+                surfaced_via="decision_resurfacing",
+                record_ids=[decision.id],
+                used=False,
+                source="consistency.check_decision_resurfacing",
             )
         )
     return checks

@@ -346,6 +346,44 @@ class TestDecisionResurfacing:
         assert "race conditions" in checks[0].explanation
 
 
+class TestResurfacingSurfacingLog:
+    """Phase 2 (ADR-0023): a resurfacing warning is itself a "surfaced and
+    ignored" signal -- the checked text resembles a decision explicitly
+    rejected or superseded, which is the opposite of having used it."""
+
+    @pytest.fixture
+    def store_with_rejected(self, store):
+        store.append(
+            Decision(
+                statement="use a global mutable cache for session state",
+                status=DecisionStatus.REJECTED,
+                rationale="caused race conditions under concurrent requests",
+            )
+        )
+        return store
+
+    def test_a_flagged_resurfacing_appends_a_surfacing_record(self, store_with_rejected):
+        rejected = store_with_rejected.decisions(include_inactive=True)[0]
+
+        check_decision_resurfacing(
+            "I'll add a global mutable cache for session state to speed this up.",
+            store_with_rejected,
+        )
+
+        surfacings = store_with_rejected.surfacings()
+        assert len(surfacings) == 1
+        assert surfacings[0].surfaced_via == "decision_resurfacing"
+        assert surfacings[0].record_ids == [rejected.id]
+        assert surfacings[0].used is False
+
+    def test_unrelated_text_appends_no_surfacing_record(self, store_with_rejected):
+        check_decision_resurfacing(
+            "Let's improve the CLI help text formatting.", store_with_rejected
+        )
+
+        assert store_with_rejected.surfacings() == []
+
+
 class TestFullPipeline:
     def test_extraction_and_checking_compose(self, query, project):
         # One relation claim (subsumes both backtick spans it matches) plus
