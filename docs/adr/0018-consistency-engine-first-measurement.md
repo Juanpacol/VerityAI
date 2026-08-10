@@ -97,21 +97,38 @@ synthetic-fixture trap's blind spots.
   (`[\w./-]+` instead of `[\w.]+`), and `check.py` gained
   `check_symbol_calls_file`, which checks a file-targeted relation claim
   against the file-level `IMPORTS` graph instead of a symbol-level `CALLS`
-  edge. Verified against the exact probe this ADR used to demonstrate the
-  gap: `` `apply_tax` calls `billing/tax_rates.py` `` now reports
-  `CONTRADICTED` ("the file defining 'apply_tax' does not import
-  'billing/tax_rates.py'") instead of silently vanishing into two
-  independent existence checks. Regression tests added in both
-  `test_claims.py` and `test_consistency_check.py`
-  (`TestSymbolCallsFileRelation`). One residual, honestly-stated limitation:
-  the fix's accuracy is bounded by how completely the ingester resolves
-  imports — `from package import submodule`-style imports were observed, in
-  the real `billing/tax.py` fixture, to register only an edge to the
-  package's `__init__.py`, not to the submodule file. That is a pre-existing
-  ingester limitation, not introduced by this fix, and is not addressed
-  here. The extractor's other named gap (tolerating explanatory text
-  between the relation verb and its arguments, e.g. "likely calls a helper
-  in") remains open, deliberately out of scope for this pass.
+  edge. First verified against the exact probe this ADR used to demonstrate
+  the gap — `` `apply_tax` calls `billing/tax_rates.py` `` went from
+  vanishing entirely to reporting `CONTRADICTED`, because at that point the
+  ingester itself had a separate bug (below) that failed to record the real
+  import. Regression tests added in both `test_claims.py` and
+  `test_consistency_check.py` (`TestSymbolCallsFileRelation`).
+- **The ingester's own import-resolution gap — also fixed, same day.**
+  `billing/tax.py` does `from billing import tax_rates` and genuinely reads
+  `tax_rates.REGION_RATES` — a real import of `billing/tax_rates.py`. But
+  `graph/ingest.py`'s `visit_ImportFrom` recorded only the bare package name
+  (`billing`) as the import target, never trying `billing.tax_rates` as a
+  candidate — Python's grammar cannot tell "importing a submodule via its
+  package" from "importing a symbol defined in the package's `__init__.py`"
+  apart syntactically; only a post-walk check of whether `billing.tax_rates`
+  is a real first-party file can. Fixed by recording that more specific
+  candidate per imported name (one `IMPORTS` edge per name, matching plain
+  `import a, b`'s existing granularity) and having `_resolve` try it first.
+  **This changed the probe's correct answer**: with the ingester fixed,
+  `billing/tax.py` is now correctly recorded as importing
+  `billing/tax_rates.py`, so `` `apply_tax` calls `billing/tax_rates.py` ``
+  now reports `SUPPORTED` — the CONTRADICTED verdict reported moments
+  earlier was itself an artifact of the ingester bug, not the correct
+  answer. A second probe, `` `apply_tax` calls `billing/policy.py` `` (a
+  file `tax.py` genuinely never imports), still correctly reports
+  `CONTRADICTED`, confirming the mechanism distinguishes real from false
+  file relations once the underlying import graph is accurate. Two
+  regression tests added in `test_graph_ingest.py`, one confirming the
+  submodule case resolves to the submodule file, one confirming a plain
+  `__init__.py`-symbol import is unaffected. The extractor's remaining named
+  gap (tolerating explanatory text between the relation verb and its
+  arguments, e.g. "likely calls a helper in") remains open, deliberately
+  out of scope for this pass.
 - **Backtick-quoted local variable names — addressed, deliberately without
   changing any verdict** (same-day follow-up). Investigating a fix
   surfaced a harder fact: a real local variable name (`with_tax`) and a

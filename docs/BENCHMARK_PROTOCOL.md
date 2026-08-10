@@ -60,10 +60,13 @@ invented symbol names (14/14 caught); a blind spot on function-to-file
 relation claims (0% caught at the time, structurally invisible to the
 extractor), closed the same day by extending the relation target pattern
 to accept file paths and checking such claims against the file-level
-IMPORTS graph instead of a symbol-level CALLS edge; and a real bug in
-decision resurfacing — a corpus of one or two decisions always normalized
-its closest match to 100% confidence regardless
-of actual relevance — found, fixed, and regression-tested.
+IMPORTS graph instead of a symbol-level CALLS edge -- which in turn
+surfaced a second, independent ingester bug (`from package import
+submodule` resolved only to the package, never the real submodule file),
+also fixed the same day; and a real bug in decision resurfacing — a corpus
+of one or two decisions always normalized its closest match to 100%
+confidence regardless of actual relevance — found, fixed, and
+regression-tested.
 
 ## The two families
 

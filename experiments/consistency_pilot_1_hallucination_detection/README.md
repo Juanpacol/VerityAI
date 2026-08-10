@@ -8,9 +8,15 @@ ADR-0007. What was actually missing was the same thing Context Engine
 lacked before ADR-0009: a measurement against real, not hand-authored,
 input. This experiment is that measurement.
 
-**Status: complete, and it found a real bug**, fixed in
-`src/verityai/consistency/check.py` (see `docs/adr/0018-consistency-engine-
-first-measurement.md`).
+**Status: complete, and it found three real bugs**, all fixed the same day
+(see `docs/adr/0018-consistency-engine-first-measurement.md` for the full
+sequence): the decision-resurfacing normalization bug below, the
+function-to-file relation blind spot, and — found while fixing that blind
+spot — a separate ingester bug that had been silently making the blind-spot
+fix's own verdicts *less* accurate. Note: this README describes what Part A
+found at measurement time; the specific "0% caught" relation-blind-spot
+result and its example probe were both since fixed, and the exact probe's
+correct answer changed as a result (see the ADR).
 
 ## Part A — inducing real hallucinations, not writing them by hand
 

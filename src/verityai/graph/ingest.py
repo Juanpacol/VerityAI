@@ -166,13 +166,23 @@ class ModuleExtractor(ast.NodeVisitor):
         if node.level:
             module = "." * node.level + module
 
+        # One edge per name (matching `visit_Import`'s granularity), because
+        # `from pkg import a, b` cannot be resolved as a single unit: `a`
+        # might be a submodule file and `b` a plain symbol in the same
+        # statement. Python's grammar cannot tell "importing a submodule via
+        # its package" from "importing a symbol defined in the package's
+        # __init__.py" -- both are `ImportFrom(module="pkg", names=["x"])`.
+        # `submodule_candidate` carries the more specific guess (`pkg.x`) for
+        # `_resolve` to try first, once every file has been walked and it can
+        # check whether that candidate is a real first-party file.
         for alias in node.names:
             local = alias.asname or alias.name
-            self.imported_names[local] = f"{module}.{alias.name}" if module else alias.name
-        self._add_import(module or ".", node.lineno)
+            qualified = f"{module}.{alias.name}" if module else alias.name
+            self.imported_names[local] = qualified
+            self._add_import(module or ".", node.lineno, submodule_candidate=qualified)
         self.generic_visit(node)
 
-    def _add_import(self, module: str, line: int) -> None:
+    def _add_import(self, module: str, line: int, submodule_candidate: str | None = None) -> None:
         """Record an imported module as an EXTERNAL node.
 
         Every import becomes a node even when the target is a first-party
@@ -205,7 +215,10 @@ class ModuleExtractor(ast.NodeVisitor):
                 # resolver needs the name to look the module up among
                 # first-party files; without this it can only ever see
                 # "external:b" and no first-party import would ever resolve.
-                metadata={"module": module},
+                # `submodule_candidate` (from `from X import Y`) is `X.Y`,
+                # a strictly more specific guess than `module` alone -- see
+                # `_resolve`.
+                metadata={"module": module, "submodule_candidate": submodule_candidate},
                 line=line,
             )
         )
@@ -524,7 +537,16 @@ def _resolve(
 
     if edge.kind is EdgeKind.IMPORTS:
         module = edge.metadata.get("module", "")
-        target_id = module_ids.get(module)
+        # `from pkg import name` is ambiguous by grammar alone: `name` might
+        # be a submodule file (`pkg/name.py`) or a plain symbol defined in
+        # `pkg/__init__.py`. Try the more specific candidate first -- if
+        # `pkg.name` really is a first-party file, that IS what Python binds
+        # at runtime, not a guess. Falls back to the package itself when the
+        # candidate isn't a real file (the __init__.py-symbol case).
+        candidate = edge.metadata.get("submodule_candidate")
+        target_id = module_ids.get(candidate) if candidate else None
+        if target_id is None:
+            target_id = module_ids.get(module)
         if target_id is None and module:
             # `from pkg.core import X` names a module that is a file; `import
             # pkg` names a package whose file is `pkg/__init__.py`. Try the

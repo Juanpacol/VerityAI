@@ -282,16 +282,22 @@ as strongly as an actual paraphrase of it. Confirmed with an isolated probe,
 fixed by normalizing against the checked text's own best-possible score
 instead of the in-corpus max, and locked in with a regression test.
 
-**The function-to-file relation blind spot was closed the same day**: the
-relation target pattern now accepts file paths, and a new check
-(`check_symbol_calls_file`) verifies the claim against the file-level
-`IMPORTS` graph instead of a symbol-level `CALLS` edge. The exact probe
-this measurement used to demonstrate the gap —
-`` `apply_tax` calls `billing/tax_rates.py` `` — now correctly reports
-`CONTRADICTED` instead of vanishing. See ADR-0018 for the full write-up,
-including the residual limitations that remain open (loose relation
-phrasing, and accuracy bounded by how completely the ingester resolves
-`from package import submodule`-style imports).
+**The function-to-file relation blind spot, and a real ingester bug behind
+it, were both closed the same day.** The relation target pattern now
+accepts file paths, and a new check (`check_symbol_calls_file`) verifies
+the claim against the file-level `IMPORTS` graph. That surfaced a second,
+independent bug: the ingester recorded `from billing import tax_rates` as
+importing only the bare package, never the real submodule file —
+`billing/tax.py` genuinely does import `billing/tax_rates.py`, but the
+graph didn't know it. Fixed in `graph/ingest.py` by trying the more
+specific candidate first. The exact probe this measurement used to
+demonstrate the original gap — `` `apply_tax` calls `billing/tax_rates.py` ``
+— now correctly reports **`SUPPORTED`** (the import genuinely exists);
+a second probe against a file `apply_tax`'s module never imports still
+correctly reports `CONTRADICTED`, confirming the mechanism works once the
+underlying import graph is accurate. See ADR-0018 for the full sequence,
+including the one relation-extraction gap that remains open (loose
+phrasing like "likely calls a helper in").
 
 ---
 

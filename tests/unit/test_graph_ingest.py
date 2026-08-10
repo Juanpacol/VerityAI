@@ -297,6 +297,42 @@ class TestResolution:
         testers = store.neighbours(factory.id, [EdgeKind.TESTS], direction="in")
         assert [n.name for n in testers] == ["test_service_runs"]
 
+    def test_from_package_import_submodule_resolves_to_the_submodule_file(self, tmp_path, store):
+        """Regression (ADR-0018): `from billing import tax_rates` is a real
+        import of `billing/tax_rates.py`, not of `billing/__init__.py` --
+        but grammatically it looks identical to importing a plain symbol
+        defined inside `__init__.py`. Only a post-walk file-existence check
+        can tell them apart, and it must prefer the submodule file when one
+        exists."""
+        (tmp_path / "billing").mkdir()
+        (tmp_path / "billing" / "__init__.py").write_text("")
+        (tmp_path / "billing" / "tax_rates.py").write_text("REGION_RATES = {}\n")
+        (tmp_path / "billing" / "tax.py").write_text(
+            "from billing import tax_rates\n\n\ndef apply_tax():\n    return tax_rates.REGION_RATES\n"
+        )
+
+        ingest_repo(tmp_path, store)
+
+        tax_file = next(n for n in store.all_nodes(NodeKind.FILE) if n.path == "billing/tax.py")
+        imports = store.neighbours(tax_file.id, [EdgeKind.IMPORTS], direction="out")
+        assert "billing/tax_rates.py" in {n.path for n in imports}
+        assert "billing/__init__.py" not in {n.path for n in imports}
+
+    def test_from_package_import_symbol_still_resolves_to_the_package(self, tmp_path, store):
+        """The other half of the same ambiguity: `from billing import
+        HELPER` where `HELPER` is a plain symbol defined in
+        `billing/__init__.py`, not a submodule file -- must still resolve
+        to the package, unchanged from before this fix."""
+        (tmp_path / "billing").mkdir()
+        (tmp_path / "billing" / "__init__.py").write_text("HELPER = 1\n")
+        (tmp_path / "billing" / "tax.py").write_text("from billing import HELPER\n")
+
+        ingest_repo(tmp_path, store)
+
+        tax_file = next(n for n in store.all_nodes(NodeKind.FILE) if n.path == "billing/tax.py")
+        imports = store.neighbours(tax_file.id, [EdgeKind.IMPORTS], direction="out")
+        assert "billing/__init__.py" in {n.path for n in imports}
+
 
 class TestIncrementality:
     def test_unchanged_files_are_skipped_on_reingest(self, repo, store):
