@@ -165,7 +165,15 @@ class GraphQuery:
         return self.store.unresolved_edges()[:limit]
 
     def file_dependencies(self, path: str) -> dict[str, list[str]]:
-        """What a file imports and which files import it."""
+        """What a file imports and which files import it.
+
+        `path` must be in the form `graph/ingest.py` stored -- repo-relative,
+        no leading `./` -- because the FILE node id is derived from the path
+        string. Any other form yields two empty lists and no error, which
+        reads identically to a file that genuinely has no imports. The same
+        trap caught `reliability/risk.py`'s fan-in signal (ADR-0028);
+        `store.nodes_in_file` has it too, via an exact `path =` match.
+        """
         file_id = GraphNode.make_id(NodeKind.FILE, path)
         return {
             "imports": sorted(

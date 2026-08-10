@@ -45,6 +45,7 @@ verdict was "this pilot could not have detected an effect."
 | [0025](0025-adaptive-context-prepass.md) | Can Verity proactively surface context without breaking the prune pipeline's invariants? | Yes, as a pre-pass only — `context/adaptive.py` + `memory/surface.py` merge into `ContextPipeline.run` unchanged; wiring and a measured pilot are stated as future work, not done here |
 | [0026](0026-risk-adaptive-verification.md) | Can verification depth scale with file risk, using only signals already in the graph? | Yes — `classify_file_risk` tiers by path convention / blast radius / fan-in / untested symbols; `rules_for_tier` gates rule depth; both builtin rules tagged with risk tiers and sql-injection caveat backfilled |
 | [0027](0027-retained-trial-evidence.md) | Did ADR-0022 actually close invariant 7? | **No** — six checkable failures, including a default output path inside `.gitignore` and a CLI that could not express the metric ADR-0022 claimed to reproduce. Evidence is now a diff against a hash-pinned fixture; unretained ⇒ unpublishable, mechanically |
+| [0028](0028-the-mocked-test-that-could-not-fail.md) | Did ADR-0026's risk tiering work outside its own tests? | **No** — any path form but the ingester's silently yielded zero signals and a clean-looking `low` for every file. The suite's only `MagicMock` could not express the difference; tests rewritten against a real graph, and `unittest.mock` is gone |
 
 ## Pre-pivot (superseded)
 
