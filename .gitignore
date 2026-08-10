@@ -10,8 +10,11 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
+# Anchored to the repo root: these are setuptools build artifacts, and an
+# unanchored `lib/` silently swallowed experiments/lib/ -- shared code the
+# pilots source at runtime, which would have been missing from any clone.
+/lib/
+/lib64/
 parts/
 sdist/
 var/
