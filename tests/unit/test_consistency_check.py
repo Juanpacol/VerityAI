@@ -11,14 +11,23 @@ verdict, echoing the same discipline ADR-0006 applied to the graph itself.
 import pytest
 
 from verityai.consistency.check import (
+    check_constraint_violations,
     check_decision_resurfacing,
     check_file_exists,
+    check_file_imports,
     check_symbol_exists,
     check_symbol_relation,
     render_report,
     run_consistency_check,
 )
-from verityai.core.models import CheckStatus, Claim, ClaimKind, Decision, DecisionStatus
+from verityai.core.models import (
+    CheckStatus,
+    Claim,
+    ClaimKind,
+    Constraint,
+    Decision,
+    DecisionStatus,
+)
 from verityai.graph.ingest import ingest_repo
 from verityai.graph.query import GraphQuery
 from verityai.graph.store import GraphStore
@@ -51,12 +60,13 @@ def symbol_claim(name):
     return Claim(kind=ClaimKind.SYMBOL_EXISTS, subject=name, raw_text=f"`{name}`")
 
 
-def relation_claim(subject, relation, target):
+def relation_claim(subject, relation, target, negated=False):
     return Claim(
         kind=ClaimKind.SYMBOL_RELATION,
         subject=subject,
         relation=relation,
         target=target,
+        negated=negated,
         raw_text=f"`{subject}` {relation} `{target}`",
     )
 
@@ -230,6 +240,181 @@ class TestSymbolCallsFileRelation:
 
         assert result.status is CheckStatus.CONTRADICTED
         assert "nonexistent_fn" in result.explanation
+
+
+class TestFileImportsRelation:
+    """Phase 3: 'imports' is checkable directly and confidently -- unlike
+    'calls' on a file target (ADR-0021), an IMPORTS edge IS the claim here,
+    not a proxy standing in for a different one."""
+
+    @pytest.fixture
+    def two_file_project(self, tmp_path):
+        (tmp_path / "rates.py").write_text("REGION_RATES = {}\n")
+        (tmp_path / "tax.py").write_text("from rates import REGION_RATES\n")
+        return tmp_path
+
+    @pytest.fixture
+    def two_file_query(self, two_file_project):
+        store = GraphStore()
+        ingest_repo(two_file_project, store)
+        yield GraphQuery(store)
+        store.close()
+
+    def test_a_real_import_is_confidently_supported(self, two_file_query):
+        result = check_file_imports(relation_claim("tax.py", "imports", "rates.py"), two_file_query)
+
+        assert result.status is CheckStatus.SUPPORTED
+        assert result.confidence == 1.0
+
+    def test_a_missing_import_is_contradicted(self, two_file_query):
+        result = check_file_imports(
+            relation_claim("rates.py", "imports", "tax.py"), two_file_query
+        )
+
+        assert result.status is CheckStatus.CONTRADICTED
+
+    def test_a_nonexistent_target_file_is_contradicted(self, two_file_query):
+        result = check_file_imports(
+            relation_claim("tax.py", "imports", "nonexistent.py"), two_file_query
+        )
+
+        assert result.status is CheckStatus.CONTRADICTED
+        assert "no file at" in result.explanation.lower()
+
+    def test_a_non_file_subject_is_unverifiable_not_guessed(self, two_file_query):
+        """'imports' is a file-level relation -- a symbol subject is a
+        different, unclear claim this checker declines to guess at."""
+        result = check_file_imports(
+            relation_claim("apply_tax", "imports", "rates.py"), two_file_query
+        )
+
+        assert result.status is CheckStatus.UNVERIFIABLE
+
+    def test_dispatches_through_check_symbol_relation(self, two_file_query):
+        result = check_symbol_relation(
+            relation_claim("tax.py", "imports", "rates.py"), two_file_query
+        )
+
+        assert result.status is CheckStatus.SUPPORTED
+
+
+class TestNegatedRelation:
+    """Phase 3: "`X` does not call `Y`" must invert the affirmative verdict,
+    not be silently dropped or silently matched as if unnegated."""
+
+    def test_a_negated_true_relation_is_contradicted(self, query):
+        """`run` really does call `helper` -- claiming it does NOT is false."""
+        result = check_symbol_relation(
+            relation_claim("run", "calls", "helper", negated=True), query
+        )
+
+        assert result.status is CheckStatus.CONTRADICTED
+
+    def test_a_negated_false_relation_is_supported(self, query):
+        """`Base` really does not call `helper` -- the negation holds."""
+        result = check_symbol_relation(
+            relation_claim("Base", "calls", "helper", negated=True), query
+        )
+
+        assert result.status is CheckStatus.SUPPORTED
+
+    def test_negation_extracts_with_the_right_polarity(self):
+        from verityai.consistency.claims import extract_claims
+
+        claims = extract_claims("`run` does not call `helper`.")
+
+        assert len(claims) == 1
+        assert claims[0].negated is True
+        assert claims[0].relation == "calls"
+
+    def test_affirmative_text_is_never_extracted_as_negated(self):
+        from verityai.consistency.claims import extract_claims
+
+        claims = extract_claims("`run` calls `helper`.")
+
+        assert len(claims) == 1
+        assert claims[0].negated is False
+
+
+class TestMultiTargetRelation:
+    """Phase 3: "`X` calls `Y` and `Z`" must produce a claim against both
+    targets, not silently bind only the first."""
+
+    def test_extracts_a_claim_per_target(self):
+        from verityai.consistency.claims import extract_claims
+
+        claims = extract_claims("`run` calls `helper` and `other`.")
+
+        assert len(claims) == 2
+        assert {c.target for c in claims} == {"helper", "other"}
+        assert all(c.subject == "run" and c.relation == "calls" for c in claims)
+
+    def test_each_target_is_checked_independently(self, query):
+        real = check_symbol_relation(relation_claim("run", "calls", "helper"), query)
+        fake = check_symbol_relation(relation_claim("run", "calls", "Nonexistent"), query)
+
+        assert real.status is CheckStatus.SUPPORTED
+        assert fake.status is CheckStatus.CONTRADICTED
+
+
+class TestConstraintViolations:
+    """Phase 3: consistency/check.py previously read only
+    store.decisions() -- constraints, recorded specifically to bind future
+    work, were never consulted. Same heuristic shape and honesty discipline
+    as check_decision_resurfacing (ADR-0018's normalization fix reused)."""
+
+    @pytest.fixture
+    def store_with_hard_constraint(self, store):
+        store.append(
+            Constraint(
+                statement="must not call the legacy pricing module directly",
+                hard=True,
+            )
+        )
+        return store
+
+    def test_resembling_text_is_flagged(self, store_with_hard_constraint):
+        checks = check_constraint_violations(
+            "I'll call the legacy pricing module directly here to save time.",
+            store_with_hard_constraint,
+        )
+
+        assert checks
+        assert checks[0].status is CheckStatus.CONTRADICTED
+        assert "hard constraint" in checks[0].explanation
+
+    def test_confidence_is_never_full_certainty(self, store_with_hard_constraint):
+        checks = check_constraint_violations(
+            "call the legacy pricing module directly", store_with_hard_constraint
+        )
+
+        assert all(c.confidence < 1.0 for c in checks)
+
+    def test_unrelated_text_is_not_flagged(self, store_with_hard_constraint):
+        checks = check_constraint_violations(
+            "Let's improve the CLI help text formatting.", store_with_hard_constraint
+        )
+
+        assert checks == []
+
+    def test_soft_constraints_are_never_checked(self, store):
+        store.append(Constraint(statement="prefer stdlib over third-party packages", hard=False))
+
+        checks = check_constraint_violations(
+            "I'll pull in a third-party package here instead of stdlib.", store
+        )
+
+        assert checks == []
+
+    def test_wired_into_run_consistency_check(self, store_with_hard_constraint):
+        report = run_consistency_check(
+            "I'll call the legacy pricing module directly here.",
+            store=store_with_hard_constraint,
+        )
+
+        assert any(
+            "hard constraint" in c.explanation for c in report.contradictions
+        )
 
 
 class TestFileExistence:

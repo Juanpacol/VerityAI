@@ -579,6 +579,7 @@ class Claim(BaseModel):
     subject: str
     relation: str | None = None
     target: str | None = None
+    negated: bool = False
     raw_text: str = ""
 
 

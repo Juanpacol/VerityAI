@@ -54,6 +54,32 @@ _RELATION_EDGE_KINDS = {
 }
 
 
+def _negate(check: ClaimCheck) -> ClaimCheck:
+    """Flip a check's verdict for a negated claim ("`X` does not call `Y`").
+
+    SUPPORTED and CONTRADICTED invert -- a relation that IS there
+    contradicts the negation, and one that genuinely is not there supports
+    it. UNVERIFIABLE stays UNVERIFIABLE either way: an edge the ingester
+    could not resolve (ADR-0006) is exactly as ambiguous under negation as
+    it was under the affirmative claim.
+    """
+    if check.status is CheckStatus.SUPPORTED:
+        return check.model_copy(
+            update={
+                "status": CheckStatus.CONTRADICTED,
+                "explanation": f"negated claim is false -- {check.explanation}",
+            }
+        )
+    if check.status is CheckStatus.CONTRADICTED:
+        return check.model_copy(
+            update={
+                "status": CheckStatus.SUPPORTED,
+                "explanation": f"negated claim holds -- {check.explanation}",
+            }
+        )
+    return check
+
+
 def check_symbol_exists(claim: Claim, query: GraphQuery) -> ClaimCheck:
     """Does anything in the graph define this symbol?"""
     matches = query.define(claim.subject)
@@ -146,11 +172,85 @@ def check_symbol_calls_file(claim: Claim, query: GraphQuery) -> ClaimCheck:
     )
 
 
+def check_file_imports(claim: Claim, query: GraphQuery) -> ClaimCheck:
+    """Does `claim.subject`'s file actually import `claim.target`'s file?
+
+    Unlike `check_symbol_calls_file`, an IMPORTS edge here is both
+    necessary AND sufficient evidence -- "imports" *is* the claim, not a
+    proxy standing in for a different one (ADR-0021's finding does not
+    apply: there is no inference gap between "the graph has an IMPORTS
+    edge" and "the file imports the other file"). Restricted to file-to-file
+    claims: "imports" is a module-level relation, and a subject that is not
+    itself file-shaped ("`apply_tax` imports `X`") is a different, unclear
+    claim this function declines to guess at.
+    """
+    subject_path = claim.subject
+    if not looks_like_path(subject_path):
+        return ClaimCheck(
+            claim=claim,
+            status=CheckStatus.UNVERIFIABLE,
+            confidence=0.0,
+            explanation=(
+                f"{subject_path!r} does not look like a file -- 'imports' is a "
+                "file-level relation and this checker does not guess at what a "
+                "non-file subject importing something would mean"
+            ),
+        )
+
+    subject_file = query.store.get_node(GraphNode.make_id(NodeKind.FILE, subject_path))
+    if subject_file is None:
+        return ClaimCheck(
+            claim=claim,
+            status=CheckStatus.CONTRADICTED,
+            confidence=1.0,
+            explanation=f"no file at {subject_path!r} found in the graph",
+        )
+
+    target_path = claim.target or ""
+    target_file = query.store.get_node(GraphNode.make_id(NodeKind.FILE, target_path))
+    if target_file is None:
+        return ClaimCheck(
+            claim=claim,
+            status=CheckStatus.CONTRADICTED,
+            confidence=1.0,
+            explanation=f"no file at {target_path!r} found in the graph",
+        )
+
+    imports = query.store.neighbours(subject_file.id, kinds=[EdgeKind.IMPORTS], direction="out")
+    if any(node.id == target_file.id for node in imports):
+        return ClaimCheck(
+            claim=claim,
+            status=CheckStatus.SUPPORTED,
+            confidence=1.0,
+            explanation=f"{subject_path!r} imports {target_path!r}",
+            evidence=[Evidence(kind="file", locator=subject_path)],
+        )
+    return ClaimCheck(
+        claim=claim,
+        status=CheckStatus.CONTRADICTED,
+        confidence=1.0,
+        explanation=f"{subject_path!r} does not import {target_path!r}",
+    )
+
+
 def check_symbol_relation(claim: Claim, query: GraphQuery) -> ClaimCheck:
     """Does the graph actually contain the claimed relationship?"""
-    if looks_like_path(claim.target or ""):
-        return check_symbol_calls_file(claim, query)
+    if claim.relation == "imports":
+        result = check_file_imports(claim, query)
+        return _negate(result) if claim.negated else result
 
+    if looks_like_path(claim.target or ""):
+        result = check_symbol_calls_file(claim, query)
+        return _negate(result) if claim.negated else result
+
+    result = _check_defined_relation(claim, query)
+    return _negate(result) if claim.negated else result
+
+
+def _check_defined_relation(claim: Claim, query: GraphQuery) -> ClaimCheck:
+    """The original symbol-to-symbol CALLS/INHERITS lookup, factored out so
+    `check_symbol_relation` can apply negation uniformly across every
+    dispatch branch (imports, file-targeted calls, and this one)."""
     edge_kind = _RELATION_EDGE_KINDS.get(claim.relation or "")
     if edge_kind is None:
         return ClaimCheck(
@@ -327,6 +427,55 @@ def check_decision_resurfacing(text: str, store: MemoryStore) -> list[ClaimCheck
     return checks
 
 
+def check_constraint_violations(text: str, store: MemoryStore) -> list[ClaimCheck]:
+    """Flag text that lexically resembles violating a recorded hard constraint.
+
+    Phase 3 (ADR-0024): the `consistency -> memory` dependency was already
+    declared (`DEFAULT_POLICY`, `reliability/architecture.py`) and already
+    exercised for decisions -- constraints, the record type built precisely
+    to say "the solution must respect this, whatever else changes," were
+    never actually consulted. Same heuristic shape and the same honesty
+    discipline as `check_decision_resurfacing`: a lexical-overlap match, not
+    a lookup, normalized against the checked text's own best-possible score
+    rather than the in-corpus max (the ADR-0018 bug this reuses the fix
+    for), and never reported at full confidence. Only `hard` constraints are
+    checked -- a soft constraint's violation is a quality question, not a
+    contradiction this checker is positioned to flag.
+    """
+    hard_constraints = [c for c in store.constraints() if c.hard]
+    if not hard_constraints:
+        return []
+
+    documents = [c.statement for c in hard_constraints]
+    ranks, scores = bm25_rank(text, documents)
+    if not scores:
+        return []
+    _, self_scores = bm25_rank(text, [text])
+    self_score = self_scores.get(0, 0.0)
+    if self_score <= 0:
+        return []
+
+    checks: list[ClaimCheck] = []
+    for idx, score in scores.items():
+        normalized = score / self_score
+        if normalized < _RESURFACING_THRESHOLD:
+            continue
+        constraint = hard_constraints[idx]
+        checks.append(
+            ClaimCheck(
+                claim=Claim(
+                    kind=ClaimKind.DECISION_ALIGNMENT,
+                    subject=constraint.statement,
+                    raw_text=text[:200],
+                ),
+                status=CheckStatus.CONTRADICTED,
+                confidence=round(min(normalized, 0.85), 2),
+                explanation=f"resembles violating a hard constraint: {constraint.statement!r}",
+            )
+        )
+    return checks
+
+
 def run_consistency_check(
     text: str,
     query: GraphQuery | None = None,
@@ -376,6 +525,7 @@ def run_consistency_check(
 
     if store is not None:
         checks.extend(check_decision_resurfacing(text, store))
+        checks.extend(check_constraint_violations(text, store))
     else:
         degraded.append("no memory store provided -- decision resurfacing not checked")
 

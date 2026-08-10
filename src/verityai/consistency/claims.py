@@ -51,10 +51,39 @@ _FILE_EXTENSIONS = (
 # an unambiguous edge-kind mapping are included -- "depends on" and "uses"
 # could mean CALLS, IMPORTS, or nothing checkable, so they are left
 # unrecognized rather than mapped to a guess.
+#
+# "imports" (Phase 3, ADR-0022's plan) is free recall: it is checkable
+# directly against the graph's own IMPORTS edges, unlike "calls" on a file
+# target -- there is no inference gap here the way there was for
+# `check_symbol_calls_file` (ADR-0021), because IMPORTS *is* the claim, not
+# a proxy standing in for a different one.
 _RELATIONS = {
     "calls": "calls",
     "inherits from": "inherits",
     "extends": "inherits",
+    "imports": "imports",
+}
+
+# Negated phrasings, mapped the same way. Kept as an explicit, closed list
+# rather than a generic "does not|never" prefix bolted onto `_RELATIONS`,
+# because English negation does not commute cleanly with the affirmative
+# forms above ("calls" negates to "does not call", not "does not calls") --
+# guessing at the transformation risks matching text nobody wrote. A phrase
+# not in this list is simply not extracted, the same under-approximation
+# discipline claims.py states for everything else.
+_NEGATED_RELATIONS = {
+    "does not call": "calls",
+    "doesn't call": "calls",
+    "never calls": "calls",
+    "does not inherit from": "inherits",
+    "doesn't inherit from": "inherits",
+    "never inherits from": "inherits",
+    "does not extend": "inherits",
+    "doesn't extend": "inherits",
+    "never extends": "inherits",
+    "does not import": "imports",
+    "doesn't import": "imports",
+    "never imports": "imports",
 }
 
 # Both subject and target MUST be backtick-quoted -- not optional. An early
@@ -67,17 +96,51 @@ _RELATIONS = {
 # whitelisted noun (class/function/method/object) is still allowed to sit
 # between the subject and the verb, since "`GraphStore` class inherits from"
 # is how people actually write it.
-_RELATION_PATTERN = re.compile(
-    r"`(?P<subject>[\w.]+)`\s*(?:class|function|method|object)?\s+(?P<relation>"
-    + "|".join(re.escape(phrase) for phrase in _RELATIONS)
-    # The target may be a symbol (`[\w.]+`) or a file path -- `/` and `-`
-    # are needed for the latter (e.g. `billing/tax_rates.py`). Without them
-    # a claim like "`apply_tax` calls `billing/tax_rates.py`" never matches
-    # at all and silently decomposes into two independent, both-true
-    # existence checks -- see ADR-0018.
-    + r")\s+`(?P<target>[\w./-]+)`",
-    re.IGNORECASE,
-)
+#
+# The target may be a symbol (`[\w.]+`) or a file path -- `/` and `-` are
+# needed for the latter (e.g. `billing/tax_rates.py`). Without them a claim
+# like "`apply_tax` calls `billing/tax_rates.py`" never matches at all and
+# silently decomposes into two independent, both-true existence checks --
+# see ADR-0018.
+_TARGET = r"`(?P<target>[\w./-]+)`"
+_EXTRA_TARGET = re.compile(r"^\s*and\s+`(?P<target>[\w./-]+)`")
+
+
+def _relation_pattern(phrases: dict[str, str]) -> re.Pattern:
+    return re.compile(
+        r"`(?P<subject>[\w.]+)`\s*(?:class|function|method|object)?\s+(?P<relation>"
+        + "|".join(re.escape(phrase) for phrase in sorted(phrases, key=len, reverse=True))
+        + r")\s+"
+        + _TARGET,
+        re.IGNORECASE,
+    )
+
+
+# Negated pattern tried first: it is a strict superset of the affirmative
+# phrase text ("does not call" contains "call", not "calls"), and phrases
+# are sorted longest-first within each pattern so "does not call" is never
+# shadowed by "calls" matching partway through it.
+_NEGATED_RELATION_PATTERN = _relation_pattern(_NEGATED_RELATIONS)
+_RELATION_PATTERN = _relation_pattern(_RELATIONS)
+
+
+def _extra_targets(text: str, end: int) -> tuple[list[str], int]:
+    r"""Collect `and \`target\`` continuations right after a relation match.
+
+    "`X` calls `Y` and `Z`" must produce claims against both `Y` and `Z`,
+    not silently bind only the first -- an under-approximation here is the
+    same kind of miss ADR-0018 found for file-shaped targets, just on a
+    different axis of the same pattern.
+    """
+    targets: list[str] = []
+    cursor = end
+    while True:
+        extra = _EXTRA_TARGET.match(text[cursor:])
+        if not extra:
+            break
+        targets.append(extra.group("target"))
+        cursor += extra.end()
+    return targets, cursor
 
 
 def looks_like_path(token: str) -> bool:
@@ -126,21 +189,35 @@ def extract_claims(text: str) -> list[Claim]:
     claims: list[Claim] = []
     consumed_spans: list[tuple[int, int]] = []
 
-    for match in _RELATION_PATTERN.finditer(text):
-        subject = match.group("subject")
-        target = match.group("target")
-        relation = _RELATIONS[match.group("relation").lower()]
+    def _emit_relation_matches(pattern: re.Pattern, phrases: dict[str, str], negated: bool) -> None:
+        for match in pattern.finditer(text):
+            start, end = match.span()
+            if any(cs <= start and end <= ce for cs, ce in consumed_spans):
+                continue
 
-        claims.append(
-            Claim(
-                kind=ClaimKind.SYMBOL_RELATION,
-                subject=subject,
-                relation=relation,
-                target=target,
-                raw_text=match.group(0),
-            )
-        )
-        consumed_spans.append(match.span())
+            subject = match.group("subject")
+            relation = phrases[match.group("relation").lower()]
+            extra_targets, consumed_end = _extra_targets(text, end)
+            targets = [match.group("target"), *extra_targets]
+
+            for target in targets:
+                claims.append(
+                    Claim(
+                        kind=ClaimKind.SYMBOL_RELATION,
+                        subject=subject,
+                        relation=relation,
+                        target=target,
+                        negated=negated,
+                        raw_text=text[start:consumed_end],
+                    )
+                )
+            consumed_spans.append((start, consumed_end))
+
+    # Negated phrasing first: "does not call" is a strict superset of the
+    # substring "call", so trying the affirmative pattern first would let
+    # it match inside a negated sentence and silently drop the negation.
+    _emit_relation_matches(_NEGATED_RELATION_PATTERN, _NEGATED_RELATIONS, negated=True)
+    _emit_relation_matches(_RELATION_PATTERN, _RELATIONS, negated=False)
 
     def _is_consumed(start: int, end: int) -> bool:
         return any(cs <= start and end <= ce for cs, ce in consumed_spans)
