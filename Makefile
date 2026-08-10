@@ -1,4 +1,4 @@
-.PHONY: test lint format typecheck docker-build serve clean
+.PHONY: test lint format typecheck clean
 
 # python3 -m ... rather than bare `ruff`/`mypy`/`pytest`: those tools land in
 # user site-packages (not necessarily on PATH) when installed via
@@ -17,12 +17,6 @@ format:
 
 typecheck:
 	python3 -m mypy src/verityai
-
-docker-build:
-	docker build -t verityai:latest .
-
-serve:
-	python3 -m uvicorn verityai.api.rest:app --reload --host 0.0.0.0 --port 8000
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true

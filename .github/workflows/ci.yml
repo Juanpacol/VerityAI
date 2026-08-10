@@ -48,24 +48,3 @@ jobs:
           name: coverage-${{ matrix.python-version }}
           path: coverage.xml
           retention-days: 14
-
-  docker:
-    name: Docker build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Build image
-        run: docker build -t verityai:ci .
-
-      - name: Smoke test the image
-        run: |
-          docker run -d --name verityai-ci-smoketest -p 18000:8000 verityai:ci
-          for i in $(seq 1 15); do
-            if curl -sf http://localhost:18000/health; then break; fi
-            sleep 1
-          done
-          curl -sf http://localhost:18000/health
-          curl -sf -o /dev/null http://localhost:18000/dashboard
-          docker logs verityai-ci-smoketest
-          docker stop verityai-ci-smoketest

@@ -263,11 +263,3 @@ class RuleEngine:
                 applicable.append(rule)
 
         return applicable
-
-    def get_inference_trace(self) -> list[dict[str, Any]]:
-        """Get the trace of rule applications.
-
-        Returns:
-            List of trace entries (iteration, rule, preconditions, derived)
-        """
-        return self.inference_trace

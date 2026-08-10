@@ -84,17 +84,6 @@ class ItemKind(str, Enum):
     MEMORY = "memory"
 
 
-class RecordType(str, Enum):
-    """The kinds of state the Memory Engine persists, one JSONL file each."""
-
-    TASK = "task"
-    DECISION = "decision"
-    CONSTRAINT = "constraint"
-    DISCOVERY = "discovery"
-    FAILURE = "failure"
-    FACT = "fact"
-
-
 # --- Evidence ------------------------------------------------------------
 
 
