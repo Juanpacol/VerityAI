@@ -46,9 +46,19 @@ the function in isolation, only found by tracing the actual sequence of
 calls, deliberately deterministic (no real race condition, to avoid
 contaminating the noise floor itself). Still a ceiling, the fourth in the
 series, 5/5 both conditions — but the cost effect reproduced a third time:
-`verity` (mean 4.2) below `naive`'s floor (`[7, 9]`). All six pilots' stated
-limits (small N, narrow task design, single fixture) still apply — see each
-pilot's own README before generalizing any result.
+`verity` (mean 4.2) below `naive`'s floor (`[7, 9]`). Family B, seventh
+pilot (`experiments/family_b_pilot_7_domain_ambiguity/`, ADR-0019), changed
+the difficulty's *kind* entirely: a business-rule ambiguity not derivable
+from the code at all (does the exact day a grace period ends still count
+as within grace?), with a visible test built so both interpretations pass
+it identically and a hidden test — never shown to any trial, scored
+independently — checking which one the fix actually implements. Fifth
+ceiling, 5/5 both conditions on the hidden check too, but for a new reason:
+every `naive` trial independently chose the interpretation matching the
+fabricated policy, with no access to it, because "grace period" carries a
+strong enough naming convention to override the genuine ambiguity. All
+seven pilots' stated limits (small N, narrow task design, single fixture)
+still apply — see each pilot's own README before generalizing any result.
 
 Separately, the Consistency Engine (`consistency/`, ADR-0007) got its own
 first real measurement (`experiments/consistency_pilot_1_hallucination_

@@ -211,6 +211,30 @@ larger trial budget) to move — while the cost effect is now this project's
 most consistently reproduced Family B result, across three separate
 pilots and bug designs.
 
+**A seventh pilot tried a fundamentally different kind of difficulty**
+(`experiments/family_b_pilot_7_domain_ambiguity/`, [ADR-0019](adr/0019-domain-ambiguity-pilot.md)):
+instead of a bug with one answer derivable from the code, a business-rule
+ambiguity the code cannot resolve at all — does the exact day a grace
+period ends still count as within grace? The one visible test was
+deliberately built so both interpretations (`>` and `>=`) pass it
+identically; a second, hidden test (never shown to any trial) checks which
+one the fix actually implements, scored independently by the harness:
+
+| Metric | `naive` | `verity` | Verdict |
+|---|---|---|---|
+| Visible test passes (5 trials) | 5/5 | 5/5 | ceiling, as designed |
+| Correct at the hidden boundary (5 trials) | 5/5 | 5/5 | `indistinguishable_from_noise` |
+
+A fifth ceiling — but for a new reason. Every `naive` trial independently
+chose the strict `>` comparison with no access to the fabricated decision
+and no prompt toward the boundary case at all. The ambiguity was real (no
+code states the policy), but "grace period" carries a strong enough
+linguistic convention that the model's default matched the fabricated
+policy regardless of condition. ADR-0019 keeps the hidden-test design —
+a real technique for scoring "correct for the right reason" versus
+"happened to pass" — and proposes the next pilot use an ambiguity with no
+dominant convention (a coin-flip-shaped choice, not a language-shaped one).
+
 **The Consistency Engine got its own first real measurement**
 (`experiments/consistency_pilot_1_hallucination_detection/`, [ADR-0018](adr/0018-consistency-engine-first-measurement.md)),
 closing a stale claim in `BENCHMARK_PROTOCOL.md` that this engine was

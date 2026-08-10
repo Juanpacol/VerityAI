@@ -36,6 +36,7 @@ verdict was "this pilot could not have detected an effect."
 | [0016](0016-harder-recovery-pilot.md) | Does a harder bug break that ceiling? | No — third ceiling; cost effect reproduced and grew |
 | [0017](0017-runtime-bug-pilot.md) | Does changing the bug's *shape* break it? | No — fourth ceiling; cost effect reproduced a third time |
 | [0018](0018-consistency-engine-first-measurement.md) | Does the Consistency Engine catch real hallucinations? | 100% recall on invented symbols; three real bugs found and fixed |
+| [0019](0019-domain-ambiguity-pilot.md) | Does an ambiguity not derivable from code at all break the ceiling? | No — the model's naming convention matched the fabricated policy 10/10 regardless of condition |
 
 ## Pre-pivot (superseded)
 
