@@ -156,6 +156,16 @@ Enforced in tests, not by convention. Breaking one is a bug.
    `ContextHealth.notes`, `PruneResult.dropped_critical`.
 6. **Parsing never loses input.** The parts must sum to the whole, or every
    downstream token figure is wrong at the source.
+7. **No published metric without a retained, re-derivable artifact.** A
+   number quoted in `docs/MEASUREMENTS.md`, a README, or any external
+   material must have per-trial evidence a third party could re-check —
+   not just the aggregate. Violated once (ADR-0021, Phase 0 truth repair,
+   2026-08-10): three Family B pilots' evidence was destroyed by a re-run of
+   their own setup script, and nothing under `experiments/*/trials/` was
+   git-tracked, so the published numbers survived only as hand-typed
+   results JSON. `verity eval`'s trial harness exists to make this
+   structural rather than a matter of remembering to `git add` the right
+   directory.
 
 ---
 

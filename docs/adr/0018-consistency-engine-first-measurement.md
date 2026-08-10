@@ -150,3 +150,11 @@ synthetic-fixture trap's blind spots.
   BM25's IDF is inherently unstable with 1-2 documents; a small residual
   false-positive risk remains for very small decision corpora. Stated
   honestly rather than oversold, per this project's standing practice (T1).
+- **Correction, 2026-08-10 ([ADR-0021](0021-consistency-relation-inversion.md)):**
+  the final verdict this ADR reports for the probe —
+  `` `apply_tax` calls `billing/tax_rates.py` `` → `SUPPORTED` — was itself
+  wrong, and worse than the gap it replaced. The pilot's own ground truth
+  labels this claim false; `apply_tax` reads a dict, it never calls
+  anything. `check_symbol_calls_file` now reports `UNVERIFIABLE` for this
+  case. The function-to-file blind spot described above as "fixed" is
+  narrowed, not closed — see ADR-0021 for the full account.

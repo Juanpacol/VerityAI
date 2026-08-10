@@ -1,5 +1,17 @@
 # Recovery-after-reset pilot: does a handoff document actually save work?
 
+> **Evidence caveat added 2026-08-10 (Phase 0 truth repair, ADR-0021's sibling
+> finding):** the `trials/` directories that held each trial's post-fix code
+> were later wiped by a re-run of `experiments/lib/setup_phase_a.sh`'s
+> `rm -rf trials` (only the setup script's *`--force`-style guard* now
+> prevents this — see the script). Nothing under `trials/` was git-tracked.
+> The success and tool-call numbers below are therefore **not independently
+> re-derivable**: they rest on the hand-recorded `naive_results.json` /
+> `verity_results.json` alone, and the per-trial tool-call counts in
+> particular were self-reported at the time, not captured by any
+> instrumented harness. Treat this pilot's numbers as unverified history,
+> not as a reproducible result, until re-run through `verity eval`.
+
 Per `docs/BENCHMARK_PROTOCOL.md`'s Family B procedure. "Recovery quality
 after reset" is named there as *"the one thing the harness does that an
 agent cannot do for itself"* and the most valuable unmeasured row in the

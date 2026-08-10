@@ -1,5 +1,14 @@
 # Runtime-bug pilot: a call-sequence bug instead of a wrong constant
 
+> **Evidence caveat added 2026-08-10 (Phase 0 truth repair):** as with
+> pilots 4 and 5, the `trials/` directories were later wiped by a re-run of
+> `experiments/lib/setup_phase_a.sh` (now guarded, see the script). Nothing
+> under `trials/` was git-tracked, so the numbers below are **not
+> independently re-derivable** — they rest on the hand-recorded results
+> JSON alone, and the tool-call counts were self-reported, not captured by
+> any instrumented harness. Treat as unverified history until re-run
+> through `verity eval`.
+
 Per `docs/BENCHMARK_PROTOCOL.md`'s Family B procedure. Pilots 4 and 5
 (ADR-0015, ADR-0016) both used a "wrong-but-plausible constant" bug shape
 and both ceilinged on success (10/10, then 5/5+5/5) — ADR-0016 concluded

@@ -32,6 +32,22 @@ setup_phase_a() {
     fi
   done
 
+  # ADR-0021 (Phase 0 truth repair): a re-run of this function against
+  # pilots 4/5/6 silently `rm -rf`'d trials/ that held the post-trial,
+  # agent-fixed code -- the only evidence for that pilot's published tool-call
+  # numbers. Nothing under trials/ is git-tracked (see .gitignore), so once
+  # deleted, it was gone. Refuse to repeat that unless the caller explicitly
+  # opts in with FORCE_TRIALS_RESET=1, so wiping a trials/ directory
+  # containing real trial results is a deliberate act, not a side effect of
+  # re-running the setup script.
+  if [[ -d trials && "${FORCE_TRIALS_RESET:-0}" != "1" ]]; then
+    echo "setup_phase_a: trials/ already exists and would be destroyed." >&2
+    echo "  If this directory holds real trial results, back it up first --" >&2
+    echo "  nothing under trials/ is git-tracked, so this is the only copy." >&2
+    echo "  Set FORCE_TRIALS_RESET=1 to proceed anyway." >&2
+    return 1
+  fi
+
   rm -rf trials
   mkdir -p trials
 

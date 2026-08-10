@@ -89,13 +89,18 @@ def check_symbol_calls_file(claim: Claim, query: GraphQuery) -> ClaimCheck:
     """Does the file defining `claim.subject` actually import `claim.target`?
 
     A relation claim whose target is a file, not a function, asserts a
-    module-level dependency, not a call edge -- there is no CALLS edge to a
-    file node. Checked instead against the file-level IMPORTS graph
-    (`GraphQuery.file_dependencies` uses the same edges). This closes the
-    blind spot found in ADR-0018: "`apply_tax` calls `billing/tax_rates.py`"
-    used to decompose into two independent, both-true existence checks and
-    vanish -- neither symbol/file existence check has any way to see that
-    the claimed relationship between them is false.
+    module-level dependency -- there is no CALLS edge to a file node, only
+    IMPORTS edges between files (`GraphQuery.file_dependencies` uses the same
+    edges). An IMPORTS edge is necessary but not sufficient evidence for a
+    "calls" claim: a file can import a module and never call anything in it
+    (e.g. a pure dict/constant lookup). So a resolved import can only ever
+    make this claim `UNVERIFIABLE`, never `SUPPORTED` -- ADR-0021 found that
+    reporting SUPPORTED here reintroduced the exact failure this function was
+    written to close (ADR-0018): "`apply_tax` calls `billing/tax_rates.py`"
+    was confirmed as true even when `apply_tax` only reads a module-level
+    dict, never calls anything. The absence of any import, however, remains
+    a real contradiction: if the file doesn't even import the target, it
+    cannot be calling something inside it.
     """
     subject_nodes = query.define(claim.subject)
     if not subject_nodes:
@@ -122,10 +127,14 @@ def check_symbol_calls_file(claim: Claim, query: GraphQuery) -> ClaimCheck:
         if any(node.id == target_file.id for node in imports):
             return ClaimCheck(
                 claim=claim,
-                status=CheckStatus.SUPPORTED,
-                confidence=1.0,
-                explanation=f"{subject_node.path!r} imports {target_path!r}",
-                evidence=[Evidence(kind="file", locator=subject_node.path)],
+                status=CheckStatus.UNVERIFIABLE,
+                confidence=0.0,
+                explanation=(
+                    f"{subject_node.path!r} imports {target_path!r}, but an import does not "
+                    "confirm a call -- the graph has no line-level evidence that anything in "
+                    f"{claim.subject!r} actually calls a function from that file, only that "
+                    "the file is imported"
+                ),
             )
 
     return ClaimCheck(

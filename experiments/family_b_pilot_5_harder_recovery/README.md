@@ -1,5 +1,14 @@
 # Harder-recovery pilot: does a harder bug finally break the success ceiling?
 
+> **Evidence caveat added 2026-08-10 (Phase 0 truth repair):** as with pilot
+> 4, the `trials/` directories were later wiped by a re-run of
+> `experiments/lib/setup_phase_a.sh` (now guarded, see the script).
+> Nothing under `trials/` was git-tracked, so the numbers below are
+> **not independently re-derivable** — they rest on the hand-recorded
+> results JSON alone, and the tool-call counts were self-reported, not
+> captured by any instrumented harness. Treat as unverified history until
+> re-run through `verity eval`.
+
 Per `docs/BENCHMARK_PROTOCOL.md`'s Family B procedure. Pilot 4
 (`experiments/family_b_pilot_4_recovery_after_reset/`, ADR-0015) measured
 "recovery after reset" and found a real cost effect but a success-rate

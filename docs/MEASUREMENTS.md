@@ -17,14 +17,16 @@ Two things to know before reading:
 
 ## First real measurement (2026-08-09, updated same day)
 
-Measured on 3 real Claude Code development sessions of this same project
+Measured on real Claude Code development sessions of this same project
 (session transcripts read directly from `~/.claude/projects/`, never
 committed — see [ADR-0009](adr/0009-family-a-real-measurement.md)),
-~3.48M tokens combined, `tiktoken:cl100k_base`. Every prior figure in this
-project's history was synthetic; this is the first that isn't. (The
-session count grew slightly and a new protection rule was added the same
-day — see [ADR-0012](adr/0012-financial-figure-protection.md) — so
-these numbers are re-measured, not the original ADR-0009 figures.)
+`tiktoken:cl100k_base`. Every prior figure in this project's history was
+synthetic; this is the first that isn't. (The session count and total
+tokens have grown between measurements as this project's own development
+continued — this corpus is a moving target by nature, not a fixed
+benchmark set, and re-running the commands below today will not reproduce
+these exact totals. See [ADR-0012](adr/0012-financial-figure-protection.md)
+for the same reason the first re-measurement happened.)
 
 | Configuration | Tokens before | Tokens after | Reduction | Critical retained | Digit retained |
 |---|---:|---:|---:|---:|---:|
@@ -43,6 +45,21 @@ is dropped; no financial figure — amount, account number — is dropped)
 holding exactly at 100% in both real runs. 21 distinct financial figures
 were present in this corpus; none were vacuous zero-figure runs.
 
+**The caveat that belongs on the 56.7% row and did not appear here until an
+external audit found it:** under a 30,000-token budget, every session in
+this corpus large enough to matter reports `budget_met: False` — the
+budget could not actually be met, so the pipeline kept the entire protected
+(critical) set rather than cutting into it. Under invariant 1, that is
+correct behavior — but it also means **100% critical retention in this row
+is guaranteed by construction, not evidence that ranking-under-pressure
+chose well.** `render_report`/`to_json` (`bench/deterministic.py`) now print
+`budget_met` per case so this cannot go unnoticed again; running
+`verity bench ... --budget 30000` on this project's own sessions currently
+reports 2 of 6 cases meeting budget, and the tool itself prints
+`NOT PUBLISHABLE` on that exact run. A number this project quotes externally
+needs either a budget that is actually met, or the caveat stated alongside
+it — this section had neither before this note.
+
 Stated honestly: this corpus is developer conversation, not a financial
 domain, and most of those 21 figures are example amounts inside this
 project's own docstrings and tests, not genuine user data. A 100% result
@@ -50,6 +67,12 @@ here says the mechanism works on what this corpus contains — it is not yet
 evidence about a real adversarial case (one figure, once, amid heavy noise,
 with decoy numbers nearby). The numeric-recall pilot below tests exactly
 that instead of assuming it.
+
+Reproducibility is also more limited than the "reproduce it yourself"
+framing below implies: the session transcripts are private and were never
+committed, so a third party can run the same *mechanism* on their own
+sessions but can never reproduce, check, or falsify these specific published
+numbers.
 
 Reproduce it yourself (only the aggregate counts leave your machine — see
 `tests/unit/test_bench_privacy.py` for what's enforced never to appear in
@@ -98,11 +121,21 @@ a support-conversation log states a customer's account number and amount
 owed once, early, with no explicit marker; a decoy figure (a different,
 similarly-formatted account/amount) sits past the midpoint, attributed to
 a closed, unrelated case. The harness — not a live agent — prepares each
-condition's context to the *same* 800-token budget two ways: `naive`
+condition's context against an 800-token *target* two ways: `naive`
 keeps the most recent messages (what an unmanaged context window actually
 does on overflow), `verity` runs `verity context --budget 800` (with the
-ADR-0012 rule active). 5 single-turn recall trials per condition, scored
-by exact match against ground truth:
+ADR-0012 rule active). **Corrected 2026-08-10: the two conditions do not
+land on the same actual token count** — re-running
+`prepare_contexts.py --budget 800` today produces `naive_context.txt` at
+672 tokens and `verity_context.txt` at 899 tokens, 34% more content in the
+`verity` arm. `--budget` is the input each side is asked to respect, not a
+guarantee both outputs land at the same size, and the ranked/protected
+selection that `verity context` performs can legitimately keep more than a
+raw tail-truncation would. Since the metric is recall of a figure the
+`naive` arm provably never receives, this is a real confound worth stating
+plainly: some of the recall gap could reflect `verity` simply carrying more
+content, not only better selection of the same amount. 5 single-turn recall
+trials per condition, scored by exact match against ground truth:
 
 | Condition | Exact matches | Noise floor |
 |---|---|---|
@@ -151,6 +184,15 @@ that either has nothing to recover from (`naive`) or runs `verity handoff`
 first (`verity`). Both scored by an independent `pytest` run, never the
 agent's own report:
 
+> **Evidence caveat (added 2026-08-10, Phase 0 truth repair):** the
+> per-trial `trials/` directories that would let these numbers be
+> independently re-derived were later destroyed by a re-run of the pilot's
+> own setup script (now guarded — see `experiments/lib/setup_phase_a.sh`);
+> nothing under `trials/` was ever git-tracked. The table below rests on
+> the hand-recorded results JSON alone; the tool-call figures were
+> self-reported at the time, not captured by an instrumented harness. Not
+> independently verifiable until re-run through `verity eval`.
+
 | Metric | `naive` | `verity` | Verdict |
 |---|---|---|---|
 | Task success (5 trials) | 5/5 | 5/5 | `indistinguishable_from_noise` (ceiling) |
@@ -171,6 +213,12 @@ so a cold agent has to rule out a plausible dead end, not just trace one
 chain. Result: **still a ceiling**, the third in this series (after
 ADR-0011 and ADR-0015) — 10/10 both conditions found the real bug, none
 touched the decoy or the test. But the cost effect held and grew:
+
+> **Evidence caveat (added 2026-08-10, Phase 0 truth repair):** same
+> issue as pilot 4 — the `trials/` directories were destroyed by a later
+> re-run of the setup script (now guarded) and were never git-tracked;
+> the tool-call figures below are self-reported, not harness-captured. Not
+> independently verifiable until re-run through `verity eval`.
 
 | Metric | `naive` | `verity` | Verdict |
 |---|---|---|---|
@@ -196,6 +244,13 @@ a different `tier` — invisible from reading the function in isolation,
 only found by tracing the actual sequence of calls. Result: **a fourth
 ceiling**, 5/5 both conditions, but the cost effect reproduced a third
 time:
+
+> **Evidence caveat (added 2026-08-10, Phase 0 truth repair):** same
+> issue as pilots 4 and 5 — the `trials/` directories were destroyed by a
+> later re-run of the setup script (now guarded) and were never
+> git-tracked; the tool-call figures below are self-reported, not
+> harness-captured. Not independently verifiable until re-run through
+> `verity eval`.
 
 | Metric | `naive` | `verity` | Verdict |
 |---|---|---|---|
@@ -283,20 +338,30 @@ fixed by normalizing against the checked text's own best-possible score
 instead of the in-corpus max, and locked in with a regression test.
 
 **The function-to-file relation blind spot, and a real ingester bug behind
-it, were both closed the same day.** The relation target pattern now
-accepts file paths, and a new check (`check_symbol_calls_file`) verifies
-the claim against the file-level `IMPORTS` graph. That surfaced a second,
-independent bug: the ingester recorded `from billing import tax_rates` as
-importing only the bare package, never the real submodule file —
-`billing/tax.py` genuinely does import `billing/tax_rates.py`, but the
-graph didn't know it. Fixed in `graph/ingest.py` by trying the more
-specific candidate first. The exact probe this measurement used to
-demonstrate the original gap — `` `apply_tax` calls `billing/tax_rates.py` ``
-— now correctly reports **`SUPPORTED`** (the import genuinely exists);
-a second probe against a file `apply_tax`'s module never imports still
-correctly reports `CONTRADICTED`, confirming the mechanism works once the
-underlying import graph is accurate. See ADR-0018 for the full sequence,
-including the one relation-extraction gap that remains open (loose
-phrasing like "likely calls a helper in").
+it, were addressed the same day — but the fix initially overcorrected, and
+was itself corrected the next day ([ADR-0021](adr/0021-consistency-relation-inversion.md)).**
+The relation target pattern now accepts file paths, and a new check
+(`check_symbol_calls_file`) checks the claim against the file-level
+`IMPORTS` graph. That surfaced a second, independent bug: the ingester
+recorded `from billing import tax_rates` as importing only the bare
+package, never the real submodule file — `billing/tax.py` genuinely does
+import `billing/tax_rates.py`, but the graph didn't know it. Fixed in
+`graph/ingest.py` by trying the more specific candidate first.
+
+At that point the exact probe this measurement used to demonstrate the
+original gap — `` `apply_tax` calls `billing/tax_rates.py` `` — reported
+`SUPPORTED`, on the reasoning that the import genuinely exists. That
+verdict was wrong: the pilot's own ground truth labels this claim FALSE —
+`apply_tax` only reads `tax_rates.REGION_RATES`, a dict, and never calls
+anything. An `IMPORTS` edge is necessary but not sufficient evidence for a
+`calls` claim, and treating it as sufficient reintroduced the exact failure
+this fix was meant to close, just inverted: a silent false negative became
+an asserted false positive, at 100% confidence. The blind spot is now
+**narrowed, not closed**: `check_symbol_calls_file` reports `UNVERIFIABLE`
+when only an import is found (correct — the graph has no line-level call
+evidence either way), and still correctly reports `CONTRADICTED` when the
+target file isn't imported at all. See ADR-0018 for the original sequence
+and ADR-0021 for the correction, including the relation-extraction gap that
+remains open in both (loose phrasing like "likely calls a helper in").
 
 ---

@@ -190,12 +190,20 @@ class TestSymbolCallsFileRelation:
         yield GraphQuery(store)
         store.close()
 
-    def test_an_actual_import_is_supported(self, two_file_query):
+    def test_an_import_with_no_call_evidence_is_unverifiable(self, two_file_query):
+        """ADR-0021: an IMPORTS edge is necessary but not sufficient evidence
+        for a "calls" claim. `apply_tax` here only reads `REGION_RATES`, a
+        module-level dict -- it never calls anything in rates.py. Reporting
+        SUPPORTED from the import alone (the pre-ADR-0021 behavior)
+        reintroduced exactly the false-affirmation ADR-0018 was meant to
+        close, just inverted: a silent miss became a confident wrong answer.
+        """
         result = check_symbol_relation(
             relation_claim("apply_tax", "calls", "rates.py"), two_file_query
         )
 
-        assert result.status is CheckStatus.SUPPORTED
+        assert result.status is CheckStatus.UNVERIFIABLE
+        assert "does not confirm a call" in result.explanation
 
     def test_a_file_never_imported_is_contradicted(self, two_file_query):
         """apply_tax's file (tax.py) never imports policy.py -- the exact

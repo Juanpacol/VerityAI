@@ -247,12 +247,19 @@ def render_report(report: CorpusReport) -> str:
                 lines.append(f"    - [{case.name}] {warning}")
         lines.append("")
 
-    lines.append(f"  {'case':<28} {'before':>10} {'after':>10} {'saved':>10} {'ratio':>8}")
+    has_budget = any(case.budget is not None for case in report.cases)
+    budget_col = f" {'budget_met':>10}" if has_budget else ""
+    lines.append(
+        f"  {'case':<28} {'before':>10} {'after':>10} {'saved':>10} {'ratio':>8}{budget_col}"
+    )
     for case in report.cases:
-        lines.append(
+        row = (
             f"  {case.name:<28} {case.tokens_before:>10,} {case.tokens_after:>10,} "
             f"{case.tokens_saved:>10,} {case.reduction_ratio:>8.1%}"
         )
+        if has_budget:
+            row += f" {str(case.budget_met):>10}"
+        lines.append(row)
 
     lines.extend(
         [
@@ -265,9 +272,23 @@ def render_report(report: CorpusReport) -> str:
             "(must be 100%)",
             f"  Digit retention:    {min((c.digit_retention for c in report.cases), default=1.0):.1%} "
             "(must be 100%)",
-            "",
         ]
     )
+
+    if has_budget:
+        unmet = [c.name for c in report.cases if not c.budget_met]
+        if unmet:
+            lines.append(
+                f"  Budget met:         {len(report.cases) - len(unmet)}/{len(report.cases)} "
+                "cases -- when a case's budget is not met, its critical/digit retention is "
+                "100% by construction (the protected set is kept whole rather than cut), "
+                "not evidence the ranking under pressure was accurate. See "
+                "docs/BENCHMARK_PROTOCOL.md."
+            )
+        else:
+            lines.append(f"  Budget met:         {len(report.cases)}/{len(report.cases)} cases")
+
+    lines.append("")
 
     if report.is_publishable:
         lines.append("  This corpus meets the Family A publication bar.")

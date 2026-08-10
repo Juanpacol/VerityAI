@@ -63,9 +63,9 @@ convention at all (a tie-break rule between two opaque numeric IDs), with
 the hidden test's tied candidates ordered so the most natural-looking fix
 (`max(candidates, key=lambda c: c["score"])`) returns the wrong one on a
 tie. Result: `likely_real_difference`, 0/5 vs 5/5 -- the first success-rate
-split in the series, after five consecutive ceilings. All nine pilots'
-stated limits (small N, narrow task design, single fixture) still apply --
-see each pilot's own README before generalizing any result.
+split in the series, after five consecutive ceilings. All eight Family B
+pilots' stated limits (small N, narrow task design, single fixture) still
+apply -- see each pilot's own README before generalizing any result.
 
 Separately, the Consistency Engine (`consistency/`, ADR-0007) got its own
 first real measurement (`experiments/consistency_pilot_1_hallucination_
@@ -100,10 +100,12 @@ same number every time. `n=1` is sufficient and a repeat is only a smoke test.
 |---|---|
 | `tokens_before` / `tokens_after` | Sum of per-item counts, one counting method throughout |
 | `tokens_saved`, `reduction_ratio` | Difference and ratio |
-| Per-stage ledger | Tokens in/out for each of the seven pipeline stages |
+| Per-stage ledger | Tokens in/out for each pipeline stage that ran (dedup, classify, rank, filter, compress, budget, place — rank and budget are conditional on `task`/`budget` being set, so the ledger is 5–7 entries long, not fixed at seven) |
 | `critical_retention` | Fraction of protected items surviving. **Must be 1.0** |
-| Handoff cost | Tokens in the generated document, plus sections dropped |
-| Wall-clock | Pipeline duration, excluding any model call |
+| `digit_retention` | Fraction of financial figures (amounts, account numbers) surviving. **Must be 1.0** (ADR-0012) |
+| `budget_met` | Whether the requested budget was actually reached. When `False`, `critical_retention`/`digit_retention` being 1.0 is guaranteed by invariant 1 (the protected set is kept whole), not evidence about ranking quality under real pressure — see the Family A section of `docs/MEASUREMENTS.md` |
+| Handoff cost | **not measured** — no code path in `bench/` reports this today |
+| Wall-clock | **not measured** — no code path in `bench/` reports this today |
 
 Family A is what the Context Engine can honestly claim. It is real, it is
 auditable stage by stage, and it needs no statistics.
@@ -121,14 +123,17 @@ configuration and a noise floor established before any comparison.**
 | Recovery quality after reset | Judged by a model or a human |
 | Cost per completed task | Success rate is in the denominator |
 
-Family B is **out of scope for Phase 1** and no such number will be published
-until the procedure below has been executed.
-
-*Update:* "Recovery quality after reset" has since been measured
+*Status, corrected 2026-08-10:* the sentence that used to stand here —
+"Family B is out of scope for Phase 1 and no such number will be published
+until the procedure below has been executed" — is stale. Eight Family B
+pilots and one Consistency Engine pilot have since been published (see the
+status paragraph at the top of this document); the procedure below is what
+each of them followed, not a gate still waiting to be passed. "Recovery
+quality after reset" specifically was measured
 (`experiments/family_b_pilot_4_recovery_after_reset/`, ADR-0015) without the
-judged score this table assumed — by designing the task so an objective
-proxy (pytest pass/fail on a genuine fix, plus tool-call count) stands in
-for "recovery quality" instead. See the status paragraph above.
+judged score this table originally assumed — by designing the task so an
+objective proxy (pytest pass/fail on a genuine fix, plus tool-call count)
+stands in for "recovery quality" instead.
 
 ## Procedure for Family B
 
@@ -195,8 +200,12 @@ tool. Real transcripts do not look like that.
 
 The first honest measurement did come from real agent sessions on this
 repository — including sessions that built the harness itself — and it looked
-nothing like 92.4%: 1.1% with no budget forced, 55.2% with one. See the
-README and ADR-0009. Running the real measurement also found a genuine
+nothing like 92.4%: 1.1% with no budget forced, 56.7% with one (the 55.2%
+figure from the original ADR-0009 run was superseded the same day, once the
+session count grew and ADR-0012's digit-retention check was added — see
+`docs/MEASUREMENTS.md` for the current numbers and the `budget_met`
+caveat that belongs alongside the budgeted figure). See the README and
+ADR-0009. Running the real measurement also found a genuine
 methodology bug in `bench/deterministic.py` itself (a critical-retention
 false positive from classifying a duplicated marker before dedup) — proof
 that "run it on something real" catches things synthetic fixtures cannot,
