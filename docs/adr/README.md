@@ -42,6 +42,7 @@ verdict was "this pilot could not have detected an effect."
 | [0022](0022-verity-eval-harness.md) | Can a real trial harness replace hand-run, hand-scored pilots? | Yes — `verity eval` retains a content-hashed artifact per trial and flags degenerate noise floors instead of hiding them; reproduced pilot 8's result exactly |
 | [0023](0023-memory-surfacing-log.md) | Can this project measure *when* memory was surfaced, not just when it was written? | Yes, narrowly — a new `Surfacing` record, emitted from `build_handoff` and decision resurfacing; "was it used" stays honestly unresolved except one negative signal |
 | [0024](0024-reality-check-expansion.md) | Can Agent Reality Check widen its recall without repeating ADR-0021's mistake? | Yes — `imports`, negation, multi-target relations, and constraints-as-evidence, each narrow and each declining to guess where the graph has no adjudicating edge |
+| [0025](0025-adaptive-context-prepass.md) | Can Verity proactively surface context without breaking the prune pipeline's invariants? | Yes, as a pre-pass only — `context/adaptive.py` + `memory/surface.py` merge into `ContextPipeline.run` unchanged; wiring and a measured pilot are stated as future work, not done here |
 
 ## Pre-pivot (superseded)
 

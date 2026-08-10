@@ -800,3 +800,46 @@ class TrialRecord(BaseModel):
     @property
     def succeeded(self) -> bool:
         return self.scorer_exit_code == 0
+
+
+# --- Adaptive context (proactive surfacing pre-pass) ------------------------
+
+
+class ContextTrigger(BaseModel):
+    """The observation that decided *now* is the moment to surface memory.
+
+    Mirrors `relevance_reason` on `ContextItem`: a trigger is always
+    auditable, never a bare boolean. `should_surface` (`context/adaptive.py`)
+    is the only producer of these.
+    """
+
+    reason: str
+    health_snapshot: dict[str, float] = Field(default_factory=dict)
+
+
+class BudgetPlan(BaseModel):
+    """How much room a proactive surfacing pass has to work with, and why.
+
+    `basis` exists for the same reason `TokenCount` is a pair, never a bare
+    int (invariant 3): a budget number without the reasoning that produced
+    it invites more confidence than it earned. Never a bare `int`.
+    """
+
+    budget: int
+    window: int
+    basis: str
+
+
+class SurfaceDecision(BaseModel):
+    """What an adaptive pre-pass chose to add, and under what plan.
+
+    Deliberately holds `items` for `ContextPipeline.run` to consume
+    unchanged (ADR-0025) -- this is a pre-pass's output, never a substitute
+    for running the pipeline. `degraded_reason` follows the same rule as
+    every other degraded path in this codebase (invariant 5).
+    """
+
+    items: list[ContextItem] = Field(default_factory=list)
+    trigger: ContextTrigger | None = None
+    plan: BudgetPlan | None = None
+    degraded_reason: str | None = None
