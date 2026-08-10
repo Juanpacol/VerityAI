@@ -39,12 +39,17 @@ from verityai.core.models import (
     Discovery,
     Fact,
     Failure,
+    Record,
     Task,
 )
 
 VERITY_DIR = ".verity"
 
-_T = TypeVar("_T", Decision, Constraint, Discovery, Failure, Fact)
+# Bound, not value-constrained: `SnapshotManager.restore` appends records it
+# holds as a union of the five types, and a value-constrained TypeVar rejects
+# a union outright. `append` only needs `type(record)` to be a key in
+# `_FILES`, which every `Record` subclass registered below satisfies.
+_T = TypeVar("_T", bound=Record)
 
 # Each record type gets its own file. One combined log would need a
 # discriminator field and a dispatch table on read, and would make `git diff`

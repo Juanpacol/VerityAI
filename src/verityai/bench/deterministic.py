@@ -21,7 +21,7 @@ from verityai.context.classify import classify_all
 from verityai.context.ingest import load
 from verityai.context.prune import ContextPipeline
 from verityai.context.tokenizer import TokenCounter
-from verityai.core.models import PruneResult
+from verityai.core.models import ContextItem, PruneResult
 
 # Above this share of duplicate tokens, a corpus tells you more about how it
 # was generated than about the pipeline. Chosen as a round number that a
@@ -181,7 +181,7 @@ def measure_case(
     )
 
 
-def _duplicate_share(items) -> float:
+def _duplicate_share(items: list[ContextItem]) -> float:
     """Fraction of tokens sitting in exact duplicates of an earlier item."""
     total = sum(item.token_count for item in items)
     if total <= 0:

@@ -242,8 +242,11 @@ class GraphQuery:
             seed_name = found[seed_id].node.name
 
             for node_id, depth in reached.items():
-                node = by_id.get(node_id) or self.store.get_node(node_id)
-                if node is None or node.kind not in _SEED_KINDS:
+                # Distinct from the seed `node` bound in pass 1: that one is a
+                # direct lexical match and always exists, this one is a
+                # neighbour that may not be in the graph at all.
+                neighbour = by_id.get(node_id) or self.store.get_node(node_id)
+                if neighbour is None or neighbour.kind not in _SEED_KINDS:
                     continue
 
                 contribution = found[seed_id].score * (_HOP_DECAY**depth)
@@ -259,7 +262,7 @@ class GraphQuery:
                         existing.reasons.append(reason)
                 else:
                     found[node_id] = Relevant(
-                        node=node, score=contribution, depth=depth, reasons=[reason]
+                        node=neighbour, score=contribution, depth=depth, reasons=[reason]
                     )
 
         ranked = sorted(found.values(), key=lambda r: (-r.score, r.node.path, r.node.line or 0))

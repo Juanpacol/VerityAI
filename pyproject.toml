@@ -8,9 +8,29 @@ version = "0.1.0"
 description = "Model-agnostic agentic harness: context management, persistent memory, and verification around AI coding agents"
 readme = "README.md"
 requires-python = ">=3.10"
-license = {text = "MIT"}
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [
     {name = "Juan Pablo Botero Espinosa", email = "juanpabloboteroespinosa@gmail.com"}
+]
+keywords = [
+    "llm",
+    "agents",
+    "context-management",
+    "static-analysis",
+    "code-graph",
+    "mcp",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
 ]
 
 # The core deliberately depends on almost nothing. A harness that manages
@@ -30,6 +50,11 @@ dependencies = [
     # Utilities
     "python-dotenv>=1.0.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/Juanpacol/VerityAI"
+Repository = "https://github.com/Juanpacol/VerityAI"
+"Architecture decisions" = "https://github.com/Juanpacol/VerityAI/tree/main/docs/adr"
 
 [project.optional-dependencies]
 dev = [
@@ -117,6 +142,11 @@ source = ["verityai"]
 omit = ["*/tests/*"]
 
 [tool.coverage.report]
+# Single source of truth for the threshold: `make test` and CI both inherit
+# it rather than each passing --cov-fail-under and drifting apart. Actual
+# coverage sits at 96%; 90 leaves room for a genuinely hard-to-reach branch
+# without letting a whole module go untested.
+fail_under = 90
 exclude_lines = [
     "pragma: no cover",
     "if TYPE_CHECKING:",

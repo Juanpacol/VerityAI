@@ -7,26 +7,19 @@ repos:
       - id: ruff-format
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    # Pinned to match the mypy version this project's [tool.mypy] config is
-    # actually validated against (see pyproject.toml's dev deps) -- an
-    # older mypy here previously produced spurious errors on z3 arithmetic
-    # operators that the real (newer) mypy doesn't raise.
+    # Pinned to match the mypy version pyproject.toml's dev deps install, so
+    # the hook and a local `make typecheck` agree.
     rev: v1.19.1
     hooks:
       - id: mypy
-        # mypy's pre-commit hook runs in an isolated venv with ONLY these
-        # packages -- it does not see the project's real dependencies
-        # unless listed here too. Missing z3-solver in particular causes
-        # spurious operator-type errors on Z3 expressions that a normal
-        # `mypy src/verityai` run (with the project's venv active) does
-        # not produce.
+        # This hook runs in an isolated venv that sees ONLY these packages,
+        # not the project's real dependency tree -- anything the annotations
+        # reference has to be listed here. Kept to the runtime deps that
+        # actually appear in type positions; the pre-pivot list here still
+        # installed z3-solver, sqlalchemy, fastapi and neo4j long after the
+        # harness stopped depending on any of them.
         additional_dependencies:
           - pydantic>=2.0.0
-          - types-requests
-          - z3-solver>=4.12.2
-          - sqlalchemy>=2.0.0
-          - fastapi>=0.100.0
-          - neo4j>=5.15.0
         args: [src/verityai]
         pass_filenames: false
 

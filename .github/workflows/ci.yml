@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: Lint, type-check, test (Python ${{ matrix.python-version }})
@@ -13,10 +17,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # 3.9 matches requires-python / the environment this project is
-        # actually developed against; 3.11 is checked too since several
-        # newer stdlib/typing features are used and assumed compatible.
-        python-version: ["3.9", "3.11"]
+        # Matches `requires-python = ">=3.10"`. The lower bound is tested
+        # because the codebase uses PEP 604 unions at module scope, which is
+        # exactly what a 3.9 environment cannot import -- the previous matrix
+        # pinned 3.9 and could never have passed.
+        python-version: ["3.10", "3.11", "3.12"]
 
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +33,7 @@ jobs:
           cache: "pip"
 
       - name: Install dependencies
-        run: pip install -e ".[dev]"
+        run: pip install -e ".[dev,tokenizers]"
 
       - name: Lint (ruff check)
         run: ruff check src/ tests/
@@ -40,11 +45,48 @@ jobs:
         run: mypy src/verityai
 
       - name: Test with coverage
-        run: pytest tests/ --cov=verityai --cov-report=term-missing --cov-report=xml --cov-fail-under=85
+        # The threshold lives in pyproject.toml's [tool.coverage.report] so
+        # `make test` and CI cannot drift apart.
+        run: pytest tests/ --cov=verityai --cov-report=term-missing --cov-report=xml
 
       - name: Upload coverage
+        if: matrix.python-version == '3.11'
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-${{ matrix.python-version }}
+          name: coverage
           path: coverage.xml
           retention-days: 14
+
+  dogfood:
+    name: Harness checks itself
+    runs-on: ubuntu-latest
+    # The Reliability Engine's architecture check (ADR-0008) validates the
+    # import policy documented in CLAUDE.md against the real code graph, and
+    # exits non-zero when they disagree. Running it here is the difference
+    # between having that check and using it: a PR adding an undeclared
+    # cross-engine import fails before review.
+    #
+    # `verity reliability security` is deliberately NOT run here. It always
+    # exits 0 -- by design, since its own rules declare that they match a
+    # syntactic shape and cannot tell a shared container from a local one.
+    # A CI step that structurally cannot fail is theatre, and this project's
+    # own T6 finding is to be suspicious of a checker that has never failed
+    # anything. It stays a local reporting tool.
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install
+        run: pip install -e "."
+
+      - name: Build the code graph over this repository
+        run: |
+          verity init
+          verity graph build .
+
+      - name: Architecture check (import policy)
+        run: verity reliability architecture

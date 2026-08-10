@@ -36,7 +36,7 @@ from verityai.memory.store import MemoryStore
 try:
     from mcp.server.fastmcp import FastMCP
 except ImportError:  # pragma: no cover - import guard
-    FastMCP = None  # type: ignore[assignment]
+    FastMCP = None  # type: ignore[assignment, misc]
 
 
 def _store(root: str | None = None) -> MemoryStore:

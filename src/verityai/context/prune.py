@@ -30,6 +30,7 @@ own benchmark.
 """
 
 import time
+from collections.abc import Callable
 
 from verityai.context.classify import classify_all, content_hash
 from verityai.context.rank import ContextRanker
@@ -119,7 +120,13 @@ class ContextPipeline:
 
     # --- stage plumbing --------------------------------------------------
 
-    def _stage(self, stages, name, items, fn) -> list[ContextItem]:
+    def _stage(
+        self,
+        stages: list[PruneStage],
+        name: str,
+        items: list[ContextItem],
+        fn: Callable[[list[ContextItem]], list[ContextItem]],
+    ) -> list[ContextItem]:
         """Run one stage and record its ledger entry."""
         start = time.monotonic()
         before_items = len(items)
