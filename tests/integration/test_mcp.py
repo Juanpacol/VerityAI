@@ -72,6 +72,8 @@ class TestToolSurface:
             "check_claims",
             "check_security",
             "check_architecture",
+            "risk_of_changing",
+            "should_recall_memory",
         }
 
     @pytest.mark.asyncio
@@ -362,3 +364,89 @@ class TestSnapshotTools:
 
         assert "001" in output and "first" in output
         assert "002" in output and "second" in output
+
+
+class TestRiskOfChanging:
+    @pytest.mark.asyncio
+    async def test_an_empty_graph_is_refused_rather_than_tiering_low(self, server):
+        """Every file would tier `low` with no graph, which reads as "nothing
+        needs scrutiny" when the truth is "nothing was measured" (ADR-0028)."""
+        output = await call(server, "risk_of_changing", paths=["src/a.py"])
+
+        assert "graph is empty" in output
+        assert "build_code_graph" in output
+
+    @pytest.mark.asyncio
+    async def test_tiers_are_returned_with_their_reasons(self, server, tmp_path):
+        (tmp_path / "src" / "auth").mkdir(parents=True)
+        (tmp_path / "src" / "hub.py").write_text("def shared(x):\n    return x + 1\n")
+        (tmp_path / "src" / "callers.py").write_text(
+            "from hub import shared\n\n\n"
+            "def a(x):\n    return shared(x)\n\n\n"
+            "def b(x):\n    return shared(x)\n\n\n"
+            "def c(x):\n    return shared(x)\n"
+        )
+        (tmp_path / "src" / "auth" / "tokens.py").write_text("def mint():\n    return 'tok'\n")
+        await call(server, "build_code_graph")
+
+        output = await call(server, "risk_of_changing", paths=["src/auth/tokens.py", "src/hub.py"])
+
+        assert "[HIGH]" in output
+        assert "high-risk convention" in output
+        assert "blast radius" in output
+
+    @pytest.mark.asyncio
+    async def test_no_paths_is_answered_not_crashed(self, server):
+        output = await call(server, "risk_of_changing", paths=[])
+
+        assert "No paths given" in output
+
+
+class TestShouldRecallMemory:
+    @pytest.mark.asyncio
+    async def test_an_empty_store_says_so(self, server):
+        output = await call(server, "should_recall_memory", task="rate limiting")
+
+        assert "nothing to recall" in output
+
+    @pytest.mark.asyncio
+    async def test_without_a_context_sample_it_lists_what_is_on_file(self, server):
+        await call(server, "save_decision", statement="use a token bucket")
+
+        output = await call(server, "should_recall_memory", task="rate limiting")
+
+        assert "No context sample" in output
+        assert "token bucket" in output
+
+    @pytest.mark.asyncio
+    async def test_an_untriggered_context_distinguishes_its_answer(self, server):
+        """ "Nothing crossed a threshold" is not "there is nothing saved" --
+        the tool must not let an agent read one as the other."""
+        await call(server, "save_decision", statement="use a token bucket")
+
+        output = await call(
+            server, "should_recall_memory", task="rate limiting", context_sample=TRANSCRIPT
+        )
+
+        assert "No trigger" in output
+        assert "window usage" in output
+        assert "not a claim that" in output
+
+    @pytest.mark.asyncio
+    async def test_a_triggered_context_returns_the_records_with_budget_and_basis(self, server):
+        await call(server, "save_constraint", statement="must not add a Redis dependency")
+        chunk = " ".join(f"artifact{n}" for n in range(100))
+        big = json.dumps(
+            [{"role": "tool", "content": f"build chunk {i}: {chunk}"} for i in range(1600)]
+        )
+
+        output = await call(
+            server, "should_recall_memory", task="rate limiting", context_sample=big
+        )
+
+        assert "RECALL NOW" in output
+        assert ">= 75%" in output
+        # invariant 3's spirit: the budget never appears without its basis.
+        assert "basis" in output
+        assert "arXiv:2602.11988" in output
+        assert "Redis" in output

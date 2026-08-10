@@ -125,7 +125,7 @@ src/verityai/
 │   └── evidence.py       the retained artifact: diff + manifest (ADR-0027)
 ├── analysis/facts.py     AST fact extraction (carried over from T6)
 ├── cli/main.py           the verity command
-├── mcp/server.py         MCP server — 19 tools over the same core
+├── mcp/server.py         MCP server — 21 tools over the same core
 ```
 
 ### `.verity/` on disk
@@ -209,7 +209,7 @@ has the detail; the short version:
 ## Development
 
 ```bash
-pytest tests/           # 634 tests, no network, no services, no fixtures needed
+pytest tests/           # 644 tests, no network, no services, no fixtures needed
 ruff check src/ tests/
 ruff format src/ tests/
 ```

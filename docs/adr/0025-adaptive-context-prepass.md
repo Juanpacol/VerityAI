@@ -102,8 +102,14 @@ specific mechanism in `prune.py`:
   `critical_retention` against the *merged* list rather than the original
   transcript: surfaced items are the CRITICAL ones, so the original baseline
   would exclude exactly what is at risk and the check would pass vacuously.
-  MCP remains deliberately unwired, and **the pilot remains not run** — no
-  claim about this mechanism's effect is made anywhere.
+  MCP is now wired too (`risk_of_changing`, `should_recall_memory`), the CLI
+  having been exercised first as rule 5 requires. **The pilot remains not
+  run** — no claim about this mechanism's effect is made anywhere.
+
+  Wiring MCP immediately surfaced a defect this ADR's own design carried
+  from the start: `select()` dropped every candidate the BM25 ranker could
+  not score, which is exactly the memory most worth recalling. See
+  [ADR-0029](0029-unrankable-memory-is-not-irrelevant-memory.md).
 - The threshold constants (`_HIGH_WINDOW_USAGE`, `_LOW_RELEVANT_RATIO`,
   `_DEFAULT_BUDGET_RATIO`) are placeholders pending exactly that pilot —
   they should not be read as tuned values.

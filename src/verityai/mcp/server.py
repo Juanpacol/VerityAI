@@ -396,6 +396,123 @@ def build_server(name: str = "verity"):
         return render_report(report, title="SECURITY", caveats=caveats_for(report.violations))
 
     @server.tool()
+    def risk_of_changing(paths: list[str]) -> str:
+        """Tier files you are about to change: how much verification each earns.
+
+        Call this before editing several files at once, or when deciding
+        where to spend review effort. Returns low/medium/high per file with
+        the reasons behind it -- blast radius, fan-in, untested public
+        symbols, and path conventions like `auth/` or `migrations/`.
+
+        A tier is a *depth*, not a finding: "high" does not mean the file is
+        broken, it means a change there deserves more scrutiny than a change
+        to a leaf. Nothing here gates the security scan -- run `check_security`
+        as well, always.
+
+        Paths must be repo-relative as `build_code_graph` stored them
+        (`src/pkg/mod.py`). Absolute paths are relativized when possible; a
+        path that cannot be resolved is reported as such rather than silently
+        tiered low, since "no signals found" and "no risk found" are different
+        answers.
+        """
+        from verityai.graph.query import GraphQuery
+        from verityai.reliability.risk import classify_paths
+
+        if not paths:
+            return "No paths given. Pass the files you are about to change."
+
+        store = _store()
+        with _graph() as graph:
+            if not graph.stats().get("nodes.total"):
+                return (
+                    "The code graph is empty, so every file would tier 'low' for lack of "
+                    "signals -- which would read as 'nothing needs scrutiny' when nothing "
+                    "was measured. Call build_code_graph first."
+                )
+            verdicts = classify_paths(paths, GraphQuery(graph), repo_root=store.root.parent)
+
+        order = {"high": 0, "medium": 1, "low": 2}
+        lines: list[str] = []
+        for path, (tier, reasons) in sorted(
+            verdicts.items(), key=lambda kv: (order[kv[1][0]], kv[0])
+        ):
+            lines.append(f"[{tier.upper()}] {path}")
+            lines.extend(f"    {reason}" for reason in reasons)
+        return "\n".join(lines)
+
+    @server.tool()
+    def should_recall_memory(task: str, context_sample: str = "") -> str:
+        """Ask whether now is the moment to pull saved decisions back in.
+
+        Call this when a task has been running for a while, when you notice
+        you are re-deriving something, or before starting a subtask -- the
+        cases where an agent typically *does not* think to check its own
+        memory, which is exactly why this exists as a prompt-able tool.
+
+        `context_sample` is whatever slice of your working context you can
+        pass; the answer is only about what you hand over (Verity cannot see
+        your window). With no sample this reports what is on file without a
+        trigger judgement.
+
+        Returns the trigger and its threshold, the budget and its basis, and
+        the records worth surfacing -- or says plainly that nothing crossed a
+        threshold, which is a different answer from "there is nothing saved".
+        """
+        from verityai.context.adaptive import (
+            no_trigger_reason,
+            plan_budget,
+            select,
+            should_surface,
+        )
+        from verityai.memory.surface import candidates_for
+
+        store = _store()
+        counter = TokenCounter()
+        candidates = candidates_for(store, task, counter)
+        if not candidates:
+            return "Nothing is saved in .verity/ yet, so there is nothing to recall."
+
+        if not context_sample.strip():
+            lines = [
+                f"No context sample given, so no trigger was computed. {len(candidates)} "
+                "record(s) are on file:",
+            ]
+            lines.extend(f"  - {' '.join(c.content.split())[:100]}" for c in candidates[:10])
+            return "\n".join(lines)
+
+        items = load(context_sample)
+        pipeline = ContextPipeline(counter=counter)
+        measured = [pipeline.measure(item, n) for n, item in enumerate(items)]
+        health = compute_health(classify_all(measured), counter=counter)
+
+        trigger = should_surface(health)
+        if trigger is None:
+            return (
+                f"No trigger: {no_trigger_reason(health)}.\n"
+                f"{len(candidates)} record(s) are on file and none are being pushed. "
+                "This is a judgement about the context you passed, not a claim that "
+                "the records are irrelevant -- call get_state to read them anyway."
+            )
+
+        plan = plan_budget(counter, health)
+        decision = select(candidates, task, plan, trigger=trigger)
+
+        lines = [
+            f"RECALL NOW: {trigger.reason}",
+            f"  budget {plan.budget:,} of {plan.window:,} tokens",
+            f"  basis  {plan.basis}",
+            "",
+        ]
+        if decision.degraded_reason:
+            lines.append(f"  degraded: {decision.degraded_reason}")
+            lines.append("")
+        lines.extend(f"  - {' '.join(item.content.split())[:160]}" for item in decision.items)
+        withheld = len(candidates) - len(decision.items)
+        if withheld:
+            lines.append(f"\n  ({withheld} more ranked below the budget cut; get_state has all.)")
+        return "\n".join(lines)
+
+    @server.tool()
     def check_architecture() -> str:
         """Check every import against the project's declared dependency policy.
 

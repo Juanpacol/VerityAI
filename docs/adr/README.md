@@ -46,6 +46,7 @@ verdict was "this pilot could not have detected an effect."
 | [0026](0026-risk-adaptive-verification.md) | Can verification depth scale with file risk, using only signals already in the graph? | Yes — `classify_file_risk` tiers by path convention / blast radius / fan-in / untested symbols; `rules_for_tier` gates rule depth; both builtin rules tagged with risk tiers and sql-injection caveat backfilled |
 | [0027](0027-retained-trial-evidence.md) | Did ADR-0022 actually close invariant 7? | **No** — six checkable failures, including a default output path inside `.gitignore` and a CLI that could not express the metric ADR-0022 claimed to reproduce. Evidence is now a diff against a hash-pinned fixture; unretained ⇒ unpublishable, mechanically |
 | [0028](0028-the-mocked-test-that-could-not-fail.md) | Did ADR-0026's risk tiering work outside its own tests? | **No** — any path form but the ingester's silently yielded zero signals and a clean-looking `low` for every file. The suite's only `MagicMock` could not express the difference; tests rewritten against a real graph, and `unittest.mock` is gone |
+| [0029](0029-unrankable-memory-is-not-irrelevant-memory.md) | Does adaptive surfacing recall the records that matter most? | **It did the opposite** — BM25 omits zero-overlap candidates entirely, so a constraint sharing no word with the task was dropped before the budget applied and reported as a budget outcome. 0 of 4 records surfaced on a real store. Unscored candidates now rank last instead of vanishing |
 
 ## Pre-pivot (superseded)
 

@@ -152,17 +152,46 @@ def select(
     ranker = ranker or ContextRanker()
     ranking = ranker.rank(task, candidates)
 
+    # `ContextRanker.rank` returns only what it could score: a candidate whose
+    # text shares no term with the task is absent from `ranking.items`, not
+    # present with score zero. Selecting from that list alone would silently
+    # lose exactly the record most worth recalling -- a hard constraint like
+    # "must not add a Redis dependency" against the task "speed up the cache"
+    # has no lexical overlap at all, and pilot 8's whole finding is that the
+    # decisive fact is the one that cannot be inferred from the wording.
+    #
+    # So unscored candidates are ranked *last*, not dropped. Relevance still
+    # orders the budget; it just cannot make a record vanish before the budget
+    # is considered. Invariant 6's principle -- the parts must sum to the
+    # whole -- applied to selection rather than to parsing.
+    # Keyed on `ContextItem.id`, which always exists. `content_hash` is
+    # populated by whoever built the item and is empty on a plain one, so
+    # using it here would make every unscored candidate look like a duplicate
+    # of every other.
+    scored_ids = {scored.item.id for scored in ranking.items}
+    ordered = [scored.item for scored in ranking.items]
+    unscored = [item for item in candidates if item.id not in scored_ids]
+    ordered.extend(unscored)
+
     selected: list[ContextItem] = []
     used = 0
-    for scored in ranking.items:
-        if used + scored.item.token_count > plan.budget:
+    for item in ordered:
+        if used + item.token_count > plan.budget:
             continue
-        selected.append(scored.item)
-        used += scored.item.token_count
+        selected.append(item)
+        used += item.token_count
+
+    reasons = [ranking.degraded_reason] if ranking.degraded_reason else []
+    if unscored:
+        reasons.append(
+            f"{len(unscored)} candidate(s) share no term with the task and could not be "
+            "ranked; they were ordered last rather than dropped, so a constraint with no "
+            "lexical overlap can still be surfaced"
+        )
 
     return SurfaceDecision(
         items=selected,
         plan=plan,
         trigger=trigger,
-        degraded_reason=ranking.degraded_reason,
+        degraded_reason="; ".join(reasons) or None,
     )

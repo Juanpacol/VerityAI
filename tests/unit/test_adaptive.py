@@ -164,3 +164,58 @@ class TestInvariantsSurviveThePipeline:
 
         for prev, cur in zip(result.stages, result.stages[1:], strict=False):
             assert cur.tokens_before == prev.tokens_after
+
+
+class TestUnscoredCandidatesAreNotLost:
+    """`ContextRanker.rank` returns only what it could score -- a candidate
+    sharing no term with the task is absent from the result, not present with
+    score zero. Selecting from that list alone silently loses exactly the
+    record most worth recalling, and then reports it as a budget decision,
+    which is worse than losing it quietly."""
+
+    def test_a_candidate_with_no_lexical_overlap_is_still_surfaced(self):
+        counter = FixedCounter()
+        plan = plan_budget(counter, health(), ratio=0.5)
+        overlapping = item("use a token bucket for rate limiting", kind=ItemKind.MEMORY, index=0)
+        unrelated = item("must not add a Redis dependency", kind=ItemKind.MEMORY, index=1)
+        for c in (overlapping, unrelated):
+            c.token_count = counter.count(c.content).tokens
+
+        decision = select([overlapping, unrelated], task="rate limiting", plan=plan)
+
+        contents = [i.content for i in decision.items]
+        assert "must not add a Redis dependency" in contents, (
+            "a hard constraint that shares no word with the task is the one most "
+            "worth recalling; it must not disappear before the budget is applied"
+        )
+        # Relevance still orders selection -- the scored item comes first.
+        assert contents[0] == "use a token bucket for rate limiting"
+
+    def test_the_unrankable_candidates_are_declared(self):
+        counter = FixedCounter()
+        plan = plan_budget(counter, health(), ratio=0.5)
+        unrelated = item("must not add a Redis dependency", kind=ItemKind.MEMORY, index=0)
+        unrelated.token_count = counter.count(unrelated.content).tokens
+
+        decision = select([unrelated], task="rate limiting", plan=plan)
+
+        assert decision.degraded_reason is not None
+        assert "share no term with the task" in decision.degraded_reason
+        assert "rather than dropped" in decision.degraded_reason
+
+    def test_nothing_is_lost_between_candidates_and_the_budget(self):
+        """The parts must sum to the whole (invariant 6's principle): every
+        candidate is either selected or genuinely did not fit."""
+        counter = FixedCounter()
+        plan = plan_budget(counter, health(), ratio=0.5)
+        candidates = [
+            item("use a token bucket for rate limiting", kind=ItemKind.MEMORY, index=0),
+            item("must not add a Redis dependency", kind=ItemKind.MEMORY, index=1),
+            item("the deploy script lives in ops slash release", kind=ItemKind.MEMORY, index=2),
+        ]
+        for c in candidates:
+            c.token_count = counter.count(c.content).tokens
+
+        decision = select(candidates, task="rate limiting", plan=plan)
+
+        assert len(decision.items) == len(candidates)
