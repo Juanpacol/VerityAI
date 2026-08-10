@@ -39,6 +39,7 @@ verdict was "this pilot could not have detected an effect."
 | [0019](0019-domain-ambiguity-pilot.md) | Does an ambiguity not derivable from code at all break the ceiling? | No — the model's naming convention matched the fabricated policy 10/10 regardless of condition |
 | [0020](0020-arbitrary-tiebreak-pilot.md) | Does an ambiguity with no linguistic convention finally break it? | **Yes** — `likely_real_difference`, 0/5 vs 5/5, the first success-rate split in the series |
 | [0021](0021-consistency-relation-inversion.md) | Did ADR-0018's fix actually close the relation blind spot? | No — it flipped a silent false negative into an asserted false positive; corrected to `UNVERIFIABLE` |
+| [0022](0022-verity-eval-harness.md) | Can a real trial harness replace hand-run, hand-scored pilots? | Yes — `verity eval` retains a content-hashed artifact per trial and flags degenerate noise floors instead of hiding them; reproduced pilot 8's result exactly |
 
 ## Pre-pivot (superseded)
 

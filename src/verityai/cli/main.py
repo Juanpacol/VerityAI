@@ -391,6 +391,45 @@ def noise_floor(
     typer.secho(f"  conclusion: {result['conclusion']}", fg=color)
 
 
+@app.command(name="eval")
+def eval_command(
+    spec_path: Path = typer.Argument(..., help="JSON-encoded TrialSpec."),
+    work_root: Path = typer.Option(
+        Path(".verity/eval"), "--work-root", help="Where trial directories are created."
+    ),
+    json_out: Path | None = typer.Option(None, "--json", help="Write the report as JSON."),
+) -> None:
+    """Run a real, retained Family B trial harness. See docs/BENCHMARK_PROTOCOL.md.
+
+    Not exposed over MCP -- measurement stays human-invoked, matching `bench`
+    and `noise-floor`. `spec_path` is a JSON object matching `TrialSpec`
+    (name, fixture_path, conditions, n, scorer_command, metric_keys,
+    condition_commands). Every trial's result is retained under
+    `work_root/<condition>_<n>/`, content-hashed, so the numbers this
+    command prints can be independently re-checked later -- the property
+    three prior pilots' numbers lacked (invariant 7, CLAUDE.md).
+    """
+    from verityai.bench.eval import render_report, run_eval
+    from verityai.bench.eval import to_json as eval_to_json
+    from verityai.bench.trial import command_invoker
+    from verityai.core.models import TrialSpec
+
+    spec = TrialSpec.model_validate_json(spec_path.read_text(encoding="utf-8"))
+    report = run_eval(spec, command_invoker(spec), work_root)
+
+    typer.echo("")
+    typer.echo(render_report(report))
+
+    if json_out:
+        json_out.write_text(json.dumps(eval_to_json(report), indent=2), encoding="utf-8")
+        typer.echo(f"\n  JSON written to {json_out}")
+
+    if not report.is_publishable:
+        # Non-zero exit for the same reason `bench` does this: a NOT
+        # PUBLISHABLE result must not pass silently in CI.
+        raise typer.Exit(1)
+
+
 graph_app = typer.Typer(help="Build and query the code graph.")
 app.add_typer(graph_app, name="graph")
 

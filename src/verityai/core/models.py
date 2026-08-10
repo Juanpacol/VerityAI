@@ -695,3 +695,82 @@ class ArchitecturePolicy(BaseModel):
     """
 
     allowed_imports: dict[str, list[str]] = Field(default_factory=dict)
+
+
+# --- Eval (trial harness) ---------------------------------------------------
+
+
+class FailureMode(str, Enum):
+    """A closed taxonomy of why a trial's outcome came out the way it did.
+
+    Closed and small on purpose (ADR-0022): an open-ended "explain the
+    failure in your own words" taxonomy is a subjective judge wearing a
+    costume, exactly what T1 forbids. Seeded from what this project's own
+    Family B pilots actually produced (`docs/MEASUREMENTS.md`) rather than
+    invented in the abstract -- `PLAUSIBLE_IDIOM_WRONG_ON_EDGE` names pilot
+    8's `max()` tie-break bug specifically, because that shape recurs.
+    """
+
+    WRONG_CONSTANT = "wrong_constant"
+    WRONG_BOUNDARY = "wrong_boundary"
+    PLAUSIBLE_IDIOM_WRONG_ON_EDGE = "plausible_idiom_wrong_on_edge"
+    DECOY_PURSUED = "decoy_pursued"
+    TEST_MODIFIED = "test_modified"
+    NO_CHANGE = "no_change"
+
+
+class TrialSpec(BaseModel):
+    """What to run, how many times, and how to score it -- never a model call.
+
+    `scorer_command` is a shell command run in the trial's working directory
+    after the agent finishes (e.g. `pytest -q`, or a hidden-test module
+    committed alongside the fixture); its exit code is the ground truth,
+    exactly the discipline `docs/MEASUREMENTS.md` describes as "scored by
+    running `pytest` directly -- never by trusting the agent's own report."
+    A scorer that calls a model is a different kind of measurement (Family B
+    would need its own noise floor on the *scorer*) and out of scope here.
+    """
+
+    name: str
+    fixture_path: str
+    conditions: list[str]
+    n: int = Field(default=5, ge=1)
+    scorer_command: str
+    metric_keys: list[str] = Field(default_factory=lambda: ["success"])
+    # Optional: a shell command per condition, run inside the trial directory
+    # in place of a live agent -- a scripted stand-in, the same deliberate
+    # choice `experiments/lib/setup_phase_a.sh` makes for its `verity`
+    # condition (a fabricated prior investigation, not a second live agent).
+    # A condition with no entry here needs a real `invoke_agent` passed to
+    # `run_trials`/`run_eval` instead -- the CLI cannot invoke a live agent
+    # on its own.
+    condition_commands: dict[str, str] = Field(default_factory=dict)
+
+
+class TrialRecord(BaseModel):
+    """One trial's outcome, with everything needed to re-derive it later.
+
+    This model exists because of a real, audited failure (ADR-0021's
+    sibling finding, Phase 0 truth repair): three prior pilots' `5/5`
+    numbers rested only on hand-typed JSON, and the post-trial code that
+    would have let anyone re-check them was destroyed by a later re-run of
+    the pilots' own setup script -- nothing under `trials/` was ever
+    git-tracked. `artifact_hash` is the field that failure mode lacked: a
+    content hash of the post-trial tree, so "this trial's result is still
+    checkable" is a property of the record, not a hope about the
+    filesystem.
+    """
+
+    id: UUID = Field(default_factory=uuid4)
+    trial_id: str
+    condition: str
+    created_at: datetime = Field(default_factory=_now)
+    scorer_exit_code: int
+    metrics: dict[str, float] = Field(default_factory=dict)
+    transcript_path: str | None = None
+    artifact_hash: str
+    failure_mode: FailureMode | None = None
+
+    @property
+    def succeeded(self) -> bool:
+        return self.scorer_exit_code == 0
