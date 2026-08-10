@@ -97,11 +97,13 @@ src/verityai/
 │   ├── classify.py       five relevance buckets, each with a reason
 │   ├── rank.py           BM25 + optional embeddings, fused with RRF
 │   ├── prune.py          the 7-stage pipeline
+│   ├── adaptive.py       surfacing pre-pass; never bypasses prune (ADR-0025)
 │   └── health.py         multi-dimensional health + rendering
 ├── memory/
 │   ├── store.py          append-only JSONL under .verity/
 │   ├── snapshot.py       numbered captures; context only, never code
-│   └── handoff.py        the structured handoff document
+│   ├── handoff.py        the structured handoff document
+│   └── surface.py        memory records as context candidates
 ├── graph/
 │   ├── store.py          SQLite; hand-written traversal, no networkx
 │   ├── ingest.py         repo walk + AST; Python only, scope declared
@@ -113,10 +115,14 @@ src/verityai/
 │   ├── rule_engine.py    forward-chaining engine (carried over from T6)
 │   ├── security.py       SQLi + check-then-act races; every rule states its blind spot
 │   ├── architecture.py   import-policy check against the real graph
+│   ├── risk.py           per-file risk tiers from graph signals (ADR-0026)
 │   └── report.py         shared renderer for both
 ├── bench/
 │   ├── deterministic.py  Family A benchmarks, self-disqualifying
-│   └── repetition.py     noise floor / Family B statistics (generalized, ADR-0010)
+│   ├── repetition.py     noise floor / Family B statistics (generalized, ADR-0010)
+│   ├── trial.py          runs a TrialSpec; scorer is a subprocess, never a model
+│   ├── eval.py           publish-or-refuse gate over a run
+│   └── evidence.py       the retained artifact: diff + manifest (ADR-0027)
 ├── analysis/facts.py     AST fact extraction (carried over from T6)
 ├── cli/main.py           the verity command
 ├── mcp/server.py         MCP server — 19 tools over the same core
@@ -159,13 +165,26 @@ Enforced in tests, not by convention. Breaking one is a bug.
 7. **No published metric without a retained, re-derivable artifact.** A
    number quoted in `docs/MEASUREMENTS.md`, a README, or any external
    material must have per-trial evidence a third party could re-check —
-   not just the aggregate. Violated once (ADR-0021, Phase 0 truth repair,
-   2026-08-10): three Family B pilots' evidence was destroyed by a re-run of
-   their own setup script, and nothing under `experiments/*/trials/` was
-   git-tracked, so the published numbers survived only as hand-typed
-   results JSON. `verity eval`'s trial harness exists to make this
-   structural rather than a matter of remembering to `git add` the right
-   directory.
+   not just the aggregate, and **not just a hash**. The artifact is a diff
+   against a hash-pinned fixture plus a manifest line
+   (`bench/evidence.py`), written into a tracked
+   `experiments/<name>/evidence/`; `verity eval` reports a run that
+   retained nothing as NOT PUBLISHABLE, mechanically.
+
+   Violated twice, both on 2026-08-10. First (Phase 0 truth repair): three
+   Family B pilots' evidence was destroyed by a re-run of their own setup
+   script, and nothing under `experiments/*/trials/` was git-tracked, so
+   the numbers survived only as hand-typed JSON. Those three are
+   permanently unverifiable — `tool_uses` is a property of agent behaviour
+   that no fixture-and-scorer harness can regenerate — and are listed in
+   `experiments/UNREPRODUCIBLE.md`.
+
+   Second (ADR-0027): the harness built to fix the first violation did not.
+   A content hash identifies a tree but reconstructs nothing; the default
+   output path was inside git-ignored `.verity/`; and no `TrialSpec` was
+   ever committed. The lesson is worth more than the rule: **an invariant
+   about evidence cannot be discharged by a field whose test never
+   re-derives the number.**
 
 ---
 
@@ -190,7 +209,7 @@ has the detail; the short version:
 ## Development
 
 ```bash
-pytest tests/           # 520 tests, no network, no services, no fixtures needed
+pytest tests/           # 634 tests, no network, no services, no fixtures needed
 ruff check src/ tests/
 ruff format src/ tests/
 ```
@@ -198,8 +217,34 @@ ruff format src/ tests/
 - Python 3.10+. `X | None` is fine (PEP 604). The old 3.9 pin -- and its ban
   on that syntax in Pydantic annotations -- is gone with the code that forced it.
 - Line length 100, ruff format.
-- Tests use plain objects and `tmp_path`. There is nothing to mock — that is a
-  property worth protecting when adding engines.
+- Tests use plain objects and `tmp_path`. Nothing is mocked, and that is a
+  property to protect rather than a coincidence: the one test file that
+  reached for `unittest.mock` hid a total failure for a full release cycle,
+  because a `MagicMock` answers any argument identically and the defect was
+  in *which* argument the real collaborator was given (ADR-0028). If a new
+  engine seems to need a mock, that is a signal about the engine's seams.
+
+### Measurement and depth commands
+
+```bash
+verity eval <spec.json>              # a retained Family B trial run
+verity reliability risk <paths...>   # per-file risk tiers, with reasons
+verity context <t> --task X --adaptive [--dry-run]
+```
+
+`verity eval` writes scratch to `--work-root` (ignored) and the artifact to
+`--evidence-root` (tracked, defaults to `experiments/<spec name>/evidence`).
+A run that retains nothing is reported NOT PUBLISHABLE.
+
+`verity reliability risk` reports tiers; it deliberately does **not** gate
+scans. Both built-in security rules are medium/high tier, so a risk-gated
+scan would run zero rules on every low-tier file while printing no
+violations — the T6 mistake, shipped on purpose. `--show-rules` prints that
+hole (`low  0/2  -- nothing`) instead of hiding it behind a gate.
+
+`--adaptive` is a pre-pass only: surfaced memory is merged into the input
+list and pruned once. Never inject between pipeline stages — the ledger
+chains only because `_stage` is its sole writer (invariant 2).
 
 ### Adding an engine
 

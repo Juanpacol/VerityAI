@@ -191,7 +191,10 @@ agent's own report:
 > nothing under `trials/` was ever git-tracked. The table below rests on
 > the hand-recorded results JSON alone; the tool-call figures were
 > self-reported at the time, not captured by an instrumented harness. Not
-> independently verifiable until re-run through `verity eval`.
+> independently verifiable, **permanently**: `tool_uses` counts an agent's
+> tool calls -- a property of behaviour, not of the code left behind -- so no
+> fixture-and-scorer harness can regenerate it, `verity eval` included.
+> See `experiments/UNREPRODUCIBLE.md`.
 
 | Metric | `naive` | `verity` | Verdict |
 |---|---|---|---|
@@ -218,7 +221,10 @@ touched the decoy or the test. But the cost effect held and grew:
 > issue as pilot 4 — the `trials/` directories were destroyed by a later
 > re-run of the setup script (now guarded) and were never git-tracked;
 > the tool-call figures below are self-reported, not harness-captured. Not
-> independently verifiable until re-run through `verity eval`.
+> independently verifiable, **permanently**: `tool_uses` counts an agent's
+> tool calls -- a property of behaviour, not of the code left behind -- so no
+> fixture-and-scorer harness can regenerate it, `verity eval` included.
+> See `experiments/UNREPRODUCIBLE.md`.
 
 | Metric | `naive` | `verity` | Verdict |
 |---|---|---|---|
@@ -249,8 +255,10 @@ time:
 > issue as pilots 4 and 5 — the `trials/` directories were destroyed by a
 > later re-run of the setup script (now guarded) and were never
 > git-tracked; the tool-call figures below are self-reported, not
-> harness-captured. Not independently verifiable until re-run through
-> `verity eval`.
+> harness-captured. Not independently verifiable, **permanently**:
+> `tool_uses` counts an agent's tool calls -- a property of behaviour, not of
+> the code left behind -- so no fixture-and-scorer harness can regenerate it,
+> `verity eval` included. See `experiments/UNREPRODUCIBLE.md`.
 
 | Metric | `naive` | `verity` | Verdict |
 |---|---|---|---|

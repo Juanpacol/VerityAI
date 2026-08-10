@@ -10,7 +10,12 @@
 > `verity_results.json` alone, and the per-trial tool-call counts in
 > particular were self-reported at the time, not captured by any
 > instrumented harness. Treat this pilot's numbers as unverified history,
-> not as a reproducible result, until re-run through `verity eval`.
+> not as a reproducible result — **permanently**. `tool_uses` counts an
+> agent's tool calls, which is a property of behaviour rather than of the
+> code left behind, so no fixture-and-scorer harness can regenerate it,
+> `verity eval` included. An earlier version of this caveat said the numbers
+> were unverifiable "until re-run through `verity eval`"; that promised a
+> repair which does not exist. See `experiments/UNREPRODUCIBLE.md`.
 
 Per `docs/BENCHMARK_PROTOCOL.md`'s Family B procedure. "Recovery quality
 after reset" is named there as *"the one thing the harness does that an

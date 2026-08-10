@@ -6,8 +6,11 @@
 > under `trials/` was git-tracked, so the numbers below are **not
 > independently re-derivable** — they rest on the hand-recorded results
 > JSON alone, and the tool-call counts were self-reported, not captured by
-> any instrumented harness. Treat as unverified history until re-run
-> through `verity eval`.
+> any instrumented harness. Treat as unverified history -- **permanently**.
+> `tool_uses` counts an agent's tool calls, a property of
+> behaviour rather than of the code left behind, so no fixture-and-scorer
+> harness can regenerate it -- `verity eval` included. See
+> `experiments/UNREPRODUCIBLE.md`.
 
 Per `docs/BENCHMARK_PROTOCOL.md`'s Family B procedure. Pilots 4 and 5
 (ADR-0015, ADR-0016) both used a "wrong-but-plausible constant" bug shape

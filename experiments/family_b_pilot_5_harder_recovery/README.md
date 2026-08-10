@@ -6,8 +6,11 @@
 > Nothing under `trials/` was git-tracked, so the numbers below are
 > **not independently re-derivable** — they rest on the hand-recorded
 > results JSON alone, and the tool-call counts were self-reported, not
-> captured by any instrumented harness. Treat as unverified history until
-> re-run through `verity eval`.
+> captured by any instrumented harness. Treat as unverified history --
+> **permanently**. `tool_uses` counts an agent's tool calls, a property of
+> behaviour rather than of the code left behind, so no fixture-and-scorer
+> harness can regenerate it, `verity eval` included. See
+> `experiments/UNREPRODUCIBLE.md`.
 
 Per `docs/BENCHMARK_PROTOCOL.md`'s Family B procedure. Pilot 4
 (`experiments/family_b_pilot_4_recovery_after_reset/`, ADR-0015) measured
