@@ -94,8 +94,17 @@ Thumbs.db
 # Harness state. Ignored while dogfooding so it does not add noise to every
 # commit; a team wanting shared state would commit it instead.
 .verity/
-experiments/family_b_pilot_4_recovery_after_reset/trials/
-experiments/family_b_pilot_5_harder_recovery/trials/
-experiments/family_b_pilot_6_runtime_bug/trials/
-experiments/family_b_pilot_7_domain_ambiguity/trials/
-experiments/family_b_pilot_8_arbitrary_tiebreak/trials/
+
+# Trial working directories are execution scratch: copied fixtures,
+# __pycache__, rewritten on every run. Ignoring them is only defensible
+# because they are no longer the only copy -- the retained, re-derivable
+# evidence for every published number now lives in experiments/*/evidence/
+# and IS tracked (ADR-0027). That inversion is the structural fix for
+# invariant 7's one violation, where an ignored scratch directory held the
+# sole record of three pilots' results and a re-run of their own setup
+# script destroyed it.
+#
+# `*` does not cross a `/`, so this pattern cannot reach
+# experiments/<name>/evidence/. A test asserts that, because a comment
+# cannot enforce it: see tests/integration/test_cli_eval.py.
+experiments/*/trials/

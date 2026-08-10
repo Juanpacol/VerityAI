@@ -789,10 +789,14 @@ class TrialRecord(BaseModel):
     numbers rested only on hand-typed JSON, and the post-trial code that
     would have let anyone re-check them was destroyed by a later re-run of
     the pilots' own setup script -- nothing under `trials/` was ever
-    git-tracked. `artifact_hash` is the field that failure mode lacked: a
-    content hash of the post-trial tree, so "this trial's result is still
-    checkable" is a property of the record, not a hope about the
-    filesystem.
+    git-tracked. `artifact_hash` seals the post-trial tree so tampering or
+    drift is detectable.
+
+    A hash is not, on its own, the re-derivable artifact invariant 7 asks
+    for -- it identifies a tree rather than reconstructing one, and ADR-0027
+    records that mistaking the two is what let the original failure survive
+    its own repair. The artifact itself (diff, scorer output, manifest) is
+    written by `bench/evidence.py`.
     """
 
     id: UUID = Field(default_factory=uuid4)
@@ -801,6 +805,14 @@ class TrialRecord(BaseModel):
     created_at: datetime = Field(default_factory=_now)
     scorer_exit_code: int
     metrics: dict[str, float] = Field(default_factory=dict)
+    # Where `metrics` came from: "metric_fn" (in-process scorer), "scorer_json"
+    # (a JSON object on the scorer's stdout) or "exit_code" (pass/fail only).
+    # Same principle as `TokenCount` carrying its method (invariant 3): a
+    # number whose provenance is unstated invites being read as more than it
+    # is -- an `exit_code` metric cannot distinguish "the check passed" from
+    # "the scorer could not run", which is a distinction a reader needs.
+    metrics_source: str = "exit_code"
+    metrics_source_reason: str | None = None
     transcript_path: str | None = None
     artifact_hash: str
     failure_mode: FailureMode | None = None

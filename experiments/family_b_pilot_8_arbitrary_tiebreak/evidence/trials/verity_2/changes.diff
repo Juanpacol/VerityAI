@@ -1,0 +1,10 @@
+diff --git a/allocation/pick_winner.py b/allocation/pick_winner.py
+--- a/allocation/pick_winner.py
++++ b/allocation/pick_winner.py
+@@ -2,4 +2,5 @@
+ 
+ 
+ def pick_winner(candidates: list[dict]) -> dict:
+-    return candidates[0]
++    # Ties go to the LOWER id (recovered decision, phase A).
++    return sorted(candidates, key=lambda c: (-c["score"], c["id"]))[0]

@@ -1,0 +1,9 @@
+diff --git a/allocation/pick_winner.py b/allocation/pick_winner.py
+--- a/allocation/pick_winner.py
++++ b/allocation/pick_winner.py
+@@ -2,4 +2,4 @@
+ 
+ 
+ def pick_winner(candidates: list[dict]) -> dict:
+-    return candidates[0]
++    return max(candidates, key=lambda c: c["score"])

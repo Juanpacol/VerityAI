@@ -267,9 +267,7 @@ class TestFileImportsRelation:
         assert result.confidence == 1.0
 
     def test_a_missing_import_is_contradicted(self, two_file_query):
-        result = check_file_imports(
-            relation_claim("rates.py", "imports", "tax.py"), two_file_query
-        )
+        result = check_file_imports(relation_claim("rates.py", "imports", "tax.py"), two_file_query)
 
         assert result.status is CheckStatus.CONTRADICTED
 
@@ -412,9 +410,7 @@ class TestConstraintViolations:
             store=store_with_hard_constraint,
         )
 
-        assert any(
-            "hard constraint" in c.explanation for c in report.contradictions
-        )
+        assert any("hard constraint" in c.explanation for c in report.contradictions)
 
 
 class TestFileExistence:

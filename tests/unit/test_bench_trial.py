@@ -180,10 +180,41 @@ class TestRunEval:
             else:
                 (trial_dir / "value.txt").write_text("1\n")
 
+        report = run_eval(
+            spec,
+            invoke,
+            work_root=tmp_path / "work",
+            evidence_root=tmp_path / "evidence",
+        )
+
+        assert report.is_publishable, report.warnings
+        assert "success" in report.comparisons["verity"]
+
+    def test_a_run_that_retained_nothing_is_not_publishable(self, tmp_path):
+        """The gate ADR-0027 added. Before it, a run with no evidence root
+        printed the same publishable-looking report as one that retained
+        everything -- which is how three pilots' numbers outlived the only
+        copy of their evidence. `n` and the noise floor are both fine here;
+        the missing artifact alone must be disqualifying."""
+        fixture = _fixture(tmp_path)
+        spec = TrialSpec(
+            name="t",
+            fixture_path=str(fixture),
+            conditions=["naive", "verity"],
+            n=5,
+            scorer_command=_scorer_that_checks_value("1"),
+        )
+        outcomes = iter([0, 0, 0, 1, 1])
+
+        def invoke(trial_dir, condition, index):
+            value = next(outcomes) if condition == "naive" else 1
+            (trial_dir / "value.txt").write_text(f"{value}\n")
+
         report = run_eval(spec, invoke, work_root=tmp_path / "work")
 
-        assert report.is_publishable
-        assert "success" in report.comparisons["verity"]
+        assert not report.is_publishable
+        assert any("no evidence root" in w for w in report.warnings)
+        assert report.evidence_root is None
 
     def test_not_publishable_below_minimum_n(self, tmp_path):
         fixture = _fixture(tmp_path)

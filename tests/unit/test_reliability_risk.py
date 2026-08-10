@@ -16,34 +16,47 @@ class TestPathSignal:
     """Path convention heuristics trigger high risk unconditionally."""
 
     def test_auth_in_path_is_high_risk(self):
-        tier, reasons = classify_file_risk("src/auth/token_handler.py", MagicMock(store=MagicMock(nodes_in_file=lambda p: [])))
+        tier, reasons = classify_file_risk(
+            "src/auth/token_handler.py", MagicMock(store=MagicMock(nodes_in_file=lambda p: []))
+        )
 
         assert tier == "high"
         assert any("auth" in r for r in reasons)
 
     def test_migrations_in_path_is_high_risk(self):
-        tier, reasons = classify_file_risk("migrations/0021_add_payment_fields.py", MagicMock(store=MagicMock(nodes_in_file=lambda p: [])))
+        tier, reasons = classify_file_risk(
+            "migrations/0021_add_payment_fields.py",
+            MagicMock(store=MagicMock(nodes_in_file=lambda p: [])),
+        )
 
         assert tier == "high"
         assert any("migrations" in r for r in reasons)
 
     def test_api_in_path_is_high_risk(self):
-        tier, reasons = classify_file_risk("src/api/routes.py", MagicMock(store=MagicMock(nodes_in_file=lambda p: [])))
+        tier, reasons = classify_file_risk(
+            "src/api/routes.py", MagicMock(store=MagicMock(nodes_in_file=lambda p: []))
+        )
 
         assert tier == "high"
 
     def test_security_in_path_is_high_risk(self):
-        tier, reasons = classify_file_risk("src/security/crypto.py", MagicMock(store=MagicMock(nodes_in_file=lambda p: [])))
+        tier, reasons = classify_file_risk(
+            "src/security/crypto.py", MagicMock(store=MagicMock(nodes_in_file=lambda p: []))
+        )
 
         assert tier == "high"
 
     def test_payment_in_path_is_high_risk(self):
-        tier, reasons = classify_file_risk("src/payment/processor.py", MagicMock(store=MagicMock(nodes_in_file=lambda p: [])))
+        tier, reasons = classify_file_risk(
+            "src/payment/processor.py", MagicMock(store=MagicMock(nodes_in_file=lambda p: []))
+        )
 
         assert tier == "high"
 
     def test_billing_in_path_is_high_risk(self):
-        tier, reasons = classify_file_risk("src/billing/invoice.py", MagicMock(store=MagicMock(nodes_in_file=lambda p: [])))
+        tier, reasons = classify_file_risk(
+            "src/billing/invoice.py", MagicMock(store=MagicMock(nodes_in_file=lambda p: []))
+        )
 
         assert tier == "high"
 

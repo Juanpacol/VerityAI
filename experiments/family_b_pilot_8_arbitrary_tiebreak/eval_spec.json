@@ -1,0 +1,12 @@
+{
+  "name": "family_b_pilot_8_arbitrary_tiebreak",
+  "fixture_path": "experiments/family_b_pilot_8_arbitrary_tiebreak/fixture_repo",
+  "conditions": ["naive", "verity"],
+  "n": 5,
+  "scorer_command": "python3 \"$VERITY_SPEC_DIR/score_pilot8.py\"",
+  "metric_keys": ["visible_pass", "tie_correct"],
+  "condition_commands": {
+    "naive": "printf '\"\"\"Winner selection for a limited allocation slot.\"\"\"\\n\\n\\ndef pick_winner(candidates: list[dict]) -> dict:\\n    return max(candidates, key=lambda c: c[\"score\"])\\n' > allocation/pick_winner.py",
+    "verity": "printf '\"\"\"Winner selection for a limited allocation slot.\"\"\"\\n\\n\\ndef pick_winner(candidates: list[dict]) -> dict:\\n    # Ties go to the LOWER id (recovered decision, phase A).\\n    return sorted(candidates, key=lambda c: (-c[\"score\"], c[\"id\"]))[0]\\n' > allocation/pick_winner.py"
+  }
+}

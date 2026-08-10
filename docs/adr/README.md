@@ -44,6 +44,7 @@ verdict was "this pilot could not have detected an effect."
 | [0024](0024-reality-check-expansion.md) | Can Agent Reality Check widen its recall without repeating ADR-0021's mistake? | Yes — `imports`, negation, multi-target relations, and constraints-as-evidence, each narrow and each declining to guess where the graph has no adjudicating edge |
 | [0025](0025-adaptive-context-prepass.md) | Can Verity proactively surface context without breaking the prune pipeline's invariants? | Yes, as a pre-pass only — `context/adaptive.py` + `memory/surface.py` merge into `ContextPipeline.run` unchanged; wiring and a measured pilot are stated as future work, not done here |
 | [0026](0026-risk-adaptive-verification.md) | Can verification depth scale with file risk, using only signals already in the graph? | Yes — `classify_file_risk` tiers by path convention / blast radius / fan-in / untested symbols; `rules_for_tier` gates rule depth; both builtin rules tagged with risk tiers and sql-injection caveat backfilled |
+| [0027](0027-retained-trial-evidence.md) | Did ADR-0022 actually close invariant 7? | **No** — six checkable failures, including a default output path inside `.gitignore` and a CLI that could not express the metric ADR-0022 claimed to reproduce. Evidence is now a diff against a hash-pinned fixture; unretained ⇒ unpublishable, mechanically |
 
 ## Pre-pivot (superseded)
 

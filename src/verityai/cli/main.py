@@ -395,19 +395,41 @@ def noise_floor(
 def eval_command(
     spec_path: Path = typer.Argument(..., help="JSON-encoded TrialSpec."),
     work_root: Path = typer.Option(
-        Path(".verity/eval"), "--work-root", help="Where trial directories are created."
+        Path(".verity/eval"),
+        "--work-root",
+        help="Scratch: where trial directories are created. Git-ignored.",
     ),
-    json_out: Path | None = typer.Option(None, "--json", help="Write the report as JSON."),
+    evidence_root: Path | None = typer.Option(
+        None,
+        "--evidence-root",
+        help="Where the retained, re-derivable artifact is written. "
+        "Defaults to experiments/<spec name>/evidence, which is tracked.",
+    ),
+    json_out: Path | None = typer.Option(
+        None, "--json", help="Also write the report to this path (report.json is written anyway)."
+    ),
 ) -> None:
     """Run a real, retained Family B trial harness. See docs/BENCHMARK_PROTOCOL.md.
 
     Not exposed over MCP -- measurement stays human-invoked, matching `bench`
     and `noise-floor`. `spec_path` is a JSON object matching `TrialSpec`
     (name, fixture_path, conditions, n, scorer_command, metric_keys,
-    condition_commands). Every trial's result is retained under
-    `work_root/<condition>_<n>/`, content-hashed, so the numbers this
-    command prints can be independently re-checked later -- the property
-    three prior pilots' numbers lacked (invariant 7, CLAUDE.md).
+    condition_commands).
+
+    Two roots, deliberately separate (ADR-0027):
+
+    - `--work-root` is scratch. Copied fixtures and `__pycache__`, rewritten
+      every run, git-ignored.
+    - `--evidence-root` is the artifact. Per trial: a `changes.diff` that
+      applies onto a fresh fixture copy with `git apply -p1`, the scorer's
+      own output, and a `manifest.jsonl` line pinned to the fixture's hash.
+      Plus the spec that produced the run and its report.
+
+    An earlier version of this command wrote only to the scratch root and
+    called the content hash the retention mechanism. That is what let three
+    pilots' numbers outlive their evidence: the ignored copy was the only
+    copy. A run given no evidence root still works, and is reported as NOT
+    PUBLISHABLE (invariant 7, CLAUDE.md).
     """
     from verityai.bench.eval import render_report, run_eval
     from verityai.bench.eval import to_json as eval_to_json
@@ -415,7 +437,17 @@ def eval_command(
     from verityai.core.models import TrialSpec
 
     spec = TrialSpec.model_validate_json(spec_path.read_text(encoding="utf-8"))
-    report = run_eval(spec, command_invoker(spec), work_root)
+    if evidence_root is None:
+        evidence_root = Path("experiments") / spec.name / "evidence"
+    report = run_eval(
+        spec,
+        command_invoker(spec),
+        work_root,
+        evidence_root=evidence_root,
+        # So a hidden scorer can live beside the spec rather than inside the
+        # fixture, where the agent under test could read it.
+        spec_dir=spec_path.parent,
+    )
 
     typer.echo("")
     typer.echo(render_report(report))

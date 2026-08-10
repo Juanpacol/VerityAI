@@ -116,14 +116,20 @@ class TestInvariantsSurviveThePipeline:
         plan = plan_budget(counter, health(), ratio=0.5)
         task = "rate limiting design"
         candidates = [
-            item(f"constraint for {task}: must not add a Redis dependency", kind=ItemKind.MEMORY, index=0)
+            item(
+                f"constraint for {task}: must not add a Redis dependency",
+                kind=ItemKind.MEMORY,
+                index=0,
+            )
         ]
         for c in candidates:
             measured = counter.count(c.content)
             c.token_count = measured.tokens
 
         decision = select(candidates, task=task, plan=plan)
-        assert decision.items, "fixture must actually rank the candidate in, or the test proves nothing"
+        assert decision.items, (
+            "fixture must actually rank the candidate in, or the test proves nothing"
+        )
         existing = [item(f"some ordinary agent message about {task}", index=1)]
 
         pipeline = ContextPipeline(counter=counter)

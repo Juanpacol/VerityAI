@@ -1,0 +1,172 @@
+{
+  "spec_name": "family_b_pilot_8_arbitrary_tiebreak",
+  "baseline_condition": "naive",
+  "publishable": false,
+  "warnings": [
+    "'visible_pass' noise floor for 'naive' is degenerate ([1.0, 1.0]) -- every repeat landed on the same value, so any between-condition difference reads as 'likely_real_difference' regardless of whether it is one. Treat this comparison as suggestive, not conclusive.",
+    "'tie_correct' noise floor for 'naive' is degenerate ([0.0, 0.0]) -- every repeat landed on the same value, so any between-condition difference reads as 'likely_real_difference' regardless of whether it is one. Treat this comparison as suggestive, not conclusive."
+  ],
+  "evidence_root": "experiments/family_b_pilot_8_arbitrary_tiebreak/evidence",
+  "comparisons": {
+    "verity": {
+      "visible_pass": {
+        "metric": "visible_pass",
+        "noise_floor_min": 1.0,
+        "noise_floor_max": 1.0,
+        "between_config_mean": 1.0,
+        "outside_noise_floor": false,
+        "conclusion": "indistinguishable_from_noise"
+      },
+      "tie_correct": {
+        "metric": "tie_correct",
+        "noise_floor_min": 0.0,
+        "noise_floor_max": 0.0,
+        "between_config_mean": 1.0,
+        "outside_noise_floor": true,
+        "conclusion": "likely_real_difference"
+      }
+    }
+  },
+  "trials": [
+    {
+      "trial_id": "naive_1",
+      "condition": "naive",
+      "scorer_exit_code": 0,
+      "metrics": {
+        "success": 1.0,
+        "visible_pass": 1.0,
+        "tie_correct": 0.0
+      },
+      "metrics_source": "scorer_json",
+      "metrics_source_reason": null,
+      "artifact_hash": "sha256:ad60a469abf566db8ed60341c88534e5e505de2f48763b2b1b6db897a13ad10c",
+      "failure_mode": null
+    },
+    {
+      "trial_id": "naive_2",
+      "condition": "naive",
+      "scorer_exit_code": 0,
+      "metrics": {
+        "success": 1.0,
+        "visible_pass": 1.0,
+        "tie_correct": 0.0
+      },
+      "metrics_source": "scorer_json",
+      "metrics_source_reason": null,
+      "artifact_hash": "sha256:ad60a469abf566db8ed60341c88534e5e505de2f48763b2b1b6db897a13ad10c",
+      "failure_mode": null
+    },
+    {
+      "trial_id": "naive_3",
+      "condition": "naive",
+      "scorer_exit_code": 0,
+      "metrics": {
+        "success": 1.0,
+        "visible_pass": 1.0,
+        "tie_correct": 0.0
+      },
+      "metrics_source": "scorer_json",
+      "metrics_source_reason": null,
+      "artifact_hash": "sha256:ad60a469abf566db8ed60341c88534e5e505de2f48763b2b1b6db897a13ad10c",
+      "failure_mode": null
+    },
+    {
+      "trial_id": "naive_4",
+      "condition": "naive",
+      "scorer_exit_code": 0,
+      "metrics": {
+        "success": 1.0,
+        "visible_pass": 1.0,
+        "tie_correct": 0.0
+      },
+      "metrics_source": "scorer_json",
+      "metrics_source_reason": null,
+      "artifact_hash": "sha256:ad60a469abf566db8ed60341c88534e5e505de2f48763b2b1b6db897a13ad10c",
+      "failure_mode": null
+    },
+    {
+      "trial_id": "naive_5",
+      "condition": "naive",
+      "scorer_exit_code": 0,
+      "metrics": {
+        "success": 1.0,
+        "visible_pass": 1.0,
+        "tie_correct": 0.0
+      },
+      "metrics_source": "scorer_json",
+      "metrics_source_reason": null,
+      "artifact_hash": "sha256:ad60a469abf566db8ed60341c88534e5e505de2f48763b2b1b6db897a13ad10c",
+      "failure_mode": null
+    },
+    {
+      "trial_id": "verity_1",
+      "condition": "verity",
+      "scorer_exit_code": 0,
+      "metrics": {
+        "success": 1.0,
+        "visible_pass": 1.0,
+        "tie_correct": 1.0
+      },
+      "metrics_source": "scorer_json",
+      "metrics_source_reason": null,
+      "artifact_hash": "sha256:4b2c13bb5f8290631ed143f9117ce1ff684771c746a88c6f89a17615742657d6",
+      "failure_mode": null
+    },
+    {
+      "trial_id": "verity_2",
+      "condition": "verity",
+      "scorer_exit_code": 0,
+      "metrics": {
+        "success": 1.0,
+        "visible_pass": 1.0,
+        "tie_correct": 1.0
+      },
+      "metrics_source": "scorer_json",
+      "metrics_source_reason": null,
+      "artifact_hash": "sha256:4b2c13bb5f8290631ed143f9117ce1ff684771c746a88c6f89a17615742657d6",
+      "failure_mode": null
+    },
+    {
+      "trial_id": "verity_3",
+      "condition": "verity",
+      "scorer_exit_code": 0,
+      "metrics": {
+        "success": 1.0,
+        "visible_pass": 1.0,
+        "tie_correct": 1.0
+      },
+      "metrics_source": "scorer_json",
+      "metrics_source_reason": null,
+      "artifact_hash": "sha256:4b2c13bb5f8290631ed143f9117ce1ff684771c746a88c6f89a17615742657d6",
+      "failure_mode": null
+    },
+    {
+      "trial_id": "verity_4",
+      "condition": "verity",
+      "scorer_exit_code": 0,
+      "metrics": {
+        "success": 1.0,
+        "visible_pass": 1.0,
+        "tie_correct": 1.0
+      },
+      "metrics_source": "scorer_json",
+      "metrics_source_reason": null,
+      "artifact_hash": "sha256:4b2c13bb5f8290631ed143f9117ce1ff684771c746a88c6f89a17615742657d6",
+      "failure_mode": null
+    },
+    {
+      "trial_id": "verity_5",
+      "condition": "verity",
+      "scorer_exit_code": 0,
+      "metrics": {
+        "success": 1.0,
+        "visible_pass": 1.0,
+        "tie_correct": 1.0
+      },
+      "metrics_source": "scorer_json",
+      "metrics_source_reason": null,
+      "artifact_hash": "sha256:4b2c13bb5f8290631ed143f9117ce1ff684771c746a88c6f89a17615742657d6",
+      "failure_mode": null
+    }
+  ]
+}

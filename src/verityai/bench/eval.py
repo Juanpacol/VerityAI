@@ -24,6 +24,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from verityai.bench.evidence import read_manifest, write_run_evidence
 from verityai.bench.repetition import compare_to_noise_floor, summarize_metric_variance
 from verityai.bench.trial import metrics_by_condition, run_trials
 from verityai.core.models import TrialRecord, TrialSpec
@@ -43,6 +44,10 @@ class EvalReport:
     baseline_condition: str
     comparisons: dict[str, dict[str, dict[str, Any]]] = field(default_factory=dict)
     warnings: list[str] = field(default_factory=list)
+    # Where the re-derivable artifact was written, or None for a run that
+    # retained nothing. Reported rather than inferred, so a reader of the
+    # report never has to guess whether evidence exists.
+    evidence_root: str | None = None
 
     @property
     def is_publishable(self) -> bool:
@@ -65,6 +70,8 @@ def run_eval(
     work_root: Path,
     metric_fn=None,
     classify_failure=None,
+    evidence_root: Path | None = None,
+    spec_dir: Path | None = None,
 ) -> EvalReport:
     """Run every trial in `spec`, then compare every non-baseline condition
     against the first condition listed (the baseline / "within" repeat).
@@ -72,6 +79,11 @@ def run_eval(
     `spec.conditions` order matters: `conditions[0]` is the configuration
     repeated to establish the noise floor (`docs/BENCHMARK_PROTOCOL.md`
     step 1); every other condition is compared against it (steps 2-4).
+
+    `evidence_root` is where the re-derivable artifact is written. Omitting
+    it is allowed -- an in-process caller exploring a spec has no reason to
+    litter the tree -- but such a run is reported as not publishable, which
+    is the honest outcome rather than a special case.
     """
     records = run_trials(
         spec,
@@ -79,6 +91,8 @@ def run_eval(
         work_root,
         metric_fn=metric_fn,
         classify_failure=classify_failure,
+        evidence_root=evidence_root,
+        spec_dir=spec_dir,
     )
     grouped = metrics_by_condition(records)
     baseline = spec.conditions[0]
@@ -90,9 +104,43 @@ def run_eval(
             f"n={spec.n} per condition; need >= {_MIN_TRIALS_FOR_A_CLAIM} to support a claim"
         )
 
+    # The gate that gives invariant 7 teeth. Before this, a run that retained
+    # nothing printed the same publishable-looking report as one that
+    # retained everything -- which is how three pilots' numbers outlived
+    # their evidence (ADR-0027).
+    if evidence_root is None:
+        warnings.append(
+            "no evidence root: this run retained no re-derivable artifact, so its "
+            "numbers must not be published (invariant 7, CLAUDE.md)"
+        )
+    else:
+        entries = read_manifest(evidence_root)
+        undecodable = {
+            file["path"] for entry in entries for file in entry.get("unreproducible_files", [])
+        }
+        if undecodable:
+            warnings.append(
+                f"{len(undecodable)} file(s) could not be represented in a diff "
+                f"({', '.join(sorted(undecodable)[:3])}...): the retained artifact cannot "
+                "fully reconstruct these trials"
+            )
+
     for record in records:
         if not record.artifact_hash:
             warnings.append(f"trial {record.trial_id!r} has no artifact hash -- unretained result")
+
+    # A spec can ask for a metric the scorer never reports -- which used to
+    # print `insufficient_data` inside an otherwise publishable report.
+    # "We measured nothing" and "we measured nothing and said so" are
+    # different claims.
+    for metric in spec.metric_keys:
+        missing = [r.trial_id for r in records if metric not in r.metrics]
+        if missing:
+            warnings.append(
+                f"metric {metric!r} was not reported for {len(missing)} of {len(records)} "
+                "trials; have the scorer print a JSON object on stdout, or pass a "
+                "metric_fn -- comparisons for it are absent, not null results"
+            )
 
     comparisons: dict[str, dict[str, dict[str, Any]]] = {}
     for condition in spec.conditions[1:]:
@@ -114,13 +162,22 @@ def run_eval(
                 )
         comparisons[condition] = per_metric
 
-    return EvalReport(
+    report = EvalReport(
         spec_name=spec.name,
         records=records,
         baseline_condition=baseline,
         comparisons=comparisons,
         warnings=warnings,
+        evidence_root=str(evidence_root) if evidence_root is not None else None,
     )
+
+    # Written last and unconditionally: the spec and the report belong beside
+    # the per-trial evidence, or a reader has the numbers without the thing
+    # that produced them.
+    if evidence_root is not None:
+        write_run_evidence(evidence_root, spec, to_json(report))
+
+    return report
 
 
 def render_report(report: EvalReport) -> str:
@@ -172,6 +229,16 @@ def render_report(report: EvalReport) -> str:
             lines.append(f"    {mode}: {count}")
         lines.append("")
 
+    if report.evidence_root:
+        lines.append(f"  Evidence retained in {report.evidence_root}")
+        lines.append(
+            "    per trial: changes.diff (git apply -p1 onto a fresh fixture copy), "
+            "scorer.txt, and a manifest.jsonl line pinned to the fixture's hash."
+        )
+    else:
+        lines.append("  Evidence retained: NONE -- no evidence root was given.")
+    lines.append("")
+
     if report.is_publishable:
         lines.append("  This eval run meets the publication bar.")
     else:
@@ -194,6 +261,7 @@ def to_json(report: EvalReport) -> dict[str, Any]:
         "baseline_condition": report.baseline_condition,
         "publishable": report.is_publishable,
         "warnings": report.warnings,
+        "evidence_root": report.evidence_root,
         "comparisons": report.comparisons,
         "trials": [
             {
@@ -201,6 +269,8 @@ def to_json(report: EvalReport) -> dict[str, Any]:
                 "condition": record.condition,
                 "scorer_exit_code": record.scorer_exit_code,
                 "metrics": record.metrics,
+                "metrics_source": record.metrics_source,
+                "metrics_source_reason": record.metrics_source_reason,
                 "artifact_hash": record.artifact_hash,
                 "failure_mode": (
                     record.failure_mode.value if record.failure_mode is not None else None
