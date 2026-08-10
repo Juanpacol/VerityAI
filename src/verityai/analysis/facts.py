@@ -1,24 +1,21 @@
-"""AST-based fact extraction for the two KG security rules whose PRE/POST
-conditions describe patterns Z3 cannot reason about at all: `SQL Injection
-Prevention` and `No Check-Then-Act Race` (see
-`kg/seed_data/security_rules.json`). Both rules have existed since the
-project's seed data was written, but nothing previously extracted the
-facts their `formal_spec` PRE-conditions name (`user_input is untrusted`,
-`check_then_act_on_shared_resource`) from real code -- they were prompt
-guidance only, never independently checked. This module is T6's prototype
-answer to "is pattern-matching enough to close that gap:" it extracts
-fact strings that `symbolic.rule_engine.RuleEngine` can consume via its
-existing (pre-existing, unmodified) forward-chaining machinery.
+"""AST-based fact extraction for two security patterns: SQL injection and
+check-then-act races.
 
-Deliberately narrow, not a general SQLi/race-condition detector -- see the
-docstring on each function for exactly what it catches and what it
-doesn't. Z3 itself cannot help here: microsoft/z3guide's own Strings
-theory page (fetched as real evidence, see
-`docs/evidence/z3_docs/z3_docs_d192712d2ab1.json`) states its string
-solver is "an incomplete heuristic solver" and the combined theory "is
-not decidable anyway" -- arbitrary reasoning about untrusted string flow
-into a query is not something a formal solver settles, so a narrower,
-honest pattern-matcher is the deliberate alternative, not a workaround.
+Emits fact strings (`user_input is untrusted`,
+`check_then_act_on_shared_resource`) that
+`reliability.rule_engine.RuleEngine` consumes through its forward-chaining
+machinery, and that `reliability.security` turns into findings.
+
+Deliberately narrow, not a general SQLi or race detector -- each function's
+own docstring states exactly what it catches and what it misses. That
+narrowness is the design, not a shortcut: this module is what remained
+after T6 found that formal methods could not cover these patterns at all.
+Z3's own documentation describes its string solver as "an incomplete
+heuristic solver" over a combined theory that "is not decidable anyway",
+so tracking untrusted string flow into a query is not something a solver
+settles. A narrow pattern-matcher that declares its blind spots is the
+honest alternative. See `docs/RESEARCH_FINDINGS_LEGACY.md` (T6) for the
+finding, and ADR-0005 for the pivot that followed it.
 """
 
 import ast

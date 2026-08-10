@@ -1,7 +1,7 @@
 """Telling a real metric difference apart from ordinary run-to-run noise.
 
-Rescued from `_quarantine/repetition.py` and generalized. The original grew
-out of a real finding in the pre-pivot T1-T6 research programme: a single
+Carried over from the pre-pivot tree and generalized (see ADR-0010). The
+original grew out of a real finding in the T1-T6 research programme: a single
 run's outcome comparison cannot tell a real mechanism effect apart from
 `temperature=0.7` sampling variance across independent runs — checked by hand
 once, then made a reusable library so the check would actually get applied

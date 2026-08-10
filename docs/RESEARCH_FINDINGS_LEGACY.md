@@ -1,5 +1,17 @@
 # Research Findings — T1-T6 Synthesis (Fase 6)
 
+> **Archival note (2026-08-09).** This document survives on `main` because
+> the harness's invariants still cite T1, T2, T3 and T6 as their reasons
+> (see `CLAUDE.md`, "Where the invariants come from"). Everything it links
+> to — `docs/PHASE_*.md`, `docs/CASE_STUDY.md`,
+> `docs/VERIFICATION_SCOPE.md`, `docs/T5_HUMAN_EVAL_PROTOCOL.md`, and the
+> 1,199-file `docs/evidence/` corpus — describes the pre-pivot Z3
+> architecture and was moved off `main` to keep the working tree about the
+> system that exists. All of it is intact on the `legacy/pre-pivot-research`
+> branch and at the `pre-harness-pivot` tag; links below that 404 resolve
+> there. See [ADR-0005](adr/0005-agentic-harness-pivot.md) for the pivot
+> itself.
+
 ## Why this document exists
 
 After the hybrid-retrieval-trace-view work merged to `main`
