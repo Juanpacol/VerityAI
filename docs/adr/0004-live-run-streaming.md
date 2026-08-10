@@ -1,8 +1,10 @@
 # ADR-0004 — Streaming the pipeline live (SSE) and running T5 through it
 
-## Status
+- **Status**: Superseded by [ADR-0005](0005-agentic-harness-pivot.md)
+- **Scope**: SSE streaming over the HTTP API
 
-Accepted (live-view phase).
+> Pre-pivot. There is no HTTP API in the harness; the interfaces are a CLI
+> and an MCP server.
 
 ## Context
 

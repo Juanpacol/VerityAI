@@ -1,6 +1,8 @@
 # ADR-0007: Backtick-only claim extraction, and heuristics that say they are heuristics
 
-- **Status**: Accepted
+- **Status**: Accepted. Measured in
+  [ADR-0018](0018-consistency-engine-first-measurement.md), which found
+  100% recall on invented symbol names and three real bugs in this design.
 - **Date**: 2026-08-09
 - **Context**: Phase 3 of the harness (ADR-0005), built directly on the graph
   from ADR-0006.

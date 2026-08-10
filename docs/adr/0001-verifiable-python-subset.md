@@ -1,9 +1,14 @@
 # ADR-0001: Verifiable Python Subset Definition
 
-**Date**: 2026-07-13
-**Status**: ACCEPTED
-**Author**: Juan Pablo Botero Espinosa
-**Scope**: Phase 1 (Z3 AST converter scope)
+- **Status**: Superseded by [ADR-0005](0005-agentic-harness-pivot.md)
+- **Date**: 2026-07-13
+- **Author**: Juan Pablo Botero Espinosa
+- **Scope**: Phase 1 (Z3 AST converter scope)
+
+> Pre-pivot. The Z3 converter this scopes was removed when the project
+> became an agentic harness. Kept because T3 measured this subset's real
+> coverage (6.1% of HumanEval), and that finding still justifies a live
+> invariant — see `docs/RESEARCH_FINDINGS_LEGACY.md`.
 
 ## Problem
 

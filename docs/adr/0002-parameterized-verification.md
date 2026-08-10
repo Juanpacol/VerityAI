@@ -1,9 +1,11 @@
 # ADR-0002 — Verifying asserts over function parameters
 
-## Status
+- **Status**: Superseded by [ADR-0005](0005-agentic-harness-pivot.md)
+- **Scope**: Phase 3 (Z3 AST converter)
 
-Accepted (Phase 3, following user request to close the gap flagged in
-`docs/PHASE_2_REVIEW.md` and `docs/PHASE_3_METHODOLOGY.md`).
+> Pre-pivot. The AST-to-Z3 converter described here no longer exists.
+> Documents it links to were archived to the `legacy/pre-pivot-research`
+> branch.
 
 ## Context
 

@@ -23,9 +23,12 @@ output.
 
 ```
 ┌──────────────────────────────────────────────┐
-│ INTERFACE     → CLI + MCP server             │
+│ INTERFACE     → CLI + MCP server             │  working
 ├──────────────────────────────────────────────┤
-│ RELIABILITY   → architecture, tests, security│  working
+│ MEASUREMENT   → bench (Family A/B protocol)  │  working
+├──────────────────────────────────────────────┤
+│ RELIABILITY   → architecture, security       │  working
+│                 (over analysis/ AST facts)   │
 ├──────────────────────────────────────────────┤
 │ CONSISTENCY   → claims vs evidence           │  working
 ├──────────────────────────────────────────────┤
@@ -39,6 +42,11 @@ output.
 └──────────────────────────────────────────────┘
 ```
 
+`bench/` and `analysis/` are load-bearing, not scaffolding: `bench/` carries
+every Family A and Family B number this project publishes (see
+`docs/MEASUREMENTS.md`), and `analysis/` supplies the AST facts
+`reliability/security.py` reasons over.
+
 ## Dependency rule
 
 `core/` depends on nothing but Pydantic, and every engine depends on `core/`.
@@ -51,6 +59,7 @@ symbolic layer. Same principle, different contents.
 
 ```
 core/                        (no deps)
+  ├─ analysis/  (no deps -- pure AST, stdlib only)
   ├─ context/   (core)
   ├─ memory/    (core, context.tokenizer)   -- handoff needs a token budget
   ├─ graph/     (core, context.rank)        -- query.py reuses the BM25 ranker
@@ -84,6 +93,7 @@ src/verityai/
 ├── context/
 │   ├── tokenizer.py      TokenCounter — always reports its method
 │   ├── ingest.py         transcript (JSON or text) -> ContextItem[]
+│   ├── ingest_claude_code.py  Claude Code session JSONL -> ContextItem[]
 │   ├── classify.py       five relevance buckets, each with a reason
 │   ├── rank.py           BM25 + optional embeddings, fused with RRF
 │   ├── prune.py          the 7-stage pipeline
@@ -100,16 +110,16 @@ src/verityai/
 │   ├── claims.py         backtick-quoted spans + closed relation phrases
 │   └── check.py          symbol/relation/file checks + decision resurfacing
 ├── reliability/
-│   ├── rule_engine.py    forward-chaining engine (rescued from T6/quarantine)
+│   ├── rule_engine.py    forward-chaining engine (carried over from T6)
 │   ├── security.py       SQLi + check-then-act races; every rule states its blind spot
 │   ├── architecture.py   import-policy check against the real graph
 │   └── report.py         shared renderer for both
 ├── bench/
 │   ├── deterministic.py  Family A benchmarks, self-disqualifying
-│   └── repetition.py     noise floor / Family B statistics (rescued, generalized)
-├── analysis/facts.py     AST fact extraction (rescued from T6)
+│   └── repetition.py     noise floor / Family B statistics (generalized, ADR-0010)
+├── analysis/facts.py     AST fact extraction (carried over from T6)
 ├── cli/main.py           the verity command
-├── mcp/server.py         MCP server — 12 tools over the same core
+├── mcp/server.py         MCP server — 19 tools over the same core
 ```
 
 ### `.verity/` on disk
@@ -170,7 +180,7 @@ has the detail; the short version:
 ## Development
 
 ```bash
-pytest tests/           # 506 tests, no network, no services, no fixtures needed
+pytest tests/           # 520 tests, no network, no services, no fixtures needed
 ruff check src/ tests/
 ruff format src/ tests/
 ```

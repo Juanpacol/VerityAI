@@ -1,8 +1,11 @@
 # ADR-0003 — Hybrid (lexical + semantic) rule retrieval
 
-## Status
+- **Status**: Superseded by [ADR-0005](0005-agentic-harness-pivot.md)
+- **Scope**: Knowledge-graph rule retrieval
 
-Accepted (portfolio-differentiation phase, `feat/hybrid-retrieval-trace-view`).
+> Pre-pivot. The Neo4j rule KG and `api/rest.py` this describes were both
+> removed at the pivot. The BM25 ranking idea survived, rewritten over the
+> code graph — see [ADR-0006](0006-code-graph-storage.md).
 
 ## Context
 

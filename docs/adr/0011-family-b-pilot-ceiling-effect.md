@@ -1,6 +1,8 @@
 # ADR-0011: Family B pilot — a ceiling effect, and what it actually tells us
 
-- **Status**: Accepted
+- **Status**: Accepted. Its *pilot design* is superseded by
+  [ADR-0013](0013-numeric-recall-pilot.md), which corrects the ceiling
+  this one hit; the finding recorded here stands.
 - **Date**: 2026-08-09
 - **Context**: closing the last gap in `docs/BENCHMARK_PROTOCOL.md` — does
   Verity change a task's *outcome*, as opposed to how many tokens a
