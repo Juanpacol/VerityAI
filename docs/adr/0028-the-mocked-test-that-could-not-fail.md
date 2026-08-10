@@ -106,12 +106,15 @@ suite.
 - `tests/unit/test_reliability_risk.py` now runs `ingest_repo` per test. It
   costs milliseconds on an 8-file tree.
 - **Not fixed here, and now visible:** `_HIGH_RISK_PATH_MARKERS` substring-matches
-  the whole path, so `src/verityai/graph/query.py` tiers *high* on `"api"`.
-  That is a real false positive. It is surfaced rather than quietly narrowed
+  the whole path rather than its segments, so `"api"` fires on any path
+  containing those three letters — `src/rapid/…`, `src/therapist/…`,
+  `src/scrapility/…` all tier *high*. Verified by running `_path_signal`
+  over each; no file in this repository happens to trip it, so the defect is
+  latent here rather than absent. It is surfaced instead of quietly narrowed
   because choosing between substring and path-segment matching deserves its
   own decision and its own test, and `verity reliability risk` printing the
-  matched marker is how a human finds out (the same discipline
-  `security.py`'s `RULE_CAVEATS` already applies to its own rules).
+  matched marker is how a human finds out — the same discipline
+  `security.py`'s `RULE_CAVEATS` already applies to its own rules.
 
 ## The lesson worth keeping
 

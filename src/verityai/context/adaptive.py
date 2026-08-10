@@ -68,6 +68,20 @@ def should_surface(health: ContextHealth) -> ContextTrigger | None:
     return None
 
 
+def no_trigger_reason(health: ContextHealth) -> str:
+    """Why `should_surface` declined.
+
+    The negative case needs a reason too. `should_surface` returning `None`
+    is itself a decision a user is entitled to see the basis for, and a bare
+    "nothing surfaced" reads as "there was nothing to surface" rather than
+    "the context did not need it" -- two different claims (invariant 5).
+    """
+    return (
+        f"window usage {health.window_usage:.0%} < {_HIGH_WINDOW_USAGE:.0%} "
+        f"and relevant ratio {health.relevant_ratio:.0%} > {_LOW_RELEVANT_RATIO:.0%}"
+    )
+
+
 def plan_budget(
     counter: TokenCounter,
     health: ContextHealth,
@@ -98,8 +112,15 @@ def select(
     task: str,
     plan: BudgetPlan,
     ranker: ContextRanker | None = None,
+    trigger: ContextTrigger | None = None,
 ) -> SurfaceDecision:
     """Rank `candidates` against `task` and keep what fits `plan.budget`.
+
+    `trigger` is carried through onto the returned decision so the record is
+    complete where it is built. `SurfaceDecision.trigger` existed from the
+    start but nothing populated it, leaving every consumer to patch the field
+    after the fact -- which is how a record ends up complete in one caller
+    and empty in the next.
 
     Requires a non-empty `task`: `prune.py`'s `_enforce_budget` sorts by
     `rank_score`, which is only populated when ranking actually ran against
@@ -119,13 +140,14 @@ def select(
         return SurfaceDecision(
             items=[],
             plan=plan,
+            trigger=trigger,
             degraded_reason=(
                 "no task provided -- ranking against nothing would score every "
                 "candidate zero and select in an undefined order"
             ),
         )
     if not candidates:
-        return SurfaceDecision(items=[], plan=plan, degraded_reason=None)
+        return SurfaceDecision(items=[], plan=plan, trigger=trigger, degraded_reason=None)
 
     ranker = ranker or ContextRanker()
     ranking = ranker.rank(task, candidates)
@@ -141,5 +163,6 @@ def select(
     return SurfaceDecision(
         items=selected,
         plan=plan,
+        trigger=trigger,
         degraded_reason=ranking.degraded_reason,
     )

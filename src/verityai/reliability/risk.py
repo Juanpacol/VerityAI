@@ -28,6 +28,13 @@ from verityai.graph.query import GraphQuery
 # regardless of what the graph says about it -- a deliberately small,
 # explicit list rather than a heuristic guess, the same discipline
 # `_RELATIONS` in `consistency/claims.py` uses for relation phrases.
+#
+# Declared blind spot: these match anywhere in the path, not on segment
+# boundaries, so "api" fires inside `src/rapid/`, `src/therapist/` and
+# `src/scrapility/`. Over-flagging is the safe direction for a verification
+# *depth*, and `verity reliability risk` always prints which marker matched
+# so a human can see it happen -- but it is a false positive, and ADR-0028
+# records it as one rather than leaving it to be discovered.
 _HIGH_RISK_PATH_MARKERS = ("auth", "migrations", "api", "security", "payment", "billing")
 
 _TIER_ORDER = {"low": 0, "medium": 1, "high": 2}

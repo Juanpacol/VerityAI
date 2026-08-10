@@ -90,6 +90,20 @@ specific mechanism in `prune.py`:
   actually necessary before any claim about this mechanism's effect could
   be published, per invariant 7 (Phase 0) — but they are future work, not
   claimed as complete by adding these three functions.
+
+  **Update, 2026-08-10:** the CLI half is now done — `verity context
+  --adaptive [--dry-run]`. Wiring it surfaced two gaps in this ADR's own
+  design, both invariant-5 violations that only became visible once
+  something had to *explain* the decision to a user: `should_surface`
+  returning `None` carried no reason (now `no_trigger_reason`), and
+  `SurfaceDecision.trigger` existed but nothing ever populated it (now a
+  `select(trigger=...)` parameter, so the record is complete where it is
+  built rather than patched by each consumer). The CLI also has to compute
+  `critical_retention` against the *merged* list rather than the original
+  transcript: surfaced items are the CRITICAL ones, so the original baseline
+  would exclude exactly what is at risk and the check would pass vacuously.
+  MCP remains deliberately unwired, and **the pilot remains not run** — no
+  claim about this mechanism's effect is made anywhere.
 - The threshold constants (`_HIGH_WINDOW_USAGE`, `_LOW_RELEVANT_RATIO`,
   `_DEFAULT_BUDGET_RATIO`) are placeholders pending exactly that pilot —
   they should not be read as tuned values.

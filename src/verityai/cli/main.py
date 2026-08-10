@@ -109,6 +109,78 @@ def ingest(
     typer.echo(render_health(compute_health(classified, counter=counter)))
 
 
+def _adaptive_prepass(items, task: str, counter) -> list:
+    """Decide whether to surface memory into this context, and say why.
+
+    Returns the items to prepend -- possibly empty. Every branch prints its
+    own reasoning: a trigger with the threshold it crossed, a budget with its
+    `basis`, each surfaced record with its source id, and the count of what
+    did not fit. "Nothing surfaced" and "nothing to surface" are different
+    outcomes and are reported differently (invariant 5).
+    """
+    from verityai.context.adaptive import no_trigger_reason, plan_budget, select, should_surface
+    from verityai.context.classify import classify_all
+    from verityai.memory.surface import candidates_for
+
+    if not task:
+        typer.secho(
+            "  --adaptive requires --task: selection ranks candidates against the task, "
+            "and with no task every candidate scores zero and drop order collapses to "
+            "newest-first.",
+            fg=typer.colors.RED,
+            err=True,
+        )
+        raise typer.Exit(2)
+
+    measured = [ContextPipeline(counter=counter).measure(item, n) for n, item in enumerate(items)]
+    health = compute_health(classify_all(measured), counter=counter)
+
+    typer.echo("\nADAPTIVE PRE-PASS\n")
+    typer.echo(render_health(health))
+    typer.echo("")
+
+    trigger = should_surface(health)
+    if trigger is None:
+        typer.echo(f"  no trigger     {no_trigger_reason(health)}")
+        typer.echo("  nothing surfaced; the pipeline below ran on the transcript alone")
+        return []
+
+    store = MemoryStore.discover()
+    if store is None:
+        typer.secho(
+            "  degraded: triggered, but no .verity/ was found -- there is nothing to "
+            "surface from. Run `verity init` first.",
+            fg=typer.colors.YELLOW,
+        )
+        return []
+
+    candidates = candidates_for(store, task, counter)
+    plan = plan_budget(counter, health)
+    decision = select(candidates, task, plan, trigger=trigger)
+
+    typer.echo(f"  trigger        {trigger.reason}")
+    typer.echo(f"  candidates     {len(candidates)} records from .verity/state")
+    typer.echo(f"  budget         {plan.budget:,} of {plan.window:,} tokens")
+    typer.echo(f"  basis          {plan.basis}")
+    if decision.degraded_reason:
+        typer.secho(f"  degraded       {decision.degraded_reason}", fg=typer.colors.YELLOW)
+
+    surfaced_tokens = sum(item.token_count for item in decision.items)
+    typer.echo(
+        f"  surfaced       {len(decision.items)} of {len(candidates)} candidates, "
+        f"{surfaced_tokens:,} tokens  [{counter.method}]"
+    )
+    typer.echo("")
+    for n, item in enumerate(decision.items, start=1):
+        preview = " ".join(item.content.split())[:72]
+        typer.echo(f"    {n:>2}. {item.token_count:>5} tok  {preview}")
+    withheld = len(candidates) - len(decision.items)
+    if withheld:
+        typer.echo(f"\n    withheld     {withheld} candidate(s) ranked below the budget cut")
+
+    return decision.items
+
+
 @app.command()
 def context(
     source: str | None = typer.Argument(None, help="Transcript file, or - for stdin."),
@@ -116,13 +188,35 @@ def context(
     task: str = typer.Option("", "--task", "-t", help="Task description, for ranking."),
     model: str | None = typer.Option(None, "--model", help="Model, for window sizing."),
     out: Path | None = typer.Option(None, "--out", "-o", help="Write pruned context here."),
+    adaptive: bool = typer.Option(
+        False,
+        "--adaptive",
+        help="Before pruning, decide from context health whether to surface memory "
+        "records into the context. Requires --task and a .verity/ directory.",
+    ),
+    dry_run: bool = typer.Option(
+        False, "--dry-run", help="With --adaptive: show what would be surfaced, then stop."
+    ),
 ) -> None:
-    """Prune a context toward a budget and report what it cost."""
+    """Prune a context toward a budget and report what it cost.
+
+    With `--adaptive`, memory records may be surfaced into the context first.
+    That is strictly a pre-pass: the surfaced items are merged into the input
+    list and the whole thing goes through the same `ContextPipeline.run`.
+    Nothing is injected between stages, because the token ledger chains only
+    because `_stage` is its sole writer (ADR-0025, invariant 2).
+    """
     raw = _read_input(source)
     counter = TokenCounter(model=model)
     items = load(raw)
 
-    result = ContextPipeline(counter=counter).run(items, task=task, budget=budget)
+    surfaced = _adaptive_prepass(items, task, counter) if adaptive else []
+    if adaptive and dry_run:
+        raise typer.Exit(0)
+
+    # Merged, then pruned once -- never pruned separately and stitched.
+    merged = surfaced + items
+    result = ContextPipeline(counter=counter).run(merged, task=task, budget=budget)
 
     typer.echo("\nCONTEXT PIPELINE\n")
     typer.echo(f"  {'stage':<22} {'items':>12} {'tokens':>16} {'saved':>9}")
@@ -140,7 +234,12 @@ def context(
     )
     typer.echo(f"  Method:  {result.token_method}")
 
-    retention = critical_retention(items, result.items)
+    # Measured against `merged`, not the original transcript. Surfaced items
+    # are ItemKind.MEMORY, which classify.py protects as CRITICAL
+    # unconditionally -- comparing against `items` would exclude exactly the
+    # items most likely to be dropped, so the check would pass vacuously on
+    # the only case worth checking.
+    retention = critical_retention(merged, result.items)
     if retention < 1.0:
         # This is a bug in the budget stage, not a tuning outcome. Say so.
         typer.secho(
@@ -680,6 +779,33 @@ reliability_app = typer.Typer(help="Architecture and security checks over the co
 app.add_typer(reliability_app, name="reliability")
 
 
+def _changed_python_files(root: Path) -> list[str]:
+    """Python files `git diff --name-only HEAD` reports, as git prints them.
+
+    git already emits repo-relative, `./`-free paths -- exactly the form the
+    ingester stored -- so these are passed through untouched. Resolving them
+    "helpfully" would break every graph lookup silently (ADR-0028).
+    """
+    import subprocess
+
+    result = subprocess.run(
+        ["git", "diff", "--name-only", "HEAD"],
+        cwd=root,
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        first_line = (result.stderr or "").strip().splitlines()
+        typer.secho(
+            "  degraded: could not read changed files from git "
+            f"({first_line[0] if first_line else 'unknown error'}) -- pass paths explicitly.",
+            fg=typer.colors.YELLOW,
+            err=True,
+        )
+        raise typer.Exit(1)
+    return [line for line in result.stdout.splitlines() if line.endswith(".py")]
+
+
 @reliability_app.command("security")
 def reliability_security(
     root: Path | None = typer.Argument(None, help="Repository root. Defaults to cwd."),
@@ -702,6 +828,91 @@ def reliability_security(
 
     if report.violations:
         raise typer.Exit(1)
+
+
+@reliability_app.command("risk")
+def reliability_risk(
+    paths: list[str] = typer.Argument(
+        None, help="Changed files, repo-relative as `verity graph build` stored them."
+    ),
+    changed: bool = typer.Option(
+        False, "--changed", help="Tier what `git diff --name-only HEAD` reports instead."
+    ),
+    show_rules: bool = typer.Option(
+        False, "--show-rules", help="Also show which built-in security rules each tier admits."
+    ),
+) -> None:
+    """Tier changed files low/medium/high from graph signals, with reasons.
+
+    Blast radius, fan-in, untested public symbols and path convention -- all
+    already in the code graph, so `verity graph build` must have run. A tier
+    is a *verification depth*, not a finding: this never exits non-zero on a
+    high tier.
+
+    It also does not gate anything yet, deliberately. Both built-in security
+    rules are medium/high tier, so `rules_for_tier("low")` admits none of
+    them -- a risk-gated scan would check nothing at all on a low-tier file
+    while reporting no violations, which is the T6 mistake (a checker that
+    cannot fail) shipped on purpose. `--show-rules` prints that hole instead
+    of hiding it behind a gate. See ADR-0026.
+    """
+    from verityai.graph.query import GraphQuery
+    from verityai.reliability.risk import classify_paths, rules_for_tier
+    from verityai.reliability.security import BUILTIN_SECURITY_RULES
+
+    store = _require_store()
+    root = store.root.parent
+
+    targets = _changed_python_files(root) if changed else [p for p in (paths or []) if p]
+    if not targets:
+        typer.secho(
+            "  Nothing to tier. Pass paths, or --changed to read them from git.",
+            fg=typer.colors.YELLOW,
+            err=True,
+        )
+        raise typer.Exit(2)
+
+    with _open_graph() as graph:
+        stats = graph.stats()
+        if not stats.get("nodes.total"):
+            # Refusing beats answering: with an empty graph every file tiers
+            # `low` for lack of signals, which reads as "nothing needs deep
+            # verification" (ADR-0028).
+            typer.secho(
+                "  degraded: the code graph is empty -- run `verity graph build` first. "
+                "Every file would tier 'low' for lack of signals, which would read as a "
+                "clean verdict rather than an absent one.",
+                fg=typer.colors.YELLOW,
+                err=True,
+            )
+            raise typer.Exit(1)
+        verdicts = classify_paths(targets, GraphQuery(graph), repo_root=root)
+
+    typer.echo("\nRISK TIERS\n")
+    order = {"high": 0, "medium": 1, "low": 2}
+    colors = {"high": typer.colors.RED, "medium": typer.colors.YELLOW, "low": typer.colors.GREEN}
+    for path, (tier, reasons) in sorted(verdicts.items(), key=lambda kv: (order[kv[1][0]], kv[0])):
+        typer.secho(f"  [{tier.upper():<6}] {path}", fg=colors[tier])
+        for reason in reasons:
+            typer.echo(f"            {reason}")
+        typer.echo("")
+
+    typer.echo(
+        f"  {len(verdicts)} file(s) tiered against {stats['nodes.total']:,} nodes / "
+        f"{stats['edges.total']:,} edges."
+    )
+
+    if show_rules:
+        typer.echo("\n  RULES ADMITTED BY TIER")
+        total = len(BUILTIN_SECURITY_RULES)
+        for tier in ("high", "medium", "low"):
+            admitted = rules_for_tier(tier, BUILTIN_SECURITY_RULES)
+            names = ", ".join(f"{r.id}[{r.risk_tier}]" for r in admitted) or "-- nothing"
+            typer.echo(f"    {tier:<7} {len(admitted)}/{total}   {names}")
+        typer.echo(
+            "\n    A low-tier file would currently be checked by no rule at all, which is "
+            "why tiers are reported and not yet used to gate scans (ADR-0026)."
+        )
 
 
 @reliability_app.command("architecture")

@@ -123,6 +123,20 @@ class TestPathConvention:
         assert _reasons_mentioning(reasons, "auth")
         assert not _reasons_mentioning(reasons, "no graph node found")
 
+    @pytest.mark.parametrize(
+        "path", ["src/rapid/poller.py", "src/therapist/notes.py", "src/scrapility/x.py"]
+    )
+    def test_the_substring_false_positive_is_pinned_not_hidden(self, path, query):
+        """`_HIGH_RISK_PATH_MARKERS` matches anywhere in the path, not on
+        segment boundaries, so "api" fires inside r-*api*-d, ther-*api*-st and
+        scr-*api*-lity. A real false positive, declared rather than quietly
+        narrowed (ADR-0028) -- narrowing it is its own decision. This test
+        exists so the behaviour cannot change silently in either direction."""
+        tier, reasons = classify_file_risk(path, query)
+
+        assert tier == "high"
+        assert _reasons_mentioning(reasons, "'api'")
+
     def test_a_marker_file_outside_the_graph_still_says_it_was_not_consulted(self, query):
         """The reasons list must not imply signals were measured when the
         lookup never resolved. Before ADR-0028 this note was suppressed

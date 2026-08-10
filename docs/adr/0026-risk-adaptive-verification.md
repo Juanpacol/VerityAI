@@ -62,6 +62,22 @@ intended vs accidental use or guarantee the data reaches a query executor.
 - CLI integration (wiring changed paths to `classify_file_risk` → `rules_for_tier`
   for actual rule selection) is stated as **future work**, not done here. Same
   for a measured pilot comparing adaptive-depth verification vs flat-depth.
+
+  **Update, 2026-08-10:** `verity reliability risk` now exists and reports
+  tiers with their reasons; `--show-rules` prints what each tier admits.
+  Gating a scan by tier is deliberately **still not shipped**, for a reason
+  this ADR did not anticipate: both built-in rules are medium/high tier, so
+  `rules_for_tier("low")` returns an empty list. A risk-gated scan would run
+  **zero** rules on every low-tier file — most of a repository — while
+  reporting no violations. That is the T6 failure CLAUDE.md warns about (a
+  checker that can never fail), and shipping it would be doing it on purpose.
+  The command prints the `low  0/2  -- nothing` line so the coverage hole is
+  visible rather than hidden behind a gate; a test pins it, so the day a
+  low-tier rule exists, the assertion says so.
+
+  ADR-0028 records a second correction: this tiering silently returned `low`
+  for every file whenever the caller's path was not byte-identical to the
+  form the ingester stored, and the mock-based tests here could not detect it.
 - The blind spots are stated plainly in caveats:
   - Path convention heuristics are lexical patterns, not proof of risk (a file
     named `auth_utils.py` in `src/billing/` triggers high risk by path, even if

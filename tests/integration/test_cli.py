@@ -213,3 +213,121 @@ class TestHealth:
 
         assert "CONTEXT HEALTH" in result.output
         assert "PERSISTED STATE" in result.output
+
+
+class TestAdaptiveContext:
+    """`verity context --adaptive` (ADR-0025's pre-pass, wired in ADR-0028's
+    follow-up). The rule it must never break: surfaced items are merged into
+    the input list and pruned once, never injected between pipeline stages --
+    the token ledger chains only because `_stage` is its sole writer.
+    """
+
+    def _big_transcript(self, tmp_path):
+        """Large enough to push window usage past the trigger threshold."""
+        path = tmp_path / "big.txt"
+        chunk = " ".join(f"artifact{n}" for n in range(100))
+        path.write_text("\n\n".join(f"[tool_result] build chunk {i}: {chunk}" for i in range(1600)))
+        return path
+
+    def test_adaptive_without_a_task_refuses_with_the_reason(self, initialized, tmp_path):
+        transcript = tmp_path / "t.json"
+        transcript.write_text(TRANSCRIPT)
+
+        result = runner.invoke(app, ["context", str(transcript), "--adaptive"])
+
+        assert result.exit_code == 2
+        assert "requires --task" in result.output
+        assert "drop order" in result.output
+
+    def test_an_untriggered_context_says_why_it_did_not_surface(self, initialized, tmp_path):
+        """ "Nothing surfaced" and "nothing to surface" are different claims."""
+        transcript = tmp_path / "t.json"
+        transcript.write_text(TRANSCRIPT)
+
+        result = runner.invoke(
+            app, ["context", str(transcript), "--task", "rate limiting", "--adaptive"]
+        )
+
+        assert result.exit_code == 0
+        assert "no trigger" in result.output
+        assert "window usage" in result.output
+        assert "CONTEXT PIPELINE" in result.output
+
+    def test_a_triggered_context_reports_trigger_budget_and_basis(self, initialized, tmp_path):
+        runner.invoke(app, ["remember", "decision", "use a token bucket for rate limiting"])
+        runner.invoke(app, ["remember", "constraint", "must not add a Redis dependency"])
+        transcript = self._big_transcript(tmp_path)
+
+        result = runner.invoke(
+            app, ["context", str(transcript), "--task", "rate limiting", "--adaptive", "--dry-run"]
+        )
+
+        assert "trigger" in result.output
+        assert ">= 75%" in result.output
+        # invariant 3's spirit: the budget never appears without its basis.
+        assert "basis" in result.output
+        assert "arXiv:2602.11988" in result.output
+        assert "token bucket" in result.output
+
+    def test_dry_run_stops_before_the_pipeline(self, initialized, tmp_path):
+        runner.invoke(app, ["remember", "decision", "use a token bucket"])
+        transcript = self._big_transcript(tmp_path)
+
+        result = runner.invoke(
+            app, ["context", str(transcript), "--task", "rate limiting", "--adaptive", "--dry-run"]
+        )
+
+        assert result.exit_code == 0
+        assert "ADAPTIVE PRE-PASS" in result.output
+        assert "CONTEXT PIPELINE" not in result.output
+
+    def test_surfaced_critical_memory_survives_an_impossible_budget(self, initialized, tmp_path):
+        """Invariant 1 through the merged path -- the highest-value test here.
+
+        Surfaced records are ItemKind.MEMORY, which classify.py protects as
+        CRITICAL unconditionally. Under a budget that cannot be met they must
+        still be retained, and `critical_retention` must be measured against
+        the merged list: against the original transcript it would exclude the
+        very items at risk and pass vacuously.
+        """
+        runner.invoke(app, ["remember", "constraint", "must not add a Redis dependency"])
+        transcript = self._big_transcript(tmp_path)
+
+        result = runner.invoke(
+            app,
+            ["context", str(transcript), "--task", "rate limiting", "--adaptive", "--budget", "10"],
+        )
+
+        assert result.exit_code == 0
+        assert "BUG:" not in result.output
+        assert "Over budget" in result.output
+        assert "all critical and were not dropped" in result.output
+
+    def test_the_ledger_still_chains_with_surfaced_items_merged_in(self, initialized, tmp_path):
+        """invariant 2 at the CLI layer: every stage's `tokens before` equals
+        the previous stage's `tokens after`, parsed back out of the table."""
+        import re
+
+        runner.invoke(app, ["remember", "constraint", "must not add a Redis dependency"])
+        transcript = self._big_transcript(tmp_path)
+
+        result = runner.invoke(
+            app, ["context", str(transcript), "--task", "rate limiting", "--adaptive"]
+        )
+
+        rows = re.findall(r"([\d,]+) -> ([\d,]+)\s+[\d,]+\s*$", result.output, re.MULTILINE)
+        # Six stages, not seven: with no --budget the budget stage does not run.
+        assert len(rows) >= 6, result.output
+        for (_, prev_after), (next_before, _) in zip(rows, rows[1:], strict=False):
+            assert prev_after == next_before
+
+    def test_adaptive_without_a_verity_directory_degrades_with_a_reason(self, project, tmp_path):
+        transcript = self._big_transcript(tmp_path)
+
+        result = runner.invoke(
+            app, ["context", str(transcript), "--task", "rate limiting", "--adaptive"]
+        )
+
+        assert result.exit_code == 0
+        assert "degraded" in result.output
+        assert "verity init" in result.output
