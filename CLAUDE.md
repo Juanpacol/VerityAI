@@ -209,7 +209,7 @@ has the detail; the short version:
 ## Development
 
 ```bash
-pytest tests/           # 644 tests, no network, no services, no fixtures needed
+pytest tests/           # 651 tests, no network, no services, no fixtures needed
 ruff check src/ tests/
 ruff format src/ tests/
 ```
@@ -228,13 +228,16 @@ ruff format src/ tests/
 
 ```bash
 verity eval <spec.json>              # a retained Family B trial run
+verity verify <evidence-root>        # re-derive those numbers from what was kept
 verity reliability risk <paths...>   # per-file risk tiers, with reasons
 verity context <t> --task X --adaptive [--dry-run]
 ```
 
 `verity eval` writes scratch to `--work-root` (ignored) and the artifact to
 `--evidence-root` (tracked, defaults to `experiments/<spec name>/evidence`).
-A run that retains nothing is reported NOT PUBLISHABLE.
+A run that retains nothing is reported NOT PUBLISHABLE. `verity verify`
+re-applies each retained diff and re-runs the scorer, so invariant 7 is
+checkable on demand rather than only inside a test.
 
 `verity reliability risk` reports tiers; it deliberately does **not** gate
 scans. Both built-in security rules are medium/high tier, so a risk-gated
