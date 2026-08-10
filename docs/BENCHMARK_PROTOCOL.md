@@ -56,9 +56,16 @@ independently — checking which one the fix actually implements. Fifth
 ceiling, 5/5 both conditions on the hidden check too, but for a new reason:
 every `naive` trial independently chose the interpretation matching the
 fabricated policy, with no access to it, because "grace period" carries a
-strong enough naming convention to override the genuine ambiguity. All
-seven pilots' stated limits (small N, narrow task design, single fixture)
-still apply — see each pilot's own README before generalizing any result.
+strong enough naming convention to override the genuine ambiguity. Family
+B, eighth pilot (`experiments/family_b_pilot_8_arbitrary_tiebreak/`,
+ADR-0020), corrected exactly that: an ambiguity with no linguistic
+convention at all (a tie-break rule between two opaque numeric IDs), with
+the hidden test's tied candidates ordered so the most natural-looking fix
+(`max(candidates, key=lambda c: c["score"])`) returns the wrong one on a
+tie. Result: `likely_real_difference`, 0/5 vs 5/5 -- the first success-rate
+split in the series, after five consecutive ceilings. All nine pilots'
+stated limits (small N, narrow task design, single fixture) still apply --
+see each pilot's own README before generalizing any result.
 
 Separately, the Consistency Engine (`consistency/`, ADR-0007) got its own
 first real measurement (`experiments/consistency_pilot_1_hallucination_

@@ -235,6 +235,31 @@ a real technique for scoring "correct for the right reason" versus
 "happened to pass" — and proposes the next pilot use an ambiguity with no
 dominant convention (a coin-flip-shaped choice, not a language-shaped one).
 
+**An eighth pilot found that ambiguity, and the ceiling broke.**
+(`experiments/family_b_pilot_8_arbitrary_tiebreak/`, [ADR-0020](adr/0020-arbitrary-tiebreak-pilot.md)):
+same hidden-test design, but the ambiguity is a tie-break rule between two
+opaque numeric IDs — nothing in the naming suggests an answer. The hidden
+test lists the correct (per the fabricated policy) tied candidate second
+in the input, so the most natural-looking fix
+(`max(candidates, key=lambda c: c["score"])`) returns the *wrong* one on a
+tie, because Python's `max` keeps the first-seen maximum:
+
+| Metric | `naive` | `verity` | Verdict |
+|---|---|---|---|
+| Visible test passes (5 trials) | 5/5 | 5/5 | ceiling, as designed |
+| Correct on the hidden tie (5 trials) | 0/5 | 5/5 | `likely_real_difference` |
+
+The first genuine success-rate split in eight Family B pilots. Every
+`naive` trial wrote the idiomatic `max()` one-liner — reasonable, passes
+the visible test, and wrong on a tie for a reason nothing visible reveals.
+Every `verity` trial read the handoff's explicit warning about `max()`'s
+tie behavior and wrote a tie-break comparison instead. The mechanism
+wasn't difficulty — pilot 7's task was arguably harder to reason about —
+it was the *absence of any inferable signal* in the ambiguity itself. See
+ADR-0020 for what made this design succeed where pilot 7's didn't, and its
+own stated limits (N=5, one fixture, a decision that named the rule
+explicitly).
+
 **The Consistency Engine got its own first real measurement**
 (`experiments/consistency_pilot_1_hallucination_detection/`, [ADR-0018](adr/0018-consistency-engine-first-measurement.md)),
 closing a stale claim in `BENCHMARK_PROTOCOL.md` that this engine was

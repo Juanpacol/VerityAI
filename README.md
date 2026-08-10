@@ -70,7 +70,7 @@ Claude Code sessions of this project (~3.48M tokens,
 | 30,000-token budget, ranked against the task | 56.7% | 100% | 100% |
 
 **Family B — a model decides something, so every claim carries a noise
-floor.** Eight pilots, reported whatever they found:
+floor.** Nine pilots, reported whatever they found:
 
 | Pilot | Question | Verdict |
 |---|---|---|
@@ -82,14 +82,17 @@ floor.** Eight pilots, reported whatever they found:
 | [0017](docs/adr/0017-runtime-bug-pilot.md) | Does changing the bug's *shape* break it? | No. Cost effect reproduced a third time |
 | [0018](docs/adr/0018-consistency-engine-first-measurement.md) | Does the Consistency Engine catch real hallucinations? | 100% recall on invented symbols; three real bugs found and fixed |
 | [0019](docs/adr/0019-domain-ambiguity-pilot.md) | Does an ambiguity *not derivable from code at all* break the ceiling? | No — but for a new reason: the model's naming convention matched the policy in 10/10 trials regardless of condition |
+| [0020](docs/adr/0020-arbitrary-tiebreak-pilot.md) | Does an ambiguity with *no* linguistic convention finally break it? | **Yes.** `likely_real_difference` — 0/5 vs 5/5, the first success-rate split in the series |
 
-The honest summary of those eight: **recovery after a context reset
-reliably makes an already-achievable outcome cheaper, and that is the most
-reproduced result here — but no design yet has shown it changes whether a
-capable agent succeeds at all.** Five consecutive ceilings across five bug
-designs — including one where the answer genuinely isn't in the code — is
-a finding about what these tasks can detect, and it is reported as such
-rather than buried.
+The honest summary of those nine: **recovery after a context reset
+reliably makes an already-achievable outcome cheaper — the most reproduced
+result here — and it can also change whether the outcome is correct at
+all, when what's missing is knowledge no amount of reading the code can
+supply.** It took five consecutive ceilings and two attempts at a
+code-unresolvable ambiguity to isolate that condition precisely: not
+harder tracing, not vaguer wording, but an answer with no inferable signal
+anywhere in the repository. All nine results are reported as found, ceiling
+or not.
 
 ---
 

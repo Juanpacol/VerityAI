@@ -98,3 +98,4 @@ experiments/family_b_pilot_4_recovery_after_reset/trials/
 experiments/family_b_pilot_5_harder_recovery/trials/
 experiments/family_b_pilot_6_runtime_bug/trials/
 experiments/family_b_pilot_7_domain_ambiguity/trials/
+experiments/family_b_pilot_8_arbitrary_tiebreak/trials/
