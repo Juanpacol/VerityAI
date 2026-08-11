@@ -1,16 +1,16 @@
-"""AST-based fact extraction for two security patterns: SQL injection and
-check-then-act races.
+"""AST-based fact extraction for three security patterns: SQL injection,
+check-then-act races, and shell commands built from non-literal input.
 
 Emits fact strings (`user_input is untrusted`,
 `check_then_act_on_shared_resource`) that
 `reliability.rule_engine.RuleEngine` consumes through its forward-chaining
 machinery, and that `reliability.security` turns into findings.
 
-Deliberately narrow, not a general SQLi or race detector -- each function's
-own docstring states exactly what it catches and what it misses. That
-narrowness is the design, not a shortcut: this module is what remained
-after T6 found that formal methods could not cover these patterns at all.
-Z3's own documentation describes its string solver as "an incomplete
+Deliberately narrow, not a general SQLi, race or shell-injection detector --
+each function's own docstring states exactly what it catches and what it
+misses. That narrowness is the design, not a shortcut: this module is what
+remained after T6 found that formal methods could not cover these patterns
+at all. Z3's own documentation describes its string solver as "an incomplete
 heuristic solver" over a combined theory that "is not decidable anyway",
 so tracking untrusted string flow into a query is not something a solver
 settles. A narrow pattern-matcher that declares its blind spots is the
@@ -244,3 +244,81 @@ def _visit_race_stmts(
                 _visit_race_stmts(handler.body, guarded, checked, acted, lock_guarded)
             _visit_race_stmts(node.orelse, guarded, checked, acted, lock_guarded)
             _visit_race_stmts(node.finalbody, guarded, checked, acted, lock_guarded)
+
+
+_SHELL_CALL_METHOD_NAMES = frozenset({"run", "call", "check_call", "check_output", "Popen"})
+
+
+def _shell_true_keyword(call: ast.Call) -> bool:
+    return any(
+        kw.arg == "shell" and isinstance(kw.value, ast.Constant) and kw.value.value is True
+        for kw in call.keywords
+    )
+
+
+def _command_argument(call: ast.Call) -> ast.expr | None:
+    if call.args:
+        return call.args[0]
+    for kw in call.keywords:
+        if kw.arg == "args":
+            return kw.value
+    return None
+
+
+def extract_shell_command_facts(code: str) -> set[str]:
+    """Detects a `subprocess.run`/`call`/`check_call`/`check_output`/`Popen`
+    call with `shell=True` whose command argument is not a plain string
+    literal -- built via f-string/concatenation/%-format/`.format()`, or
+    passed through a variable, exactly the shapes `_is_dynamic_sql_string`
+    already recognizes for query strings, reused here for command strings.
+    `shell=True` hands the string to the platform shell, so any of those
+    construction methods puts whatever built the dynamic portion in a
+    position to inject shell metacharacters (`;`, `|`, backticks) rather
+    than just arguments.
+
+    Also recognizes the standard SAFE idiom -- a call with no `shell=True`
+    (shell absent or explicitly `False`) whose command is passed as a list
+    of arguments rather than a single string -- and emits
+    `shell_disabled_or_args_list`, matching `uses_parameterized_query`'s
+    role for the SQL rule: "no dynamic shell command found" is a different
+    claim from "found one, but it's the safe list-argument kind."
+
+    What this does NOT catch: `os.system` (always shells out, no `shell=`
+    keyword to match on -- out of scope for this rule, not silently
+    swallowed); a command string built across more than one hop of variable
+    reassignment; or whether the dynamic portion actually originates from
+    untrusted input rather than hardcoded, trusted values -- purely
+    syntactic, no real data-flow analysis, same limits as
+    `extract_sql_injection_facts`.
+    """
+    try:
+        tree = ast.parse(code)
+    except SyntaxError:
+        return set()
+
+    facts: set[str] = set()
+
+    for func_node in ast.walk(tree):
+        if not isinstance(func_node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            continue
+
+        for node in ast.walk(func_node):
+            if not isinstance(node, ast.Call):
+                continue
+            func = node.func
+            if not (isinstance(func, ast.Attribute) and func.attr in _SHELL_CALL_METHOD_NAMES):
+                continue
+
+            command = _command_argument(node)
+            if command is None:
+                continue
+
+            if _shell_true_keyword(node):
+                is_dynamic, _ = _is_dynamic_sql_string(command)
+                literal = _literal_string_value(command)
+                if is_dynamic or (isinstance(command, ast.Name) and not literal):
+                    facts.add("shell_command_from_nonliteral")
+            elif isinstance(command, ast.List):
+                facts.add("shell_disabled_or_args_list")
+
+    return facts

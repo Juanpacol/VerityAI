@@ -1017,8 +1017,14 @@ def reliability_risk(
             admitted = rules_for_tier(tier, BUILTIN_SECURITY_RULES)
             names = ", ".join(f"{r.id}[{r.risk_tier}]" for r in admitted) or "-- nothing"
             typer.echo(f"    {tier:<7} {len(admitted)}/{total}   {names}")
+        low_count = len(rules_for_tier("low", BUILTIN_SECURITY_RULES))
+        coverage = (
+            "would currently be checked by no rule at all"
+            if low_count == 0
+            else f"is currently checked by only {low_count}/{total} rule(s)"
+        )
         typer.echo(
-            "\n    A low-tier file would currently be checked by no rule at all, which is "
+            f"\n    A low-tier file {coverage}, which is "
             "why tiers are reported and not yet used to gate scans (ADR-0026)."
         )
 

@@ -298,15 +298,16 @@ class TestRulesForTier:
     def test_an_unknown_tier_falls_back_to_the_low_ceiling(self):
         assert [r.id for r in rules_for_tier("bogus", _rules())] == ["cheap"]
 
-    def test_the_builtin_rules_admit_nothing_at_the_low_tier(self):
-        """Not a bug in `rules_for_tier`, but the reason ADR-0026 stops at
-        reporting tiers instead of gating scans: both builtin security rules
-        are medium/high, so a risk-gated scan would check nothing at all on a
-        low-tier file while printing no violations. Pinned here so the day
-        someone adds a low-tier rule, this test says so."""
+    def test_only_the_low_tier_rule_is_admitted_at_the_low_tier(self):
+        """Pinned so a future rule addition/removal is caught here rather
+        than silently changing what a low-tier scan actually covers. Until
+        `shell-command-injection` (ADR-0032), this admitted nothing -- the
+        reason ADR-0026 stops at reporting tiers instead of gating scans."""
         from verityai.reliability.security import BUILTIN_SECURITY_RULES
 
-        assert rules_for_tier("low", BUILTIN_SECURITY_RULES) == []
+        assert {r.id for r in rules_for_tier("low", BUILTIN_SECURITY_RULES)} == {
+            "shell-command-injection"
+        }
         assert len(rules_for_tier("high", BUILTIN_SECURITY_RULES)) == len(BUILTIN_SECURITY_RULES)
 
 

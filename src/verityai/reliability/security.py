@@ -1,19 +1,26 @@
 """Security checks: T6's deterministic pattern-matching, finally wired up.
 
-The two fact extractors in `analysis/facts.py` have existed since Phase 1's
+The fact extractors in `analysis/facts.py` have existed since Phase 1's
 predecessor research but were never connected to anything — the KG rules they
 targeted (`SQL Injection Prevention`, `No Check-Then-Act Race`) were prompt
 guidance only. This module is the connection: extract facts from real code,
 run them through the rescued `RuleEngine.check_for_violation`, report
 violations as `Finding`s.
 
-Two rules, both narrow by explicit design (see each extractor's own
+Three rules, all narrow by explicit design (see each extractor's own
 docstring for exactly what it catches and doesn't): syntactic, single-file,
 no real data-flow analysis. A hit means "worth a human look," a miss means
 "not this exact shape" — never a soundness or completeness guarantee. That
 framing came from real evidence: Z3's own documentation calls its string
 theory "an incomplete heuristic solver," which is why this is a pattern
 matcher and not a proof.
+
+The third rule (`shell-command-injection`) is `risk_tier="low"` where the
+first two are `medium`/`high` — its severity and its risk tier are
+deliberately not the same axis (ADR-0026): a `shell=True` call built from a
+variable is a real class of bug regardless of the blast radius of the file
+it sits in, so it is worth running even on a leaf `verity reliability risk`
+would otherwise tier low for lack of any elevating signal.
 
 Findings are file-granular, not line-granular. The extractors analyze a
 whole parsed module and return a flat set of fact strings; recovering which
@@ -24,7 +31,11 @@ more precise than it is.
 
 from pathlib import Path
 
-from verityai.analysis.facts import extract_race_condition_facts, extract_sql_injection_facts
+from verityai.analysis.facts import (
+    extract_race_condition_facts,
+    extract_shell_command_facts,
+    extract_sql_injection_facts,
+)
 from verityai.core.models import Finding, ReliabilityReport, Rule, VerificationStatus
 from verityai.graph.ingest import find_nested_projects, walk_repo
 from verityai.reliability.rule_engine import RuleEngine
@@ -55,6 +66,20 @@ BUILTIN_SECURITY_RULES: list[Rule] = [
             "neither guarded by a lock -- the textbook check-then-act race shape."
         ),
     ),
+    Rule(
+        id="shell-command-injection",
+        name="Shell Command From Non-Literal Input",
+        category="security",
+        severity="high",
+        risk_tier="low",
+        formal_spec="PRE: shell_command_from_nonliteral; POST: shell_disabled_or_args_list",
+        description=(
+            "A subprocess.run()/call()/check_call()/check_output()/Popen() call passed "
+            "shell=True with a command built by concatenation, f-string, %-format, "
+            ".format() or a bare variable, and no call in the same function uses the "
+            "safer shell=False-with-a-list form."
+        ),
+    ),
 ]
 
 
@@ -83,6 +108,15 @@ RULE_CAVEATS: dict[str, str] = {
         "actually shared across threads/processes. A hit on an ordinary local "
         "dict being built up is expected and is not itself a bug."
     ),
+    "shell-command-injection": (
+        "This rule matches a syntactic shape (shell=True with a command that is not "
+        "a plain string literal) -- it has no data-flow analysis, so it cannot tell "
+        "whether the dynamic portion actually originates from untrusted input or is "
+        "built entirely from trusted values the operator controls, such as a "
+        "configuration-driven command a benchmark harness is meant to run. A hit "
+        "there is a false positive by this definition, not evidence of an "
+        "exploitable injection."
+    ),
 }
 
 
@@ -94,7 +128,11 @@ def caveats_for(findings: list[Finding]) -> list[str]:
 
 def extract_all_facts(code: str) -> set[str]:
     """Every fact this module's rules can consume, from one module's source."""
-    return extract_sql_injection_facts(code) | extract_race_condition_facts(code)
+    return (
+        extract_sql_injection_facts(code)
+        | extract_race_condition_facts(code)
+        | extract_shell_command_facts(code)
+    )
 
 
 def scan_code(code: str, path: str = "", rules: list[Rule] | None = None) -> list[Finding]:

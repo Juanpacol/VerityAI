@@ -44,6 +44,16 @@ def add_if_missing(cache, key, value, lock):
             cache[key] = value
 """
 
+VULNERABLE_SHELL = """
+def run_it(command):
+    subprocess.run(command, shell=True)
+"""
+
+SAFE_SHELL = """
+def run_it(command):
+    subprocess.run(["echo", command])
+"""
+
 
 class TestSQLInjection:
     def test_dynamic_query_is_flagged(self):
@@ -76,6 +86,25 @@ class TestCheckThenActRace:
 
     def test_lock_guarded_check_then_act_is_not_flagged(self):
         assert scan_code(SAFE_RACE) == []
+
+
+class TestShellCommandInjection:
+    def test_shell_true_with_a_variable_command_is_flagged(self):
+        findings = scan_code(VULNERABLE_SHELL)
+
+        assert len(findings) == 1
+        assert findings[0].rule_id == "shell-command-injection"
+        assert findings[0].severity == "high"
+
+    def test_list_form_without_shell_true_is_not_flagged(self):
+        assert scan_code(SAFE_SHELL) == []
+
+    def test_is_admitted_at_the_low_risk_tier(self):
+        from verityai.reliability.risk import rules_for_tier
+
+        assert any(
+            r.id == "shell-command-injection" for r in rules_for_tier("low", BUILTIN_SECURITY_RULES)
+        )
 
 
 class TestNoFindings:
@@ -116,6 +145,11 @@ class TestKnownFalsePositive:
 
         assert caveats_for(race_findings) == [RULE_CAVEATS["check-then-act-race"]]
 
+    def test_caveats_for_surfaces_the_shell_caveat_when_it_fires(self):
+        shell_findings = scan_code(VULNERABLE_SHELL)
+
+        assert caveats_for(shell_findings) == [RULE_CAVEATS["shell-command-injection"]]
+
     def test_the_caveat_is_rendered_in_the_report(self):
         findings = scan_code(VULNERABLE_RACE, path="a.py")
         from verityai.core.models import ReliabilityReport
@@ -145,6 +179,28 @@ class TestInjectedRules:
         findings = scan_code(VULNERABLE_SQL, rules=[custom])
 
         assert [f.rule_id for f in findings] == ["custom-rule"]
+
+
+class TestAcceptedShellFinding:
+    """`bench/trial.py` runs `TrialSpec.scorer_command`/`condition_commands`
+    via `shell=True` by design (ADR-0022) -- an operator-authored command,
+    not attacker input. ADR-0032 accepts the resulting finding rather than
+    narrowing the rule to hide it. Pinned so this stays a documented,
+    deliberate acceptance and does not quietly start passing (which would
+    mean the rule stopped working) or start failing CI (which would mean
+    someone tried to silence a real, if accepted, finding)."""
+
+    def test_trial_py_is_flagged_for_shell_true_with_a_variable_command(self):
+        import pathlib
+
+        from verityai.reliability.security import scan_file
+
+        trial_py = (
+            pathlib.Path(__file__).resolve().parents[2] / "src" / "verityai" / "bench" / "trial.py"
+        )
+        findings = scan_file(trial_py, rel_path="src/verityai/bench/trial.py")
+
+        assert any(f.rule_id == "shell-command-injection" for f in findings)
 
 
 class TestFileAndRepoScanning:
@@ -194,10 +250,11 @@ class TestFileAndRepoScanning:
 
 
 class TestExtractAllFacts:
-    def test_combines_both_extractors(self):
-        combined = VULNERABLE_SQL + VULNERABLE_RACE
+    def test_combines_all_extractors(self):
+        combined = VULNERABLE_SQL + VULNERABLE_RACE + VULNERABLE_SHELL
 
         facts = extract_all_facts(combined)
 
         assert "sql_query_built_dynamically" in facts
         assert "check_then_act_on_shared_resource" in facts
+        assert "shell_command_from_nonliteral" in facts

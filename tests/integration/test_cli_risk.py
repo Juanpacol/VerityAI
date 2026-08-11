@@ -65,15 +65,16 @@ class TestTiering:
 
         assert "no elevating signal found" in result.output
 
-    def test_show_rules_prints_the_zero_coverage_hole(self, project):
-        """The most useful line this command emits: at the low tier the
-        built-in rules admit nothing, which is why tiers are reported rather
-        than used to gate scans (ADR-0026)."""
+    def test_show_rules_prints_low_tier_coverage(self, project):
+        """The most useful line this command emits: how much of the rule set
+        a low-tier file actually earns, which is why tiers are reported
+        rather than used to gate scans (ADR-0026)."""
         result = runner.invoke(app, ["reliability", "risk", "src/plain.py", "--show-rules"])
 
         assert "RULES ADMITTED BY TIER" in result.output
-        assert "0/2" in result.output
-        assert "would currently be checked by no rule at all" in result.output
+        assert "1/3" in result.output
+        assert "shell-command-injection" in result.output
+        assert "is currently checked by only 1/3 rule(s)" in result.output
 
 
 class TestPathFormAtTheCliLayer:
