@@ -295,27 +295,31 @@ The import was legitimate; the diagram was stale. See
 
 ```bash
 pip install -e ".[mcp]"
-claude mcp add verity -- verity-mcp
+claude mcp add verity -- verity-mcp --root .
 ```
 
-Nineteen tools, each a thin wrapper over the same functions the CLI calls:
+Five tools, each dispatched by an operation, each a thin wrapper over the same
+functions the CLI calls:
 
-- **context** — `optimize_context`, `context_health`
-- **memory** — `set_task`, `save_decision`, `save_constraint`, `save_discovery`,
-  `save_failure`, `get_state`, `handoff`
-- **graph** — `build_code_graph`, `find_relevant_code`, `check_symbol_exists`,
-  `impact_of_changing`
-- **consistency** — `check_claims`
-- **reliability** — `check_security`, `check_architecture`
-- **snapshots** — `snapshot`, `restore`, `list_snapshots`
+- **`context`** — `optimize` · `health` · `recall`
+- **`remember`** — `decision` · `constraint` · `discovery` · `failure`
+- **`session`** — `task` · `state` · `handoff` · `snapshot` · `restore` · `list`
+- **`code`** — `index` · `find` · `define` · `impact`
+- **`verify`** — `claims` · `security` · `architecture` · `risk`
 
-`check_symbol_exists` is the one to reach for before asserting an API is
+Five rather than twenty-one for a measurable reason, not an aesthetic one: a
+client picks a tool by matching a request against descriptions, so a long
+surface spends the budget that should have gone to *when to call this* — and
+several of the old twenty-one were the same function under two names. See
+[ADR-0030](docs/adr/0030-five-mcp-tools.md).
+
+`code(op="define")` is the one to reach for before asserting an API is
 available. It answers `NOT FOUND: no definition of 'refresh_token' in this
 repository. Do not assume it exists.` — far cheaper than opening files, and the
 difference between believing and knowing.
 
-`check_claims` is the same idea applied to a whole draft response: call it on
-your own output before sending it, and it flags every backtick-quoted
+`verify(op="claims")` is the same idea applied to a whole draft response:
+call it on your own output before sending it, and it flags every backtick-quoted
 assertion the graph or memory actually contradicts, plus anything that
 resembles a decision already ruled out.
 

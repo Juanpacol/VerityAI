@@ -3,7 +3,16 @@
 Every tool here is a thin wrapper over a function the CLI also calls. That is
 the design constraint, not an accident — when an agent gets a surprising
 context back, a person must be able to reproduce it with `verity context` and
-see the same thing. A tool with logic of its own would break that.
+see the same thing. A tool with logic of its own would break that. The bodies
+live in `handlers.py`; this module is the surface, and the surface is the
+descriptions.
+
+There are five tools, not twenty-one, and the reason is measurable rather than
+aesthetic: a client picks a tool by matching a request against descriptions, so
+twenty-one entries spend the context budget that should have gone to *when to
+call this* — and several of the twenty-one were the same function under two
+names. Each tool now takes an `op`, and each op keeps the guidance the separate
+tool used to carry (ADR-0030).
 
 What this integration can and cannot do, stated plainly because it bounds
 every claim the project can make:
@@ -21,17 +30,11 @@ tool, not just what it does, because a tool an agent never thinks to call is
 worth nothing.
 """
 
-from pathlib import Path
+import argparse
+import os
+from typing import Literal
 
-from verityai.context.classify import classify_all, relevance_breakdown
-from verityai.context.health import compute_health, render_health
-from verityai.context.ingest import load
-from verityai.context.prune import ContextPipeline
-from verityai.context.tokenizer import TokenCounter
-from verityai.core.models import Constraint, Decision, Discovery, Failure, Task
-from verityai.memory.handoff import build_handoff
-from verityai.memory.snapshot import SnapshotManager
-from verityai.memory.store import MemoryStore
+from verityai.mcp import handlers
 
 try:
     from mcp.server.fastmcp import FastMCP
@@ -39,23 +42,31 @@ except ImportError:  # pragma: no cover - import guard
     FastMCP = None  # type: ignore[assignment, misc]
 
 
-def _store(root: str | None = None) -> MemoryStore:
-    """Resolve the store, creating `.verity/` if the agent has not run init.
+def _missing(call: str, **named: object) -> str | None:
+    """Name the argument an op needs, as an answer rather than an exception.
 
-    Auto-creating is right here even though the CLI refuses to: an agent
-    calling `save_decision` cannot usefully react to "run verity init first",
-    and losing the decision is worse than creating a directory.
+    A returned string is a better affordance for an agent than a transport
+    error: it arrives where the agent is already reading, and it says which
+    argument to add. `call` is the call it was reaching for, spelled out, so
+    the answer doubles as the corrected example.
     """
-    start = Path(root) if root else None
-    found = MemoryStore.discover(start)
-    return found if found is not None else MemoryStore.init(start)
+    absent = [name for name, value in named.items() if not value]
+    if not absent:
+        return None
+    which = " and ".join(f"`{name}`" for name in absent)
+    return f"{call} needs {which}. Add it and call again."
 
 
-def build_server(name: str = "verity"):
+def build_server(name: str = "verity", root: str | None = None):
     """Construct the MCP server.
 
     A factory rather than a module-level singleton so tests can build an
     isolated instance, and so importing this module never starts anything.
+
+    `root` is where `.verity/` lives. When it is None the store is discovered
+    from the process's working directory — fine when the client launches the
+    server inside the project, wrong and silent when it does not, which is why
+    `verity-mcp --root` exists.
     """
     if FastMCP is None:
         raise RuntimeError(
@@ -64,526 +75,275 @@ def build_server(name: str = "verity"):
 
     server = FastMCP(name)
 
-    # --- context -----------------------------------------------------------
-
     @server.tool()
-    def optimize_context(
-        transcript: str,
+    def context(
+        op: Literal["optimize", "health", "recall"],
+        transcript: str = "",
         task: str = "",
         budget: int = 20000,
+        context_sample: str = "",
     ) -> str:
-        """Prune a context down to a token budget, keeping what matters.
+        """Work on the conversation itself: prune it, measure it, or reload it.
 
-        Call this when a conversation has grown long, when tool output has
-        filled the window, or before handing work to another agent. Pass the
-        transcript as JSON messages or plain text.
+        Call this when a session has been running for a while — when tool
+        output has filled the window, when you are about to hand work over, or
+        when you notice yourself re-deriving something.
 
-        Returns the pruned context plus a stage-by-stage ledger of what was
-        removed and why. Items marked critical are never dropped, even if that
-        means exceeding the budget.
+        ops:
+          optimize  Prune a context down to a token budget, keeping what
+                    matters. Call this when the transcript has grown long or
+                    before handing work to another agent. Returns the pruned
+                    context plus a stage-by-stage ledger of what went and why;
+                    items marked critical are never dropped, even if that means
+                    exceeding the budget. Needs `transcript` (JSON messages or
+                    plain text); takes `task`, `budget`.
+          health    Assess the quality of a context, not just how full it is.
+                    Call this to find out whether the context is still good —
+                    high redundancy, heavy tool noise or low relevance density
+                    all mean it is time to prune or hand off. Reports each
+                    dimension separately; treat the aggregate as a summary of
+                    them, not a measurement of its own. Needs `transcript`.
+          recall    Ask whether now is the moment to pull saved decisions back
+                    in. Call this before starting a subtask, or when you catch
+                    yourself re-deriving something — the cases where an agent
+                    typically does not think to check its own memory, which is
+                    why this is prompt-able at all. Returns the trigger and its
+                    threshold, the budget and its basis, and the records worth
+                    surfacing — or says plainly that nothing crossed a
+                    threshold, which is a different answer from "nothing is
+                    saved". Needs `task`; takes `context_sample`.
+
+        Verity cannot see your window, so every answer here is about the text
+        you hand over and nothing else.
         """
-        counter = TokenCounter()
-        result = ContextPipeline(counter=counter).run(load(transcript), task=task, budget=budget)
-
-        ledger = "\n".join(
-            f"  {stage.name:<22} {stage.tokens_before:>8,} -> {stage.tokens_after:>8,}"
-            f"  (saved {stage.tokens_saved:,})"
-            for stage in result.stages
-        )
-        body = "\n\n".join(item.content for item in result.items)
-
-        over = (
-            ""
-            if result.budget_met
-            else "\n\nNOTE: over budget. The remaining items are all critical and were not dropped."
-        )
-
-        return (
-            f"Pruned {result.tokens_before:,} -> {result.tokens_after:,} tokens "
-            f"({result.reduction_ratio:.1%} saved, counted with {result.token_method}).\n\n"
-            f"{ledger}{over}\n\n--- CONTEXT ---\n\n{body}"
-        )
-
-    @server.tool()
-    def context_health(transcript: str) -> str:
-        """Assess the quality of a context, not just how full it is.
-
-        Call this when work has been going on for a while and you want to know
-        whether the context is still good — high redundancy, heavy tool noise
-        or low relevance density all mean it is time to prune or hand off.
-
-        Reports each dimension separately. Treat the aggregate score as a
-        summary of the dimensions, not as a measurement in its own right.
-        """
-        counter = TokenCounter()
-        pipeline = ContextPipeline(counter=counter)
-        items = classify_all([pipeline.measure(i, n) for n, i in enumerate(load(transcript))])
-
-        breakdown = relevance_breakdown(items)
-        total = sum(breakdown.values())
-        table = "\n".join(
-            f"  {bucket:<12} {tokens:>8,}  {(tokens / total if total else 0):>6.1%}"
-            for bucket, tokens in sorted(breakdown.items(), key=lambda kv: -kv[1])
-        )
-
-        return f"{render_health(compute_health(items, counter=counter))}\n\nBY RELEVANCE\n{table}"
-
-    # --- memory ------------------------------------------------------------
-
-    @server.tool()
-    def set_task(title: str, description: str = "", next_action: str = "") -> str:
-        """Record what you are currently working on.
-
-        Call this at the start of a task. Everything else recorded afterwards
-        hangs off it, and it is the first section of any handoff document.
-        """
-        store = _store()
-        store.set_task(Task(title=title, description=description, next_action=next_action or None))
-        return f"Task set: {title}"
-
-    @server.tool()
-    def save_decision(statement: str, why: str = "") -> str:
-        """Record a decision and its rationale, permanently.
-
-        Call this the moment you choose between approaches — especially when
-        you reject one. Decisions are never deleted, so a rejected approach
-        stays visible and will not be quietly re-proposed later.
-        """
-        _store().append(Decision(statement=statement, rationale=why, source="mcp"))
-        return f"Decision recorded: {statement}"
-
-    @server.tool()
-    def save_constraint(statement: str, hard: bool = True) -> str:
-        """Record a rule the solution must respect.
-
-        Call this for anything that invalidates the work if violated: a
-        dependency you must not add, an interface you must not break, a policy
-        you must follow. Set hard=False for a preference rather than a rule.
-        """
-        _store().append(Constraint(statement=statement, hard=hard, source="mcp"))
-        return f"Constraint recorded: {statement}"
-
-    @server.tool()
-    def save_discovery(statement: str) -> str:
-        """Record something you learned about the project.
-
-        Call this when a tool call teaches you something non-obvious — how a
-        module is wired, where a behaviour actually lives. This is information
-        you paid tool calls for, and it is expensive to rediscover.
-        """
-        _store().append(Discovery(statement=statement, source="mcp"))
-        return f"Discovery recorded: {statement}"
-
-    @server.tool()
-    def save_failure(attempted: str, error: str = "") -> str:
-        """Record something you tried that did not work.
-
-        Call this on every dead end. It is the single most valuable thing to
-        remember on a long task, and the easiest to forget — without it, the
-        same approach gets attempted again several hours later.
-        """
-        _store().append(Failure(attempted=attempted, error=error, source="mcp"))
-        return f"Failure recorded: {attempted}"
-
-    @server.tool()
-    def get_state() -> str:
-        """Retrieve everything recorded about the current task.
-
-        Call this when starting fresh on an existing task, after a context
-        reset, or whenever you are unsure whether something was already
-        decided or already tried.
-        """
-        document, report = build_handoff(_store())
-        return f"{document}\n[{report['tokens']:,} tokens, {report['token_method']}]"
-
-    @server.tool()
-    def handoff(budget: int = 2000) -> str:
-        """Produce a structured handoff document for a fresh session.
-
-        Call this when the context is degrading or you are about to hand work
-        to another agent. The document is self-contained: task, state,
-        decisions, constraints, discoveries, failures, files, next action.
-
-        Sections are dropped in a fixed order if the budget is tight, and the
-        response says which ones went.
-        """
-        document, report = build_handoff(_store(), budget=budget)
-        dropped = (
-            f"\n[dropped to fit budget: {', '.join(report['dropped_sections'])}]"
-            if report["dropped_sections"]
-            else ""
-        )
-        return f"{document}\n[{report['tokens']:,} tokens, {report['token_method']}]{dropped}"
-
-    # --- code graph --------------------------------------------------------
-
-    def _graph():
-        from verityai.graph.store import GraphStore
-
-        return GraphStore.for_verity_dir(_store().root)
-
-    @server.tool()
-    def find_relevant_code(task: str, limit: int = 15) -> str:
-        """Find code related to a task, by relationship as well as by name.
-
-        Call this before reading files, whenever you need to know what parts
-        of the codebase a piece of work touches. It seeds on text and then
-        follows call, containment, inheritance and test edges — so it surfaces
-        the function that has nothing to do with your search terms but is
-        called by one that does, which grep and embedding search both miss.
-
-        Every result says why it was included. Requires `build_code_graph`
-        to have been run.
-        """
-        from verityai.graph.query import GraphQuery, render_relevant
-
-        with _graph() as graph:
-            if not graph.stats().get("nodes.total"):
-                return "The code graph is empty. Call build_code_graph first."
-            return render_relevant(GraphQuery(graph).context_for(task, limit=limit))
-
-    @server.tool()
-    def check_symbol_exists(name: str) -> str:
-        """Check whether a function, class or method actually exists.
-
-        Call this before asserting that some API is available, and whenever
-        you are about to act on a memory of the codebase rather than something
-        you just read. It is far cheaper than opening files, and it is the
-        difference between "I believe there is a refresh_token method" and
-        knowing.
-        """
-        from verityai.graph.query import GraphQuery
-
-        with _graph() as graph:
-            if not graph.stats().get("nodes.total"):
-                return "The code graph is empty. Call build_code_graph first."
-
-            matches = GraphQuery(graph).define(name)
-            if not matches:
-                return (
-                    f"NOT FOUND: no definition of {name!r} in this repository. "
-                    "Do not assume it exists."
-                )
-
-            lines = [f"FOUND: {len(matches)} definition(s) of {name!r}."]
-            for node in matches[:10]:
-                lines.append(f"  {node.kind.value} {node.qualname or node.name}")
-                lines.append(f"    {node.path}:{node.line}")
-                if node.signature:
-                    lines.append(f"    {node.signature}")
-            return "\n".join(lines)
-
-    @server.tool()
-    def impact_of_changing(name: str) -> str:
-        """See what depends on a symbol before you change it.
-
-        Call this before editing any shared function or class. Returns what
-        calls it and which tests exercise it — the blast radius, derived from
-        edges rather than from a text search for the name.
-        """
-        from verityai.graph.query import GraphQuery
-
-        with _graph() as graph:
-            if not graph.stats().get("nodes.total"):
-                return "The code graph is empty. Call build_code_graph first."
-
-            query = GraphQuery(graph)
-            matches = query.define(name)
-            if not matches:
-                return f"No definition of {name!r} found."
-
-            node = matches[0]
-            callers = query.callers(node.id)
-            tests = query.tests_for(node.id)
-
-            lines = [
-                f"{node.kind.value} {node.qualname or node.name} ({node.path}:{node.line})",
-                "",
-            ]
-            lines.append(f"Called by ({len(callers)}):")
-            lines.extend(f"  {c.qualname or c.name}  ({c.path})" for c in callers[:20] or [])
-            if not callers:
-                lines.append("  nothing -- it may be dead code, or reached indirectly")
-            lines.append("")
-            lines.append(f"Tested by ({len(tests)}):")
-            lines.extend(f"  {t.qualname or t.name}  ({t.path})" for t in tests[:20] or [])
-            if not tests:
-                lines.append(
-                    "  no direct test edge. Note this over-reports: a test driving this "
-                    "indirectly would not show up here."
-                )
-            return "\n".join(lines)
-
-    @server.tool()
-    def build_code_graph(force: bool = False) -> str:
-        """Index the repository into a queryable code graph.
-
-        Call this once at the start of a session, and again after substantial
-        edits. It is incremental — unchanged files are skipped — so re-running
-        it is cheap.
-
-        The response states how much of the tree is actually represented.
-        Python only in this version; other languages are reported as not read
-        rather than silently missing.
-        """
-        from verityai.graph.ingest import ingest_repo
-
-        store = _store()
-        with _graph() as graph:
-            report = ingest_repo(store.root.parent, graph, force=force)
-            stats = graph.stats()
-
-        return (
-            f"{report.coverage_note}\n"
-            f"{stats['nodes.total']:,} nodes, {stats['edges.total']:,} edges "
-            f"in {report.duration_seconds}s.\n"
-            f"{stats['edges.unresolved']:,} calls unresolved (builtins, methods on "
-            "untyped locals) -- kept, not discarded."
-        )
-
-    @server.tool()
-    def check_claims(text: str) -> str:
-        """Check your own claims against the code graph before stating them.
-
-        Call this on your own draft response before sending it, whenever it
-        asserts something checkable about the codebase -- that a symbol
-        exists, that one function calls another, that a file is at some path.
-        Write the claims in backticks the way you normally format code
-        references (`` `ClassName.method` ``, `` `A` calls `B` ``) and this
-        will tell you which ones the graph or memory actually contradicts.
-
-        Also flags text that resembles a decision already rejected or
-        superseded, so you do not re-propose something already ruled out.
-
-        No model is involved in the checking -- a claim it cannot extract is
-        simply not checked, never guessed at. Requires `build_code_graph` for
-        the symbol and relation checks; decision checks work regardless.
-        """
-        from verityai.consistency.check import render_report, run_consistency_check
-        from verityai.graph.query import GraphQuery
-
-        store = _store()
-        with _graph() as graph:
-            query = GraphQuery(graph) if graph.stats().get("nodes.total") else None
-            report = run_consistency_check(
-                text, query=query, store=store, repo_root=store.root.parent
+        if op == "optimize":
+            return _missing(
+                f'context(op="{op}")', transcript=transcript
+            ) or handlers.optimize_context(transcript, task, budget)
+        if op == "health":
+            return _missing(
+                f'context(op="{op}")', transcript=transcript
+            ) or handlers.context_health(transcript)
+        if op == "recall":
+            return _missing(f'context(op="{op}")', task=task) or handlers.recall(
+                root, task, context_sample
             )
-
-        if not report.checks:
-            return f"No checkable claims found in that text ({report.claims_extracted} extracted)."
-
-        result = render_report(report)
-        if report.contradictions:
-            return f"FOUND {len(report.contradictions)} CONTRADICTION(S):\n\n{result}"
-        return f"All claims check out.\n\n{result}"
+        raise AssertionError(f"unhandled op {op!r}")  # pragma: no cover
 
     @server.tool()
-    def check_security() -> str:
-        """Scan the repository for SQL injection and check-then-act races.
+    def remember(
+        kind: Literal["decision", "constraint", "discovery", "failure"],
+        statement: str,
+        why: str = "",
+        hard: bool = True,
+    ) -> str:
+        """Write something to durable project memory, permanently.
 
-        Call this before finishing a task that touches database queries or
-        shared mutable state (caches, in-memory counters, session stores).
-        Deterministic AST pattern matching, not a model and not a proof -- a
-        finding means "worth a human look," a clean scan means "not this
-        exact shape," neither is a soundness guarantee. See the returned
-        caveats for exactly what each rule can and cannot see.
+        Call this the moment you learn or decide something a future session
+        would otherwise pay to rediscover. Records are append-only and never
+        deleted, so a rejected approach stays visible instead of being quietly
+        re-proposed later.
+
+        kinds:
+          decision    A choice between approaches, especially a rejection.
+                      `statement` is the choice, `why` the rationale.
+          constraint  A rule the solution must respect — a dependency you must
+                      not add, an interface you must not break. Call this for
+                      anything that invalidates the work if violated. Set
+                      `hard=False` for a preference rather than a rule.
+          discovery   Something non-obvious you learned about the project: how
+                      a module is wired, where a behaviour actually lives.
+                      This is information you paid tool calls for.
+          failure     A dead end. `statement` is what you tried, `why` the
+                      error. Call this on every one — it is the most valuable
+                      thing to remember on a long task and the easiest to
+                      forget, and without it the same approach gets attempted
+                      again several hours later.
         """
-        from verityai.reliability.report import render_report
-        from verityai.reliability.security import caveats_for, scan_repo
-
-        store = _store()
-        report = scan_repo(store.root.parent)
-        return render_report(report, title="SECURITY", caveats=caveats_for(report.violations))
-
-    @server.tool()
-    def risk_of_changing(paths: list[str]) -> str:
-        """Tier files you are about to change: how much verification each earns.
-
-        Call this before editing several files at once, or when deciding
-        where to spend review effort. Returns low/medium/high per file with
-        the reasons behind it -- blast radius, fan-in, untested public
-        symbols, and path conventions like `auth/` or `migrations/`.
-
-        A tier is a *depth*, not a finding: "high" does not mean the file is
-        broken, it means a change there deserves more scrutiny than a change
-        to a leaf. Nothing here gates the security scan -- run `check_security`
-        as well, always.
-
-        Paths must be repo-relative as `build_code_graph` stored them
-        (`src/pkg/mod.py`). Absolute paths are relativized when possible; a
-        path that cannot be resolved is reported as such rather than silently
-        tiered low, since "no signals found" and "no risk found" are different
-        answers.
-        """
-        from verityai.graph.query import GraphQuery
-        from verityai.reliability.risk import classify_paths
-
-        if not paths:
-            return "No paths given. Pass the files you are about to change."
-
-        store = _store()
-        with _graph() as graph:
-            if not graph.stats().get("nodes.total"):
-                return (
-                    "The code graph is empty, so every file would tier 'low' for lack of "
-                    "signals -- which would read as 'nothing needs scrutiny' when nothing "
-                    "was measured. Call build_code_graph first."
-                )
-            verdicts = classify_paths(paths, GraphQuery(graph), repo_root=store.root.parent)
-
-        order = {"high": 0, "medium": 1, "low": 2}
-        lines: list[str] = []
-        for path, (tier, reasons) in sorted(
-            verdicts.items(), key=lambda kv: (order[kv[1][0]], kv[0])
-        ):
-            lines.append(f"[{tier.upper()}] {path}")
-            lines.extend(f"    {reason}" for reason in reasons)
-        return "\n".join(lines)
-
-    @server.tool()
-    def should_recall_memory(task: str, context_sample: str = "") -> str:
-        """Ask whether now is the moment to pull saved decisions back in.
-
-        Call this when a task has been running for a while, when you notice
-        you are re-deriving something, or before starting a subtask -- the
-        cases where an agent typically *does not* think to check its own
-        memory, which is exactly why this exists as a prompt-able tool.
-
-        `context_sample` is whatever slice of your working context you can
-        pass; the answer is only about what you hand over (Verity cannot see
-        your window). With no sample this reports what is on file without a
-        trigger judgement.
-
-        Returns the trigger and its threshold, the budget and its basis, and
-        the records worth surfacing -- or says plainly that nothing crossed a
-        threshold, which is a different answer from "there is nothing saved".
-        """
-        from verityai.context.adaptive import (
-            no_trigger_reason,
-            plan_budget,
-            select,
-            should_surface,
+        return _missing(f'remember(kind="{kind}")', statement=statement) or handlers.remember(
+            root, kind, statement, why, hard
         )
-        from verityai.memory.surface import candidates_for
 
-        store = _store()
-        counter = TokenCounter()
-        candidates = candidates_for(store, task, counter)
-        if not candidates:
-            return "Nothing is saved in .verity/ yet, so there is nothing to recall."
+    @server.tool()
+    def session(
+        op: Literal["task", "state", "handoff", "snapshot", "restore", "list"],
+        title: str = "",
+        description: str = "",
+        next_action: str = "",
+        budget: int = 2000,
+        label: str = "",
+        number: int = 0,
+    ) -> str:
+        """Read back or checkpoint the state of the work in progress.
 
-        if not context_sample.strip():
-            lines = [
-                f"No context sample given, so no trigger was computed. {len(candidates)} "
-                "record(s) are on file:",
-            ]
-            lines.extend(f"  - {' '.join(c.content.split())[:100]}" for c in candidates[:10])
-            return "\n".join(lines)
+        Call this at the start of a task, after a context reset, before
+        anything risky, and whenever you are unsure whether something was
+        already decided or already tried.
 
-        items = load(context_sample)
-        pipeline = ContextPipeline(counter=counter)
-        measured = [pipeline.measure(item, n) for n, item in enumerate(items)]
-        health = compute_health(classify_all(measured), counter=counter)
+        ops:
+          task      Record what you are currently working on. Call this first:
+                    everything saved afterwards hangs off it, and it is the
+                    opening section of any handoff. Needs `title`; takes
+                    `description`, `next_action`.
+          state     Retrieve everything recorded about the current task,
+                    unabridged. Call this when starting fresh on existing work.
+          handoff   The same document, fitted to a token budget for a fresh
+                    session: task, state, decisions, constraints, discoveries,
+                    failures, files, next action. Call this when the context is
+                    degrading or you are handing off. Sections drop in a fixed
+                    order if the budget is tight and the answer says which
+                    went. Takes `budget`.
+          snapshot  Capture the current task state as a restorable checkpoint.
+                    Call this before anything risky. Takes `label`.
+          restore   Return to a checkpoint after a wrong path. Needs `number`.
+          list      List the snapshots. Call this before `restore` to find the
+                    right number.
 
-        trigger = should_surface(health)
-        if trigger is None:
-            return (
-                f"No trigger: {no_trigger_reason(health)}.\n"
-                f"{len(candidates)} record(s) are on file and none are being pushed. "
-                "This is a judgement about the context you passed, not a claim that "
-                "the records are irrelevant -- call get_state to read them anyway."
+        Snapshots cover context only — code rollback is git's job, and Verity
+        never modifies your working tree.
+        """
+        if op == "task":
+            return _missing(f'session(op="{op}")', title=title) or handlers.set_task(
+                root, title, description, next_action
             )
-
-        plan = plan_budget(counter, health)
-        decision = select(candidates, task, plan, trigger=trigger)
-
-        lines = [
-            f"RECALL NOW: {trigger.reason}",
-            f"  budget {plan.budget:,} of {plan.window:,} tokens",
-            f"  basis  {plan.basis}",
-            "",
-        ]
-        if decision.degraded_reason:
-            lines.append(f"  degraded: {decision.degraded_reason}")
-            lines.append("")
-        lines.extend(f"  - {' '.join(item.content.split())[:160]}" for item in decision.items)
-        withheld = len(candidates) - len(decision.items)
-        if withheld:
-            lines.append(f"\n  ({withheld} more ranked below the budget cut; get_state has all.)")
-        return "\n".join(lines)
+        if op == "state":
+            return handlers.state(root)
+        if op == "handoff":
+            return handlers.handoff(root, budget)
+        if op == "snapshot":
+            return handlers.snapshot(root, label)
+        if op == "restore":
+            return _missing(f'session(op="{op}")', number=number) or handlers.restore(root, number)
+        if op == "list":
+            return handlers.list_snapshots(root)
+        raise AssertionError(f"unhandled op {op!r}")  # pragma: no cover
 
     @server.tool()
-    def check_architecture() -> str:
-        """Check every import against the project's declared dependency policy.
+    def code(
+        op: Literal["find", "define", "impact", "index"],
+        name: str = "",
+        task: str = "",
+        limit: int = 15,
+        force: bool = False,
+    ) -> str:
+        """Ask the code graph what is actually in this repository.
 
-        Call this after adding a new cross-module import, especially one
-        connecting two different top-level packages under `verityai/` (or
-        this project's own package). A graph algorithm, not a model call --
-        it answers "does this specific import go somewhere the architecture
-        says it shouldn't," which is stronger than just checking for cycles.
+        Call `op="index"` once at the start of a session — every other op reads
+        the graph it builds and will tell you to run it rather than answer from
+        an empty index. Then call this before reading files, and before
+        asserting that any API exists.
+
+        ops:
+          index   Index the repository into a queryable graph. Incremental —
+                  unchanged files are skipped — so re-running after edits is
+                  cheap. The answer states how much of the tree is actually
+                  represented; Python only in this version, and other languages
+                  are reported as not read rather than silently missing. Takes
+                  `force` to rebuild from scratch.
+          find    Find code related to a task, by relationship as well as by
+                  name. Call this before opening files. It seeds on text and
+                  then follows call, containment, inheritance and test edges,
+                  so it surfaces the function that has nothing to do with your
+                  search terms but is called by one that does — which grep and
+                  embedding search both miss. Every result says why it was
+                  included. Needs `task`; takes `limit`.
+          define  Check whether a function, class or method actually exists,
+                  and where. Call this before asserting an API is available,
+                  and whenever you are about to act on a memory of the codebase
+                  rather than something you just read. Far cheaper than opening
+                  files, and the difference between believing and knowing.
+                  Needs `name`.
+          impact  See what depends on a symbol before you change it: what calls
+                  it and which tests exercise it. Call this before editing any
+                  shared function or class. The blast radius is derived from
+                  edges, not from a text search for the name. Needs `name`.
         """
-        from verityai.reliability.architecture import check_architecture_at
-        from verityai.reliability.report import render_report
-
-        store = _store()
-        report = check_architecture_at(store.root.parent)
-        return render_report(report, title="ARCHITECTURE")
-
-    # --- snapshots ---------------------------------------------------------
+        if op == "index":
+            return handlers.index(root, force)
+        if op == "find":
+            return _missing(f'code(op="{op}")', task=task) or handlers.find(root, task, limit)
+        if op == "define":
+            return _missing(f'code(op="{op}")', name=name) or handlers.define(root, name)
+        if op == "impact":
+            return _missing(f'code(op="{op}")', name=name) or handlers.impact(root, name)
+        raise AssertionError(f"unhandled op {op!r}")  # pragma: no cover
 
     @server.tool()
-    def snapshot(label: str = "") -> str:
-        """Capture the current task state as a restorable snapshot.
+    def verify(
+        op: Literal["claims", "security", "architecture", "risk"],
+        text: str = "",
+        paths: list[str] | None = None,
+    ) -> str:
+        """Check work against the repository before you call it done.
 
-        Call this before anything risky. Snapshots cover context only — code
-        rollback is git's job, and Verity never modifies the working tree.
+        Call this on your own draft answer, and on the files you touched, near
+        the end of a task. Nothing here is a model call and nothing here is a
+        proof: these are deterministic checks that say what they cannot see.
+
+        ops:
+          claims        Check your own claims against the code graph and saved
+                        memory. Call this on a draft response that asserts
+                        something checkable — that a symbol exists, that one
+                        function calls another, that a file is at some path.
+                        Write them in backticks the way you normally format
+                        code references (`ClassName.method`, `A` calls `B`).
+                        Also flags text resembling a decision already rejected
+                        or superseded. A claim it cannot extract is simply not
+                        checked, never guessed at. Needs `text`.
+          security      Scan for SQL injection and check-then-act races. Call
+                        this before finishing a task touching database queries
+                        or shared mutable state (caches, counters, session
+                        stores). A finding means "worth a human look"; a clean
+                        scan means "not this exact shape". See the returned
+                        caveats for what each rule cannot see.
+          architecture  Check every import against the project's declared
+                        dependency policy. Call this after adding a
+                        cross-package import. A graph algorithm, not a cycle
+                        check: it answers whether this specific import goes
+                        somewhere the architecture says it should not.
+          risk          Tier files you are about to change: how much
+                        verification each earns. Call this before editing
+                        several files at once. Returns low/medium/high per file
+                        with reasons — blast radius, fan-in, untested public
+                        symbols, conventions like `auth/` or `migrations/`. A
+                        tier is a *depth*, not a finding: "high" does not mean
+                        broken. It gates nothing — run `security` as well,
+                        always. Needs `paths`, repo-relative as `index` stored
+                        them (`src/pkg/mod.py`); a path that cannot be resolved
+                        is reported as such rather than silently tiered low.
         """
-        snap = SnapshotManager(_store()).create(label=label)
-        return f"Snapshot {snap.number:03d} created" + (f" ({label})" if label else "")
-
-    @server.tool()
-    def restore(number: int) -> str:
-        """Restore task state from a snapshot.
-
-        Call this after going down a wrong path, when the current state has
-        become confused, or when you need to return to a known-good point.
-
-        Restores context only. If the code also needs reverting, do that
-        yourself with git — this tool will not touch your files.
-        """
-        manager = SnapshotManager(_store())
-        snap = manager.restore(number)
-        if snap is None:
-            return f"No snapshot {number:03d}. Use list_snapshots to see what exists."
-
-        advice = (
-            f"\n\nThis state was captured at commit {snap.git_sha[:12]}. "
-            "Verity has not touched your working tree; revert the code yourself if needed."
-            if snap.git_sha
-            else ""
-        )
-        return f"Restored snapshot {snap.number:03d}.{advice}"
-
-    @server.tool()
-    def list_snapshots() -> str:
-        """List available snapshots.
-
-        Call this before `restore` to find the right number.
-        """
-        snapshots = SnapshotManager(_store()).list()
-        if not snapshots:
-            return "No snapshots yet."
-        return "\n".join(
-            f"  {s.number:03d}  {s.created_at:%Y-%m-%d %H:%M}  {s.label}" for s in snapshots
-        )
+        if op == "claims":
+            return _missing(f'verify(op="{op}")', text=text) or handlers.check_claims(root, text)
+        if op == "security":
+            return handlers.check_security(root)
+        if op == "architecture":
+            return handlers.check_architecture(root)
+        if op == "risk":
+            if not paths:
+                return "No paths given. Pass the files you are about to change."
+            return handlers.risk(root, paths)
+        raise AssertionError(f"unhandled op {op!r}")  # pragma: no cover
 
     return server
 
 
 def main() -> None:
-    """Run the server over stdio."""
-    build_server().run()
+    parser = argparse.ArgumentParser(
+        prog="verity-mcp", description="Run the Verity MCP server over stdio."
+    )
+    parser.add_argument(
+        "--root",
+        default=os.environ.get("VERITY_ROOT"),
+        help=(
+            "Project directory holding .verity/ (default: $VERITY_ROOT, then the "
+            "working directory). Set this when the client does not launch the "
+            "server inside the project -- otherwise state is written where the "
+            "client happened to start, silently."
+        ),
+    )
+    args = parser.parse_args()
+    build_server(root=args.root).run()
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()
