@@ -35,7 +35,7 @@ environment those agents work in.
 
 ## Status
 
-**Phase 4 of 5.** All five engines work, are covered by 520 tests (96%
+**Phase 4 of 5.** All five engines work, are covered by 668 tests (95%
 coverage, no network and no services), and are reachable from both a CLI
 and an MCP server. Phase 5 (deeper agent integrations and a UI) has not
 started.
@@ -48,9 +48,10 @@ started.
 | Consistency — hallucinated and contradictory claims | working |
 | Reliability — architecture, security | working |
 
-One Family A measurement and seven Family B pilots have been run, on real
+One Family A measurement and nine Family B pilots have been run, on real
 data rather than synthetic fixtures. Results — including the four pilots
-that found no effect — are summarized below and detailed in
+that found no effect, and three whose cost figures were later found to have
+no retained evidence — are summarized below and detailed in
 [`docs/MEASUREMENTS.md`](docs/MEASUREMENTS.md).
 
 ---
@@ -77,22 +78,33 @@ floor.** Nine pilots, reported whatever they found:
 | [0011](docs/adr/0011-family-b-pilot-ceiling-effect.md) | Does the harness change a task's outcome? | `indistinguishable_from_noise` — 20/20 both conditions. A ceiling, not a null result |
 | [0013](docs/adr/0013-numeric-recall-pilot.md) | Does figure protection survive a real token budget? | `likely_real_difference` — 0/5 vs 5/5 |
 | [0014](docs/adr/0014-agent-driven-memory-pilot.md) | Does an agent use a memory tool unprompted across turns? | `likely_real_difference` — 0/5 vs 5/5 |
-| [0015](docs/adr/0015-recovery-after-reset-pilot.md) | Does recovering a handoff after a reset change the outcome? | Success ceilinged; **cost** fell below the noise floor |
-| [0016](docs/adr/0016-harder-recovery-pilot.md) | Does a harder bug break that ceiling? | No. Cost effect reproduced and grew |
-| [0017](docs/adr/0017-runtime-bug-pilot.md) | Does changing the bug's *shape* break it? | No. Cost effect reproduced a third time |
+| [0015](docs/adr/0015-recovery-after-reset-pilot.md) | Does recovering a handoff after a reset change the outcome? | Success ceilinged; a cost saving was reported but its evidence was later destroyed — see below |
+| [0016](docs/adr/0016-harder-recovery-pilot.md) | Does a harder bug break that ceiling? | No. Same cost claim, same lost evidence |
+| [0017](docs/adr/0017-runtime-bug-pilot.md) | Does changing the bug's *shape* break it? | No. Same cost claim, same lost evidence |
 | [0018](docs/adr/0018-consistency-engine-first-measurement.md) | Does the Consistency Engine catch real hallucinations? | 100% recall on invented symbols; three real bugs found and fixed |
 | [0019](docs/adr/0019-domain-ambiguity-pilot.md) | Does an ambiguity *not derivable from code at all* break the ceiling? | No — but for a new reason: the model's naming convention matched the policy in 10/10 trials regardless of condition |
 | [0020](docs/adr/0020-arbitrary-tiebreak-pilot.md) | Does an ambiguity with *no* linguistic convention finally break it? | **Yes.** `likely_real_difference` — 0/5 vs 5/5, the first success-rate split in the series |
 
 The honest summary of those nine: **recovery after a context reset
-reliably makes an already-achievable outcome cheaper — the most reproduced
-result here — and it can also change whether the outcome is correct at
-all, when what's missing is knowledge no amount of reading the code can
-supply.** It took five consecutive ceilings and two attempts at a
-code-unresolvable ambiguity to isolate that condition precisely: not
+reliably ceilings task success, and can also change whether the outcome
+is correct at all, when what's missing is knowledge no amount of reading
+the code can supply.** It took five consecutive ceilings and two attempts
+at a code-unresolvable ambiguity to isolate that condition precisely: not
 harder tracing, not vaguer wording, but an answer with no inferable signal
 anywhere in the repository. All nine results are reported as found, ceiling
 or not.
+
+Pilots 4–6 also reported that recovery made the ceilinged outcome *cheaper*
+— fewer tool calls per trial, reproduced three times running. That claim is
+**not currently checkable**: the per-trial evidence was destroyed by a later
+re-run of the pilots' own setup script before this project required retained
+artifacts (ADR-0027), and `tool_uses` is a property of agent behaviour that
+no fixture-and-scorer harness can regenerate after the fact. The figures are
+not repeated here; they are recorded, with the full account of what was lost
+and why it cannot be repaired, in
+[`experiments/UNREPRODUCIBLE.md`](experiments/UNREPRODUCIBLE.md). Cite the
+ceiling results above freely. Cite the cost claim only as history, and only
+with that file alongside it.
 
 ---
 
@@ -166,6 +178,12 @@ verity remember failure "fixed window counter" --error "rejected legitimate burs
 
 # Generate a handoff for a cold session
 verity handoff --budget 2000
+
+# Read everything on file, unabridged (no --budget)
+verity state
+
+# Should saved decisions be pulled back into a context right now?
+verity recall --task "rate limiting" --sample transcript.json
 
 verity snapshot "before the refactor"
 verity restore 1
@@ -371,7 +389,7 @@ looks like. This is the rule that turned T2 from a result into a retraction.
 pip install -e ".[dev]"
 
 make check      # everything CI runs: ruff, mypy, pytest with coverage
-make test       # 520 tests, no network, no services, ~3s
+make test       # 668 tests, no network, no services, ~10s
 make dogfood    # the harness checks its own architecture (ADR-0008)
 ```
 

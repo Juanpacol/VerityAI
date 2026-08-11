@@ -211,7 +211,7 @@ has the detail; the short version:
 ## Development
 
 ```bash
-pytest tests/           # 657 tests, no network, no services, no fixtures needed
+pytest tests/           # 668 tests, no network, no services, no fixtures needed
 ruff check src/ tests/
 ruff format src/ tests/
 ```

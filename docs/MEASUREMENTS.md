@@ -298,6 +298,18 @@ a real technique for scoring "correct for the right reason" versus
 "happened to pass" — and proposes the next pilot use an ambiguity with no
 dominant convention (a coin-flip-shaped choice, not a language-shaped one).
 
+> **Evidence:** retrofitted onto a retained artifact
+> ([ADR-0031](adr/0031-pilot-7-retrofit.md)) —
+> `experiments/family_b_pilot_7_domain_ambiguity/evidence/` holds a diff,
+> scorer output and a fixture-pinned manifest for all 10 trials, reconstructed
+> from the code each trial actually left behind. `verity verify
+> experiments/family_b_pilot_7_domain_ambiguity/evidence` re-derives the table
+> below exactly. The gate still reports this run NOT PUBLISHABLE (a
+> reconstruction that replays one fixed script per condition has no trial-to-
+> trial variance for the noise-floor check to observe) — see the ADR for why
+> that is a structural property of retrofitting a ceiling, not a defect in
+> the number.
+
 **An eighth pilot found that ambiguity, and the ceiling broke.**
 (`experiments/family_b_pilot_8_arbitrary_tiebreak/`, [ADR-0020](adr/0020-arbitrary-tiebreak-pilot.md)):
 same hidden-test design, but the ambiguity is a tie-break rule between two
@@ -322,6 +334,12 @@ it was the *absence of any inferable signal* in the ambiguity itself. See
 ADR-0020 for what made this design succeed where pilot 7's didn't, and its
 own stated limits (N=5, one fixture, a decision that named the rule
 explicitly).
+
+> **Evidence:** the only Family B pilot with a retained artifact —
+> `experiments/family_b_pilot_8_arbitrary_tiebreak/evidence/` holds a
+> per-trial diff, scorer output and a manifest pinned to the fixture's
+> hash, produced by the committed `eval_spec.json`. Re-derive the table
+> above with `verity verify experiments/family_b_pilot_8_arbitrary_tiebreak/evidence`.
 
 **The Consistency Engine got its own first real measurement**
 (`experiments/consistency_pilot_1_hallucination_detection/`, [ADR-0018](adr/0018-consistency-engine-first-measurement.md)),

@@ -1,0 +1,10 @@
+diff --git a/billing/late_fee.py b/billing/late_fee.py
+--- a/billing/late_fee.py
++++ b/billing/late_fee.py
+@@ -4,4 +4,6 @@
+ 
+ 
+ def apply_late_fee(subtotal: float, days_overdue: int, grace_days: int) -> float:
++    if days_overdue > grace_days:
++        return subtotal * (1 + FEE_RATE)
+     return subtotal

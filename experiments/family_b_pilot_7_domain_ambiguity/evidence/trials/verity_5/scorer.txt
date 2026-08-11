@@ -1,0 +1,5 @@
+--- scorer stdout ---
+{"visible_pass": 1.0, "boundary_correct": 1.0}
+
+--- scorer stderr ---
+

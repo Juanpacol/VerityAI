@@ -1,0 +1,12 @@
+{
+  "name": "family_b_pilot_7_domain_ambiguity",
+  "fixture_path": "experiments/family_b_pilot_7_domain_ambiguity/fixture_repo",
+  "conditions": ["naive", "verity"],
+  "n": 5,
+  "scorer_command": "python3 \"$VERITY_SPEC_DIR/score_pilot7.py\"",
+  "metric_keys": ["visible_pass", "boundary_correct"],
+  "condition_commands": {
+    "naive": "printf '\"\"\"Late-fee calculation.\"\"\"\\n\\nFEE_RATE = 0.02\\n\\n\\ndef apply_late_fee(subtotal: float, days_overdue: int, grace_days: int) -> float:\\n    if days_overdue > grace_days:\\n        return subtotal * (1 + FEE_RATE)\\n    return subtotal\\n' > billing/late_fee.py",
+    "verity": "printf '\"\"\"Late-fee calculation.\"\"\"\\n\\nFEE_RATE = 0.02\\n\\n\\ndef apply_late_fee(subtotal: float, days_overdue: int, grace_days: int) -> float:\\n    if days_overdue > grace_days:\\n        return subtotal * (1 + FEE_RATE)\\n    return subtotal\\n' > billing/late_fee.py"
+  }
+}

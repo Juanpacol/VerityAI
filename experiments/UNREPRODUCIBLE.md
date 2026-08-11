@@ -47,6 +47,15 @@ tool-call reduction; their evidence was lost and the figures cannot be
 re-checked." Never as a current result, never in external material, and never
 aggregated with figures that do have artifacts.
 
+**Removed from `README.md` (2026-08-11).** The README's Family B summary
+previously stated the cost saving as a standing result ("the most reproduced
+result here"). That framing did not distinguish a claim with retained
+evidence from one without, so it has been rewritten to state only the
+ceilinged success result and to point here for the cost claim, with the
+explicit caveat that the cost claim is history, not a current, checkable
+number. `docs/MEASUREMENTS.md` already carried the correct per-pilot caveats
+before this change and was not restated.
+
 **What a real successor would need.** A live-agent pilot with tool calls
 counted from the transcript rather than self-reported, run through
 `verity eval` so each trial retains a diff and a manifest line. That is new
@@ -61,10 +70,21 @@ For contrast, and so this file is not read as a general disclaimer:
 | Result | Artifact |
 |---|---|
 | [Pilot 8 — arbitrary tie-break](family_b_pilot_8_arbitrary_tiebreak/) | `evidence/` — a per-trial diff, scorer output, and a manifest pinned to the fixture's hash, plus the `eval_spec.json` that produced them. `tests/unit/test_bench_evidence.py` re-derives every trial's metric on each test run. |
+| [Pilot 7 — domain ambiguity](family_b_pilot_7_domain_ambiguity/) | `evidence/`, retrofitted 2026-08-11 ([ADR-0031](../docs/adr/0031-pilot-7-retrofit.md)) from the code each trial left behind. `verity verify experiments/family_b_pilot_7_domain_ambiguity/evidence` re-derives all 10 trials to the originally published 5/5-and-5/5. `verity eval` still reports the run NOT PUBLISHABLE — see the ADR for why that is structural to retrofitting a ceiling, not a discrepancy in the number. |
 
-Pilot 7's headline metric is likewise a deterministic property of committed
-code, though it has not yet been re-run through the harness to produce an
-`evidence/` directory.
+**Retrofit candidates, not yet attempted**, in order of how directly their
+existing materials support a scorer:
+
+- **Pilot 2 (numeric recall)** — no fixture directory, but a regenerable one
+  (`generate_fixture.py`, committed) and a committed `ground_truth.json` an
+  exact-match scorer could check. Closest in shape to pilot 8.
+- **Pilot 1 and the consistency pilot** — fixtures exist, but the original
+  scoring was live-agent behaviour judged against prose
+  (`ground_truth.md`), not an exact check; retrofitting either needs a new
+  machine-checkable scorer, not just a reconstruction of left-behind code.
+- **Pilot 3 (agent memory)** — not retrofittable by this technique for the
+  same reason as pilots 4-6: its trials retained only `.verity/` state, not
+  code, and its metric is a property of live multi-turn agent behaviour.
 
 ---
 
