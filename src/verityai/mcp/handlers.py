@@ -18,7 +18,7 @@ from verityai.context.ingest import load
 from verityai.context.prune import ContextPipeline
 from verityai.context.tokenizer import TokenCounter
 from verityai.core.models import Constraint, Decision, Discovery, Failure, Task
-from verityai.memory.handoff import build_handoff
+from verityai.memory.handoff import build_handoff, render_token_footer
 from verityai.memory.snapshot import SnapshotManager
 from verityai.memory.store import MemoryStore
 
@@ -94,61 +94,15 @@ def context_health(transcript: str) -> str:
 
 
 def recall(root: str | None, task: str, context_sample: str) -> str:
-    from verityai.context.adaptive import (
-        no_trigger_reason,
-        plan_budget,
-        select,
-        should_surface,
-    )
+    from verityai.context.adaptive import describe_recall
     from verityai.memory.surface import candidates_for
 
     store = store_at(root)
     counter = TokenCounter()
     candidates = candidates_for(store, task, counter)
-    if not candidates:
-        return "Nothing is saved in .verity/ yet, so there is nothing to recall."
-
-    if not context_sample.strip():
-        lines = [
-            f"No context sample given, so no trigger was computed. {len(candidates)} "
-            "record(s) are on file:",
-        ]
-        lines.extend(f"  - {' '.join(c.content.split())[:100]}" for c in candidates[:10])
-        return "\n".join(lines)
-
-    items = load(context_sample)
-    pipeline = ContextPipeline(counter=counter)
-    measured = [pipeline.measure(item, n) for n, item in enumerate(items)]
-    health = compute_health(classify_all(measured), counter=counter)
-
-    trigger = should_surface(health)
-    if trigger is None:
-        return (
-            f"No trigger: {no_trigger_reason(health)}.\n"
-            f"{len(candidates)} record(s) are on file and none are being pushed. "
-            "This is a judgement about the context you passed, not a claim that "
-            'the records are irrelevant -- call session(op="state") to read them anyway.'
-        )
-
-    plan = plan_budget(counter, health)
-    decision = select(candidates, task, plan, trigger=trigger)
-
-    lines = [
-        f"RECALL NOW: {trigger.reason}",
-        f"  budget {plan.budget:,} of {plan.window:,} tokens",
-        f"  basis  {plan.basis}",
-        "",
-    ]
-    if decision.degraded_reason:
-        lines.append(f"  degraded: {decision.degraded_reason}")
-        lines.append("")
-    lines.extend(f"  - {' '.join(item.content.split())[:160]}" for item in decision.items)
-    withheld = len(candidates) - len(decision.items)
-    if withheld:
-        lines.append(
-            f'\n  ({withheld} more ranked below the budget cut; session(op="state") has all.)'
-        )
-    return "\n".join(lines)
+    return describe_recall(
+        candidates, task, context_sample, counter, see_all_hint='session(op="state")'
+    )
 
 
 # --- memory ----------------------------------------------------------------
@@ -178,17 +132,12 @@ def set_task(root: str | None, title: str, description: str, next_action: str) -
 
 def state(root: str | None) -> str:
     document, report = build_handoff(store_at(root))
-    return f"{document}\n[{report['tokens']:,} tokens, {report['token_method']}]"
+    return f"{document}\n{render_token_footer(report)}"
 
 
 def handoff(root: str | None, budget: int) -> str:
     document, report = build_handoff(store_at(root), budget=budget)
-    dropped = (
-        f"\n[dropped to fit budget: {', '.join(report['dropped_sections'])}]"
-        if report["dropped_sections"]
-        else ""
-    )
-    return f"{document}\n[{report['tokens']:,} tokens, {report['token_method']}]{dropped}"
+    return f"{document}\n{render_token_footer(report)}"
 
 
 # --- snapshots -------------------------------------------------------------

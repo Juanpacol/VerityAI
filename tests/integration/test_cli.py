@@ -164,6 +164,78 @@ class TestMemoryCommands:
         assert "# HANDOFF" in out.read_text()
 
 
+class TestState:
+    """`verity state` is the CLI counterpart of MCP's `session(op="state")` --
+    CLAUDE.md requires a person be able to reproduce whatever an agent saw."""
+
+    def test_state_matches_unbudgeted_handoff(self, initialized):
+        runner.invoke(app, ["task", "add rate limiting"])
+        runner.invoke(app, ["remember", "decision", "token bucket"])
+
+        state_out = runner.invoke(app, ["state"]).output
+        handoff_out = runner.invoke(app, ["handoff"]).output
+
+        assert state_out == handoff_out
+
+    def test_state_is_unabridged_where_handoff_can_be_budgeted(self, initialized):
+        runner.invoke(app, ["task", "the task"])
+        runner.invoke(app, ["remember", "discovery", "a fairly long discovery " * 20])
+
+        budgeted = runner.invoke(app, ["handoff", "--budget", "30"]).output
+        unabridged = runner.invoke(app, ["state"]).output
+
+        assert "dropped to fit budget" in budgeted
+        assert "dropped to fit budget" not in unabridged
+
+
+class TestRecall:
+    """`verity recall` is the CLI counterpart of MCP's `context(op="recall")`."""
+
+    def test_an_empty_store_says_so(self, initialized):
+        result = runner.invoke(app, ["recall", "--task", "rate limiting"])
+
+        assert "nothing to recall" in result.output
+
+    def test_without_a_sample_it_lists_what_is_on_file(self, initialized):
+        runner.invoke(app, ["remember", "decision", "use a token bucket"])
+
+        result = runner.invoke(app, ["recall", "--task", "rate limiting"])
+
+        assert "No context sample" in result.output
+        assert "token bucket" in result.output
+
+    def test_an_untriggered_sample_distinguishes_its_answer(self, initialized, tmp_path):
+        """ "Nothing crossed a threshold" must not read as "nothing is saved"."""
+        runner.invoke(app, ["remember", "decision", "use a token bucket"])
+        sample = tmp_path / "sample.json"
+        sample.write_text(TRANSCRIPT)
+
+        result = runner.invoke(app, ["recall", "--task", "rate limiting", "--sample", str(sample)])
+
+        assert "No trigger" in result.output
+        assert "not a claim that" in result.output
+        assert "verity state" in result.output
+        assert 'session(op="state")' not in result.output
+
+    def test_a_triggered_sample_returns_the_records_with_budget_and_basis(
+        self, initialized, tmp_path
+    ):
+        runner.invoke(app, ["remember", "constraint", "must not add a Redis dependency"])
+        chunk = " ".join(f"artifact{n}" for n in range(100))
+        big = json.dumps(
+            [{"role": "tool", "content": f"build chunk {i}: {chunk}"} for i in range(1600)]
+        )
+        sample = tmp_path / "big.json"
+        sample.write_text(big)
+
+        result = runner.invoke(app, ["recall", "--task", "rate limiting", "--sample", str(sample)])
+
+        assert "RECALL NOW" in result.output
+        assert "basis" in result.output
+        assert "Redis" in result.output
+        assert 'session(op="state")' not in result.output
+
+
 class TestSnapshots:
     def test_snapshot_restore_round_trip(self, initialized):
         runner.invoke(app, ["task", "original task"])

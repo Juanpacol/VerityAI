@@ -20,6 +20,10 @@ rule), so candidate *sourcing* lives in `memory/surface.py`; this module
 only ranks and budgets what it is handed.
 """
 
+from verityai.context.classify import classify_all
+from verityai.context.health import compute_health
+from verityai.context.ingest import load
+from verityai.context.prune import ContextPipeline
 from verityai.context.rank import ContextRanker
 from verityai.context.tokenizer import TokenCounter
 from verityai.core.models import (
@@ -195,3 +199,69 @@ def select(
         trigger=trigger,
         degraded_reason="; ".join(reasons) or None,
     )
+
+
+def describe_recall(
+    candidates: list[ContextItem],
+    task: str,
+    context_sample: str,
+    counter: TokenCounter,
+    *,
+    see_all_hint: str,
+) -> str:
+    """Render "should this be recalled now" for a surface -- CLI or MCP.
+
+    Pulled out because the CLI and MCP surfaces built this report twice with
+    the same data and quietly different wording (different preview lengths,
+    different padding), which is exactly the kind of drift CLAUDE.md's "a
+    person must be able to reproduce what an agent saw" rule exists to
+    prevent. This function takes `candidates` already resolved by the caller
+    (`memory.surface.candidates_for`) rather than a `MemoryStore`, so that
+    `context/` still never imports `memory/`.
+
+    `see_all_hint` is the surface-appropriate way to say "read everything on
+    file anyway" -- `verity state` from the CLI, `session(op="state")` from
+    MCP -- so the two outputs differ only in the one place they must.
+    """
+    if not candidates:
+        return "Nothing is saved in .verity/ yet, so there is nothing to recall."
+
+    if not context_sample.strip():
+        lines = [
+            f"No context sample given, so no trigger was computed. {len(candidates)} "
+            "record(s) are on file:",
+        ]
+        lines.extend(f"  - {' '.join(c.content.split())[:100]}" for c in candidates[:10])
+        return "\n".join(lines)
+
+    items = load(context_sample)
+    pipeline = ContextPipeline(counter=counter)
+    measured = [pipeline.measure(item, n) for n, item in enumerate(items)]
+    health = compute_health(classify_all(measured), counter=counter)
+
+    trigger = should_surface(health)
+    if trigger is None:
+        return (
+            f"No trigger: {no_trigger_reason(health)}.\n"
+            f"{len(candidates)} record(s) are on file and none are being pushed. "
+            "This is a judgement about the context you passed, not a claim that "
+            f"the records are irrelevant -- call {see_all_hint} to read them anyway."
+        )
+
+    plan = plan_budget(counter, health)
+    decision = select(candidates, task, plan, trigger=trigger)
+
+    lines = [
+        f"RECALL NOW: {trigger.reason}",
+        f"  budget {plan.budget:,} of {plan.window:,} tokens",
+        f"  basis  {plan.basis}",
+        "",
+    ]
+    if decision.degraded_reason:
+        lines.append(f"  degraded: {decision.degraded_reason}")
+        lines.append("")
+    lines.extend(f"  - {' '.join(item.content.split())[:160]}" for item in decision.items)
+    withheld = len(candidates) - len(decision.items)
+    if withheld:
+        lines.append(f"\n  ({withheld} more ranked below the budget cut; {see_all_hint} has all.)")
+    return "\n".join(lines)

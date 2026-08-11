@@ -128,6 +128,21 @@ def build_handoff(
     }
 
 
+def render_token_footer(report: dict) -> str:
+    """The token-count line `build_handoff` callers print, plus dropped
+    sections if any -- one string, so the CLI and MCP surfaces cannot drift
+    on wording the way they had (same data, different padding) before this
+    was pulled out.
+
+    Returns the footer only; where a caller puts it (stdout, stderr, appended
+    to a returned string) stays theirs to decide.
+    """
+    lines = [f"[{report['tokens']:,} tokens, {report['token_method']}]"]
+    if report["dropped_sections"]:
+        lines.append(f"[dropped to fit budget: {', '.join(report['dropped_sections'])}]")
+    return "\n".join(lines)
+
+
 def _render(
     task: Task | None,
     decisions: list[Decision],

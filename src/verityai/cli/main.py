@@ -23,7 +23,7 @@ from verityai.context.ingest import load
 from verityai.context.prune import ContextPipeline
 from verityai.context.tokenizer import TokenCounter
 from verityai.core.models import Constraint, Decision, Discovery, Failure, Task
-from verityai.memory.handoff import build_handoff
+from verityai.memory.handoff import build_handoff, render_token_footer
 from verityai.memory.snapshot import SnapshotManager
 from verityai.memory.store import MemoryStore
 
@@ -286,7 +286,13 @@ def handoff(
     budget: int | None = typer.Option(None, "--budget", "-b", help="Token ceiling."),
     out: Path | None = typer.Option(None, "--out", "-o", help="Write the document here."),
 ) -> None:
-    """Generate a structured handoff document from persisted state."""
+    """Generate a structured handoff document from persisted state.
+
+    With no `--budget`, this is unabridged -- the same document `verity
+    state` returns, under a name a reader looking for "the handoff document"
+    will find first. `--budget` trims it in a fixed section order (see
+    `memory/handoff.py`), and the report says what was dropped.
+    """
     store = _require_store()
     document, report = build_handoff(store, budget=budget)
 
@@ -296,13 +302,58 @@ def handoff(
     else:
         typer.echo(document)
 
-    typer.echo(f"\n[{report['tokens']:,} tokens, {report['token_method']}]", err=True)
+    footer = render_token_footer(report)
     if report["dropped_sections"]:
-        typer.secho(
-            f"[dropped to fit budget: {', '.join(report['dropped_sections'])}]",
-            fg=typer.colors.YELLOW,
-            err=True,
-        )
+        first, _, rest = footer.partition("\n")
+        typer.echo(f"\n{first}", err=True)
+        typer.secho(rest, fg=typer.colors.YELLOW, err=True)
+    else:
+        typer.echo(f"\n{footer}", err=True)
+
+
+@app.command()
+def state() -> None:
+    """Retrieve everything recorded about the current task, unabridged.
+
+    Equivalent to `verity handoff` with no `--budget` -- named for whoever is
+    looking for "what does Verity currently think is going on" rather than
+    "produce a handoff document." This is the CLI counterpart of the MCP
+    `session(op="state")` tool: a person must be able to reproduce by hand
+    whatever an agent saw there.
+    """
+    store = _require_store()
+    document, report = build_handoff(store)
+    typer.echo(document)
+    typer.echo(f"\n{render_token_footer(report)}", err=True)
+
+
+@app.command()
+def recall(
+    task: str = typer.Option(..., "--task", "-t", help="Task description, for ranking."),
+    sample: str | None = typer.Option(
+        None, "--sample", "-s", help="Context file to compute a trigger against, or - for stdin."
+    ),
+) -> None:
+    """Ask whether now is the moment to pull saved decisions back in.
+
+    Without `--sample`, lists what is on file with no trigger computed. With
+    it, reports the trigger and its threshold, the budget and its basis, and
+    the records worth surfacing -- or says plainly that nothing crossed a
+    threshold, which is a different answer from "there is nothing saved"
+    (invariant 5). This is the CLI counterpart of the MCP `context(op="recall")`
+    tool, sharing its rendering (`context.adaptive.describe_recall`) so the
+    two surfaces cannot drift on wording.
+    """
+    from verityai.context.adaptive import describe_recall
+    from verityai.memory.surface import candidates_for
+
+    store = _require_store()
+    counter = TokenCounter()
+    candidates = candidates_for(store, task, counter)
+    context_sample = _read_input(sample) if sample else ""
+    typer.echo(
+        describe_recall(candidates, task, context_sample, counter, see_all_hint="verity state")
+    )
 
 
 @app.command()
