@@ -258,10 +258,14 @@ def _decide(
         if item.original_index >= recent_cutoff:
             return Relevance.CRITICAL, "most recent exchange"
 
-    # 6. User messages carry intent, which is expensive to reconstruct.
-    if item.kind is ItemKind.USER_MESSAGE:
-        return Relevance.CRITICAL, "user instruction"
-
+    # A user message is otherwise protected only by an earlier, more precise
+    # rule above (an explicit marker, a financial figure, or recency) -- not
+    # by its kind alone. An unconditional "every user message is critical"
+    # rule used to live here; removed because a long conversation shaped like
+    # many short user pointers ("also check X") and a few substantive
+    # assistant replies let the pointers consume the entire un-droppable
+    # critical floor before ranking ever got a chance to protect the reply
+    # that actually carried the answer. See ADR-0033.
     return Relevance.RELEVANT, "no demotion rule matched"
 
 

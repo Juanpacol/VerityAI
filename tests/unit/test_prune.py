@@ -57,6 +57,34 @@ class TestCriticalItemsSurvive:
 
         assert any(i.kind is ItemKind.USER_MESSAGE for i in result.items)
 
+    def test_generic_user_pointers_do_not_starve_the_real_answer(self, pipeline):
+        """Regression for the bug ADR-0033 fixes: when most user turns are
+        short, generic pointers ("also check X") and the actual answer lives
+        in one assistant reply, the pointers must not consume the entire
+        critical floor and push the answer out under a tight budget."""
+        items = [
+            item(f"also check file_{n}.py while we're at it", kind=ItemKind.USER_MESSAGE, index=n)
+            for n in range(9)
+        ]
+        items.append(
+            item(
+                "the root cause is a missing UNKNOWN case in the unsafe set",
+                kind=ItemKind.AGENT_MESSAGE,
+                index=9,
+            )
+        )
+        items += [
+            item(f"also check file_{n}.py while we're at it", kind=ItemKind.USER_MESSAGE, index=n)
+            for n in range(10, 18)
+        ]
+
+        result = pipeline.run(
+            items, task="what is the root cause of the missing UNKNOWN case", budget=35
+        )
+
+        surviving = [i.content for i in result.items]
+        assert any("root cause" in c for c in surviving)
+
     def test_system_prompt_is_protected(self, pipeline):
         items = [
             item("You are a coding agent.", kind=ItemKind.SYSTEM, index=0),

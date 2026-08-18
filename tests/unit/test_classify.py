@@ -87,10 +87,18 @@ class TestProtectedKinds:
 
         assert result.relevance is Relevance.CRITICAL
 
-    def test_user_messages_are_critical(self):
+    def test_old_generic_user_messages_are_not_automatically_critical(self):
+        """A user message is protected by an explicit marker, a financial
+        figure, or recency (see TestRecency below) -- not by its kind alone.
+        An unconditional "every user message is critical" rule used to live
+        here; removed because a long conversation shaped like many short
+        user pointers ("also check X") and a few substantive assistant
+        replies let the pointers consume the entire un-droppable critical
+        floor before ranking ever got a chance to protect the reply that
+        actually carried the answer (ADR-0033)."""
         result = classify_one("please add retries", kind=ItemKind.USER_MESSAGE)
 
-        assert result.relevance is Relevance.CRITICAL
+        assert result.relevance is Relevance.RELEVANT
 
 
 class TestFinancialFigures:
@@ -218,6 +226,20 @@ class TestRecency:
         classified = classify_all(items)
 
         assert not all(c.relevance is Relevance.CRITICAL for c in classified)
+
+    def test_recent_user_messages_stay_critical_via_recency(self):
+        """Removing the kind-based rule narrows user-message protection, it
+        doesn't remove it: a user message that's part of the active,
+        recent exchange is still pinned -- just by rule 5, not by its kind."""
+        items = [
+            item(f"also check file_{n}.py", kind=ItemKind.USER_MESSAGE, index=n) for n in range(30)
+        ]
+
+        classified = classify_all(items)
+
+        assert classified[-1].relevance is Relevance.CRITICAL
+        assert "recent" in classified[-1].relevance_reason
+        assert classified[0].relevance is Relevance.RELEVANT
 
 
 class TestReasons:
