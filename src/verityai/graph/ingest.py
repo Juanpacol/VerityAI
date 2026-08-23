@@ -7,6 +7,15 @@ graph that silently covered a third of a polyglot repository would answer
 "does this function exist" confidently and wrongly, and there would be nothing
 in the output to suggest otherwise.
 
+Scale limits, also declared rather than implied: `MAX_FILE_BYTES` (below) is
+the only size limit — no file-count or total-bytes cap exists. `walk_repo`
+materializes the entire file list into memory before any parsing starts, and
+`IngestReport.skipped` grows one entry per non-Python file, so a large
+polyglot or asset-heavy repository grows the report linearly with the whole
+tree, not with the Python subset actually graphed. Fine at this project's
+own scale (hundreds of files); worth checking before pointing this at a
+monorepo.
+
 Call resolution is best-effort and says so. Python is dynamic; a name at a
 call site can be a local, an import, a method on an inferred type, or built at
 runtime. The resolver tries, in order: names defined in the same module, then

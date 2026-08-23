@@ -2,19 +2,25 @@
 
 **Give AI agents the right context. Verify what they do.**
 
-VerityAI is a model-agnostic agentic harness for AI-assisted software
-engineering. It provides context management, persistent structured memory,
-consistency checking, and engineering verification around AI coding agents.
+VerityAI is an agentic harness for AI-assisted software engineering. It
+provides context management, persistent structured memory, consistency
+checking, and engineering verification around AI coding agents.
 
-Verity does not replace Claude, Codex, Gemini or Cursor. It controls the
-environment those agents work in.
+Verity does not replace the agent. It controls the environment the agent
+works in — through a CLI and an MCP server, neither tied to one vendor by
+design. In practice, though, "designed to be interface-agnostic" and "built
+and tested against multiple agents" are different claims: only **Claude
+Code** has been dogfooded end to end (every pilot in `experiments/`, this
+project's own CI, and the `PreCompact`/`SessionStart` hook integration,
+which reaches for Claude-Code-specific hook events). See CLAUDE.md's
+"Scope" section for the full statement.
 
 ```
                     USER
                      │
                      ▼
                 AI AGENT
-          Claude / Codex / Gemini
+                Claude Code
                      │
                      ▼
           ┌─────────────────────┐

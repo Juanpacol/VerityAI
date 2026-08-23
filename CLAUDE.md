@@ -2,9 +2,26 @@
 
 ## What this is
 
-A **model-agnostic agentic harness**: a context, memory and verification layer
-around AI coding agents (Claude Code, Codex, Cursor, Aider). It does not
-generate code. It manages the environment an agent generates code in.
+An agentic harness: a context, memory and verification layer around AI
+coding agents. It does not generate code. It manages the environment an
+agent generates code in.
+
+**Scope, stated precisely rather than claimed broadly.** The core engines
+(`context/`, `memory/`, `graph/`, `consistency/`, `reliability/`) call no
+agent-specific API — they operate on plain transcripts and a filesystem
+store, and the CLI/MCP surfaces are the only two ways in, neither tied to
+one vendor. That makes the *design* interface-agnostic. What has actually
+been built, tested, and dogfooded end to end is **Claude Code**: every
+pilot in `experiments/`, the hook integration in `cli/hooks.py`
+([[0039-precompact-and-session-start-hooks|ADR-0039]], which reaches for
+Claude Code's specific `PreCompact`/`SessionStart` hook events — a
+mechanism this project has not confirmed exists in the same shape
+elsewhere), and this project's own CI dogfooding all run against it. An
+earlier version of this document claimed "model-agnostic" support for
+Codex, Cursor, and Aider with no test behind any of the three; that claim
+is retracted here rather than repeated. Extending real support to another
+agent means giving it the same treatment Claude Code got — a real pilot,
+not an assumption that a generic CLI/MCP surface implies parity.
 
 The problem: agents on long tasks lose context, forget decisions, re-walk dead
 ends, hallucinate APIs, and drift from the architecture — and no amount of
