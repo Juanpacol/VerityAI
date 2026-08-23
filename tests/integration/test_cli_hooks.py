@@ -96,3 +96,36 @@ class TestInstall:
         settings = json.loads((project / ".claude" / "settings.json").read_text())
         assert "PreCompact" in settings["hooks"]
         assert "SessionStart" in settings["hooks"]
+
+    def test_statusline_flag_registers_it(self, project):
+        result = runner.invoke(app, ["hooks", "install", str(project), "--statusline"])
+
+        assert result.exit_code == 0
+        settings = json.loads((project / ".claude" / "settings.json").read_text())
+        assert settings["statusLine"]["command"] == "verity hooks statusline"
+
+    def test_without_the_flag_no_statusline_is_set(self, project):
+        result = runner.invoke(app, ["hooks", "install", str(project)])
+
+        assert result.exit_code == 0
+        settings = json.loads((project / ".claude" / "settings.json").read_text())
+        assert "statusLine" not in settings
+
+
+class TestStatusline:
+    def test_shows_verity_state(self, initialized):
+        runner.invoke(app, ["remember", "decision", "use postgres", "--why", "reliable"])
+        payload = json.dumps({"cwd": str(initialized)})
+
+        result = runner.invoke(app, ["hooks", "statusline"], input=payload)
+
+        assert result.exit_code == 0
+        assert "1 dec" in result.output
+
+    def test_prints_nothing_without_a_verity_store(self, project):
+        payload = json.dumps({"cwd": str(project)})
+
+        result = runner.invoke(app, ["hooks", "statusline"], input=payload)
+
+        assert result.exit_code == 0
+        assert result.output.strip() == ""

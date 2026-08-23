@@ -125,6 +125,60 @@ def resume_context(payload: dict[str, Any], root: Path | None = None) -> str | N
     )
 
 
+_YELLOW = "\033[33m"
+_DIM = "\033[2m"
+_RESET = "\033[0m"
+
+
+def _age(delta_seconds: float) -> str:
+    if delta_seconds < 60:
+        return "just now"
+    if delta_seconds < 3600:
+        return f"{int(delta_seconds // 60)}m ago"
+    if delta_seconds < 86400:
+        return f"{int(delta_seconds // 3600)}h ago"
+    return f"{int(delta_seconds // 86400)}d ago"
+
+
+def render_statusline(payload: dict[str, Any], root: Path | None = None) -> str | None:
+    """One line summarizing `.verity/` state, for Claude Code's status line.
+
+    Returns `None` when there is nothing to show (no `.verity/`) so the
+    installed statusline command degrades to silence rather than clutter in
+    a project that never ran `verity init`.
+    """
+    from datetime import datetime, timezone
+
+    cwd = payload.get("workspace", {}).get("current_dir") or payload.get("cwd")
+    store = MemoryStore.discover(Path(cwd) if cwd else root)
+    if store is None:
+        return None
+
+    summary = store.summary()
+    parts = [
+        f"{summary['decisions']} dec",
+        f"{summary['discoveries']} disc",
+        f"{summary['facts']} fact",
+    ]
+    if summary["failures"]:
+        parts.append(f"{summary['failures']} fail")
+
+    snapshots = SnapshotManager(store).list()
+    if snapshots:
+        latest = snapshots[-1]
+        age = (datetime.now(timezone.utc) - latest.created_at).total_seconds()
+        snap_text = f"snap {latest.number:03d} ({_age(age)})"
+    else:
+        snap_text = "no snapshots"
+
+    line = f"verity: {' '.join(parts)} | {snap_text}"
+
+    if summary["corrupt_lines"]:
+        line += f" | {_YELLOW}⚠ {summary['corrupt_lines']} corrupt{_RESET}"
+
+    return f"{_DIM}{line}{_RESET}"
+
+
 def install(project_root: Path) -> Path:
     """Merge PreCompact/SessionStart hook entries into
     `.claude/settings.json`, preserving whatever is already there.
@@ -164,3 +218,26 @@ def install(project_root: Path) -> Path:
 
     atomic_write_text(settings_path, json.dumps(settings, indent=2) + "\n")
     return settings_path
+
+
+def install_statusline(project_root: Path) -> tuple[Path, bool]:
+    """Set `statusLine` in `.claude/settings.json` to `verity hooks
+    statusline`, unless one is already configured.
+
+    Returns `(settings_path, installed)`. Never overwrites an existing
+    `statusLine` -- unlike the two hook arrays in `install()`, this is a
+    single slot a user may already have pointed at their own script (git
+    branch, a cost tracker, ...), and clobbering it silently would cost
+    them something `verity` has no way to know the value of.
+    """
+    settings_path = project_root / ".claude" / "settings.json"
+    settings: dict[str, Any] = {}
+    if settings_path.exists():
+        settings = json.loads(settings_path.read_text(encoding="utf-8"))
+
+    if "statusLine" in settings:
+        return settings_path, False
+
+    settings["statusLine"] = {"type": "command", "command": "verity hooks statusline"}
+    atomic_write_text(settings_path, json.dumps(settings, indent=2) + "\n")
+    return settings_path, True

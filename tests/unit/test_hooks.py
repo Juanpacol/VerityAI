@@ -8,8 +8,15 @@ the function runs without raising.
 
 import json
 
-from verityai.cli.hooks import capture_precompact, install, resume_context
-from verityai.core.models import Decision
+from verityai.cli.hooks import (
+    capture_precompact,
+    install,
+    install_statusline,
+    render_statusline,
+    resume_context,
+)
+from verityai.core.models import Decision, Discovery
+from verityai.memory.snapshot import SnapshotManager
 from verityai.memory.store import MemoryStore
 
 TRANSCRIPT_WITH_DECISION = "\n".join(
@@ -194,3 +201,82 @@ class TestInstall:
         settings = json.loads((settings_dir / "settings.json").read_text())
         assert settings["hooks"]["PostToolUse"][0]["hooks"][0]["command"] == "echo hi"
         assert "PreCompact" in settings["hooks"]
+
+
+class TestRenderStatusline:
+    def test_returns_none_without_a_verity_store(self, tmp_path):
+        assert render_statusline({"cwd": str(tmp_path)}, root=tmp_path) is None
+
+    def test_shows_record_counts(self, tmp_path):
+        store = MemoryStore.init(tmp_path)
+        store.append(Decision(statement="a"))
+        store.append(Discovery(statement="b"))
+
+        line = render_statusline({"cwd": str(tmp_path)}, root=tmp_path)
+
+        assert "1 dec" in line
+        assert "1 disc" in line
+
+    def test_shows_no_snapshots_when_none_exist(self, tmp_path):
+        MemoryStore.init(tmp_path)
+
+        line = render_statusline({"cwd": str(tmp_path)}, root=tmp_path)
+
+        assert "no snapshots" in line
+
+    def test_shows_latest_snapshot_number(self, tmp_path):
+        store = MemoryStore.init(tmp_path)
+        SnapshotManager(store).create()
+        SnapshotManager(store).create()
+
+        line = render_statusline({"cwd": str(tmp_path)}, root=tmp_path)
+
+        assert "snap 002" in line
+
+    def test_shows_corruption_warning(self, tmp_path):
+        store = MemoryStore.init(tmp_path)
+        store.append(Decision(statement="a"))
+        path = store.root / "state" / "decisions.jsonl"
+        with path.open("a") as handle:
+            handle.write("{ bad\n")
+
+        line = render_statusline({"cwd": str(tmp_path)}, root=tmp_path)
+
+        assert "corrupt" in line
+
+    def test_no_corruption_warning_when_clean(self, tmp_path):
+        store = MemoryStore.init(tmp_path)
+        store.append(Decision(statement="a"))
+
+        line = render_statusline({"cwd": str(tmp_path)}, root=tmp_path)
+
+        assert "corrupt" not in line
+
+    def test_reads_cwd_from_workspace_current_dir(self, tmp_path):
+        MemoryStore.init(tmp_path)
+
+        line = render_statusline({"workspace": {"current_dir": str(tmp_path)}}, root=None)
+
+        assert line is not None
+
+
+class TestInstallStatusline:
+    def test_sets_statusline_on_a_fresh_settings_file(self, tmp_path):
+        path, installed = install_statusline(tmp_path)
+
+        assert installed is True
+        settings = json.loads(path.read_text())
+        assert settings["statusLine"]["command"] == "verity hooks statusline"
+
+    def test_does_not_overwrite_an_existing_statusline(self, tmp_path):
+        settings_dir = tmp_path / ".claude"
+        settings_dir.mkdir()
+        (settings_dir / "settings.json").write_text(
+            json.dumps({"statusLine": {"type": "command", "command": "my-own-script.sh"}})
+        )
+
+        path, installed = install_statusline(tmp_path)
+
+        assert installed is False
+        settings = json.loads(path.read_text())
+        assert settings["statusLine"]["command"] == "my-own-script.sh"

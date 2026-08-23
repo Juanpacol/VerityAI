@@ -195,6 +195,11 @@ verity recall --task "rate limiting" --sample transcript.json
 # re-inject the handoff after -- no `remember` call required (ADR-0039)
 verity hooks install
 
+# Also add a live one-line status bar (decisions/discoveries/last snapshot,
+# corruption warning) at the bottom of the Claude Code terminal (ADR-0040).
+# Never overwrites a statusLine you already have configured.
+verity hooks install --statusline
+
 verity snapshot "before the refactor"
 verity restore 1
 ```

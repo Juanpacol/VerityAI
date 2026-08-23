@@ -1142,12 +1142,26 @@ def hooks_session_start() -> None:
         typer.echo(context)
 
 
+@hooks_app.command("statusline")
+def hooks_statusline() -> None:
+    """statusLine command body: one line of live .verity/ state."""
+    from verityai.cli.hooks import render_statusline
+
+    payload = _read_hook_payload()
+    line = render_statusline(payload, root=Path(payload.get("cwd") or Path.cwd()))
+    if line:
+        typer.echo(line)
+
+
 @hooks_app.command("install")
 def hooks_install(
     path: Path | None = typer.Argument(None, help="Repository root. Defaults to cwd."),
+    statusline: bool = typer.Option(
+        False, "--statusline", help="Also set the statusLine, if none is configured yet."
+    ),
 ) -> None:
     """Register the PreCompact/SessionStart hooks in .claude/settings.json."""
-    from verityai.cli.hooks import install
+    from verityai.cli.hooks import install, install_statusline
 
     target = (Path(path) if path else Path.cwd()).resolve()
     written = install(target)
@@ -1155,6 +1169,16 @@ def hooks_install(
     typer.echo(
         "Automatic capture before compaction, and handoff re-injection after, are now active."
     )
+
+    if statusline:
+        _, installed = install_statusline(target)
+        if installed:
+            typer.secho("Status line set to `verity hooks statusline`.", fg=typer.colors.GREEN)
+        else:
+            typer.echo(
+                "A statusLine is already configured -- left untouched. "
+                "Run `verity hooks statusline` yourself to see what it would show."
+            )
 
 
 def main() -> None:
