@@ -123,7 +123,19 @@ class TestContext:
         transcript.write_text(TRANSCRIPT)
         out = tmp_path / "pruned.txt"
 
-        runner.invoke(app, ["context", str(transcript), "--budget", "500", "--out", str(out)])
+        runner.invoke(
+            app,
+            [
+                "context",
+                str(transcript),
+                "--budget",
+                "500",
+                "--task",
+                "rate limiting",
+                "--out",
+                str(out),
+            ],
+        )
 
         assert out.exists()
         assert "rate limiting" in out.read_text().lower()

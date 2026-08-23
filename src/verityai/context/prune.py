@@ -104,8 +104,9 @@ class ContextPipeline:
         if not budget_met:
             # Over budget with critical items intact is the intended outcome,
             # not a bug — but the caller has to be told, in a field they must
-            # look at, rather than discovering it from a number.
-            dropped_critical = []
+            # look at, rather than discovering it from a number. List the
+            # protected items responsible for the overflow.
+            dropped_critical = [item.id for item in current if item.is_protected]
 
         return PruneResult(
             items=current,
@@ -282,7 +283,7 @@ class ContextPipeline:
                 if item.relevance is bucket and not item.is_protected and item.id in survivors
             ]
             # Worst-ranked and oldest dropped first.
-            candidates.sort(key=lambda i: (i.metadata.get("rank_score", 0.0), -i.original_index))
+            candidates.sort(key=lambda i: (i.metadata.get("rank_score", 0.0), i.original_index))
 
             for item in candidates:
                 if total <= budget:

@@ -47,6 +47,18 @@ class TestCriticalItemsSurvive:
         assert result.budget_met is False
         assert result.tokens_after > 10
 
+    def test_dropped_critical_names_the_overflowing_items(self, pipeline):
+        # ADR-0034 regression: dropped_critical used to stay [] always, even
+        # when budget_met is False, so a caller had no way to learn which
+        # critical items were responsible for the overflow.
+        items = [item(f"DECISION: choice number {n} " * 20, index=n) for n in range(5)]
+
+        result = pipeline.run(items, budget=10)
+
+        assert result.budget_met is False
+        assert len(result.dropped_critical) == 5
+        assert set(result.dropped_critical) == {i.id for i in result.items}
+
     def test_user_messages_are_protected(self, pipeline):
         items = [
             item("what is the timeout?", kind=ItemKind.USER_MESSAGE, index=0),
@@ -242,3 +254,18 @@ class TestBudgetDropOrder:
         kept = result.items[0]
         assert kept.relevance is Relevance.CRITICAL
         assert "decision:" in kept.relevance_reason
+
+    def test_tied_rank_score_drops_the_oldest_first(self, pipeline):
+        # ADR-0034 regression: the tiebreak key used to sort on
+        # -original_index, which drops the *newest* tied item first --
+        # the opposite of the docstring's "oldest goes before the newest".
+        older = item("some filler content here", index=0)
+        newer = item("some filler content here", index=5)
+        for i in (older, newer):
+            i.relevance = Relevance.RELEVANT
+            i.metadata["rank_score"] = 0.0
+            i.token_count = 3
+
+        result = pipeline._enforce_budget([older, newer], budget=4)
+
+        assert [i.original_index for i in result] == [5]
