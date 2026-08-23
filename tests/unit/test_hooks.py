@@ -231,7 +231,8 @@ class TestRenderStatusline:
 
         line = render_statusline({"cwd": str(tmp_path)}, root=tmp_path)
 
-        assert "snap 002" in line
+        assert "2 snapshots" in line
+        assert "latest: 002" in line
 
     def test_shows_corruption_warning(self, tmp_path):
         store = MemoryStore.init(tmp_path)
@@ -258,6 +259,71 @@ class TestRenderStatusline:
         line = render_statusline({"workspace": {"current_dir": str(tmp_path)}}, root=None)
 
         assert line is not None
+
+    def test_second_line_shows_context_window_usage(self, tmp_path):
+        MemoryStore.init(tmp_path)
+        payload = {
+            "cwd": str(tmp_path),
+            "context_window": {
+                "used_percentage": 62.4,
+                "remaining_percentage": 37.6,
+                "context_window_size": 200000,
+            },
+        }
+
+        line = render_statusline(payload, root=tmp_path)
+
+        assert "62% used" in line
+        assert "200,000" in line
+        assert "38% left" in line
+
+    def test_high_window_usage_is_colored(self, tmp_path):
+        MemoryStore.init(tmp_path)
+        payload = {"cwd": str(tmp_path), "context_window": {"used_percentage": 85.0}}
+
+        line = render_statusline(payload, root=tmp_path)
+
+        assert "\033[33m" in line
+
+    def test_second_line_absent_without_context_window_or_transcript(self, tmp_path):
+        MemoryStore.init(tmp_path)
+
+        line = render_statusline({"cwd": str(tmp_path)}, root=tmp_path)
+
+        assert "\n" not in line
+
+    def test_second_line_shows_degradation_from_a_real_transcript(self, tmp_path):
+        MemoryStore.init(tmp_path)
+        transcript = tmp_path / "transcript.jsonl"
+        messages = [TRANSCRIPT_WITH_DECISION] + [
+            json.dumps(
+                {
+                    "type": "assistant",
+                    "message": {"role": "assistant", "content": "exact duplicate filler line"},
+                }
+            )
+            for _ in range(6)
+        ]
+        transcript.write_text("\n".join(messages))
+        payload = {"cwd": str(tmp_path), "transcript_path": str(transcript)}
+
+        line = render_statusline(payload, root=tmp_path)
+
+        assert "degraded:" in line
+        assert "critical retained:" in line
+
+    def test_second_line_omits_health_on_an_unreadable_transcript(self, tmp_path):
+        MemoryStore.init(tmp_path)
+        payload = {
+            "cwd": str(tmp_path),
+            "context_window": {"used_percentage": 10.0},
+            "transcript_path": str(tmp_path / "does_not_exist.jsonl"),
+        }
+
+        line = render_statusline(payload, root=tmp_path)
+
+        assert "10% used" in line
+        assert "degraded:" not in line
 
 
 class TestInstallStatusline:

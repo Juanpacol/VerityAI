@@ -24,11 +24,15 @@ is deliberately never used here — a capture failure should degrade to
 """
 
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from verityai.context.classify import classify_all
+from verityai.context.health import compute_health
 from verityai.context.ingest_claude_code import is_claude_code_jsonl, parse_jsonl
+from verityai.context.prune import ContextPipeline
+from verityai.context.tokenizer import TokenCounter
 from verityai.core.atomic import atomic_write_text
 from verityai.core.models import Discovery, Relevance
 from verityai.memory.handoff import build_handoff
@@ -36,6 +40,39 @@ from verityai.memory.snapshot import SnapshotManager
 from verityai.memory.store import CorruptStateError, MemoryStore
 
 _HOOK_TAG = "auto-captured"
+
+
+def _classify_transcript(
+    transcript_path: str | None,
+) -> tuple[list, TokenCounter | None, str | None]:
+    """Read and classify a session transcript, or say why it could not.
+
+    Shared by `capture_precompact` (which only needs the CRITICAL items)
+    and `render_statusline` (which needs the full classified set to
+    compute health) -- one parse path, so the two can never disagree about
+    what a transcript contains.
+
+    Returns `(classified_items, counter, error_reason)`. `counter` is the
+    `TokenCounter` used to measure the items, needed downstream by
+    `compute_health` to report its counting method; it is `None` exactly
+    when `error_reason` is set.
+    """
+    if not transcript_path:
+        return [], None, "no transcript_path in hook payload"
+
+    path = Path(transcript_path)
+    if not path.exists():
+        return [], None, f"transcript not found: {transcript_path}"
+
+    raw = path.read_text(encoding="utf-8")
+    if not is_claude_code_jsonl(raw):
+        return [], None, "transcript is not a recognized session format"
+
+    items, _skipped = parse_jsonl(raw)
+    counter = TokenCounter()
+    pipeline = ContextPipeline(counter=counter)
+    measured = [pipeline.measure(item, i) for i, item in enumerate(items)]
+    return classify_all(measured), counter, None
 
 
 def capture_precompact(payload: dict[str, Any], root: Path | None = None) -> dict[str, Any]:
@@ -50,32 +87,10 @@ def capture_precompact(payload: dict[str, Any], root: Path | None = None) -> dic
     if store is None:
         return {"skipped_reason": "no .verity/ found", "captured": 0, "snapshot_number": None}
 
-    transcript_path = payload.get("transcript_path")
-    if not transcript_path:
-        return {
-            "skipped_reason": "no transcript_path in hook payload",
-            "captured": 0,
-            "snapshot_number": None,
-        }
+    classified, _counter, error = _classify_transcript(payload.get("transcript_path"))
+    if error:
+        return {"skipped_reason": error, "captured": 0, "snapshot_number": None}
 
-    path = Path(transcript_path)
-    if not path.exists():
-        return {
-            "skipped_reason": f"transcript not found: {transcript_path}",
-            "captured": 0,
-            "snapshot_number": None,
-        }
-
-    raw = path.read_text(encoding="utf-8")
-    if not is_claude_code_jsonl(raw):
-        return {
-            "skipped_reason": "transcript is not a recognized session format",
-            "captured": 0,
-            "snapshot_number": None,
-        }
-
-    items, _skipped = parse_jsonl(raw)
-    classified = classify_all(items)
     critical = [i for i in classified if i.relevance is Relevance.CRITICAL]
 
     already = {d.statement for d in store.discoveries()}
@@ -140,20 +155,9 @@ def _age(delta_seconds: float) -> str:
     return f"{int(delta_seconds // 86400)}d ago"
 
 
-def render_statusline(payload: dict[str, Any], root: Path | None = None) -> str | None:
-    """One line summarizing `.verity/` state, for Claude Code's status line.
-
-    Returns `None` when there is nothing to show (no `.verity/`) so the
-    installed statusline command degrades to silence rather than clutter in
-    a project that never ran `verity init`.
-    """
-    from datetime import datetime, timezone
-
-    cwd = payload.get("workspace", {}).get("current_dir") or payload.get("cwd")
-    store = MemoryStore.discover(Path(cwd) if cwd else root)
-    if store is None:
-        return None
-
+def _memory_line(store: MemoryStore) -> str:
+    """Line 1: what's persisted -- record counts and how many snapshots
+    ("scratchpads") actually got saved, not just the latest one."""
     summary = store.summary()
     parts = [
         f"{summary['decisions']} dec",
@@ -167,16 +171,77 @@ def render_statusline(payload: dict[str, Any], root: Path | None = None) -> str 
     if snapshots:
         latest = snapshots[-1]
         age = (datetime.now(timezone.utc) - latest.created_at).total_seconds()
-        snap_text = f"snap {latest.number:03d} ({_age(age)})"
+        snap_text = f"{len(snapshots)} snapshot{'s' if len(snapshots) != 1 else ''} (latest: {latest.number:03d}, {_age(age)})"
     else:
-        snap_text = "no snapshots"
+        snap_text = "no snapshots yet"
 
     line = f"verity: {' '.join(parts)} | {snap_text}"
-
     if summary["corrupt_lines"]:
         line += f" | {_YELLOW}⚠ {summary['corrupt_lines']} corrupt{_RESET}"
+    return line
 
-    return f"{_DIM}{line}{_RESET}"
+
+def _context_line(payload: dict[str, Any]) -> str | None:
+    """Line 2: how close to the real ceiling, and how much of what's in the
+    window is VerityAI's own CRITICAL/RELEVANT signal versus waste.
+
+    Two different numbers, deliberately not collapsed into one: window
+    usage (`context_window.used_percentage`, Claude Code's own count of
+    the raw window) answers "how soon until this session is forced to
+    compact." `degraded` (`ContextHealth.redundancy`, computed here from
+    the same transcript via the same classify_all pipeline `verity
+    context` uses) answers a different question -- "of what's in there,
+    how much is actually still useful" -- and a window can be near-full
+    while mostly wasted, which the raw percentage alone cannot say.
+    """
+    window = payload.get("context_window") or {}
+    used_pct = window.get("used_percentage")
+    remaining_pct = window.get("remaining_percentage")
+
+    window_segment = None
+    if used_pct is not None:
+        size = window.get("context_window_size")
+        color = _YELLOW if used_pct >= 80 else ""
+        reset = _RESET if color else ""
+        size_text = f" of {size:,}" if size else ""
+        window_segment = f"{color}{used_pct:.0f}% used{reset}{size_text} tokens"
+        if remaining_pct is not None:
+            window_segment += f" ({remaining_pct:.0f}% left)"
+
+    classified, counter, error = _classify_transcript(payload.get("transcript_path"))
+    health_segment = None
+    if not error and classified:
+        health = compute_health(classified, counter=counter)
+        health_segment = (
+            f"degraded: {health.redundancy:.0%} | critical retained: {health.critical_retained:.0%}"
+        )
+
+    segments = [s for s in (window_segment, health_segment) if s]
+    if not segments:
+        return None
+    return "context: " + " | ".join(segments)
+
+
+def render_statusline(payload: dict[str, Any], root: Path | None = None) -> str | None:
+    """Live `.verity/` state and context health, for Claude Code's status line.
+
+    Two lines: persisted memory (`_memory_line`) and context window /
+    degradation (`_context_line`). Returns `None` only when there is no
+    `.verity/` at all, so the installed statusline command degrades to
+    silence rather than clutter in a project that never ran `verity init`.
+    A missing or unreadable transcript degrades `_context_line` to just the
+    window-usage segment (or `None`), never the whole statusline.
+    """
+    cwd = payload.get("workspace", {}).get("current_dir") or payload.get("cwd")
+    store = MemoryStore.discover(Path(cwd) if cwd else root)
+    if store is None:
+        return None
+
+    lines = [f"{_DIM}{_memory_line(store)}{_RESET}"]
+    context_line = _context_line(payload)
+    if context_line:
+        lines.append(f"{_DIM}{context_line}{_RESET}")
+    return "\n".join(lines)
 
 
 def install(project_root: Path) -> Path:
