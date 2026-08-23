@@ -261,10 +261,36 @@ class MemoryStore:
         return self.read(Discovery)
 
     def failures(self, include_resolved: bool = True) -> list[Failure]:
-        failures = self.read(Failure)
+        """Failures, newest last, with `resolve_failure()`'s markers
+        applied and hidden.
+
+        A marker record (`resolves is not None`) is metadata about the log,
+        not a failure of its own, so it never appears in the returned list
+        -- only the original it points at, reclassified to `resolved=True`.
+        Without this, `resolve_failure()` would have no visible effect:
+        `summary()["failures"]` (unresolved count) would grow forever and
+        never shrink, which is exactly the gap found by reading this
+        project's own `.verity/state/failures.jsonl` by hand.
+        """
+        all_failures = self.read(Failure)
+        resolved_ids = {f.resolves for f in all_failures if f.resolves is not None}
+        originals = [f for f in all_failures if f.resolves is None]
+        reclassified = [
+            f.model_copy(update={"resolved": True}) if f.id in resolved_ids else f
+            for f in originals
+        ]
         if include_resolved:
-            return failures
-        return [f for f in failures if not f.resolved]
+            return reclassified
+        return [f for f in reclassified if not f.resolved]
+
+    def resolve_failure(self, failure_id: UUID, note: str = "") -> Failure:
+        """Mark an earlier failure resolved, mirroring `supersede()`:
+        appends a marker rather than rewriting the original line.
+        """
+        original = next((f for f in self.read(Failure) if f.id == failure_id), None)
+        attempted = original.attempted if original is not None else str(failure_id)
+        marker = Failure(attempted=attempted, error=note, resolved=True, resolves=failure_id)
+        return self.append(marker)
 
     def facts(self) -> list[Fact]:
         return self.read(Fact)

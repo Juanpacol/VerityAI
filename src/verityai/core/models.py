@@ -185,11 +185,17 @@ class Failure(Record):
 
     Stored so the same dead end is not walked twice — the single highest-value
     record type for long tasks, and the one agents are worst at retaining.
+
+    `resolves` mirrors `Decision.supersedes`: closing a failure appends a
+    marker record rather than rewriting the original line, for the same
+    reason -- an append-only log that could still be edited in place would
+    not be append-only. `MemoryStore.failures()` follows the chain on read.
     """
 
     attempted: str
     error: str = ""
     resolved: bool = False
+    resolves: UUID | None = None
 
 
 class Surfacing(Record):

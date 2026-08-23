@@ -681,6 +681,58 @@ def remember_failure(
     typer.secho("Failure recorded", fg=typer.colors.GREEN)
 
 
+failures_app = typer.Typer(
+    invoke_without_command=True,
+    help="List and resolve recorded failures.",
+)
+app.add_typer(failures_app, name="failures")
+
+
+@failures_app.callback()
+def failures_list(ctx: typer.Context) -> None:
+    """List failures, numbered oldest first (the number `resolve` takes).
+
+    Without this, nothing ever closes a failure: `remember failure` only
+    creates records, and until `resolve` existed, the unresolved count in
+    `verity health`/`verity status`/the status line could only grow.
+    """
+    if ctx.invoked_subcommand is not None:
+        return
+    store = _require_store()
+    failures = store.failures()
+    if not failures:
+        typer.echo("No failures recorded.")
+        return
+    for n, f in enumerate(failures, start=1):
+        mark = "✓" if f.resolved else " "
+        typer.echo(f"  [{mark}] {n:>2}. {f.attempted}")
+        if f.error:
+            typer.echo(f"          {f.error}")
+    open_count = sum(1 for f in failures if not f.resolved)
+    typer.echo(
+        f"\n{open_count} open of {len(failures)}. Run `verity failures resolve <N>` to close one."
+    )
+
+
+@failures_app.command("resolve")
+def failures_resolve(
+    number: int = typer.Argument(..., help="Number from `verity failures`."),
+    note: str = typer.Option("", "--note", "-n", help="What fixed it."),
+) -> None:
+    """Mark a failure resolved. Append-only: the original line is kept."""
+    store = _require_store()
+    failures = store.failures()
+    if not (1 <= number <= len(failures)):
+        typer.secho(f"No failure #{number} (have 1-{len(failures)})", fg=typer.colors.RED, err=True)
+        raise typer.Exit(1)
+    target = failures[number - 1]
+    if target.resolved:
+        typer.echo(f"#{number} is already resolved.")
+        return
+    store.resolve_failure(target.id, note=note)
+    typer.secho(f"Resolved #{number}: {target.attempted}", fg=typer.colors.GREEN)
+
+
 @app.command()
 def bench(
     paths: list[Path] = typer.Argument(..., help="Transcript files to measure."),

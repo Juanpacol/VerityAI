@@ -97,6 +97,49 @@ class TestAppendOnly:
         assert reclassified.status is DecisionStatus.SUPERSEDED
 
 
+class TestFailureResolution:
+    """Before resolve_failure() existed, nothing ever closed a failure --
+    remember failure only appended, so the unresolved count could only
+    grow. Found by reading this project's own .verity/state/failures.jsonl
+    by hand: 10 failures, all still `resolved: false`, most already fixed."""
+
+    def test_resolving_removes_it_from_the_unresolved_count(self, store):
+        original = store.append(Failure(attempted="tried X", error="boom"))
+
+        store.resolve_failure(original.id, note="fixed by Y")
+
+        assert len(store.failures(include_resolved=False)) == 0
+
+    def test_resolving_preserves_the_original_line(self, store):
+        """Append-only, mirroring supersede(): the original failure's own
+        line is never rewritten, only reclassified on read."""
+        original = store.append(Failure(attempted="tried X", error="boom"))
+
+        store.resolve_failure(original.id, note="fixed by Y")
+
+        raw = store.read(Failure)
+        untouched = [f for f in raw if f.id == original.id][0]
+        assert untouched.resolved is False
+
+    def test_resolve_marker_is_not_itself_a_visible_failure(self, store):
+        """The marker record resolve_failure() appends is metadata about
+        the log, not a new failure -- it must not double the count."""
+        original = store.append(Failure(attempted="tried X"))
+        store.resolve_failure(original.id)
+
+        assert len(store.failures()) == 1
+
+    def test_unresolved_failures_are_unaffected(self, store):
+        store.append(Failure(attempted="tried X"))
+        resolved_one = store.append(Failure(attempted="tried Y"))
+        store.resolve_failure(resolved_one.id)
+
+        open_failures = store.failures(include_resolved=False)
+
+        assert len(open_failures) == 1
+        assert open_failures[0].attempted == "tried X"
+
+
 class TestRoundTrip:
     def test_every_record_type_round_trips(self, store):
         store.append(Decision(statement="d", rationale="because"))

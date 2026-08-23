@@ -160,6 +160,53 @@ class TestMemoryCommands:
         assert "fixed window" in result.output
         assert "write the test" in result.output
 
+
+class TestFailures:
+    def test_lists_failures_numbered(self, initialized):
+        runner.invoke(app, ["remember", "failure", "tried X", "--error", "boom"])
+        runner.invoke(app, ["remember", "failure", "tried Y"])
+
+        result = runner.invoke(app, ["failures"])
+
+        assert result.exit_code == 0
+        assert "1. tried X" in result.output
+        assert "2. tried Y" in result.output
+        assert "2 open of 2" in result.output
+
+    def test_resolve_closes_it_and_leaves_the_original_intact(self, initialized):
+        runner.invoke(app, ["remember", "failure", "tried X", "--error", "boom"])
+
+        resolve_result = runner.invoke(app, ["failures", "resolve", "1", "--note", "fixed by Y"])
+        list_result = runner.invoke(app, ["failures"])
+
+        assert resolve_result.exit_code == 0
+        assert "Resolved #1" in resolve_result.output
+        assert "[✓]  1. tried X" in list_result.output
+        assert "0 open of 1" in list_result.output
+
+    def test_resolve_out_of_range_fails_clearly(self, initialized):
+        runner.invoke(app, ["remember", "failure", "tried X"])
+
+        result = runner.invoke(app, ["failures", "resolve", "99"])
+
+        assert result.exit_code == 1
+        assert "No failure #99" in result.output
+
+    def test_resolving_twice_is_a_no_op_not_a_duplicate(self, initialized):
+        runner.invoke(app, ["remember", "failure", "tried X"])
+        runner.invoke(app, ["failures", "resolve", "1"])
+
+        second = runner.invoke(app, ["failures", "resolve", "1"])
+        listed = runner.invoke(app, ["failures"])
+
+        assert "already resolved" in second.output
+        assert "0 open of 1" in listed.output
+
+    def test_no_failures_says_so(self, initialized):
+        result = runner.invoke(app, ["failures"])
+
+        assert "No failures recorded" in result.output
+
     def test_handoff_reports_its_token_cost(self, initialized):
         runner.invoke(app, ["task", "something"])
 
