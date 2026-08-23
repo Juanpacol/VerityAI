@@ -7,6 +7,7 @@ the function runs without raising.
 """
 
 import json
+from pathlib import Path
 
 from verityai.cli.hooks import (
     capture_precompact,
@@ -72,6 +73,8 @@ class TestCapturePrecompact:
         result = capture_precompact({"transcript_path": str(transcript)}, root=tmp_path)
 
         assert result["snapshot_number"] == 1
+        assert result["snapshot_path"] is not None
+        assert Path(result["snapshot_path"]).exists()
 
     def test_is_idempotent_on_repeated_calls(self, tmp_path):
         """The same transcript re-read (e.g. a second PreCompact in one

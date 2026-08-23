@@ -280,6 +280,46 @@ class TestSnapshots:
         assert "first" in result.output
         assert "second" in result.output
 
+    def test_snapshot_reports_the_path_it_saved_to(self, initialized):
+        result = runner.invoke(app, ["snapshot"])
+
+        assert "saved to:" in result.output
+        assert str(initialized / ".verity" / "snapshots" / "001" / "snapshot.json") in result.output
+
+    def test_snapshots_show_prints_full_contents(self, initialized):
+        runner.invoke(app, ["remember", "decision", "use postgres", "--why", "reliable"])
+        runner.invoke(app, ["snapshot", "checkpoint"])
+
+        result = runner.invoke(app, ["snapshots", "show", "1"])
+
+        assert result.exit_code == 0
+        assert "SNAPSHOT 001" in result.output
+        assert "checkpoint" in result.output
+        assert "use postgres" in result.output
+        assert "path:" in result.output
+
+    def test_snapshots_show_missing_number_fails_clearly(self, initialized):
+        result = runner.invoke(app, ["snapshots", "show", "42"])
+
+        assert result.exit_code == 1
+        assert "No snapshot" in result.output
+
+    def test_snapshots_browse_lists_then_shows_a_pick_then_quits(self, initialized):
+        runner.invoke(app, ["remember", "decision", "use postgres", "--why", "reliable"])
+        runner.invoke(app, ["snapshot"])
+
+        result = runner.invoke(app, ["snapshots", "browse"], input="1\nq\n")
+
+        assert result.exit_code == 0
+        assert "SNAPSHOT 001" in result.output
+        assert "use postgres" in result.output
+
+    def test_snapshots_browse_with_no_snapshots_says_so(self, initialized):
+        result = runner.invoke(app, ["snapshots", "browse"])
+
+        assert result.exit_code == 0
+        assert "No snapshots yet" in result.output
+
     def test_restoring_a_missing_snapshot_fails_clearly(self, initialized):
         result = runner.invoke(app, ["restore", "42"])
 

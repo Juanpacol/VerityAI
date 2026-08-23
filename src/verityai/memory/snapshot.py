@@ -68,6 +68,13 @@ class SnapshotManager:
         # `9` is the kind of thing that only bites once you have ten snapshots.
         return self.snapshots_dir / f"{number:03d}"
 
+    def path_for(self, number: int) -> Path:
+        """Where snapshot `number`'s file lives, whether or not it exists
+        yet -- the thing a caller actually wants to tell a user, since
+        "snapshot 003 created" without the path forces a `find` to answer
+        the next question."""
+        return self._dir_for(number) / "snapshot.json"
+
     def next_number(self) -> int:
         """One past the highest existing snapshot number.
 

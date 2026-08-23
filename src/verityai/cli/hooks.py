@@ -85,11 +85,21 @@ def capture_precompact(payload: dict[str, Any], root: Path | None = None) -> dic
     """
     store = MemoryStore.discover(root)
     if store is None:
-        return {"skipped_reason": "no .verity/ found", "captured": 0, "snapshot_number": None}
+        return {
+            "skipped_reason": "no .verity/ found",
+            "captured": 0,
+            "snapshot_number": None,
+            "snapshot_path": None,
+        }
 
     classified, _counter, error = _classify_transcript(payload.get("transcript_path"))
     if error:
-        return {"skipped_reason": error, "captured": 0, "snapshot_number": None}
+        return {
+            "skipped_reason": error,
+            "captured": 0,
+            "snapshot_number": None,
+            "snapshot_path": None,
+        }
 
     critical = [i for i in classified if i.relevance is Relevance.CRITICAL]
 
@@ -104,16 +114,24 @@ def capture_precompact(payload: dict[str, Any], root: Path | None = None) -> dic
         captured += 1
 
     snapshot_number = None
+    snapshot_path = None
+    manager = SnapshotManager(store)
     try:
-        snapshot = SnapshotManager(store).create(label="auto: pre-compact")
+        snapshot = manager.create(label="auto: pre-compact")
         snapshot_number = snapshot.number
+        snapshot_path = str(manager.path_for(snapshot.number))
     except CorruptStateError:
         # Corrupt state already has its own loud channel (verity health).
         # A capture hook is not the place to surface it a second time --
         # the newly-captured discoveries above are still real and kept.
         pass
 
-    return {"skipped_reason": None, "captured": captured, "snapshot_number": snapshot_number}
+    return {
+        "skipped_reason": None,
+        "captured": captured,
+        "snapshot_number": snapshot_number,
+        "snapshot_path": snapshot_path,
+    }
 
 
 def resume_context(payload: dict[str, Any], root: Path | None = None) -> str | None:

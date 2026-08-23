@@ -78,6 +78,13 @@ class TestNumbering:
 
         assert (manager.snapshots_dir / "001").is_dir()
 
+    def test_path_for_matches_where_create_actually_writes(self, store):
+        manager = SnapshotManager(store)
+        snap = manager.create()
+
+        assert manager.path_for(snap.number).exists()
+        assert manager.path_for(snap.number) == manager.snapshots_dir / "001" / "snapshot.json"
+
 
 class TestRestore:
     def test_restore_is_additive_not_destructive(self, store):

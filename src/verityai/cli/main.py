@@ -394,6 +394,7 @@ def snapshot(
         typer.echo("Fix the corrupt line(s) by hand, or pass --force to snapshot anyway.", err=True)
         raise typer.Exit(1) from exc
     typer.secho(f"Snapshot {snap.number:03d} created", fg=typer.colors.GREEN)
+    typer.echo(f"  saved to: {manager.path_for(snap.number)}")
     if snap.git_sha:
         typer.echo(f"  git: {snap.git_sha[:12]}")
 
@@ -424,15 +425,119 @@ def restore(
         typer.echo("Verity does not touch your working tree — revert the code yourself if needed.")
 
 
-@app.command(name="snapshots")
-def list_snapshots() -> None:
-    """List all snapshots."""
+def _render_snapshot(snap, path: Path) -> str:
+    """Full contents of one snapshot -- the detail `verity snapshots` (a
+    list, deliberately terse) never had room for."""
+    lines = [
+        f"SNAPSHOT {snap.number:03d}" + (f'  "{snap.label}"' if snap.label else ""),
+        f"  path:    {path}",
+        f"  created: {snap.created_at:%Y-%m-%d %H:%M}",
+    ]
+    if snap.git_sha:
+        lines.append(f"  git:     {snap.git_sha[:12]}")
+
+    def section(title: str, records, field: str) -> None:
+        lines.append(f"\n{title}")
+        if not records:
+            lines.append("  (none)")
+            return
+        for r in records:
+            lines.append(f"  - {getattr(r, field)}")
+
+    if snap.task:
+        lines.append(f"\nTASK\n  {snap.task.title}")
+        if snap.task.next_action:
+            lines.append(f"  next: {snap.task.next_action}")
+    else:
+        lines.append("\nTASK\n  (none recorded)")
+
+    section("DECISIONS", snap.decisions, "statement")
+    section("CONSTRAINTS", snap.constraints, "statement")
+    section("DISCOVERIES", snap.discoveries, "statement")
+    section("FAILURES", snap.failures, "attempted")
+    section("FACTS", snap.facts, "statement")
+
+    return "\n".join(lines)
+
+
+snapshots_app = typer.Typer(
+    invoke_without_command=True,
+    help="List, inspect, and browse saved snapshots.",
+)
+app.add_typer(snapshots_app, name="snapshots")
+
+
+@snapshots_app.callback()
+def snapshots_list(ctx: typer.Context) -> None:
+    """List all snapshots. Run with no arguments; `show`/`browse` are subcommands."""
+    if ctx.invoked_subcommand is not None:
+        return
     manager = SnapshotManager(_require_store())
     for snap in manager.list():
         label = f"  {snap.label}" if snap.label else ""
         typer.echo(f"  {snap.number:03d}  {snap.created_at:%Y-%m-%d %H:%M}{label}")
     for report in manager.integrity():
         typer.secho(f"  ! {report.source}: {report.note}", fg=typer.colors.YELLOW)
+    if manager.list():
+        typer.echo(
+            "\nRun `verity snapshots show <N>` for full contents, or `verity snapshots browse` to pick one."
+        )
+
+
+@snapshots_app.command("show")
+def snapshots_show(number: int = typer.Argument(..., help="Snapshot number.")) -> None:
+    """Print one snapshot's full contents -- what was saved, and where."""
+    manager = SnapshotManager(_require_store())
+    snap, report = manager.get_report(number)
+    if not report.exists:
+        typer.secho(f"No snapshot {number:03d}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(1)
+    if not report.clean or snap is None:
+        typer.secho(
+            f"Snapshot {number:03d} exists but is unreadable: {report.note}",
+            fg=typer.colors.RED,
+            err=True,
+        )
+        raise typer.Exit(1)
+    typer.echo(_render_snapshot(snap, manager.path_for(number)))
+
+
+@snapshots_app.command("browse")
+def snapshots_browse() -> None:
+    """Pick a snapshot from a numbered list and view its contents, in a loop.
+
+    A CLI, not a curses TUI -- "interactive" here means the prompt loop
+    stays open until you type `q`, so you can look at several snapshots
+    in one sitting without re-invoking the command each time.
+    """
+    manager = SnapshotManager(_require_store())
+    snaps = manager.list()
+    if not snaps:
+        typer.echo("No snapshots yet. Run `verity snapshot` to create one.")
+        return
+
+    while True:
+        typer.echo("\nSNAPSHOTS")
+        for snap in snaps:
+            label = f"  {snap.label}" if snap.label else ""
+            typer.echo(f"  {snap.number:03d}  {snap.created_at:%Y-%m-%d %H:%M}{label}")
+        choice = typer.prompt("\nNumber to view (q to quit)", default="q", show_default=False)
+        if choice.strip().lower() in ("q", "quit", "exit", ""):
+            return
+        try:
+            number = int(choice.strip())
+        except ValueError:
+            typer.secho(f"Not a number: {choice}", fg=typer.colors.RED)
+            continue
+        picked, report = manager.get_report(number)
+        if not report.exists or picked is None:
+            typer.secho(f"No snapshot {number:03d}", fg=typer.colors.RED)
+            continue
+        if not report.clean:
+            typer.secho(f"Snapshot {number:03d} is unreadable: {report.note}", fg=typer.colors.RED)
+            continue
+        typer.echo("")
+        typer.echo(_render_snapshot(picked, manager.path_for(number)))
 
 
 @app.command()
@@ -1125,7 +1230,8 @@ def hooks_precompact() -> None:
         typer.echo(f"verity: {result['skipped_reason']}", err=True)
     elif result["snapshot_number"]:
         typer.echo(
-            f"verity: captured {result['captured']} item(s), snapshot {result['snapshot_number']:03d}"
+            f"verity: captured {result['captured']} item(s), snapshot "
+            f"{result['snapshot_number']:03d} saved to {result['snapshot_path']}"
         )
     else:
         typer.echo(f"verity: captured {result['captured']} item(s)")
