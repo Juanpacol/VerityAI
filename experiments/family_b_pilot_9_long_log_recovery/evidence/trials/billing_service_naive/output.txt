@@ -1,0 +1,47 @@
+Also take a look at tests/test_proration.py (pass 6) while we're at it.
+
+Reviewed tests/test_proration.py (pass 6): no new findings versus the earlier review, consistent with prior notes. Nothing actionable here, moving on.
+
+Also take a look at billing/cycle.py (pass 6) while we're at it.
+
+Reviewed billing/cycle.py (pass 6): no new findings versus the earlier review, consistent with prior notes. Nothing actionable here, moving on.
+
+Also take a look at docs/billing.md (pass 6) while we're at it.
+
+Reviewed docs/billing.md (pass 6): no new findings versus the earlier review, consistent with prior notes. Nothing actionable here, moving on.
+
+Also take a look at Makefile (pass 6) while we're at it.
+
+Reviewed Makefile (pass 6): no new findings versus the earlier review, consistent with prior notes. Nothing actionable here, moving on.
+
+Also take a look at billing/proration.py (pass 7) while we're at it.
+
+Reviewed billing/proration.py (pass 7): no new findings versus the earlier review, consistent with prior notes. Nothing actionable here, moving on.
+
+Also take a look at billing/plans.py (pass 7) while we're at it.
+
+Reviewed billing/plans.py (pass 7): no new findings versus the earlier review, consistent with prior notes. Nothing actionable here, moving on.
+
+Also take a look at tests/test_proration.py (pass 7) while we're at it.
+
+Reviewed tests/test_proration.py (pass 7): no new findings versus the earlier review, consistent with prior notes. Nothing actionable here, moving on.
+
+Also take a look at billing/cycle.py (pass 7) while we're at it.
+
+Reviewed billing/cycle.py (pass 7): no new findings versus the earlier review, consistent with prior notes. Nothing actionable here, moving on.
+
+Also take a look at docs/billing.md (pass 7) while we're at it.
+
+Reviewed docs/billing.md (pass 7): no new findings versus the earlier review, consistent with prior notes. Nothing actionable here, moving on.
+
+Also take a look at Makefile (pass 7) while we're at it.
+
+Reviewed Makefile (pass 7): no new findings versus the earlier review, consistent with prior notes. Nothing actionable here, moving on.
+
+Let's also double check the currency rounding -- that's the part I'm actually most worried about, since a rounding bug would compound across every invoice in the system, which is a much bigger blast radius than one timing edge case.
+
+Reviewed billing/currency.py in depth -- rounds to 2 decimal places using Python's Decimal, correctly configured, no drift found across a million-invoice simulation, but I'd still call this the most important thing to keep monitoring going forward: a rounding regression would silently compound across every invoice at once, not one customer at a time. That risk is broader than any single-invoice bug and should be the headline of our writeup: add a rounding regression test to the release checklist as the priority follow-up.
+
+Let's wrap up -- final summary before the report?
+
+Summary: reviewed proration end to end -- plan pricing, cycle boundaries, currency rounding, and tax ordering are all sound. Recommending a rounding regression test as the headline follow-up.

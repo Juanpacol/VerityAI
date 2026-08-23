@@ -47,6 +47,36 @@ tool-call reduction; their evidence was lost and the figures cannot be
 re-checked." Never as a current result, never in external material, and never
 aggregated with figures that do have artifacts.
 
+---
+
+## Recovered, not permanent: the long-log recovery pilot
+
+A third violation, distinct in kind from the two above. A self-run pilot
+(2026-08-17 through 08-19, no external developers) built long synthetic
+session logs from three external private repos, found that `verity context`
+recovered a buried fact naive tail-truncation lost — 3/3 — then lost that
+evidence itself when the working session's scratchpad was destroyed by
+`/compact`, before it was ever committed anywhere. No `trials/` directory,
+no manifest, nothing tracked.
+
+**Why this one is not permanent, unlike pilots 4-6.** Both arms of this
+comparison are deterministic functions of a fixture — a token-budget prune
+and a tail-truncation, no agent behavior, no live tool calls in the
+measurement loop. Nothing about the finding depended on the destroyed
+session; it only needed to be rebuilt. It now is:
+[Pilot 9 — long-log recovery](family_b_pilot_9_long_log_recovery/), with
+synthetic self-contained fixtures (not the original external repos, so the
+evidence needs no outside dependency to re-derive) and the same 3/3 result.
+`evidence/manifest.jsonl` and `evidence/report.json` were confirmed
+byte-identical across two independent runs of `generate_fixture.py` +
+`run_pilot9.py` before being retained.
+
+**The lesson, same as pilots 4-6's:** evidence that lives only in a session
+scratchpad is not retained, regardless of how it was produced. The
+difference here is that "no agent behavior in the loop" is exactly the
+condition that makes a lost result recoverable rather than permanently gone
+— worth checking for, specifically, before writing a lost result off.
+
 **Removed from `README.md` (2026-08-11).** The README's Family B summary
 previously stated the cost saving as a standing result ("the most reproduced
 result here"). That framing did not distinguish a claim with retained

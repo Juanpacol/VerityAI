@@ -1,0 +1,40 @@
+{
+  "spec_name": "family_b_pilot_9_long_log_recovery",
+  "budget_fraction": 0.25,
+  "n_fixtures": 3,
+  "naive_signal_survives": "0/3",
+  "verity_signal_survives": "3/3",
+  "conclusion": "verity recovers the buried signal in every fixture where naive tail-truncation loses it",
+  "rows": [
+    {
+      "fixture": "auth_service",
+      "condition": "naive",
+      "signal_survives": false
+    },
+    {
+      "fixture": "auth_service",
+      "condition": "verity",
+      "signal_survives": true
+    },
+    {
+      "fixture": "billing_service",
+      "condition": "naive",
+      "signal_survives": false
+    },
+    {
+      "fixture": "billing_service",
+      "condition": "verity",
+      "signal_survives": true
+    },
+    {
+      "fixture": "search_service",
+      "condition": "naive",
+      "signal_survives": false
+    },
+    {
+      "fixture": "search_service",
+      "condition": "verity",
+      "signal_survives": true
+    }
+  ]
+}

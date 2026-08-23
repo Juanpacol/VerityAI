@@ -341,6 +341,27 @@ explicitly).
 > hash, produced by the committed `eval_spec.json`. Re-derive the table
 > above with `verity verify experiments/family_b_pilot_8_arbitrary_tiebreak/evidence`.
 
+**Pilot 9 (long-log context recovery,
+`experiments/family_b_pilot_9_long_log_recovery/`) measures the claim this
+project's `context/` engine actually exists to support: recovering a signal
+that got buried in a long conversation, not making a fresh agent faster.**
+Three synthetic ~12,000-character session logs, each with one real fact
+stated once mid-log and a decoy near the tail engineered to read as "the
+headline finding." At a 25%-of-total token budget, naive tail-truncation
+lost the real fact and kept the decoy in all three; `verity context`
+recovered the real fact in all three. `naive: 0/3  verity: 3/3`. No agent in
+the loop — both arms are deterministic, so n=1 per fixture is the correct
+Family A protocol here despite the pilot's Family-B-shaped design, and the
+evidence is re-derivable by re-running `generate_fixture.py` +
+`run_pilot9.py` (confirmed byte-identical across two runs before being
+retained). This result only worked after
+[ADR-0033](adr/0033-user-messages-are-not-unconditionally-critical.md) — the
+first attempt at this pilot lost the signal identically to naive, because
+every generic user turn was unconditionally `CRITICAL` and starved the
+budget before ranking ever ran. See
+[`experiments/UNREPRODUCIBLE.md`](../experiments/UNREPRODUCIBLE.md) for why
+this pilot exists as a rebuild rather than an original result.
+
 **The Consistency Engine got its own first real measurement**
 (`experiments/consistency_pilot_1_hallucination_detection/`, [ADR-0018](adr/0018-consistency-engine-first-measurement.md)),
 closing a stale claim in `BENCHMARK_PROTOCOL.md` that this engine was

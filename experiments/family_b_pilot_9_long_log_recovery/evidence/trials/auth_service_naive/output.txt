@@ -1,0 +1,47 @@
+Also take a look at tests/test_refresh.py (pass 6) while we're at it.
+
+Reviewed tests/test_refresh.py (pass 6): no new findings versus the earlier review, consistent with prior notes. Nothing actionable here, moving on.
+
+Also take a look at auth/models.py (pass 6) while we're at it.
+
+Reviewed auth/models.py (pass 6): no new findings versus the earlier review, consistent with prior notes. Nothing actionable here, moving on.
+
+Also take a look at docs/auth.md (pass 6) while we're at it.
+
+Reviewed docs/auth.md (pass 6): no new findings versus the earlier review, consistent with prior notes. Nothing actionable here, moving on.
+
+Also take a look at Makefile (pass 6) while we're at it.
+
+Reviewed Makefile (pass 6): no new findings versus the earlier review, consistent with prior notes. Nothing actionable here, moving on.
+
+Also take a look at auth/refresh.py (pass 7) while we're at it.
+
+Reviewed auth/refresh.py (pass 7): no new findings versus the earlier review, consistent with prior notes. Nothing actionable here, moving on.
+
+Also take a look at auth/tokens.py (pass 7) while we're at it.
+
+Reviewed auth/tokens.py (pass 7): no new findings versus the earlier review, consistent with prior notes. Nothing actionable here, moving on.
+
+Also take a look at tests/test_refresh.py (pass 7) while we're at it.
+
+Reviewed tests/test_refresh.py (pass 7): no new findings versus the earlier review, consistent with prior notes. Nothing actionable here, moving on.
+
+Also take a look at auth/models.py (pass 7) while we're at it.
+
+Reviewed auth/models.py (pass 7): no new findings versus the earlier review, consistent with prior notes. Nothing actionable here, moving on.
+
+Also take a look at docs/auth.md (pass 7) while we're at it.
+
+Reviewed docs/auth.md (pass 7): no new findings versus the earlier review, consistent with prior notes. Nothing actionable here, moving on.
+
+Also take a look at Makefile (pass 7) while we're at it.
+
+Reviewed Makefile (pass 7): no new findings versus the earlier review, consistent with prior notes. Nothing actionable here, moving on.
+
+Let's also double check the rate limiter -- that's the part I'm actually most worried about, since a rate-limit bug would lock out legitimate users at scale, which is a much bigger blast radius than one lookup edge case.
+
+Reviewed auth/rate_limit.py in depth -- it uses a sliding window per IP, correctly configured, no bug found, but I'd still call this the most important thing to keep monitoring going forward: a misconfigured rate limit is the kind of failure that takes down the whole login flow at once, not one user at a time. That risk is broader than any single-user bug and should be the headline of our writeup: harden rate-limit monitoring and alerting as the priority follow-up.
+
+Let's wrap up -- final summary before the report?
+
+Summary: reviewed refresh-token validation end to end -- signature, expiry, issuer, and rate limiting are all sound. Recommending rate-limit monitoring as the headline follow-up.
