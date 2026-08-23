@@ -1095,6 +1095,68 @@ def reliability_architecture(
         raise typer.Exit(1)
 
 
+hooks_app = typer.Typer(
+    help="Claude Code hook integration: automatic capture, not agent-remembered."
+)
+app.add_typer(hooks_app, name="hooks")
+
+
+def _read_hook_payload() -> dict:
+    """Claude Code sends a hook its JSON payload on stdin."""
+    try:
+        parsed = json.loads(sys.stdin.read())
+    except json.JSONDecodeError:
+        return {}
+    return parsed if isinstance(parsed, dict) else {}
+
+
+@hooks_app.command("precompact")
+def hooks_precompact() -> None:
+    """PreCompact hook body: persist CRITICAL transcript items before they degrade.
+
+    Never blocks compaction (always exits 0) -- a capture failure here must
+    degrade to "nothing extra was saved," not to a stuck session.
+    """
+    from verityai.cli.hooks import capture_precompact
+
+    payload = _read_hook_payload()
+    result = capture_precompact(payload, root=Path(payload.get("cwd") or Path.cwd()))
+    if result["skipped_reason"]:
+        typer.echo(f"verity: {result['skipped_reason']}", err=True)
+    elif result["snapshot_number"]:
+        typer.echo(
+            f"verity: captured {result['captured']} item(s), snapshot {result['snapshot_number']:03d}"
+        )
+    else:
+        typer.echo(f"verity: captured {result['captured']} item(s)")
+
+
+@hooks_app.command("session-start")
+def hooks_session_start() -> None:
+    """SessionStart hook body: re-inject the handoff after a compaction resume."""
+    from verityai.cli.hooks import resume_context
+
+    payload = _read_hook_payload()
+    context = resume_context(payload, root=Path(payload.get("cwd") or Path.cwd()))
+    if context:
+        typer.echo(context)
+
+
+@hooks_app.command("install")
+def hooks_install(
+    path: Path | None = typer.Argument(None, help="Repository root. Defaults to cwd."),
+) -> None:
+    """Register the PreCompact/SessionStart hooks in .claude/settings.json."""
+    from verityai.cli.hooks import install
+
+    target = (Path(path) if path else Path.cwd()).resolve()
+    written = install(target)
+    typer.secho(f"Hooks registered in {written}", fg=typer.colors.GREEN)
+    typer.echo(
+        "Automatic capture before compaction, and handoff re-injection after, are now active."
+    )
+
+
 def main() -> None:
     app()
 

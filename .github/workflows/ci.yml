@@ -90,3 +90,6 @@ jobs:
 
       - name: Architecture check (import policy)
         run: verity reliability architecture
+
+      - name: Hooks stay registered (ADR-0039)
+        run: verity hooks install .

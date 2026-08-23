@@ -24,10 +24,13 @@ typecheck:
 check: lint typecheck test
 
 # The harness checking itself: build the code graph over this repo and
-# validate CLAUDE.md's import policy against it (ADR-0008).
+# validate CLAUDE.md's import policy against it (ADR-0008), and keep this
+# repo's own PreCompact/SessionStart hooks registered (ADR-0039) -- if the
+# tool isn't trusted to protect its own sessions, why would anyone else's be.
 dogfood:
 	verity graph build .
 	verity reliability architecture
+	verity hooks install .
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true

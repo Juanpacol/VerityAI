@@ -185,6 +185,10 @@ verity state
 # Should saved decisions be pulled back into a context right now?
 verity recall --task "rate limiting" --sample transcript.json
 
+# Capture CRITICAL transcript items automatically before compaction, and
+# re-inject the handoff after -- no `remember` call required (ADR-0039)
+verity hooks install
+
 verity snapshot "before the refactor"
 verity restore 1
 ```

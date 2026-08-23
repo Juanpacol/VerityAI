@@ -124,7 +124,9 @@ src/verityai/
 │   ├── eval.py           publish-or-refuse gate over a run
 │   └── evidence.py       the retained artifact: diff + manifest (ADR-0027)
 ├── analysis/facts.py     AST fact extraction (carried over from T6)
-├── cli/main.py           the verity command
+├── cli/
+│   ├── main.py           the verity command
+│   └── hooks.py          Claude Code PreCompact/SessionStart integration (ADR-0039)
 ├── mcp/
 │   ├── server.py         the tool surface — 5 tools, op-dispatched (ADR-0030)
 │   └── handlers.py       one function per operation, over the same core
