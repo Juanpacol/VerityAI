@@ -362,6 +362,22 @@ budget before ranking ever ran. See
 [`experiments/UNREPRODUCIBLE.md`](../experiments/UNREPRODUCIBLE.md) for why
 this pilot exists as a rebuild rather than an original result.
 
+**A companion pilot on the opposite question,
+`experiments/family_b_pilot_10_fresh_agent_speed/`, found no consistent
+turns/cost advantage for a fresh agent with an MCP memory handoff solving a
+*known* bug, in either direction.** Two bugs this project found in itself
+(pinned to their pre-fix commits, `b320239` and `cb64bd0`, as the fixture —
+no external repo needed), three repetitions per condition, all 12 trials
+independently verified by re-running the real test suite against each
+trial's own checkout. Result: verity was 18.3% *faster* on one bug and
+22.0% *slower* on the other. Direction flipping between bugs at this sample
+size is consistent with noise, not a real effect — the honest reading,
+together with an earlier same-session attempt at this exact question that
+found verity worse in all three bugs tested but lost its raw evidence to a
+mid-session `/compact` (see `experiments/UNREPRODUCIBLE.md`), is that this
+tool's value is recovering context that was already lost (pilot 9, above),
+not accelerating an agent that still has full access to the repo.
+
 **The Consistency Engine got its own first real measurement**
 (`experiments/consistency_pilot_1_hallucination_detection/`, [ADR-0018](adr/0018-consistency-engine-first-measurement.md)),
 closing a stale claim in `BENCHMARK_PROTOCOL.md` that this engine was

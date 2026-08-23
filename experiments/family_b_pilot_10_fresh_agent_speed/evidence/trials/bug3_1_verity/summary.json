@@ -1,0 +1,8 @@
+{
+  "trial_id": "bug3_1_verity",
+  "condition": "verity",
+  "turns": 20,
+  "cost_usd": 0.4733,
+  "denials": 1,
+  "result_preview": "All 551 unit tests pass. Integration failures are pre-existing (missing `typer` package), unrelated to this change.\n\nDone. Fixed `src/verityai/memory/store.py:162` (`decisions()` now calls new `_reclassify_superseded()` helper) so old decisions get status flipped to SUPERSEDED on read when another d"
+}

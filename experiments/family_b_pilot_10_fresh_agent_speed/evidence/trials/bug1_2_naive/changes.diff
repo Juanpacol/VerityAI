@@ -1,0 +1,83 @@
+diff --git a/src/verityai/context/prune.py b/src/verityai/context/prune.py
+index 4fad073..0c4f5e7 100644
+--- a/src/verityai/context/prune.py
++++ b/src/verityai/context/prune.py
+@@ -104,8 +104,11 @@ class ContextPipeline:
+         if not budget_met:
+             # Over budget with critical items intact is the intended outcome,
+             # not a bug — but the caller has to be told, in a field they must
+-            # look at, rather than discovering it from a number.
+-            dropped_critical = []
++            # look at, rather than discovering it from a number. The items
++            # responsible are the protected ones still present: they were
++            # never eligible for the budget stage to drop, so their combined
++            # size is exactly what pushed the result over budget.
++            dropped_critical = [item.id for item in current if item.is_protected]
+ 
+         return PruneResult(
+             items=current,
+@@ -282,7 +285,7 @@ class ContextPipeline:
+                 if item.relevance is bucket and not item.is_protected and item.id in survivors
+             ]
+             # Worst-ranked and oldest dropped first.
+-            candidates.sort(key=lambda i: (i.metadata.get("rank_score", 0.0), -i.original_index))
++            candidates.sort(key=lambda i: (i.metadata.get("rank_score", 0.0), i.original_index))
+ 
+             for item in candidates:
+                 if total <= budget:
+diff --git a/tests/unit/test_prune.py b/tests/unit/test_prune.py
+index da493e3..778cc3e 100644
+--- a/tests/unit/test_prune.py
++++ b/tests/unit/test_prune.py
+@@ -95,6 +95,25 @@ class TestCriticalItemsSurvive:
+ 
+         assert any(i.kind is ItemKind.SYSTEM for i in result.items)
+ 
++    def test_dropped_critical_is_populated_when_budget_missed(self, pipeline):
++        """Invariant 5: every degraded path says why. `dropped_critical` must
++        name the critical items responsible for the overrun, not sit empty."""
++        items = [item(f"DECISION: choice number {n} " * 20, index=n) for n in range(5)]
++
++        result = pipeline.run(items, budget=10)
++
++        assert result.budget_met is False
++        assert result.dropped_critical != []
++        assert set(result.dropped_critical) == {i.id for i in result.items}
++
++    def test_dropped_critical_is_empty_when_budget_is_met(self, pipeline):
++        items = [item("DECISION: use postgres not redis", index=0)]
++
++        result = pipeline.run(items, budget=1000)
++
++        assert result.budget_met is True
++        assert result.dropped_critical == []
++
+ 
+ class TestDeduplication:
+     def test_exact_duplicates_are_removed(self, pipeline):
+@@ -242,3 +261,25 @@ class TestBudgetDropOrder:
+         kept = result.items[0]
+         assert kept.relevance is Relevance.CRITICAL
+         assert "decision:" in kept.relevance_reason
++
++    def test_tie_break_drops_oldest_first(self, pipeline):
++        """Docstring on `_enforce_budget` promises ties break on original
++        index, oldest dropped first. Same relevance and rank_score, so the
++        only thing left to break the tie is `original_index`."""
++        items = [
++            item("filler content", kind=ItemKind.TOOL_OUTPUT, index=n) for n in range(3)
++        ]
++        items = [
++            i.model_copy(
++                update={
++                    "relevance": Relevance.RELEVANT,
++                    "metadata": {"rank_score": 0.5},
++                    "token_count": 1,
++                }
++            )
++            for i in items
++        ]
++
++        survivors = pipeline._enforce_budget(items, budget=len(items) - 1)
++
++        assert [i.original_index for i in survivors] == [1, 2]

@@ -1,0 +1,77 @@
+diff --git a/src/verityai/memory/store.py b/src/verityai/memory/store.py
+index ed2f6a5..b2efb9e 100644
+--- a/src/verityai/memory/store.py
++++ b/src/verityai/memory/store.py
+@@ -167,6 +167,15 @@ class MemoryStore:
+         need in Phase 3 — hence the flag rather than a separate file.
+         """
+         all_decisions = self.read(Decision)
++        # `supersede()` never rewrites the old record's status on disk (that
++        # would defeat append-only); it only appends a replacement whose
++        # `supersedes` points back. So the chain has to be resolved here, on
++        # read, by checking which ids are targeted by some later decision's
++        # `supersedes` -- an explicit REJECTED stays REJECTED either way.
++        superseded_ids = {d.supersedes for d in all_decisions if d.supersedes is not None}
++        for d in all_decisions:
++            if d.id in superseded_ids and d.status is DecisionStatus.ACTIVE:
++                d.status = DecisionStatus.SUPERSEDED
+         if include_inactive:
+             return all_decisions
+         return [d for d in all_decisions if d.status is DecisionStatus.ACTIVE]
+diff --git a/tests/unit/test_consistency_check.py b/tests/unit/test_consistency_check.py
+index a2abbae..0d9c5c3 100644
+--- a/tests/unit/test_consistency_check.py
++++ b/tests/unit/test_consistency_check.py
+@@ -514,6 +514,30 @@ class TestDecisionResurfacing:
+ 
+         assert all("per-request" not in c.explanation for c in checks)
+ 
++    def test_a_superseded_decision_is_flagged_like_a_rejected_one(self, store):
++        """Regression: `MemoryStore.supersede()` never rewrote the old
++        record's status on disk -- it only appended a replacement with
++        `supersedes` set. Before `decisions()` resolved that chain on read,
++        a superseded decision's on-disk status stayed ACTIVE forever, so it
++        never reached this check's `(REJECTED, SUPERSEDED)` filter and
++        re-proposing it went undetected."""
++        original = store.append(
++            Decision(
++                statement="use a global mutable cache for session state",
++                rationale="caused race conditions under concurrent requests",
++            )
++        )
++        store.supersede(original.id, Decision(statement="use per-request session objects"))
++
++        checks = check_decision_resurfacing(
++            "I'll add a global mutable cache for session state to speed this up.",
++            store,
++        )
++
++        assert checks
++        assert checks[0].status is CheckStatus.CONTRADICTED
++        assert "superseded" in checks[0].explanation
++
+     def test_no_inactive_decisions_means_nothing_to_flag(self, store):
+         store.append(Decision(statement="use postgres"))
+ 
+diff --git a/tests/unit/test_memory.py b/tests/unit/test_memory.py
+index b3c5ea8..1f0ae48 100644
+--- a/tests/unit/test_memory.py
++++ b/tests/unit/test_memory.py
+@@ -77,6 +77,17 @@ class TestAppendOnly:
+         stored = [d for d in store.read(Decision) if d.id == replacement.id][0]
+         assert stored.supersedes == original.id
+ 
++    def test_superseded_decision_is_reclassified_on_read(self, store):
++        original = store.append(Decision(statement="use redis"))
++        store.supersede(original.id, Decision(statement="use postgres"))
++
++        active = store.decisions()
++        assert [d.statement for d in active] == ["use postgres"]
++
++        everything = store.decisions(include_inactive=True)
++        stored_original = [d for d in everything if d.id == original.id][0]
++        assert stored_original.status is DecisionStatus.SUPERSEDED
++
+ 
+ class TestRoundTrip:
+     def test_every_record_type_round_trips(self, store):

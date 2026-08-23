@@ -1,0 +1,8 @@
+{
+  "trial_id": "bug1_2_naive",
+  "condition": "naive",
+  "turns": 24,
+  "cost_usd": 0.4591,
+  "denials": 0,
+  "result_preview": "All 551 unit tests pass. Integration errors pre-exist (missing `typer` module, unrelated to change).\n\nTwo bugs fixed in `src/verityai/context/prune.py`:\n\n1. `dropped_critical` \u2014 always set to `[]`, never populated with real UUIDs. Now on budget miss, lists ids of protected items still present (they'"
+}

@@ -1,0 +1,77 @@
+diff --git a/src/verityai/context/prune.py b/src/verityai/context/prune.py
+index 4fad073..b9da598 100644
+--- a/src/verityai/context/prune.py
++++ b/src/verityai/context/prune.py
+@@ -104,8 +104,10 @@ class ContextPipeline:
+         if not budget_met:
+             # Over budget with critical items intact is the intended outcome,
+             # not a bug — but the caller has to be told, in a field they must
+-            # look at, rather than discovering it from a number.
+-            dropped_critical = []
++            # look at, rather than discovering it from a number. These items
++            # were never dropped (they are protected); they are what the
++            # budget could not fit.
++            dropped_critical = [item.id for item in current if item.is_protected]
+ 
+         return PruneResult(
+             items=current,
+@@ -282,7 +284,7 @@ class ContextPipeline:
+                 if item.relevance is bucket and not item.is_protected and item.id in survivors
+             ]
+             # Worst-ranked and oldest dropped first.
+-            candidates.sort(key=lambda i: (i.metadata.get("rank_score", 0.0), -i.original_index))
++            candidates.sort(key=lambda i: (i.metadata.get("rank_score", 0.0), i.original_index))
+ 
+             for item in candidates:
+                 if total <= budget:
+diff --git a/tests/unit/test_prune.py b/tests/unit/test_prune.py
+index da493e3..05bfd4a 100644
+--- a/tests/unit/test_prune.py
++++ b/tests/unit/test_prune.py
+@@ -47,6 +47,26 @@ class TestCriticalItemsSurvive:
+         assert result.budget_met is False
+         assert result.tokens_after > 10
+ 
++    def test_dropped_critical_is_populated_when_budget_not_met(self, pipeline):
++        """Regression: `dropped_critical` was unconditionally reset to `[]`
++        right before being returned, so it never reported anything even when
++        `budget_met` was False. It must list the critical items the budget
++        could not fit."""
++        items = [item(f"DECISION: choice number {n} " * 20, index=n) for n in range(5)]
++
++        result = pipeline.run(items, budget=10)
++
++        assert result.budget_met is False
++        assert set(result.dropped_critical) == {i.id for i in result.items}
++
++    def test_dropped_critical_is_empty_when_budget_met(self, pipeline):
++        items = [item("DECISION: small", index=0)]
++
++        result = pipeline.run(items, budget=1000)
++
++        assert result.budget_met is True
++        assert result.dropped_critical == []
++
+     def test_user_messages_are_protected(self, pipeline):
+         items = [
+             item("what is the timeout?", kind=ItemKind.USER_MESSAGE, index=0),
+@@ -242,3 +262,19 @@ class TestBudgetDropOrder:
+         kept = result.items[0]
+         assert kept.relevance is Relevance.CRITICAL
+         assert "decision:" in kept.relevance_reason
++
++    def test_ties_break_oldest_dropped_first(self, pipeline):
++        """Same relevance bucket, same (absent) rank score: the docstring on
++        `_enforce_budget` says ties break oldest-first -- the lowest
++        `original_index` should be dropped before a higher one. No task is
++        given so the rank stage is skipped and every item ties at a
++        rank_score of 0.0, isolating the index tiebreak."""
++        items = [
++            item("substantive filler discussion one here", index=0),
++            item("substantive filler discussion two here", index=1),
++        ]
++
++        result = pipeline.run(items, budget=6)
++
++        remaining_indexes = {i.original_index for i in result.items}
++        assert remaining_indexes == {1}

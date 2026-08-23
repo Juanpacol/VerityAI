@@ -1,0 +1,24 @@
+{
+  "spec_name": "family_b_pilot_10_fresh_agent_speed",
+  "bugs": {
+    "bug1": {
+      "naive_turns_avg": 20.0,
+      "verity_turns_avg": 16.3,
+      "naive_cost_avg": 0.4207,
+      "verity_cost_avg": 0.3637,
+      "delta_turns_pct": -18.3,
+      "n_naive": 3,
+      "n_verity": 3
+    },
+    "bug3": {
+      "naive_turns_avg": 13.7,
+      "verity_turns_avg": 16.7,
+      "naive_cost_avg": 0.3123,
+      "verity_cost_avg": 0.3887,
+      "delta_turns_pct": 22.0,
+      "n_naive": 3,
+      "n_verity": 3
+    }
+  },
+  "conclusion": "no consistent turns/cost advantage for verity in either direction -- bug1: verity -18.3% turns (better); bug3: verity +22.0% turns (worse). Direction flips between bugs at n=3, consistent with noise rather than a real effect at this sample size and task scale."
+}

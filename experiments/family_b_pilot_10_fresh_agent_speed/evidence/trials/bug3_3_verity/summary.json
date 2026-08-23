@@ -1,0 +1,8 @@
+{
+  "trial_id": "bug3_3_verity",
+  "condition": "verity",
+  "turns": 11,
+  "cost_usd": 0.2951,
+  "denials": 0,
+  "result_preview": "All 75 pass.\n\nFixed `decisions()` in `src/verityai/memory/store.py` \u2014 now folds `supersedes` chain, marking any decision that's target of another's `supersedes` as `SUPERSEDED` regardless of stored status. Previously docstring claimed this happened but no code did it: old decision stayed `ACTIVE` fo"
+}

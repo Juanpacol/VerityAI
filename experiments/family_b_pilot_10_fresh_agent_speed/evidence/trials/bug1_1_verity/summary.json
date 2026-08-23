@@ -1,0 +1,8 @@
+{
+  "trial_id": "bug1_1_verity",
+  "condition": "verity",
+  "turns": 19,
+  "cost_usd": 0.3678,
+  "denials": 1,
+  "result_preview": "All unit tests pass (551), integration fail pre-existing, missing `typer` package, unrelated.\n\nTwo bugs found and fixed in `src/verityai/context/prune.py`:\n\n1. **`dropped_critical` never populated.** Line 93 init `[]`, line 108 reset to `[]` again on over-budget \u2014 dead code, always empty regardless "
+}

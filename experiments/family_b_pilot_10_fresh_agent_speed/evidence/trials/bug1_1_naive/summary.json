@@ -1,0 +1,8 @@
+{
+  "trial_id": "bug1_1_naive",
+  "condition": "naive",
+  "turns": 19,
+  "cost_usd": 0.4139,
+  "denials": 0,
+  "result_preview": "All unit tests pass (550), integration errors pre-existing missing `typer` dep, unrelated.\n\nTwo bugs found and fixed in `src/verityai/context/prune.py`:\n\n1. **`dropped_critical` never populated.** Line 108 unconditionally reset to `[]` even inside the `not budget_met` branch \u2014 the \"record what didn'"
+}

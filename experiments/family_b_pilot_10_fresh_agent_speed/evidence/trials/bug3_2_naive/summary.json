@@ -1,0 +1,8 @@
+{
+  "trial_id": "bug3_2_naive",
+  "condition": "naive",
+  "turns": 12,
+  "cost_usd": 0.2852,
+  "denials": 0,
+  "result_preview": "All 75 pass.\n\nRoot cause: `decisions()` never followed `supersedes` chain \u2014 old decision's on-disk `status` stayed `ACTIVE` forever, so superseded decisions leaked into active context and `check_decision_resurfacing` (which filters on `REJECTED`/`SUPERSEDED`) never caught them, silently defeating th"
+}

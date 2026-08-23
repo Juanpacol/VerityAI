@@ -1,0 +1,59 @@
+diff --git a/src/verityai/memory/store.py b/src/verityai/memory/store.py
+index ed2f6a5..f83a7a4 100644
+--- a/src/verityai/memory/store.py
++++ b/src/verityai/memory/store.py
+@@ -165,11 +165,25 @@ class MemoryStore:
+         Defaults to active only, because that is what belongs in a context.
+         The superseded and rejected ones are what the Consistency Engine will
+         need in Phase 3 — hence the flag rather than a separate file.
++
++        `supersede()` appends the replacement without rewriting the old
++        record's `status` field in place (append-only), so a decision's
++        recorded status can lag its real one. This is where that gets
++        corrected: any decision that is the target of another decision's
++        `supersedes` is reclassified SUPERSEDED here, on read, regardless of
++        what status its own record carries.
+         """
+         all_decisions = self.read(Decision)
++        superseded_ids = {d.supersedes for d in all_decisions if d.supersedes is not None}
++        effective = [
++            d.model_copy(update={"status": DecisionStatus.SUPERSEDED})
++            if d.id in superseded_ids and d.status is DecisionStatus.ACTIVE
++            else d
++            for d in all_decisions
++        ]
+         if include_inactive:
+-            return all_decisions
+-        return [d for d in all_decisions if d.status is DecisionStatus.ACTIVE]
++            return effective
++        return [d for d in effective if d.status is DecisionStatus.ACTIVE]
+ 
+     def constraints(self) -> list[Constraint]:
+         return self.read(Constraint)
+diff --git a/tests/unit/test_memory.py b/tests/unit/test_memory.py
+index b3c5ea8..2b5de14 100644
+--- a/tests/unit/test_memory.py
++++ b/tests/unit/test_memory.py
+@@ -77,6 +77,22 @@ class TestAppendOnly:
+         stored = [d for d in store.read(Decision) if d.id == replacement.id][0]
+         assert stored.supersedes == original.id
+ 
++    def test_a_superseded_decision_is_reclassified_on_read(self, store):
++        """The original's on-disk status field stays ACTIVE (append-only, no
++        rewrite) -- decisions() must follow the `supersedes` chain to see
++        that it is no longer current, matching the store.supersede() docstring.
++        """
++        original = store.append(Decision(statement="use redis"))
++        store.supersede(original.id, Decision(statement="use postgres"))
++
++        active = store.decisions()
++        assert len(active) == 1
++        assert active[0].statement == "use postgres"
++
++        everything = store.decisions(include_inactive=True)
++        original_after = [d for d in everything if d.id == original.id][0]
++        assert original_after.status is DecisionStatus.SUPERSEDED
++
+ 
+ class TestRoundTrip:
+     def test_every_record_type_round_trips(self, store):

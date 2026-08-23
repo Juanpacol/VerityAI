@@ -1,0 +1,8 @@
+{
+  "trial_id": "bug3_1_naive",
+  "condition": "naive",
+  "turns": 13,
+  "cost_usd": 0.3184,
+  "denials": 0,
+  "result_preview": "All 75 pass.\n\nRoot cause: `supersede()` docstring claim false. Old decision's `status` stays ACTIVE on disk forever (append-only, never rewritten); nothing anywhere followed `supersedes` chain to reclassify it on read. So `decisions()` leaked stale decisions as active, and `check_decision_resurfacin"
+}

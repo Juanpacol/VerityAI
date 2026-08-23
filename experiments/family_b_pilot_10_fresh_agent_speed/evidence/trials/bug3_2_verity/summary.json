@@ -1,0 +1,8 @@
+{
+  "trial_id": "bug3_2_verity",
+  "condition": "verity",
+  "turns": 19,
+  "cost_usd": 0.3978,
+  "denials": 1,
+  "result_preview": "All 552 unit tests pass. Integration failures pre-exist, missing `typer` module, unrelated.\n\nRoot cause and fix: `MemoryStore.decisions()` at `src/verityai/memory/store.py:162` filtered by raw `status` field only \u2014 never followed `supersedes` chain despite docstring claim. `supersede()` set `replace"
+}

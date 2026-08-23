@@ -1,0 +1,87 @@
+diff --git a/src/verityai/memory/store.py b/src/verityai/memory/store.py
+index ed2f6a5..e1d8931 100644
+--- a/src/verityai/memory/store.py
++++ b/src/verityai/memory/store.py
+@@ -165,11 +165,25 @@ class MemoryStore:
+         Defaults to active only, because that is what belongs in a context.
+         The superseded and rejected ones are what the Consistency Engine will
+         need in Phase 3 — hence the flag rather than a separate file.
++
++        `supersede()` appends the replacement without rewriting the old
++        record, so the old record's own `status` field stays `ACTIVE` in the
++        log forever. Reclassification therefore has to happen here, on read,
++        by following the `supersedes` chain: any decision that some other
++        decision names as `supersedes` is effectively `SUPERSEDED`, whatever
++        its stored `status` says.
+         """
+         all_decisions = self.read(Decision)
++        superseded_ids = {d.supersedes for d in all_decisions if d.supersedes is not None}
++        effective = [
++            d.model_copy(update={"status": DecisionStatus.SUPERSEDED})
++            if d.id in superseded_ids and d.status is DecisionStatus.ACTIVE
++            else d
++            for d in all_decisions
++        ]
+         if include_inactive:
+-            return all_decisions
+-        return [d for d in all_decisions if d.status is DecisionStatus.ACTIVE]
++            return effective
++        return [d for d in effective if d.status is DecisionStatus.ACTIVE]
+ 
+     def constraints(self) -> list[Constraint]:
+         return self.read(Constraint)
+diff --git a/tests/unit/test_consistency_check.py b/tests/unit/test_consistency_check.py
+index a2abbae..d5e6aff 100644
+--- a/tests/unit/test_consistency_check.py
++++ b/tests/unit/test_consistency_check.py
+@@ -519,6 +519,23 @@ class TestDecisionResurfacing:
+ 
+         assert check_decision_resurfacing("anything at all", store) == []
+ 
++    def test_superseded_decision_is_flagged_not_only_rejected(self, store):
++        """Regression: `supersede()` never rewrites the old record's `status`
++        field -- it stays ACTIVE in the log. The old decision must still be
++        reclassified as SUPERSEDED (via `MemoryStore.decisions()` following
++        the `supersedes` chain) so a resembling proposal is flagged here too,
++        not only ones explicitly appended with `status=REJECTED`."""
++        original = store.append(Decision(statement="use a global mutable cache for session state"))
++        store.supersede(original.id, Decision(statement="use per-request session objects"))
++
++        checks = check_decision_resurfacing(
++            "I'll add a global mutable cache for session state to speed this up.",
++            store,
++        )
++
++        assert checks
++        assert checks[0].status is CheckStatus.CONTRADICTED
++
+     def test_the_rationale_is_surfaced_when_present(self, store_with_rejected):
+         checks = check_decision_resurfacing(
+             "global mutable cache for session state", store_with_rejected
+diff --git a/tests/unit/test_memory.py b/tests/unit/test_memory.py
+index b3c5ea8..d2aaa5e 100644
+--- a/tests/unit/test_memory.py
++++ b/tests/unit/test_memory.py
+@@ -77,6 +77,22 @@ class TestAppendOnly:
+         stored = [d for d in store.read(Decision) if d.id == replacement.id][0]
+         assert stored.supersedes == original.id
+ 
++    def test_superseded_decision_is_reclassified_on_read(self, store):
++        """The old record's own `status` stays ACTIVE in the log (append-only);
++        `decisions()` must follow the `supersedes` chain to exclude it from the
++        active set, per its own docstring."""
++        original = store.append(Decision(statement="use redis"))
++        replacement = store.supersede(original.id, Decision(statement="use postgres"))
++
++        active = store.decisions()
++        assert [d.statement for d in active] == ["use postgres"]
++
++        everyone = store.decisions(include_inactive=True)
++        old = [d for d in everyone if d.id == original.id][0]
++        assert old.status is DecisionStatus.SUPERSEDED
++        new = [d for d in everyone if d.id == replacement.id][0]
++        assert new.status is DecisionStatus.ACTIVE
++
+ 
+ class TestRoundTrip:
+     def test_every_record_type_round_trips(self, store):

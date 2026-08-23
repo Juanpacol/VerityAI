@@ -1,0 +1,8 @@
+{
+  "trial_id": "bug1_3_verity",
+  "condition": "verity",
+  "turns": 16,
+  "cost_usd": 0.4014,
+  "denials": 0,
+  "result_preview": "Both bugs fixed.\n\n**Bug 1** (`prune.py:104-108`): `dropped_critical` unconditionally reset to `[]` right before return, discarding whatever it could've held. Since critical items never get dropped (protected), fix populates it with ids of the critical items still present when `budget_met` is False \u2014"
+}

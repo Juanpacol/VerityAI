@@ -1,0 +1,46 @@
+diff --git a/src/verityai/memory/store.py b/src/verityai/memory/store.py
+index ed2f6a5..f7eca38 100644
+--- a/src/verityai/memory/store.py
++++ b/src/verityai/memory/store.py
+@@ -165,8 +165,18 @@ class MemoryStore:
+         Defaults to active only, because that is what belongs in a context.
+         The superseded and rejected ones are what the Consistency Engine will
+         need in Phase 3 — hence the flag rather than a separate file.
++
++        `supersede()` appends the replacement without rewriting the old
++        record's line, so the on-disk `status` of a superseded decision is
++        still `ACTIVE`. This is where that gets corrected: any decision named
++        as another's `supersedes` target is reclassified to `SUPERSEDED`
++        here, on read, before the active/inactive split.
+         """
+         all_decisions = self.read(Decision)
++        superseded_ids = {d.supersedes for d in all_decisions if d.supersedes is not None}
++        for d in all_decisions:
++            if d.status is DecisionStatus.ACTIVE and d.id in superseded_ids:
++                d.status = DecisionStatus.SUPERSEDED
+         if include_inactive:
+             return all_decisions
+         return [d for d in all_decisions if d.status is DecisionStatus.ACTIVE]
+diff --git a/tests/unit/test_memory.py b/tests/unit/test_memory.py
+index b3c5ea8..8404bf5 100644
+--- a/tests/unit/test_memory.py
++++ b/tests/unit/test_memory.py
+@@ -77,6 +77,18 @@ class TestAppendOnly:
+         stored = [d for d in store.read(Decision) if d.id == replacement.id][0]
+         assert stored.supersedes == original.id
+ 
++    def test_superseded_decision_is_reclassified_on_read(self, store):
++        original = store.append(Decision(statement="use redis"))
++        store.supersede(original.id, Decision(statement="use postgres"))
++
++        active = store.decisions()
++        assert len(active) == 1
++        assert active[0].statement == "use postgres"
++
++        everything = store.decisions(include_inactive=True)
++        stored_original = [d for d in everything if d.id == original.id][0]
++        assert stored_original.status is DecisionStatus.SUPERSEDED
++
+ 
+ class TestRoundTrip:
+     def test_every_record_type_round_trips(self, store):

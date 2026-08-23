@@ -1,0 +1,62 @@
+diff --git a/src/verityai/context/prune.py b/src/verityai/context/prune.py
+index 4fad073..e845581 100644
+--- a/src/verityai/context/prune.py
++++ b/src/verityai/context/prune.py
+@@ -104,8 +104,9 @@ class ContextPipeline:
+         if not budget_met:
+             # Over budget with critical items intact is the intended outcome,
+             # not a bug — but the caller has to be told, in a field they must
+-            # look at, rather than discovering it from a number.
+-            dropped_critical = []
++            # look at, rather than discovering it from a number. Record which
++            # protected items are the ones that would not fit.
++            dropped_critical = [item.id for item in current if item.is_protected]
+ 
+         return PruneResult(
+             items=current,
+@@ -282,7 +283,7 @@ class ContextPipeline:
+                 if item.relevance is bucket and not item.is_protected and item.id in survivors
+             ]
+             # Worst-ranked and oldest dropped first.
+-            candidates.sort(key=lambda i: (i.metadata.get("rank_score", 0.0), -i.original_index))
++            candidates.sort(key=lambda i: (i.metadata.get("rank_score", 0.0), i.original_index))
+ 
+             for item in candidates:
+                 if total <= budget:
+diff --git a/tests/unit/test_prune.py b/tests/unit/test_prune.py
+index da493e3..551def5 100644
+--- a/tests/unit/test_prune.py
++++ b/tests/unit/test_prune.py
+@@ -46,6 +46,16 @@ class TestCriticalItemsSurvive:
+         assert len(result.items) == 5
+         assert result.budget_met is False
+         assert result.tokens_after > 10
++        assert len(result.dropped_critical) == 5
++        assert set(result.dropped_critical) == {i.id for i in result.items}
++
++    def test_dropped_critical_stays_empty_when_budget_is_met(self, pipeline):
++        items = [item("DECISION: use postgres not redis", index=0)]
++
++        result = pipeline.run(items, budget=1000)
++
++        assert result.budget_met is True
++        assert result.dropped_critical == []
+ 
+     def test_user_messages_are_protected(self, pipeline):
+         items = [
+@@ -242,3 +252,15 @@ class TestBudgetDropOrder:
+         kept = result.items[0]
+         assert kept.relevance is Relevance.CRITICAL
+         assert "decision:" in kept.relevance_reason
++
++    def test_ties_drop_oldest_first(self, pipeline):
++        # Four same-relevance, same-rank items (no task -> rank stage
++        # skipped, so every item's rank_score ties at the metadata default).
++        # The docstring promises the oldest goes first; budget only room
++        # for the newest two.
++        items = [item(f"unique filler content number {n}", index=n) for n in range(4)]
++
++        result = pipeline.run(items, budget=11)
++
++        remaining_indexes = sorted(i.original_index for i in result.items)
++        assert remaining_indexes == [2, 3]

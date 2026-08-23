@@ -1,0 +1,8 @@
+{
+  "trial_id": "bug1_2_verity",
+  "condition": "verity",
+  "turns": 14,
+  "cost_usd": 0.3219,
+  "denials": 0,
+  "result_preview": "551 unit tests pass, none broke.\n\n**Findings + fix:**\n\n1. `dropped_critical` \u2014 never populated. Code set it to `[]` before check, then inside `if not budget_met` re-set to `[]` again (no-op, wrong direction of intent). Fix: populate with IDs of critical (protected) items still in output when budget "
+}

@@ -77,6 +77,33 @@ difference here is that "no agent behavior in the loop" is exactly the
 condition that makes a lost result recoverable rather than permanently gone
 — worth checking for, specifically, before writing a lost result off.
 
+---
+
+## The same violation happened twice in one session, on the opposite kind of pilot
+
+The very next pilot in this session (`family_b_pilot_10_fresh_agent_speed`,
+6 bugs × 3 reps in an earlier attempt, testing whether a fresh agent with an
+MCP handoff solves a *known* bug faster than one without) lost its evidence
+to the identical failure — a session `/compact` before commit — but this
+one genuinely **cannot** be rebuilt the way pilot 9 was. Both arms are
+live-agent trials, not a deterministic function of a fixture; `tool_uses`
+and turn counts are a property of agent behavior, exactly the reason pilots
+4-6 above are permanently unverifiable. Those specific numbers (+36%/+13%/
++9% turns, verity worse in all three) are gone and join pilots 4-6 in "may
+be cited as history, never as a current result."
+
+**What was done instead of re-describing the lost numbers:** a fresh run of
+the same question, retained as `family_b_pilot_10_fresh_agent_speed` —
+`evidence/` is written to this tracked directory after every individual
+trial completes, not batched at the end, specifically so a mid-run
+`/compact` can cost at most the trials not yet written, never the whole
+pilot. That run's result differs from the lost one (direction flips between
+the two bugs tested, rather than verity losing in all cases) — which is
+itself informative: two independent attempts at the same question, at n=3,
+disagreeing on direction is exactly what "no real effect, mostly noise"
+looks like, and is a stronger version of the conclusion than either run
+alone would support.
+
 **Removed from `README.md` (2026-08-11).** The README's Family B summary
 previously stated the cost saving as a standing result ("the most reproduced
 result here"). That framing did not distinguish a claim with retained

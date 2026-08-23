@@ -1,0 +1,8 @@
+{
+  "trial_id": "bug3_3_naive",
+  "condition": "naive",
+  "turns": 16,
+  "cost_usd": 0.3332,
+  "denials": 0,
+  "result_preview": "All 76 pass.\n\nRoot cause: `MemoryStore.decisions()` filtered on raw stored `status`, but `supersede()` never rewrote old record's status (append-only log), so old decision stayed `ACTIVE` forever \u2014 never reclassified, contrary to docstring. Also broke `check_decision_resurfacing`, which relies on `d"
+}
