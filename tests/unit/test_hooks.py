@@ -229,19 +229,27 @@ class TestVerdict:
         )
         status, reasons = verdict(health, {"corrupt_lines": 3}, snapshot_age_days=None)
         assert status == "critical"
-        assert any("corrupt" in r for r in reasons)
+        assert any("corrupt" in reason for reason, _action in reasons)
+        assert any("verity health" in action for _reason, action in reasons)
 
-    def test_critical_on_lost_critical_context(self):
+    def test_critical_retained_is_never_a_trigger(self):
+        """compute_health() hardcodes critical_retained=1.0 on every
+        unpruned transcript (its own docstring says so) -- every call this
+        module makes is on an unpruned transcript, so this dimension can
+        never actually report a loss here. A version of verdict() that
+        used it as a critical-tier trigger shipped briefly and was wrong
+        for the same reason ADR-0041 flags contradiction_count; this pins
+        the fix (ADR-0042/0043)."""
         health = ContextHealth(
             window_usage=0.1,
             relevant_ratio=1.0,
-            critical_retained=0.8,
+            critical_retained=0.8,  # a value that could never occur here in practice
             redundancy=0.0,
             tool_noise=0.0,
         )
         status, reasons = verdict(health, {"corrupt_lines": 0}, snapshot_age_days=None)
-        assert status == "critical"
-        assert any("lost" in r for r in reasons)
+        assert status == "healthy"
+        assert not any("lost" in reason.lower() for reason, _action in reasons)
 
     def test_degraded_on_high_window_usage(self):
         health = ContextHealth(
@@ -268,7 +276,8 @@ class TestVerdict:
     def test_degraded_on_stale_snapshot(self):
         status, reasons = verdict(None, {"corrupt_lines": 0}, snapshot_age_days=10.0)
         assert status == "degraded"
-        assert any("snapshot" in r for r in reasons)
+        assert any("snapshot" in reason for reason, _action in reasons)
+        assert any("verity snapshot" in action for _reason, action in reasons)
 
     def test_healthy_with_no_health_and_no_snapshots(self):
         status, reasons = verdict(None, {"corrupt_lines": 0}, snapshot_age_days=None)
@@ -289,7 +298,7 @@ class TestVerdict:
         )
         status, reasons = verdict(health, {"corrupt_lines": 0}, snapshot_age_days=None)
         assert status == "healthy"
-        assert not any("contradiction" in r.lower() for r in reasons)
+        assert not any("contradiction" in reason.lower() for reason, _action in reasons)
 
 
 class TestRenderStatusline:
@@ -327,7 +336,7 @@ class TestRenderStatusline:
 
         assert "ctx 62%" in line
 
-    def test_shows_critical_retention_from_a_real_transcript(self, tmp_path):
+    def test_shows_a_real_critical_item_count_from_the_transcript(self, tmp_path):
         MemoryStore.init(tmp_path)
         transcript = tmp_path / "transcript.jsonl"
         transcript.write_text(TRANSCRIPT_WITH_DECISION)
@@ -335,7 +344,26 @@ class TestRenderStatusline:
 
         line = render_statusline(payload, root=tmp_path)
 
-        assert "crit 100%" in line
+        assert "1 crit" in line
+
+    def test_points_at_verity_status_when_not_healthy(self, tmp_path):
+        store = MemoryStore.init(tmp_path)
+        store.append(Decision(statement="a"))
+        path = store.root / "state" / "decisions.jsonl"
+        with path.open("a") as handle:
+            handle.write("{ bad\n")
+
+        line = render_statusline({"cwd": str(tmp_path)}, root=tmp_path)
+
+        assert "verity status" in line
+
+    def test_no_pointer_when_healthy(self, tmp_path):
+        store = MemoryStore.init(tmp_path)
+        store.append(Decision(statement="a"))
+
+        line = render_statusline({"cwd": str(tmp_path)}, root=tmp_path)
+
+        assert "verity status" not in line
 
     def test_status_turns_critical_on_corruption(self, tmp_path):
         store = MemoryStore.init(tmp_path)

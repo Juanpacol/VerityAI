@@ -1,6 +1,12 @@
 # ADR-0042: statusline redesign — one verdict line, `verity status` for detail
 
-- **Status**: Accepted
+- **Status**: Accepted, amended by
+  [[0043-verdict-actions-and-the-fake-critical-retained-signal|ADR-0043]]
+  — the `crit N%` segment and bare reason strings shown below shipped
+  briefly and were replaced (a real `N crit` count, and `(reason, action)`
+  pairs) once ADR-0043 found `crit N%` could never show anything but
+  100%. Kept for the reasoning trail on the one-line-plus-detail shape,
+  not as documentation of the current exact segments.
 - **Date**: 2026-08-23
 - **Context**: direct feedback on [[0040-verity-statusline|ADR-0040]]'s
   first version (`verity: 12 dec 18 disc 0 fact 10 fail | 3 snapshots

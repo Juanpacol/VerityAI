@@ -23,7 +23,7 @@ from verityai.context.ingest import load, load_report
 from verityai.context.prune import ContextPipeline
 from verityai.context.tokenizer import TokenCounter
 from verityai.core.atomic import atomic_write_text
-from verityai.core.models import Constraint, Decision, Discovery, Failure, Task
+from verityai.core.models import Constraint, Decision, Discovery, Failure, Relevance, Task
 from verityai.memory.handoff import build_handoff, render_token_footer
 from verityai.memory.snapshot import SnapshotManager
 from verityai.memory.store import CorruptStateError, MemoryStore
@@ -349,12 +349,16 @@ def status(
         f"  Failures:           {summary['failures']:>6}",
     ]
 
+    critical_now = sum(1 for i in items if i.relevance is Relevance.CRITICAL)
+    lines += [
+        "",
+        "Integrity",
+        f"  Critical items now: {critical_now:>6}",
+    ]
+
     if store is not None:
         snapshots = SnapshotManager(store).list()
         lines += [
-            "",
-            "Integrity",
-            f"  Critical retained:  {health.critical_retained:>6.1%}",
             "",
             "Snapshots",
             f"  Total:              {len(snapshots):>6}",
@@ -371,8 +375,9 @@ def status(
     lines += ["", "Status"]
     typer.echo("\n".join(lines))
     typer.secho(f"  ● {verdict_status.upper()}", fg=color)
-    for reason in reasons:
+    for reason, action in reasons:
         typer.echo(f"    - {reason}")
+        typer.secho(f"      -> {action}", fg=typer.colors.CYAN)
 
 
 @app.command()

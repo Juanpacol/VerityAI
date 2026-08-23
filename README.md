@@ -196,10 +196,11 @@ verity recall --task "rate limiting" --sample transcript.json
 verity hooks install
 
 # Also add a live status bar at the bottom of the Claude Code terminal:
-# a single verdict line (healthy/degraded/critical, context %, critical
-# retention, decision/failure counts, alert count), with `verity status`
-# for the full sectioned breakdown on demand (ADR-0042). Never overwrites
-# a statusLine you already have configured.
+# a single verdict line (healthy/degraded/critical, context %, live
+# critical-item count, decision/failure counts, alert count) that points
+# at `verity status` when something needs attention -- and `verity
+# status` pairs every reason with the specific command that addresses it
+# (ADR-0042, ADR-0043). Never overwrites a statusLine you already have.
 verity hooks install --statusline
 verity status transcript.json   # the expanded view the bar summarizes
 

@@ -198,38 +198,70 @@ def verdict(
     health: ContextHealth | None,
     summary: dict[str, int],
     snapshot_age_days: float | None,
-) -> tuple[str, list[str]]:
-    """One word -- `healthy`, `degraded`, or `critical` -- plus the reasons
-    behind it. The single source of truth for both the status line's dot
-    and `verity status`'s expanded view, so the two can never disagree
-    about whether something is wrong.
+) -> tuple[str, list[tuple[str, str]]]:
+    """One word -- `healthy`, `degraded`, or `critical` -- plus
+    `(reason, action)` pairs: what's wrong, and the specific `verity`
+    command that addresses it. A verdict a developer can't act on is just
+    an number dressed up as a word, which is the same complaint that made
+    the raw-counts statusline (ADR-0040) not useful in the first place.
+
+    The single source of truth for both the status line's dot and `verity
+    status`'s expanded view, so the two can never disagree about whether
+    something is wrong.
 
     Thresholds are a stated editorial judgement (same disclaimer
     `ContextHealth.score` already carries), not a measured cutoff: critical
-    means something has demonstrably gone wrong (corrupt state, or a
-    CRITICAL item confirmed lost); degraded means attention is warranted
-    soon, not that anything broke.
+    means something has demonstrably gone wrong; degraded means attention
+    is warranted soon, not that anything broke.
 
     Deliberately does not fold in `ContextHealth.contradiction_count` --
     nothing in this codebase currently computes a real value for it (see
     ADR-0041), and displaying a bare `0` next to genuine signals would
     imply "checked, none found" for a dimension that was never checked.
+
+    Also deliberately does not use `ContextHealth.critical_retained` as a
+    trigger: `compute_health()` hardcodes it to `1.0` whenever called on an
+    unpruned transcript (its own docstring says so -- "nothing has been
+    pruned yet at measurement time"), which is every call this module
+    makes. Treating it as a live signal here would repeat the exact
+    always-passing-checker mistake this project's own T6 finding warns
+    about, just less visibly than an unwired zero -- it shipped briefly in
+    ADR-0042's first version and was found and removed in ADR-0043.
     """
-    reasons = []
+    reasons: list[tuple[str, str]] = []
 
     if summary["corrupt_lines"]:
-        reasons.append(f"{summary['corrupt_lines']} corrupt line(s) in .verity/")
-    if health is not None and health.critical_retained < 1.0:
-        reasons.append(f"critical context lost ({health.critical_retained:.0%} retained)")
+        reasons.append(
+            (
+                f"{summary['corrupt_lines']} corrupt line(s) in .verity/",
+                "run `verity health` to see which file/line, then fix or delete it by hand",
+            )
+        )
     if reasons:
         return "critical", reasons
 
     if health is not None and health.window_usage >= _DEGRADED_WINDOW_USAGE:
-        reasons.append(f"context window {health.window_usage:.0%} full")
+        reasons.append(
+            (
+                f"context window {health.window_usage:.0%} full",
+                "run `verity context <transcript> --budget N --task '...'` to prune now, "
+                "or let the PreCompact hook auto-capture before the next compaction",
+            )
+        )
     if health is not None and health.redundancy >= _DEGRADED_REDUNDANCY:
-        reasons.append(f"{health.redundancy:.0%} of context is redundant/obsolete")
+        reasons.append(
+            (
+                f"{health.redundancy:.0%} of context is redundant/obsolete",
+                "run `verity context <transcript> --budget N --task '...'` to prune it out",
+            )
+        )
     if snapshot_age_days is not None and snapshot_age_days >= _STALE_SNAPSHOT_DAYS:
-        reasons.append(f"latest snapshot is {int(snapshot_age_days)}d old")
+        reasons.append(
+            (
+                f"latest snapshot is {int(snapshot_age_days)}d old",
+                "run `verity snapshot` to capture current state",
+            )
+        )
     if reasons:
         return "degraded", reasons
 
@@ -240,12 +272,17 @@ def render_statusline(payload: dict[str, Any], root: Path | None = None) -> str 
     """One compact line: is Verity healthy, and is the agent still working
     with good context -- not a dump of every internal metric.
 
-    `verity ● healthy | ctx 63% | crit 100% | 12D 10F | 0⚠`
+    `verity ● healthy | ctx 63% | 4 crit | 12D 10F | 0⚠`
 
-    Detail belongs in `verity status`, not here; this line exists to be
-    scanned in under a second. Returns `None` only when there is no
-    `.verity/` at all, so the installed statusline command degrades to
-    silence rather than clutter in a project that never ran `verity init`.
+    A non-healthy verdict appends `-> verity status` -- detecting a problem
+    without pointing at how to address it just moves the "what do I do
+    with this number" question from the counts (ADR-0040's complaint) to
+    the word. `verity status` prints each reason paired with the specific
+    command that addresses it (`verdict()`'s `action` half).
+
+    Returns `None` only when there is no `.verity/` at all, so the
+    installed statusline command degrades to silence rather than clutter
+    in a project that never ran `verity init`.
     """
     cwd = payload.get("workspace", {}).get("current_dir") or payload.get("cwd")
     store = MemoryStore.discover(Path(cwd) if cwd else root)
@@ -265,8 +302,9 @@ def render_statusline(payload: dict[str, Any], root: Path | None = None) -> str 
     used_pct = window.get("used_percentage")
     if used_pct is not None:
         segments.append(f"ctx {used_pct:.0f}%")
-    if health is not None:
-        segments.append(f"crit {health.critical_retained:.0%}")
+    if classified:
+        critical_now = sum(1 for i in classified if i.relevance is Relevance.CRITICAL)
+        segments.append(f"{critical_now} crit")
 
     segments.append(f"{summary['decisions']}D {summary['failures']}F")
 
@@ -277,7 +315,10 @@ def render_statusline(payload: dict[str, Any], root: Path | None = None) -> str 
     alert_reset = _RESET if alerts else ""
     segments.append(f"{alert_color}{alerts}⚠{alert_reset}")
 
-    return f"{_DIM}verity{_RESET} " + f" {_DIM}|{_RESET} ".join(segments)
+    line = f"{_DIM}verity{_RESET} " + f" {_DIM}|{_RESET} ".join(segments)
+    if status != "healthy":
+        line += f"  {_DIM}-> verity status{_RESET}"
+    return line
 
 
 def install(project_root: Path) -> Path:

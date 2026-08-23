@@ -398,7 +398,7 @@ class TestStatus:
         assert "VERITY STATUS" in result.output
         assert "Decisions:" in result.output
         assert "Failures:" in result.output
-        assert "Critical retained:" in result.output
+        assert "Critical items now:" in result.output
         assert "HEALTHY" in result.output
 
     def test_status_never_mentions_contradictions(self, initialized, tmp_path):
@@ -411,6 +411,21 @@ class TestStatus:
         result = runner.invoke(app, ["status", str(transcript)])
 
         assert "contradiction" not in result.output.lower()
+
+    def test_status_pairs_each_reason_with_an_action(self, initialized, tmp_path):
+        runner.invoke(app, ["remember", "decision", "a", "--why", "reason"])
+        path = initialized / ".verity" / "state" / "decisions.jsonl"
+        with path.open("a") as handle:
+            handle.write("{ bad\n")
+        transcript = tmp_path / "t.json"
+        transcript.write_text(TRANSCRIPT)
+
+        result = runner.invoke(app, ["status", str(transcript)])
+
+        assert result.exit_code == 0
+        assert "CRITICAL" in result.output
+        assert "corrupt line" in result.output
+        assert "verity health" in result.output
 
     def test_status_without_verity_init_still_runs(self, project, tmp_path):
         transcript = tmp_path / "t.json"
