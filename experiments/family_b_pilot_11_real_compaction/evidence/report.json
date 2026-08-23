@@ -1,0 +1,11 @@
+{
+  "spec_name": "family_b_pilot_11_real_compaction",
+  "n_per_condition": 1,
+  "note": "Preliminary n=1 -- run stopped after this pair because it consumed a real Claude Pro rate-limit window (not API billing). See README for why.",
+  "planted_fact": "shell-command-injection rule (security.py): severity=high, risk_tier=low, blind spot=no data-flow analysis / cannot distinguish untrusted from trusted-config-driven input",
+  "naive_final_answer": "shell-command-injection: severity high, risk_tier low. Blind spot: check RULE_CAVEATS dict, not stored in memory \u2014 need re-read for exact text.",
+  "verity_final_answer": "shell-command-injection rule: severity=high, risk_tier=low. Blind spot: no data-flow analysis \u2014 can't tell if dynamic command portion comes from untrusted input or trusted/config values.",
+  "naive_total_cost_usd": 1.2463,
+  "verity_total_cost_usd": 0.8822,
+  "conclusion": "n=1: naive recovered the simple fact (severity/risk_tier) but explicitly lost the specific blind-spot detail after heavy padding ('not stored in memory -- need re-read'). verity recovered the blind-spot detail in full and near-verbatim via `verity handoff`, matching the discovery it recorded in .verity/ at turn 1. Consistent with pilot 9's finding, this time against real session growth rather than a synthetic log -- but n=1 only."
+}

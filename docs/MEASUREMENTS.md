@@ -378,6 +378,17 @@ mid-session `/compact` (see `experiments/UNREPRODUCIBLE.md`), is that this
 tool's value is recovering context that was already lost (pilot 9, above),
 not accelerating an agent that still has full access to the repo.
 
+**A preliminary n=1 check against a real (not synthetic) session,
+`experiments/family_b_pilot_11_real_compaction/`, points the same direction
+as pilot 9.** A real Claude Code session grown past the `--autocompact`
+floor (100k tokens, the only scriptable trigger — `/compact` itself is
+REPL-only) lost a specific detail under `naive` ("not stored in memory —
+need re-read") that `verity handoff` recovered near-verbatim under
+`verity`. Not a Family B result — n=1, no noise floor, stopped after one
+pair because a second condition's run hit the account's Claude Pro
+rate-limit window mid-session. Retained as a real-session data point and as
+the cost/design baseline (~$1/session) for a proper N≥5 run later.
+
 **The Consistency Engine got its own first real measurement**
 (`experiments/consistency_pilot_1_hallucination_detection/`, [ADR-0018](adr/0018-consistency-engine-first-measurement.md)),
 closing a stale claim in `BENCHMARK_PROTOCOL.md` that this engine was

@@ -1,0 +1,1 @@
+{"id": "0843c0a5-1013-4ec4-996f-1db1d8b8673b", "created_at": "2026-08-23T17:47:29.575153Z", "source": "cli", "evidence": [], "tags": [], "statement": "shell-command-injection rule: severity=high, risk_tier=low; blind spot is no data-flow analysis, so it cannot distinguish untrusted input from trusted/config-driven values in the dynamic command portion"}
