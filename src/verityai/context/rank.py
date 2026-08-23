@@ -217,15 +217,19 @@ class ContextRanker:
             return {}, {}, "lexical_only", "embed_fn returned an empty vector"
 
         similarities: list[tuple[int, float]] = []
+        failed = 0
         for idx, doc in enumerate(documents):
             try:
                 vector = self.embed_fn(doc)
             except Exception:
                 # One bad document must not sink the whole pass; it simply
                 # gets no semantic signal and falls back to its lexical rank.
+                failed += 1
                 continue
             if vector:
                 similarities.append((idx, _cosine_similarity(query_vector, vector)))
+            else:
+                failed += 1
 
         if not similarities:
             return {}, {}, "lexical_only", "embed_fn produced no usable document vectors"
@@ -238,4 +242,8 @@ class ContextRanker:
             ranks[idx] = rank
             scores[idx] = sim
 
-        return ranks, scores, "hybrid", None
+        # Still hybrid overall -- most documents did get a semantic score --
+        # but invariant 5 says a partial degradation must be reported too,
+        # not only a total one.
+        degraded = f"embed_fn failed on {failed}/{len(documents)} documents" if failed else None
+        return ranks, scores, "hybrid", degraded

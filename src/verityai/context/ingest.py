@@ -156,8 +156,9 @@ def from_text(text: str) -> list[ContextItem]:
     return items
 
 
-def load(raw: str) -> list[ContextItem]:
-    """Parse `raw` as JSON messages if possible, otherwise as text.
+def load_report(raw: str) -> tuple[list[ContextItem], dict[str, int]]:
+    """Parse `raw` as JSON messages if possible, otherwise as text, plus a
+    count-by-reason of any session bookkeeping lines that were skipped.
 
     Tries the structured path first and falls back silently, because a caller
     piping in a transcript should not have to declare its format. Whether the
@@ -169,11 +170,12 @@ def load(raw: str) -> list[ContextItem]:
     (one per line), so that parse fails, and `is_claude_code_jsonl` is the
     tiebreaker before falling further back to the plain-text path.
 
-    Session bookkeeping lines get silently dropped here (their counts are not
-    surfaced through this return type) — a caller who needs that breakdown
-    should call `ingest_claude_code.parse_jsonl` directly, the way
-    `graph/ingest.py`'s `IngestReport.skipped` is only available from the
-    function that actually walks the repo, not from a generic loader.
+    The skip channel is a count-by-reason dict here, not a `ParseReport` —
+    `ingest_claude_code.parse_jsonl`'s own return shape, kept as-is. A
+    20,000-line session file where hundreds of lines share one reason needs
+    a summary, not a report naming every line; `memory/store.py`'s
+    `ParseReport` is the right instrument for the opposite population
+    (a handful of hand-edited records where the line number matters).
     """
     stripped = raw.strip()
     if stripped.startswith("[") or stripped.startswith("{"):
@@ -181,13 +183,18 @@ def load(raw: str) -> list[ContextItem]:
             parsed = json.loads(stripped)
         except json.JSONDecodeError:
             if is_claude_code_jsonl(raw):
-                items, _skipped = parse_jsonl(raw)
-                return items
-            return from_text(raw)
+                return parse_jsonl(raw)
+            return from_text(raw), {}
 
         if isinstance(parsed, list):
-            return from_messages(parsed)
+            return from_messages(parsed), {}
         if isinstance(parsed, dict) and isinstance(parsed.get("messages"), list):
-            return from_messages(parsed["messages"])
+            return from_messages(parsed["messages"]), {}
 
-    return from_text(raw)
+    return from_text(raw), {}
+
+
+def load(raw: str) -> list[ContextItem]:
+    """`load_report(raw)` with the skip counts dropped. See `load_report()`
+    for that channel."""
+    return load_report(raw)[0]

@@ -125,6 +125,9 @@ def build_handoff(
             "discoveries": len(discoveries),
             "failures": len(failures),
         },
+        # Every source this handoff drew from that could not be fully read.
+        # A caller must not mistake a truncated history for the whole one.
+        "corruption": [r.note for r in store.integrity() if not r.clean],
     }
 
 
@@ -140,6 +143,13 @@ def render_token_footer(report: dict) -> str:
     lines = [f"[{report['tokens']:,} tokens, {report['token_method']}]"]
     if report["dropped_sections"]:
         lines.append(f"[dropped to fit budget: {', '.join(report['dropped_sections'])}]")
+    if report.get("corruption"):
+        n = len(report["corruption"])
+        lines.append(
+            f"[warning: {n} record source{'s' if n != 1 else ''} could not be fully read — this handoff is incomplete]"
+        )
+        for note in report["corruption"]:
+            lines.append(f"[{note}]")
     return "\n".join(lines)
 
 

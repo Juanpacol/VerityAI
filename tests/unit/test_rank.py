@@ -97,6 +97,33 @@ class TestHybridFusion:
         assert result.mode == "hybrid"
         assert result.degraded_reason is None
 
+    def test_partial_embedding_failure_sets_degraded_reason(self):
+        """ADR-0037: mode stays hybrid -- most documents genuinely got a
+        semantic score -- but invariant 5 says the partial loss must still
+        be reported, not swallowed the way it was before this fix."""
+
+        def embed(text):
+            if text == "bad document":
+                raise RuntimeError("boom")
+            return [float(len(text)), 1.0, 0.5]
+
+        items = [item("bad document"), item("query content here")]
+        result = ContextRanker(embed_fn=embed).rank("query", items)
+
+        assert result.mode == "hybrid"
+        assert result.degraded_reason is not None
+        assert "1/2" in result.degraded_reason
+
+    def test_no_degraded_reason_when_all_embeddings_succeed(self):
+        def embed(text):
+            return [float(len(text)), 1.0, 0.5]
+
+        items = [item("first"), item("second query content")]
+        result = ContextRanker(embed_fn=embed).rank("query", items)
+
+        assert result.mode == "hybrid"
+        assert result.degraded_reason is None
+
     def test_provenance_names_the_method_used(self):
         result = ContextRanker().rank("caching", [item("the caching layer")])
 

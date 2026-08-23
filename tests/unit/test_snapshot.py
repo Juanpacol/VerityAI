@@ -7,8 +7,11 @@ the records written after the snapshot, since those are the evidence of
 whatever went wrong.
 """
 
+import pytest
+
 from verityai.core.models import Constraint, Decision, Discovery, Fact, Failure, Task
 from verityai.memory.snapshot import SnapshotManager
+from verityai.memory.store import CorruptStateError
 
 
 def populate(store):
@@ -146,3 +149,56 @@ class TestListing:
 
         assert len(listed) == 1
         assert listed[0].label == "good"
+
+
+class TestCorruptStateRefusal:
+    """ADR-0037: create() is the one read path here that would otherwise
+    turn a corrupt line into a permanent, clean-looking artifact."""
+
+    def test_get_report_distinguishes_missing_from_corrupt(self, store):
+        manager = SnapshotManager(store)
+
+        missing, missing_report = manager.get_report(1)
+        assert missing is None
+        assert missing_report.exists is False
+
+        manager.create()
+        (manager.snapshots_dir / "001" / "snapshot.json").write_text("not json")
+        corrupt, corrupt_report = manager.get_report(1)
+        assert corrupt is None
+        assert corrupt_report.exists is True
+        assert not corrupt_report.clean
+
+    def test_list_omits_corrupt_but_integrity_names_it(self, store):
+        manager = SnapshotManager(store)
+        manager.create(label="good")
+        bad = manager.create(label="bad")
+        (manager.snapshots_dir / f"{bad.number:03d}" / "snapshot.json").write_text("not json")
+
+        assert len(manager.list()) == 1
+        integrity = manager.integrity()
+        assert len(integrity) == 1
+        assert integrity[0].source == f"snapshots/{bad.number:03d}/snapshot.json"
+
+    def test_create_refuses_on_corrupt_state(self, store):
+        store.append(Decision(statement="good"))
+        path = store.root / "state" / "decisions.jsonl"
+        with path.open("a") as handle:
+            handle.write("{ bad\n")
+        manager = SnapshotManager(store)
+
+        with pytest.raises(CorruptStateError):
+            manager.create()
+
+        assert not manager.snapshots_dir.exists() or list(manager.snapshots_dir.iterdir()) == []
+
+    def test_create_with_force_succeeds_despite_corruption(self, store):
+        store.append(Decision(statement="good"))
+        path = store.root / "state" / "decisions.jsonl"
+        with path.open("a") as handle:
+            handle.write("{ bad\n")
+        manager = SnapshotManager(store)
+
+        snap = manager.create(force=True)
+
+        assert snap.number == 1

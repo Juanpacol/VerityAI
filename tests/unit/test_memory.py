@@ -179,6 +179,134 @@ class TestCorruption:
         assert store.task() is None
 
 
+class TestParseReport:
+    """ADR-0037: read_report()/integrity() discharge invariants 5 and 6,
+    which the plain accessors above intentionally left unaddressed."""
+
+    def test_read_report_sums_to_whole(self, store):
+        store.append(Decision(statement="a"))
+        store.append(Decision(statement="b"))
+        store.append(Decision(statement="c"))
+        path = store.root / "state" / "decisions.jsonl"
+        with path.open("a") as handle:
+            handle.write("{ not valid json\n")
+
+        records, report = store.read_report(Decision)
+
+        assert len(records) == 3
+        assert report.lines_seen == 4
+        assert report.parsed == 3
+        assert len(report.skipped) == 1
+        assert report.sums_to_whole
+
+    def test_blank_lines_are_not_counted_as_lines_seen(self, store):
+        store.append(Decision(statement="only one"))
+        path = store.root / "state" / "decisions.jsonl"
+        with path.open("a") as handle:
+            handle.write("\n\n   \n")
+
+        _, report = store.read_report(Decision)
+
+        assert report.lines_seen == report.parsed == 1
+        assert report.clean
+
+    def test_truncated_final_line_names_its_line_number(self, store):
+        store.append(Decision(statement="a"))
+        store.append(Decision(statement="b"))
+        store.append(Decision(statement="c"))
+        path = store.root / "state" / "decisions.jsonl"
+        with path.open("a") as handle:
+            handle.write('{"statement": "truncated mid-wr\n')
+
+        _, report = store.read_report(Decision)
+
+        assert 4 in report.skipped
+        assert "invalid JSON" in report.skipped[4]
+
+    def test_valid_json_wrong_schema_is_skipped_with_a_schema_reason(self, store):
+        path = store.root / "state" / "decisions.jsonl"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("a") as handle:
+            handle.write('{"nonsense": 1}\n')
+
+        records, report = store.read_report(Decision)
+
+        assert records == []
+        assert "Decision" in report.skipped[1]
+
+    def test_valid_json_non_object_line_is_skipped(self, store):
+        path = store.root / "state" / "decisions.jsonl"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("a") as handle:
+            handle.write("[1, 2, 3]\n")
+
+        records, report = store.read_report(Decision)
+
+        assert records == []
+        assert report.skipped[1] == "not a JSON object"
+
+    def test_read_returns_the_same_records_as_read_report(self, store):
+        store.append(Decision(statement="good"))
+        path = store.root / "state" / "decisions.jsonl"
+        with path.open("a") as handle:
+            handle.write("{ bad\n")
+
+        assert store.read(Decision) == store.read_report(Decision)[0]
+
+    def test_summary_reports_corrupt_lines(self, store):
+        store.append(Decision(statement="a"))
+        store.append(Decision(statement="b"))
+        store.append(Decision(statement="c"))
+        path = store.root / "state" / "decisions.jsonl"
+        with path.open("a") as handle:
+            handle.write("{ bad\n")
+
+        summary = store.summary()
+
+        assert summary["corrupt_lines"] == 1
+        assert summary["corrupt_files"] == 1
+        assert summary["decisions"] == 3
+
+    def test_summary_is_clean_on_a_healthy_store(self, store):
+        store.append(Decision(statement="a"))
+
+        summary = store.summary()
+
+        assert summary["corrupt_lines"] == 0
+        assert summary["corrupt_files"] == 0
+
+    def test_integrity_covers_every_backing_file_and_task_json(self, store):
+        sources = {r.source for r in store.integrity()}
+
+        assert sources == {
+            "state/decisions.jsonl",
+            "state/constraints.jsonl",
+            "state/discoveries.jsonl",
+            "state/failures.jsonl",
+            "memory/facts.jsonl",
+            "memory/surfacings.jsonl",
+            "state/task.json",
+        }
+
+    def test_task_absent_and_task_corrupt_are_distinguishable(self, store):
+        absent, absent_report = store.task_report()
+        assert absent is None
+        assert absent_report.exists is False
+
+        (store.root / "state" / "task.json").write_text("not json at all")
+        corrupt, corrupt_report = store.task_report()
+        assert corrupt is None
+        assert corrupt_report.exists is True
+        assert not corrupt_report.clean
+
+    def test_parse_report_note_is_empty_when_clean(self, store):
+        store.append(Decision(statement="a"))
+
+        _, report = store.read_report(Decision)
+
+        assert report.note == ""
+
+
 class TestSummary:
     def test_summary_distinguishes_active_from_total(self, store):
         store.append(Decision(statement="active one"))

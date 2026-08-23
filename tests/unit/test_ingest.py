@@ -8,7 +8,7 @@ headline savings figure at the source.
 
 import json
 
-from verityai.context.ingest import from_messages, from_text, kind_for_role, load
+from verityai.context.ingest import from_messages, from_text, kind_for_role, load, load_report
 from verityai.core.models import ItemKind
 
 
@@ -138,3 +138,25 @@ class TestNoInputIsLost:
 
         assert "some banner" in combined
         assert "random unstructured text" in combined
+
+
+class TestLoadReport:
+    def test_load_report_surfaces_skipped_session_lines(self):
+        from pathlib import Path
+
+        fixture = Path(__file__).parents[1] / "fixtures" / "claude_code_sample.jsonl"
+        raw = fixture.read_text()
+
+        items, skipped = load_report(raw)
+
+        assert [i.content for i in items] == [i.content for i in load(raw)]
+        assert skipped
+        assert skipped.get("unparseable", 0) == 1
+
+    def test_load_report_is_empty_for_a_plain_message_array(self):
+        raw = json.dumps([{"role": "user", "content": "hello there"}])
+
+        items, skipped = load_report(raw)
+
+        assert [i.content for i in items] == [i.content for i in load(raw)]
+        assert skipped == {}

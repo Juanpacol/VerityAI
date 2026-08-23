@@ -286,6 +286,27 @@ class TestSnapshots:
         assert result.exit_code == 1
         assert "No snapshot" in result.output
 
+    def test_restore_distinguishes_corrupt_snapshot_from_missing(self, initialized):
+        runner.invoke(app, ["snapshot"])
+        (initialized / ".verity" / "snapshots" / "001" / "snapshot.json").write_text("not json")
+
+        result = runner.invoke(app, ["restore", "1"])
+
+        assert result.exit_code == 1
+        assert "unreadable" in result.output
+        assert "No snapshot" not in result.output
+
+    def test_snapshot_refuses_on_corrupt_state_and_suggests_force(self, initialized):
+        runner.invoke(app, ["remember", "decision", "a", "--why", "reason"])
+        path = initialized / ".verity" / "state" / "decisions.jsonl"
+        with path.open("a") as handle:
+            handle.write("{ not valid json\n")
+
+        result = runner.invoke(app, ["snapshot"])
+
+        assert result.exit_code == 1
+        assert "--force" in result.output
+
 
 class TestHealth:
     def test_health_includes_persisted_state_when_available(self, initialized, tmp_path):
@@ -297,6 +318,31 @@ class TestHealth:
 
         assert "CONTEXT HEALTH" in result.output
         assert "PERSISTED STATE" in result.output
+
+    def test_health_prints_corruption_block(self, initialized, tmp_path):
+        runner.invoke(app, ["remember", "decision", "a", "--why", "reason"])
+        runner.invoke(app, ["remember", "decision", "b", "--why", "reason"])
+        runner.invoke(app, ["remember", "decision", "c", "--why", "reason"])
+        path = initialized / ".verity" / "state" / "decisions.jsonl"
+        with path.open("a") as handle:
+            handle.write("{ not valid json\n")
+        transcript = tmp_path / "t.json"
+        transcript.write_text(TRANSCRIPT)
+
+        result = runner.invoke(app, ["health", str(transcript)])
+
+        assert result.exit_code == 0
+        assert "CORRUPTION" in result.output
+        assert "line 4" in result.output
+
+    def test_health_prints_no_corruption_block_when_clean(self, initialized, tmp_path):
+        runner.invoke(app, ["remember", "decision", "a", "--why", "reason"])
+        transcript = tmp_path / "t.json"
+        transcript.write_text(TRANSCRIPT)
+
+        result = runner.invoke(app, ["health", str(transcript)])
+
+        assert "CORRUPTION" not in result.output
 
 
 class TestAdaptiveContext:

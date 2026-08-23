@@ -20,7 +20,7 @@ from verityai.context.tokenizer import TokenCounter
 from verityai.core.models import Constraint, Decision, Discovery, Failure, Task
 from verityai.memory.handoff import build_handoff, render_token_footer
 from verityai.memory.snapshot import SnapshotManager
-from verityai.memory.store import MemoryStore
+from verityai.memory.store import CorruptStateError, MemoryStore
 
 EMPTY_GRAPH = 'The code graph is empty. Call code(op="index") first.'
 
@@ -144,15 +144,24 @@ def handoff(root: str | None, budget: int) -> str:
 
 
 def snapshot(root: str | None, label: str) -> str:
-    snap = SnapshotManager(store_at(root)).create(label=label)
+    manager = SnapshotManager(store_at(root))
+    try:
+        snap = manager.create(label=label)
+    except CorruptStateError as exc:
+        return f"Refused: {exc}\nFix the corrupt line(s) by hand, or call again with force=true."
     return f"Snapshot {snap.number:03d} created" + (f" ({label})" if label else "")
 
 
 def restore(root: str | None, number: int) -> str:
-    snap = SnapshotManager(store_at(root)).restore(number)
-    if snap is None:
+    manager = SnapshotManager(store_at(root))
+    _, report = manager.get_report(number)
+    if not report.exists:
         return f'No snapshot {number:03d}. Use session(op="list") to see what exists.'
+    if not report.clean:
+        return f"Snapshot {number:03d} exists but is unreadable: {report.note}"
 
+    snap = manager.restore(number)
+    assert snap is not None  # report.exists and report.clean already confirmed it
     advice = (
         f"\n\nThis state was captured at commit {snap.git_sha[:12]}. "
         "Verity has not touched your working tree; revert the code yourself if needed."
@@ -163,12 +172,11 @@ def restore(root: str | None, number: int) -> str:
 
 
 def list_snapshots(root: str | None) -> str:
-    snapshots = SnapshotManager(store_at(root)).list()
-    if not snapshots:
-        return "No snapshots yet."
-    return "\n".join(
-        f"  {s.number:03d}  {s.created_at:%Y-%m-%d %H:%M}  {s.label}" for s in snapshots
-    )
+    manager = SnapshotManager(store_at(root))
+    snapshots = manager.list()
+    lines = [f"  {s.number:03d}  {s.created_at:%Y-%m-%d %H:%M}  {s.label}" for s in snapshots]
+    lines += [f"  ! {r.source}: {r.note}" for r in manager.integrity()]
+    return "\n".join(lines) if lines else "No snapshots yet."
 
 
 # --- code graph ------------------------------------------------------------

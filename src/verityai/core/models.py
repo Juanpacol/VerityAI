@@ -387,6 +387,44 @@ class Snapshot(BaseModel):
     git_sha: str | None = None
 
 
+class ParseReport(BaseModel):
+    """What a parse read, and what it could not — the parts, summing to the
+    whole (invariant 6), with a reason for every line it dropped
+    (invariant 5).
+
+    Keyed by line number, not by reason: in an append-only JSONL file the
+    line number is the address a user goes and edits (`sed -n '42p' ...`),
+    the way a path is the address in `IngestReport.skipped`.
+    """
+
+    source: str = ""
+    exists: bool = True
+    lines_seen: int = 0
+    parsed: int = 0
+    skipped: dict[int, str] = Field(default_factory=dict)
+
+    @property
+    def sums_to_whole(self) -> bool:
+        return self.lines_seen == self.parsed + len(self.skipped)
+
+    @property
+    def clean(self) -> bool:
+        return not self.skipped
+
+    @property
+    def note(self) -> str:
+        """One-line human rendering. Empty when clean."""
+        if self.clean:
+            return ""
+        lines = sorted(self.skipped)
+        where = f"line {lines[0]}" if len(lines) == 1 else "lines " + ", ".join(map(str, lines))
+        reason = self.skipped[lines[0]]
+        extra = f" (+{len(lines) - 1} more)" if len(lines) > 1 else ""
+        return (
+            f"{self.source}: {self.parsed}/{self.lines_seen} lines parsed; {where} {reason}{extra}"
+        )
+
+
 # --- Knowledge graph -----------------------------------------------------
 
 

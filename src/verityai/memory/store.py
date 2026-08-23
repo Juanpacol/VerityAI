@@ -32,6 +32,8 @@ from pathlib import Path
 from typing import Optional, TypeVar
 from uuid import UUID
 
+from pydantic import ValidationError
+
 from verityai.core.models import (
     Constraint,
     Decision,
@@ -39,12 +41,24 @@ from verityai.core.models import (
     Discovery,
     Fact,
     Failure,
+    ParseReport,
     Record,
     Surfacing,
     Task,
 )
 
 VERITY_DIR = ".verity"
+
+
+class CorruptStateError(Exception):
+    """Raised when an operation refuses to build on unreadable state.
+
+    `SnapshotManager.create()` is the one place a read defect would
+    otherwise become a permanent write defect (ADR-0037) — everything else
+    in this module tolerates a corrupt line and reports it via
+    `ParseReport`.
+    """
+
 
 # Bound, not value-constrained: `SnapshotManager.restore` appends records it
 # holds as a union of the five types, and a value-constrained TypeVar rejects
@@ -135,27 +149,75 @@ class MemoryStore:
             handle.write(line + "\n")
         return record
 
-    def read(self, model: type) -> list:
-        """Read every record of one type, oldest first.
+    def _source_name(self, model: type) -> str:
+        subdir, filename = _FILES[model]
+        return f"{subdir}/{filename}"
 
-        A malformed line is skipped rather than fatal. These files live in a
-        user's repo and get hand-edited and merge-conflicted; one bad line
-        must not make the whole history unreadable.
+    def read_report(self, model: type) -> tuple[list, ParseReport]:
+        """Read every record of one type, oldest first, plus a report of
+        what could not be parsed.
+
+        A malformed line is skipped rather than fatal — these files live in
+        a user's repo and get hand-edited and merge-conflicted, so one bad
+        line must not make the whole history unreadable. But skipping it
+        silently would violate invariant 5 ("every degraded path says why")
+        and invariant 6 ("parsing never loses input"); `ParseReport` is the
+        channel that discharges both. `read()` is this with the report
+        dropped, for the many call sites that don't need it.
         """
+        source = self._source_name(model)
         path = self._path_for(model)
         if not path.exists():
-            return []
+            return [], ParseReport(source=source, exists=False)
+
+        try:
+            text = path.read_text(encoding="utf-8")
+        except OSError as exc:
+            return [], ParseReport(source=source, exists=True, skipped={0: f"unreadable: {exc}"})
 
         records = []
-        for line in path.read_text(encoding="utf-8").splitlines():
+        lines_seen = 0
+        skipped: dict[int, str] = {}
+        for lineno, line in enumerate(text.splitlines(), start=1):
             line = line.strip()
             if not line:
                 continue
+            lines_seen += 1
             try:
-                records.append(model(**json.loads(line)))
-            except Exception:
+                parsed = json.loads(line)
+            except json.JSONDecodeError as exc:
+                skipped[lineno] = f"invalid JSON: {exc.msg} (column {exc.colno})"
                 continue
-        return records
+            if not isinstance(parsed, dict):
+                skipped[lineno] = "not a JSON object"
+                continue
+            try:
+                records.append(model(**parsed))
+            except ValidationError as exc:
+                first = exc.errors()[0]
+                loc = ".".join(str(p) for p in first["loc"]) or "?"
+                skipped[lineno] = f"does not match {model.__name__}: {loc}: {first['msg']}"
+
+        return records, ParseReport(
+            source=source, exists=True, lines_seen=lines_seen, parsed=len(records), skipped=skipped
+        )
+
+    def read(self, model: type) -> list:
+        """Read every record of one type, oldest first. See `read_report()`
+        for the corruption channel this drops."""
+        return self.read_report(model)[0]
+
+    def integrity(self) -> list[ParseReport]:
+        """One `ParseReport` per backing file, including `state/task.json`.
+
+        The single entry point `verity health`, the handoff footer, and the
+        MCP surface use to tell a caller their view of `.verity/` is
+        incomplete, rather than silently reporting a plausible smaller
+        number.
+        """
+        reports = [self.read_report(model)[1] for model in _FILES]
+        reports.append(self.task_report()[1])
+        return reports
 
     # --- typed accessors -------------------------------------------------
 
@@ -227,15 +289,30 @@ class MemoryStore:
     def _task_path(self) -> Path:
         return self.root / "state" / "task.json"
 
-    def task(self) -> Task | None:
-        """The current task, or None if none has been set."""
+    def task_report(self) -> tuple[Task | None, ParseReport]:
+        """The current task, plus a report distinguishing "none set" from
+        "the record is corrupt" — `task()` collapsed both to `None`."""
+        source = "state/task.json"
         path = self._task_path
         if not path.exists():
-            return None
+            return None, ParseReport(source=source, exists=False)
         try:
-            return Task(**json.loads(path.read_text(encoding="utf-8")))
-        except Exception:
-            return None
+            raw = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            reason = f"invalid JSON: {exc.msg} (column {exc.colno})"
+            return None, ParseReport(source=source, lines_seen=1, skipped={1: reason})
+        try:
+            return Task(**raw), ParseReport(source=source, lines_seen=1, parsed=1)
+        except ValidationError as exc:
+            first = exc.errors()[0]
+            loc = ".".join(str(p) for p in first["loc"]) or "?"
+            reason = f"does not match Task: {loc}: {first['msg']}"
+            return None, ParseReport(source=source, lines_seen=1, skipped={1: reason})
+
+    def task(self) -> Task | None:
+        """The current task, or None if none has been set (or is corrupt --
+        see `task_report()` to tell the two apart)."""
+        return self.task_report()[0]
 
     def set_task(self, task: Task) -> Task:
         """Write the current task. The one place this store overwrites.
@@ -255,7 +332,13 @@ class MemoryStore:
     # --- reporting -------------------------------------------------------
 
     def summary(self) -> dict[str, int]:
-        """Record counts per category, for `verity health` and the CLI."""
+        """Record counts per category, for `verity health` and the CLI.
+
+        `corrupt_lines`/`corrupt_files` are always present, `0` when clean —
+        a field that appears only on failure is a field nobody's code path
+        exercises. See `integrity()` for the per-file detail.
+        """
+        reports = self.integrity()
         return {
             "decisions": len(self.decisions()),
             "decisions_total": len(self.read(Decision)),
@@ -265,4 +348,6 @@ class MemoryStore:
             "failures_total": len(self.read(Failure)),
             "facts": len(self.facts()),
             "surfacings": len(self.surfacings()),
+            "corrupt_lines": sum(len(r.skipped) for r in reports),
+            "corrupt_files": sum(1 for r in reports if not r.clean),
         }

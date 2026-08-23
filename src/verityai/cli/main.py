@@ -19,13 +19,13 @@ import typer
 
 from verityai.context.classify import relevance_breakdown
 from verityai.context.health import compute_health, critical_retention, render_health
-from verityai.context.ingest import load
+from verityai.context.ingest import load, load_report
 from verityai.context.prune import ContextPipeline
 from verityai.context.tokenizer import TokenCounter
 from verityai.core.models import Constraint, Decision, Discovery, Failure, Task
 from verityai.memory.handoff import build_handoff, render_token_footer
 from verityai.memory.snapshot import SnapshotManager
-from verityai.memory.store import MemoryStore
+from verityai.memory.store import CorruptStateError, MemoryStore
 
 app = typer.Typer(
     name="verity",
@@ -270,15 +270,36 @@ def health(
 
     counter = TokenCounter(model=model)
     pipeline = ContextPipeline(counter=counter)
-    items = classify_all([pipeline.measure(i, n) for n, i in enumerate(load(_read_input(source)))])
+    raw_items, skipped = load_report(_read_input(source))
+    items = classify_all([pipeline.measure(i, n) for n, i in enumerate(raw_items)])
 
     store = MemoryStore.discover()
     typer.echo(render_health(compute_health(items, counter=counter)))
+
+    if skipped:
+        total_skipped = sum(skipped.values())
+        by_reason = ", ".join(f"{reason} {n}" for reason, n in skipped.items())
+        unparseable = skipped.get("unparseable", 0)
+        color = typer.colors.YELLOW if unparseable else None
+        typer.secho(f"\n  [session: {total_skipped} lines skipped — {by_reason}]", fg=color)
 
     if store is not None:
         typer.echo("\nPERSISTED STATE")
         for key, value in store.summary().items():
             typer.echo(f"  {key:<20} {value:>5}")
+
+        bad = [r for r in store.integrity() if not r.clean]
+        if bad:
+            n = sum(len(r.skipped) for r in bad)
+            typer.echo()
+            typer.secho(
+                f"  CORRUPTION — {n} line{'s' if n != 1 else ''} could not be read. "
+                "Counts above are incomplete.",
+                fg=typer.colors.YELLOW,
+            )
+            for report in bad:
+                typer.secho(f"    {report.note}", fg=typer.colors.YELLOW)
+            typer.echo("    Fix or delete the line by hand; .verity/ is plain JSONL on purpose.")
 
 
 @app.command()
@@ -359,10 +380,18 @@ def recall(
 @app.command()
 def snapshot(
     label: str = typer.Argument("", help="Optional label for this snapshot."),
+    force: bool = typer.Option(
+        False, "--force", help="Snapshot over corrupt state anyway (not recommended)."
+    ),
 ) -> None:
     """Capture current task state as a numbered snapshot."""
     manager = SnapshotManager(_require_store())
-    snap = manager.create(label=label)
+    try:
+        snap = manager.create(label=label, force=force)
+    except CorruptStateError as exc:
+        typer.secho(f"Refused: {exc}", fg=typer.colors.RED, err=True)
+        typer.echo("Fix the corrupt line(s) by hand, or pass --force to snapshot anyway.", err=True)
+        raise typer.Exit(1) from exc
     typer.secho(f"Snapshot {snap.number:03d} created", fg=typer.colors.GREEN)
     if snap.git_sha:
         typer.echo(f"  git: {snap.git_sha[:12]}")
@@ -374,11 +403,20 @@ def restore(
 ) -> None:
     """Restore context state from a snapshot. Never touches your code."""
     manager = SnapshotManager(_require_store())
-    snap = manager.restore(number)
-    if snap is None:
+    _, report = manager.get_report(number)
+    if not report.exists:
         typer.secho(f"No snapshot {number:03d}", fg=typer.colors.RED, err=True)
         raise typer.Exit(1)
+    if not report.clean:
+        typer.secho(
+            f"Snapshot {number:03d} exists but is unreadable: {report.note}",
+            fg=typer.colors.RED,
+            err=True,
+        )
+        raise typer.Exit(1)
 
+    snap = manager.restore(number)
+    assert snap is not None  # report.exists and report.clean already confirmed it
     typer.secho(f"Restored snapshot {snap.number:03d}", fg=typer.colors.GREEN)
     if snap.git_sha:
         typer.echo(f"\nThis context was captured at commit {snap.git_sha[:12]}.")
@@ -388,9 +426,12 @@ def restore(
 @app.command(name="snapshots")
 def list_snapshots() -> None:
     """List all snapshots."""
-    for snap in SnapshotManager(_require_store()).list():
+    manager = SnapshotManager(_require_store())
+    for snap in manager.list():
         label = f"  {snap.label}" if snap.label else ""
         typer.echo(f"  {snap.number:03d}  {snap.created_at:%Y-%m-%d %H:%M}{label}")
+    for report in manager.integrity():
+        typer.secho(f"  ! {report.source}: {report.note}", fg=typer.colors.YELLOW)
 
 
 @app.command()

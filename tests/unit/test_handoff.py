@@ -9,7 +9,7 @@ declared order rather than truncating it into uselessness.
 """
 
 from verityai.core.models import Constraint, Decision, Discovery, Failure, Task
-from verityai.memory.handoff import build_handoff
+from verityai.memory.handoff import build_handoff, render_token_footer
 
 from ..conftest import FixedCounter
 
@@ -208,3 +208,37 @@ class TestSurfacingLog:
         assert len(store.surfacings()) == before + 1
         manager.restore(snap.number)
         assert len(store.surfacings()) == before + 1
+
+
+class TestCorruptionReporting:
+    """ADR-0037: a handoff must not present a truncated history as the
+    whole one."""
+
+    def test_handoff_report_carries_corruption(self, store):
+        populate(store)
+        path = store.root / "state" / "decisions.jsonl"
+        with path.open("a") as handle:
+            handle.write("{ bad\n")
+
+        _, report = build_handoff(store, counter=FixedCounter())
+
+        assert report["corruption"]
+        assert "decisions.jsonl" in report["corruption"][0]
+
+    def test_token_footer_warns_on_corruption(self, store):
+        populate(store)
+        path = store.root / "state" / "decisions.jsonl"
+        with path.open("a") as handle:
+            handle.write("{ bad\n")
+
+        _, report = build_handoff(store, counter=FixedCounter())
+
+        assert "incomplete" in render_token_footer(report)
+
+    def test_token_footer_unchanged_when_clean(self, store):
+        _, report = build_handoff(populate(store), counter=FixedCounter())
+
+        footer = render_token_footer(report)
+
+        assert "incomplete" not in footer
+        assert "corruption" not in footer.lower()

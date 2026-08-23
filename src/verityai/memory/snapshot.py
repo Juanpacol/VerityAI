@@ -12,9 +12,14 @@ records, so the act of restoring is visible in the log. A restore that erased
 history would destroy the evidence needed to understand why it was necessary.
 """
 
+from __future__ import annotations
+
+import builtins
 import json
 import subprocess
 from pathlib import Path
+
+from pydantic import ValidationError
 
 from verityai.core.models import (
     Constraint,
@@ -22,9 +27,10 @@ from verityai.core.models import (
     Discovery,
     Fact,
     Failure,
+    ParseReport,
     Snapshot,
 )
-from verityai.memory.store import MemoryStore
+from verityai.memory.store import CorruptStateError, MemoryStore
 
 
 def _git_sha(repo_root: Path) -> str | None:
@@ -77,8 +83,24 @@ class SnapshotManager:
         ]
         return max(numbers, default=0) + 1
 
-    def create(self, label: str = "") -> Snapshot:
-        """Capture current state as a new numbered snapshot."""
+    def create(self, label: str = "", force: bool = False) -> Snapshot:
+        """Capture current state as a new numbered snapshot.
+
+        Refuses on corrupt source state unless `force=True` (ADR-0037): a
+        snapshot built from a truncated line would write a shortened
+        history forward as a *clean-looking* artifact, and `restore()`
+        would later re-append that shortened history as new records —
+        turning a read defect into a permanent write defect. Every other
+        reader in this module tolerates corruption and reports it; this is
+        the one write path that must refuse instead.
+        """
+        if not force:
+            bad = [r for r in self.store.integrity() if not r.clean]
+            if bad:
+                raise CorruptStateError(
+                    "refusing to snapshot over corrupt state: " + "; ".join(r.note for r in bad)
+                )
+
         snapshot = Snapshot(
             number=self.next_number(),
             label=label,
@@ -99,26 +121,54 @@ class SnapshotManager:
         )
         return snapshot
 
-    def get(self, number: int) -> Snapshot | None:
+    def get_report(self, number: int) -> tuple[Snapshot | None, ParseReport]:
+        """A snapshot, plus a report distinguishing "never existed" from
+        "exists but is unreadable" — `get()` collapsed both to `None`."""
+        source = f"snapshots/{number:03d}/snapshot.json"
         path = self._dir_for(number) / "snapshot.json"
         if not path.exists():
-            return None
+            return None, ParseReport(source=source, exists=False)
         try:
-            return Snapshot(**json.loads(path.read_text(encoding="utf-8")))
-        except Exception:
-            return None
+            raw = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            reason = f"invalid JSON: {exc.msg} (column {exc.colno})"
+            return None, ParseReport(source=source, lines_seen=1, skipped={1: reason})
+        try:
+            return Snapshot(**raw), ParseReport(source=source, lines_seen=1, parsed=1)
+        except ValidationError as exc:
+            first = exc.errors()[0]
+            loc = ".".join(str(p) for p in first["loc"]) or "?"
+            reason = f"does not match Snapshot: {loc}: {first['msg']}"
+            return None, ParseReport(source=source, lines_seen=1, skipped={1: reason})
 
-    def list(self) -> list[Snapshot]:
-        """All snapshots, oldest first. Unreadable ones are skipped."""
+    def get(self, number: int) -> Snapshot | None:
+        """A snapshot, or None if missing or corrupt — see `get_report()`
+        to tell the two apart."""
+        return self.get_report(number)[0]
+
+    def _numbers(self) -> list[int]:
         if not self.snapshots_dir.is_dir():
             return []
-        snapshots = []
-        for entry in sorted(self.snapshots_dir.iterdir()):
-            if entry.is_dir() and entry.name.isdigit():
-                snapshot = self.get(int(entry.name))
-                if snapshot is not None:
-                    snapshots.append(snapshot)
-        return snapshots
+        return sorted(
+            int(entry.name)
+            for entry in self.snapshots_dir.iterdir()
+            if entry.is_dir() and entry.name.isdigit()
+        )
+
+    def list(self) -> list[Snapshot]:
+        """All readable snapshots, oldest first. Unreadable ones are
+        skipped here — see `integrity()` to learn about them."""
+        return [s for n in self._numbers() if (s := self.get(n)) is not None]
+
+    def integrity(self) -> builtins.list[ParseReport]:
+        """One `ParseReport` per snapshot directory that failed to parse.
+
+        Return type spelled `builtins.list` because this class already
+        defines a method named `list`, which shadows the builtin for name
+        resolution in the rest of this class body -- both at runtime and
+        for mypy, `from __future__ import annotations` notwithstanding.
+        """
+        return [r for n in self._numbers() if not (r := self.get_report(n)[1]).clean]
 
     def restore(self, number: int) -> Snapshot | None:
         """Re-apply a snapshot's state by appending it forward.
