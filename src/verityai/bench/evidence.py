@@ -45,6 +45,7 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 
+from verityai.core.atomic import atomic_write_text
 from verityai.core.models import TrialRecord, TrialSpec
 
 # Directories that are execution artifacts, not trial content. Hashing or
@@ -306,10 +307,8 @@ def write_trial_evidence(
     trial_evidence.mkdir(parents=True, exist_ok=True)
 
     diff, unreproducible = tree_diff(fixture, trial_dir)
-    (trial_evidence / "changes.diff").write_text(diff, encoding="utf-8")
-    (trial_evidence / "scorer.txt").write_text(
-        _scorer_log(scorer_stdout, scorer_stderr), encoding="utf-8"
-    )
+    atomic_write_text(trial_evidence / "changes.diff", diff)
+    atomic_write_text(trial_evidence / "scorer.txt", _scorer_log(scorer_stdout, scorer_stderr))
 
     transcript_relative: str | None = None
     if record.transcript_path:
@@ -361,8 +360,9 @@ def write_run_evidence(
     recurring.
     """
     evidence_root.mkdir(parents=True, exist_ok=True)
-    (evidence_root / SPEC_NAME).write_text(
-        json.dumps(json.loads(spec.model_dump_json()), indent=2) + "\n", encoding="utf-8"
+    atomic_write_text(
+        evidence_root / SPEC_NAME,
+        json.dumps(json.loads(spec.model_dump_json()), indent=2) + "\n",
     )
     # Recorded relative to the evidence root, so the artifact stays portable
     # and self-describing. A scorer reached through `$VERITY_SPEC_DIR` cannot
@@ -372,7 +372,7 @@ def write_run_evidence(
     payload = dict(report_json)
     if spec_dir is not None:
         payload["spec_dir"] = os.path.relpath(spec_dir.resolve(), evidence_root.resolve())
-    (evidence_root / REPORT_NAME).write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    atomic_write_text(evidence_root / REPORT_NAME, json.dumps(payload, indent=2) + "\n")
 
 
 def verify_evidence(

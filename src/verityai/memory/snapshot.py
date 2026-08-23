@@ -21,6 +21,7 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
+from verityai.core.atomic import atomic_write_text
 from verityai.core.models import (
     Constraint,
     Decision,
@@ -115,9 +116,9 @@ class SnapshotManager:
 
         target = self._dir_for(snapshot.number)
         target.mkdir(parents=True, exist_ok=True)
-        (target / "snapshot.json").write_text(
+        atomic_write_text(
+            target / "snapshot.json",
             json.dumps(snapshot.model_dump(mode="json"), ensure_ascii=False, indent=2),
-            encoding="utf-8",
         )
         return snapshot
 

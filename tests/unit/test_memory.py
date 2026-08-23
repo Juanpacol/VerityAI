@@ -10,6 +10,8 @@ look fine until the day they matter:
   repository and will be hand-edited and merge-conflicted.
 """
 
+import pytest
+
 from verityai.core.models import (
     Constraint,
     Decision,
@@ -177,6 +179,23 @@ class TestCorruption:
         (store.root / "state" / "task.json").write_text("not json at all")
 
         assert store.task() is None
+
+    def test_set_task_leaves_the_previous_task_intact_if_the_write_fails(self, store, monkeypatch):
+        """ADR-0038: set_task() writes atomically. If the write step raises
+        partway through, the previous task.json must still be readable, not
+        truncated -- proof of the same guarantee a real kill mid-write needs."""
+        store.set_task(Task(title="original"))
+
+        import verityai.core.atomic as atomic_module
+
+        monkeypatch.setattr(
+            atomic_module.os, "fdopen", lambda *a, **k: (_ for _ in ()).throw(RuntimeError("boom"))
+        )
+
+        with pytest.raises(RuntimeError):
+            store.set_task(Task(title="replacement"))
+
+        assert store.task().title == "original"
 
 
 class TestParseReport:

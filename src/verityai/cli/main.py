@@ -22,6 +22,7 @@ from verityai.context.health import compute_health, critical_retention, render_h
 from verityai.context.ingest import load, load_report
 from verityai.context.prune import ContextPipeline
 from verityai.context.tokenizer import TokenCounter
+from verityai.core.atomic import atomic_write_text
 from verityai.core.models import Constraint, Decision, Discovery, Failure, Task
 from verityai.memory.handoff import build_handoff, render_token_footer
 from verityai.memory.snapshot import SnapshotManager
@@ -256,7 +257,7 @@ def context(
         )
 
     if out:
-        out.write_text("\n\n".join(item.content for item in result.items), encoding="utf-8")
+        atomic_write_text(out, "\n\n".join(item.content for item in result.items))
         typer.echo(f"\n  Written to {out}")
 
 
@@ -318,7 +319,7 @@ def handoff(
     document, report = build_handoff(store, budget=budget)
 
     if out:
-        out.write_text(document, encoding="utf-8")
+        atomic_write_text(out, document)
         typer.secho(f"Written to {out}", fg=typer.colors.GREEN)
     else:
         typer.echo(document)
@@ -521,7 +522,7 @@ def bench(
     typer.echo(render_report(report))
 
     if json_out:
-        json_out.write_text(to_json(report), encoding="utf-8")
+        atomic_write_text(json_out, to_json(report))
         typer.echo(f"\n  JSON written to {json_out}")
 
     if not report.is_publishable:
@@ -644,7 +645,7 @@ def eval_command(
     typer.echo(render_report(report))
 
     if json_out:
-        json_out.write_text(json.dumps(eval_to_json(report), indent=2), encoding="utf-8")
+        atomic_write_text(json_out, json.dumps(eval_to_json(report), indent=2))
         typer.echo(f"\n  JSON written to {json_out}")
 
     if not report.is_publishable:

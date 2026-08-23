@@ -28,12 +28,14 @@ Layout:
 """
 
 import json
+import os
 from pathlib import Path
 from typing import Optional, TypeVar
 from uuid import UUID
 
 from pydantic import ValidationError
 
+from verityai.core.atomic import atomic_write_text
 from verityai.core.models import (
     Constraint,
     Decision,
@@ -116,12 +118,17 @@ class MemoryStore:
         (root / "snapshots").mkdir(parents=True, exist_ok=True)
 
         config = root / "config.toml"
-        if not config.exists():
-            config.write_text(
-                "# VerityAI harness configuration\n"
-                '[context]\nmodel = "claude-sonnet-5"\ndefault_budget = 20000\n',
-                encoding="utf-8",
-            )
+        try:
+            # O_EXCL makes "create only if absent" one atomic syscall rather
+            # than a check-then-write race between two concurrent `init`s.
+            fd = os.open(config, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+            with os.fdopen(fd, "w", encoding="utf-8") as handle:
+                handle.write(
+                    "# VerityAI harness configuration\n"
+                    '[context]\nmodel = "claude-sonnet-5"\ndefault_budget = 20000\n'
+                )
+        except FileExistsError:
+            pass
         return cls(root)
 
     @property
@@ -321,11 +328,9 @@ class MemoryStore:
         what every other record hangs off; an append-only task log would just
         mean reading the whole file to find the last line.
         """
-        path = self._task_path
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(
+        atomic_write_text(
+            self._task_path,
             json.dumps(task.model_dump(mode="json"), ensure_ascii=False, indent=2),
-            encoding="utf-8",
         )
         return task
 
