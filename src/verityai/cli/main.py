@@ -304,6 +304,78 @@ def health(
 
 
 @app.command()
+def status(
+    source: str | None = typer.Argument(None, help="Transcript file, or - for stdin."),
+    model: str | None = typer.Option(None, "--model", help="Model, for window sizing."),
+) -> None:
+    """Sectioned diagnostic view: what the status line's one line summarizes.
+
+    Ends in the same verdict (`healthy`/`degraded`/`critical`) the status
+    line shows, computed by the same `verity.cli.hooks.verdict` -- the
+    short line is for detecting something might be wrong; this is for
+    diagnosing what. Requires a transcript source, like `verity health`,
+    because the health section is computed from one, not from a live
+    Claude Code session (only the `hooks statusline` command has that).
+    """
+    from verityai.cli.hooks import latest_snapshot_age_days, verdict
+    from verityai.context.classify import classify_all
+
+    counter = TokenCounter(model=model)
+    pipeline = ContextPipeline(counter=counter)
+    items = classify_all([pipeline.measure(i, n) for n, i in enumerate(load(_read_input(source)))])
+    health = compute_health(items, counter=counter)
+
+    store = MemoryStore.discover()
+    summary = (
+        store.summary()
+        if store
+        else {"decisions": 0, "discoveries": 0, "failures": 0, "facts": 0, "corrupt_lines": 0}
+    )
+    snap_age = latest_snapshot_age_days(store) if store else None
+    verdict_status, reasons = verdict(health, summary, snap_age)
+
+    lines = [
+        "VERITY STATUS",
+        "",
+        "Context",
+        f"  Usage:              {health.window_usage:>6.1%}",
+        f"  Relevance:          {health.relevant_ratio:>6.1%}",
+        f"  Redundancy:         {health.redundancy:>6.1%}",
+        f"  Tool noise:         {health.tool_noise:>6.1%}",
+        "",
+        "Memory",
+        f"  Decisions:          {summary['decisions']:>6}",
+        f"  Discoveries:        {summary['discoveries']:>6}",
+        f"  Failures:           {summary['failures']:>6}",
+    ]
+
+    if store is not None:
+        snapshots = SnapshotManager(store).list()
+        lines += [
+            "",
+            "Integrity",
+            f"  Critical retained:  {health.critical_retained:>6.1%}",
+            "",
+            "Snapshots",
+            f"  Total:              {len(snapshots):>6}",
+            f"  Latest:             {f'{snap_age:.0f}d ago' if snap_age is not None else 'none yet':>6}",
+        ]
+    else:
+        lines.append("\n  (no .verity/ found -- Memory/Snapshots sections need `verity init`)")
+
+    color = {
+        "critical": typer.colors.RED,
+        "degraded": typer.colors.YELLOW,
+        "healthy": typer.colors.GREEN,
+    }[verdict_status]
+    lines += ["", "Status"]
+    typer.echo("\n".join(lines))
+    typer.secho(f"  ● {verdict_status.upper()}", fg=color)
+    for reason in reasons:
+        typer.echo(f"    - {reason}")
+
+
+@app.command()
 def handoff(
     budget: int | None = typer.Option(None, "--budget", "-b", help="Token ceiling."),
     out: Path | None = typer.Option(None, "--out", "-o", help="Write the document here."),

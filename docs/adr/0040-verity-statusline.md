@@ -1,6 +1,10 @@
 # ADR-0040: a live status line for `.verity/` state
 
-- **Status**: Accepted
+- **Status**: Superseded by [[0042-statusline-redesign-single-verdict-line|ADR-0042]]
+  — the two-line format and its exact segments described below no longer
+  match the shipped code. Kept for the reasoning trail (why a status line
+  at all, why it reads `context_window`/`transcript_path`, the performance
+  benchmark), not as documentation of the current output.
 - **Date**: 2026-08-23
 - **Context**: the user asked, directly, how to get VerityAI visible inside
   the Claude Code terminal itself — "as if it were an interactive bar" —

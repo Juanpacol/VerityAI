@@ -385,6 +385,43 @@ class TestHealth:
         assert "CORRUPTION" not in result.output
 
 
+class TestStatus:
+    def test_status_shows_sectioned_view_and_verdict(self, initialized, tmp_path):
+        runner.invoke(app, ["remember", "decision", "use postgres", "--why", "reliable"])
+        runner.invoke(app, ["remember", "failure", "fixed window", "--error", "rejected bursts"])
+        transcript = tmp_path / "t.json"
+        transcript.write_text(TRANSCRIPT)
+
+        result = runner.invoke(app, ["status", str(transcript)])
+
+        assert result.exit_code == 0
+        assert "VERITY STATUS" in result.output
+        assert "Decisions:" in result.output
+        assert "Failures:" in result.output
+        assert "Critical retained:" in result.output
+        assert "HEALTHY" in result.output
+
+    def test_status_never_mentions_contradictions(self, initialized, tmp_path):
+        """ADR-0041/0042: nothing in this codebase computes a real
+        contradiction count; the sectioned view must not display a bare
+        zero that would read as 'checked, none found'."""
+        transcript = tmp_path / "t.json"
+        transcript.write_text(TRANSCRIPT)
+
+        result = runner.invoke(app, ["status", str(transcript)])
+
+        assert "contradiction" not in result.output.lower()
+
+    def test_status_without_verity_init_still_runs(self, project, tmp_path):
+        transcript = tmp_path / "t.json"
+        transcript.write_text(TRANSCRIPT)
+
+        result = runner.invoke(app, ["status", str(transcript)])
+
+        assert result.exit_code == 0
+        assert "no .verity/ found" in result.output
+
+
 class TestAdaptiveContext:
     """`verity context --adaptive` (ADR-0025's pre-pass, wired in ADR-0028's
     follow-up). The rule it must never break: surfaced items are merged into

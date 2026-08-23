@@ -15,9 +15,9 @@ from verityai.cli.hooks import (
     install_statusline,
     render_statusline,
     resume_context,
+    verdict,
 )
-from verityai.core.models import Decision, Discovery
-from verityai.memory.snapshot import SnapshotManager
+from verityai.core.models import ContextHealth, Decision, Failure
 from verityai.memory.store import MemoryStore
 
 TRANSCRIPT_WITH_DECISION = "\n".join(
@@ -206,38 +206,138 @@ class TestInstall:
         assert "PreCompact" in settings["hooks"]
 
 
+class TestVerdict:
+    def test_healthy_when_nothing_is_wrong(self):
+        health = ContextHealth(
+            window_usage=0.3,
+            relevant_ratio=0.9,
+            critical_retained=1.0,
+            redundancy=0.05,
+            tool_noise=0.0,
+        )
+        status, reasons = verdict(health, {"corrupt_lines": 0}, snapshot_age_days=1.0)
+        assert status == "healthy"
+        assert reasons == []
+
+    def test_critical_on_corruption_regardless_of_health(self):
+        health = ContextHealth(
+            window_usage=0.1,
+            relevant_ratio=1.0,
+            critical_retained=1.0,
+            redundancy=0.0,
+            tool_noise=0.0,
+        )
+        status, reasons = verdict(health, {"corrupt_lines": 3}, snapshot_age_days=None)
+        assert status == "critical"
+        assert any("corrupt" in r for r in reasons)
+
+    def test_critical_on_lost_critical_context(self):
+        health = ContextHealth(
+            window_usage=0.1,
+            relevant_ratio=1.0,
+            critical_retained=0.8,
+            redundancy=0.0,
+            tool_noise=0.0,
+        )
+        status, reasons = verdict(health, {"corrupt_lines": 0}, snapshot_age_days=None)
+        assert status == "critical"
+        assert any("lost" in r for r in reasons)
+
+    def test_degraded_on_high_window_usage(self):
+        health = ContextHealth(
+            window_usage=0.9,
+            relevant_ratio=1.0,
+            critical_retained=1.0,
+            redundancy=0.0,
+            tool_noise=0.0,
+        )
+        status, _ = verdict(health, {"corrupt_lines": 0}, snapshot_age_days=None)
+        assert status == "degraded"
+
+    def test_degraded_on_high_redundancy(self):
+        health = ContextHealth(
+            window_usage=0.1,
+            relevant_ratio=0.5,
+            critical_retained=1.0,
+            redundancy=0.4,
+            tool_noise=0.0,
+        )
+        status, _ = verdict(health, {"corrupt_lines": 0}, snapshot_age_days=None)
+        assert status == "degraded"
+
+    def test_degraded_on_stale_snapshot(self):
+        status, reasons = verdict(None, {"corrupt_lines": 0}, snapshot_age_days=10.0)
+        assert status == "degraded"
+        assert any("snapshot" in r for r in reasons)
+
+    def test_healthy_with_no_health_and_no_snapshots(self):
+        status, reasons = verdict(None, {"corrupt_lines": 0}, snapshot_age_days=None)
+        assert status == "healthy"
+        assert reasons == []
+
+    def test_never_reports_contradictions(self):
+        """ADR-0041: contradiction_count is never computed by anything in
+        this codebase; verdict must not treat its always-zero default as a
+        real signal."""
+        health = ContextHealth(
+            window_usage=0.1,
+            relevant_ratio=1.0,
+            critical_retained=1.0,
+            redundancy=0.0,
+            tool_noise=0.0,
+            contradiction_count=0,
+        )
+        status, reasons = verdict(health, {"corrupt_lines": 0}, snapshot_age_days=None)
+        assert status == "healthy"
+        assert not any("contradiction" in r.lower() for r in reasons)
+
+
 class TestRenderStatusline:
     def test_returns_none_without_a_verity_store(self, tmp_path):
         assert render_statusline({"cwd": str(tmp_path)}, root=tmp_path) is None
 
-    def test_shows_record_counts(self, tmp_path):
-        store = MemoryStore.init(tmp_path)
-        store.append(Decision(statement="a"))
-        store.append(Discovery(statement="b"))
-
-        line = render_statusline({"cwd": str(tmp_path)}, root=tmp_path)
-
-        assert "1 dec" in line
-        assert "1 disc" in line
-
-    def test_shows_no_snapshots_when_none_exist(self, tmp_path):
+    def test_is_a_single_line(self, tmp_path):
         MemoryStore.init(tmp_path)
 
         line = render_statusline({"cwd": str(tmp_path)}, root=tmp_path)
 
-        assert "no snapshots" in line
+        assert "\n" not in line
 
-    def test_shows_latest_snapshot_number(self, tmp_path):
-        store = MemoryStore.init(tmp_path)
-        SnapshotManager(store).create()
-        SnapshotManager(store).create()
+    def test_shows_status_word(self, tmp_path):
+        MemoryStore.init(tmp_path)
 
         line = render_statusline({"cwd": str(tmp_path)}, root=tmp_path)
 
-        assert "2 snapshots" in line
-        assert "latest: 002" in line
+        assert "healthy" in line
 
-    def test_shows_corruption_warning(self, tmp_path):
+    def test_shows_decisions_and_failures_short_codes(self, tmp_path):
+        store = MemoryStore.init(tmp_path)
+        store.append(Decision(statement="a"))
+        store.append(Failure(attempted="b"))
+
+        line = render_statusline({"cwd": str(tmp_path)}, root=tmp_path)
+
+        assert "1D 1F" in line
+
+    def test_shows_context_window_percentage(self, tmp_path):
+        MemoryStore.init(tmp_path)
+        payload = {"cwd": str(tmp_path), "context_window": {"used_percentage": 62.4}}
+
+        line = render_statusline(payload, root=tmp_path)
+
+        assert "ctx 62%" in line
+
+    def test_shows_critical_retention_from_a_real_transcript(self, tmp_path):
+        MemoryStore.init(tmp_path)
+        transcript = tmp_path / "transcript.jsonl"
+        transcript.write_text(TRANSCRIPT_WITH_DECISION)
+        payload = {"cwd": str(tmp_path), "transcript_path": str(transcript)}
+
+        line = render_statusline(payload, root=tmp_path)
+
+        assert "crit 100%" in line
+
+    def test_status_turns_critical_on_corruption(self, tmp_path):
         store = MemoryStore.init(tmp_path)
         store.append(Decision(statement="a"))
         path = store.root / "state" / "decisions.jsonl"
@@ -246,15 +346,16 @@ class TestRenderStatusline:
 
         line = render_statusline({"cwd": str(tmp_path)}, root=tmp_path)
 
-        assert "corrupt" in line
+        assert "critical" in line
+        assert "1⚠" in line
 
-    def test_no_corruption_warning_when_clean(self, tmp_path):
+    def test_zero_alerts_when_clean(self, tmp_path):
         store = MemoryStore.init(tmp_path)
         store.append(Decision(statement="a"))
 
         line = render_statusline({"cwd": str(tmp_path)}, root=tmp_path)
 
-        assert "corrupt" not in line
+        assert "0⚠" in line
 
     def test_reads_cwd_from_workspace_current_dir(self, tmp_path):
         MemoryStore.init(tmp_path)
@@ -262,71 +363,6 @@ class TestRenderStatusline:
         line = render_statusline({"workspace": {"current_dir": str(tmp_path)}}, root=None)
 
         assert line is not None
-
-    def test_second_line_shows_context_window_usage(self, tmp_path):
-        MemoryStore.init(tmp_path)
-        payload = {
-            "cwd": str(tmp_path),
-            "context_window": {
-                "used_percentage": 62.4,
-                "remaining_percentage": 37.6,
-                "context_window_size": 200000,
-            },
-        }
-
-        line = render_statusline(payload, root=tmp_path)
-
-        assert "62% used" in line
-        assert "200,000" in line
-        assert "38% left" in line
-
-    def test_high_window_usage_is_colored(self, tmp_path):
-        MemoryStore.init(tmp_path)
-        payload = {"cwd": str(tmp_path), "context_window": {"used_percentage": 85.0}}
-
-        line = render_statusline(payload, root=tmp_path)
-
-        assert "\033[33m" in line
-
-    def test_second_line_absent_without_context_window_or_transcript(self, tmp_path):
-        MemoryStore.init(tmp_path)
-
-        line = render_statusline({"cwd": str(tmp_path)}, root=tmp_path)
-
-        assert "\n" not in line
-
-    def test_second_line_shows_degradation_from_a_real_transcript(self, tmp_path):
-        MemoryStore.init(tmp_path)
-        transcript = tmp_path / "transcript.jsonl"
-        messages = [TRANSCRIPT_WITH_DECISION] + [
-            json.dumps(
-                {
-                    "type": "assistant",
-                    "message": {"role": "assistant", "content": "exact duplicate filler line"},
-                }
-            )
-            for _ in range(6)
-        ]
-        transcript.write_text("\n".join(messages))
-        payload = {"cwd": str(tmp_path), "transcript_path": str(transcript)}
-
-        line = render_statusline(payload, root=tmp_path)
-
-        assert "degraded:" in line
-        assert "critical retained:" in line
-
-    def test_second_line_omits_health_on_an_unreadable_transcript(self, tmp_path):
-        MemoryStore.init(tmp_path)
-        payload = {
-            "cwd": str(tmp_path),
-            "context_window": {"used_percentage": 10.0},
-            "transcript_path": str(tmp_path / "does_not_exist.jsonl"),
-        }
-
-        line = render_statusline(payload, root=tmp_path)
-
-        assert "10% used" in line
-        assert "degraded:" not in line
 
 
 class TestInstallStatusline:

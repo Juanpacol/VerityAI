@@ -34,7 +34,7 @@ from verityai.context.ingest_claude_code import is_claude_code_jsonl, parse_json
 from verityai.context.prune import ContextPipeline
 from verityai.context.tokenizer import TokenCounter
 from verityai.core.atomic import atomic_write_text
-from verityai.core.models import Discovery, Relevance
+from verityai.core.models import ContextHealth, Discovery, Relevance
 from verityai.memory.handoff import build_handoff
 from verityai.memory.snapshot import SnapshotManager
 from verityai.memory.store import CorruptStateError, MemoryStore
@@ -159,8 +159,21 @@ def resume_context(payload: dict[str, Any], root: Path | None = None) -> str | N
 
 
 _YELLOW = "\033[33m"
+_RED = "\033[31m"
+_GREEN = "\033[32m"
 _DIM = "\033[2m"
 _RESET = "\033[0m"
+
+# Editorial, not empirical -- same disclaimer ContextHealth.score's own
+# docstring already carries for its weights. Chosen to make "critical" mean
+# something has actually gone wrong (corruption, lost critical context),
+# "degraded" mean attention is warranted soon, "healthy" mean neither.
+_DEGRADED_WINDOW_USAGE = 0.85
+_DEGRADED_REDUNDANCY = 0.25
+_STALE_SNAPSHOT_DAYS = 7
+
+_STATUS_COLOR = {"critical": _RED, "degraded": _YELLOW, "healthy": _GREEN}
+_STATUS_DOT = {"critical": "●", "degraded": "●", "healthy": "●"}
 
 
 def _age(delta_seconds: float) -> str:
@@ -173,93 +186,98 @@ def _age(delta_seconds: float) -> str:
     return f"{int(delta_seconds // 86400)}d ago"
 
 
-def _memory_line(store: MemoryStore) -> str:
-    """Line 1: what's persisted -- record counts and how many snapshots
-    ("scratchpads") actually got saved, not just the latest one."""
-    summary = store.summary()
-    parts = [
-        f"{summary['decisions']} dec",
-        f"{summary['discoveries']} disc",
-        f"{summary['facts']} fact",
-    ]
-    if summary["failures"]:
-        parts.append(f"{summary['failures']} fail")
-
+def latest_snapshot_age_days(store: MemoryStore) -> float | None:
     snapshots = SnapshotManager(store).list()
-    if snapshots:
-        latest = snapshots[-1]
-        age = (datetime.now(timezone.utc) - latest.created_at).total_seconds()
-        snap_text = f"{len(snapshots)} snapshot{'s' if len(snapshots) != 1 else ''} (latest: {latest.number:03d}, {_age(age)})"
-    else:
-        snap_text = "no snapshots yet"
-
-    line = f"verity: {' '.join(parts)} | {snap_text}"
-    if summary["corrupt_lines"]:
-        line += f" | {_YELLOW}⚠ {summary['corrupt_lines']} corrupt{_RESET}"
-    return line
-
-
-def _context_line(payload: dict[str, Any]) -> str | None:
-    """Line 2: how close to the real ceiling, and how much of what's in the
-    window is VerityAI's own CRITICAL/RELEVANT signal versus waste.
-
-    Two different numbers, deliberately not collapsed into one: window
-    usage (`context_window.used_percentage`, Claude Code's own count of
-    the raw window) answers "how soon until this session is forced to
-    compact." `degraded` (`ContextHealth.redundancy`, computed here from
-    the same transcript via the same classify_all pipeline `verity
-    context` uses) answers a different question -- "of what's in there,
-    how much is actually still useful" -- and a window can be near-full
-    while mostly wasted, which the raw percentage alone cannot say.
-    """
-    window = payload.get("context_window") or {}
-    used_pct = window.get("used_percentage")
-    remaining_pct = window.get("remaining_percentage")
-
-    window_segment = None
-    if used_pct is not None:
-        size = window.get("context_window_size")
-        color = _YELLOW if used_pct >= 80 else ""
-        reset = _RESET if color else ""
-        size_text = f" of {size:,}" if size else ""
-        window_segment = f"{color}{used_pct:.0f}% used{reset}{size_text} tokens"
-        if remaining_pct is not None:
-            window_segment += f" ({remaining_pct:.0f}% left)"
-
-    classified, counter, error = _classify_transcript(payload.get("transcript_path"))
-    health_segment = None
-    if not error and classified:
-        health = compute_health(classified, counter=counter)
-        health_segment = (
-            f"degraded: {health.redundancy:.0%} | critical retained: {health.critical_retained:.0%}"
-        )
-
-    segments = [s for s in (window_segment, health_segment) if s]
-    if not segments:
+    if not snapshots:
         return None
-    return "context: " + " | ".join(segments)
+    latest = snapshots[-1]
+    return (datetime.now(timezone.utc) - latest.created_at).total_seconds() / 86400
+
+
+def verdict(
+    health: ContextHealth | None,
+    summary: dict[str, int],
+    snapshot_age_days: float | None,
+) -> tuple[str, list[str]]:
+    """One word -- `healthy`, `degraded`, or `critical` -- plus the reasons
+    behind it. The single source of truth for both the status line's dot
+    and `verity status`'s expanded view, so the two can never disagree
+    about whether something is wrong.
+
+    Thresholds are a stated editorial judgement (same disclaimer
+    `ContextHealth.score` already carries), not a measured cutoff: critical
+    means something has demonstrably gone wrong (corrupt state, or a
+    CRITICAL item confirmed lost); degraded means attention is warranted
+    soon, not that anything broke.
+
+    Deliberately does not fold in `ContextHealth.contradiction_count` --
+    nothing in this codebase currently computes a real value for it (see
+    ADR-0041), and displaying a bare `0` next to genuine signals would
+    imply "checked, none found" for a dimension that was never checked.
+    """
+    reasons = []
+
+    if summary["corrupt_lines"]:
+        reasons.append(f"{summary['corrupt_lines']} corrupt line(s) in .verity/")
+    if health is not None and health.critical_retained < 1.0:
+        reasons.append(f"critical context lost ({health.critical_retained:.0%} retained)")
+    if reasons:
+        return "critical", reasons
+
+    if health is not None and health.window_usage >= _DEGRADED_WINDOW_USAGE:
+        reasons.append(f"context window {health.window_usage:.0%} full")
+    if health is not None and health.redundancy >= _DEGRADED_REDUNDANCY:
+        reasons.append(f"{health.redundancy:.0%} of context is redundant/obsolete")
+    if snapshot_age_days is not None and snapshot_age_days >= _STALE_SNAPSHOT_DAYS:
+        reasons.append(f"latest snapshot is {int(snapshot_age_days)}d old")
+    if reasons:
+        return "degraded", reasons
+
+    return "healthy", []
 
 
 def render_statusline(payload: dict[str, Any], root: Path | None = None) -> str | None:
-    """Live `.verity/` state and context health, for Claude Code's status line.
+    """One compact line: is Verity healthy, and is the agent still working
+    with good context -- not a dump of every internal metric.
 
-    Two lines: persisted memory (`_memory_line`) and context window /
-    degradation (`_context_line`). Returns `None` only when there is no
+    `verity ● healthy | ctx 63% | crit 100% | 12D 10F | 0⚠`
+
+    Detail belongs in `verity status`, not here; this line exists to be
+    scanned in under a second. Returns `None` only when there is no
     `.verity/` at all, so the installed statusline command degrades to
     silence rather than clutter in a project that never ran `verity init`.
-    A missing or unreadable transcript degrades `_context_line` to just the
-    window-usage segment (or `None`), never the whole statusline.
     """
     cwd = payload.get("workspace", {}).get("current_dir") or payload.get("cwd")
     store = MemoryStore.discover(Path(cwd) if cwd else root)
     if store is None:
         return None
 
-    lines = [f"{_DIM}{_memory_line(store)}{_RESET}"]
-    context_line = _context_line(payload)
-    if context_line:
-        lines.append(f"{_DIM}{context_line}{_RESET}")
-    return "\n".join(lines)
+    summary = store.summary()
+    classified, counter, error = _classify_transcript(payload.get("transcript_path"))
+    health = compute_health(classified, counter=counter) if not error and classified else None
+    snapshot_age = latest_snapshot_age_days(store)
+    status, _reasons = verdict(health, summary, snapshot_age)
+
+    color = _STATUS_COLOR[status]
+    segments = [f"{color}{_STATUS_DOT[status]} {status}{_RESET}"]
+
+    window = payload.get("context_window") or {}
+    used_pct = window.get("used_percentage")
+    if used_pct is not None:
+        segments.append(f"ctx {used_pct:.0f}%")
+    if health is not None:
+        segments.append(f"crit {health.critical_retained:.0%}")
+
+    segments.append(f"{summary['decisions']}D {summary['failures']}F")
+
+    alerts = summary["corrupt_lines"] + (
+        1 if snapshot_age is not None and snapshot_age >= _STALE_SNAPSHOT_DAYS else 0
+    )
+    alert_color = _YELLOW if alerts else ""
+    alert_reset = _RESET if alerts else ""
+    segments.append(f"{alert_color}{alerts}⚠{alert_reset}")
+
+    return f"{_DIM}verity{_RESET} " + f" {_DIM}|{_RESET} ".join(segments)
 
 
 def install(project_root: Path) -> Path:

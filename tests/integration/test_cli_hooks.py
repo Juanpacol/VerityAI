@@ -120,7 +120,7 @@ class TestStatusline:
         result = runner.invoke(app, ["hooks", "statusline"], input=payload)
 
         assert result.exit_code == 0
-        assert "1 dec" in result.output
+        assert "1D" in result.output
 
     def test_prints_nothing_without_a_verity_store(self, project):
         payload = json.dumps({"cwd": str(project)})
