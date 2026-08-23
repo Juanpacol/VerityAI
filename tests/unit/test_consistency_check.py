@@ -476,6 +476,19 @@ class TestDecisionResurfacing:
 
         assert checks == []
 
+    def test_superseded_decision_is_flagged_like_a_rejected_one(self, store):
+        # ADR-0034 regression: supersede() never actually deactivated the
+        # original decision, so this check's REJECTED/SUPERSEDED filter
+        # never matched anything superseded -- the resurfacing check
+        # silently never fired for the whole other half of its own purpose.
+        original = store.append(Decision(statement="use redis for caching"))
+        store.supersede(original.id, Decision(statement="use postgres for caching"))
+
+        checks = check_decision_resurfacing("we should use redis for caching", store)
+
+        assert checks
+        assert checks[0].status is CheckStatus.CONTRADICTED
+
     def test_a_single_rejected_decision_does_not_swallow_unrelated_text(self, store):
         """Regression: with only one or two decisions on record, normalizing
         against the corpus's own max score made the closest-of-the-available

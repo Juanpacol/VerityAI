@@ -163,13 +163,27 @@ class MemoryStore:
         """Decisions, newest last.
 
         Defaults to active only, because that is what belongs in a context.
-        The superseded and rejected ones are what the Consistency Engine will
-        need in Phase 3 — hence the flag rather than a separate file.
+        The superseded and rejected ones are what the Consistency Engine
+        needs (`check_decision_resurfacing`) — hence the flag rather than a
+        separate file.
+
+        A decision named by another decision's `supersedes` is reclassified
+        here, on read, to `SUPERSEDED` — regardless of the `status` its own
+        record was written with. `supersede()` never rewrites the old
+        record (append-only), so this is the only place the chain is
+        actually followed; without it the old record stays `ACTIVE` forever.
         """
         all_decisions = self.read(Decision)
+        superseded_ids = {d.supersedes for d in all_decisions if d.supersedes is not None}
+        reclassified = [
+            d.model_copy(update={"status": DecisionStatus.SUPERSEDED})
+            if d.id in superseded_ids and d.status is DecisionStatus.ACTIVE
+            else d
+            for d in all_decisions
+        ]
         if include_inactive:
-            return all_decisions
-        return [d for d in all_decisions if d.status is DecisionStatus.ACTIVE]
+            return reclassified
+        return [d for d in reclassified if d.status is DecisionStatus.ACTIVE]
 
     def constraints(self) -> list[Constraint]:
         return self.read(Constraint)

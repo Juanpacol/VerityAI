@@ -77,6 +77,23 @@ class TestAppendOnly:
         stored = [d for d in store.read(Decision) if d.id == replacement.id][0]
         assert stored.supersedes == original.id
 
+    def test_superseded_decision_is_excluded_from_active(self, store):
+        # ADR-0034 regression: the original record's status stayed ACTIVE
+        # forever (append-only, never rewritten), and decisions() did a flat
+        # status filter with no supersedes-chain walking, so a superseded
+        # decision kept showing up as active alongside its replacement.
+        original = store.append(Decision(statement="use redis for caching"))
+        store.supersede(original.id, Decision(statement="use postgres for caching"))
+
+        active = store.decisions()
+
+        assert len(active) == 1
+        assert active[0].statement == "use postgres for caching"
+
+        inactive = store.decisions(include_inactive=True)
+        reclassified = [d for d in inactive if d.id == original.id][0]
+        assert reclassified.status is DecisionStatus.SUPERSEDED
+
 
 class TestRoundTrip:
     def test_every_record_type_round_trips(self, store):
