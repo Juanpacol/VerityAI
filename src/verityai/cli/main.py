@@ -350,10 +350,11 @@ def status(
     ]
 
     critical_now = sum(1 for i in items if i.relevance is Relevance.CRITICAL)
+    critical_pct = critical_now / len(items) if items else 0.0
     lines += [
         "",
         "Integrity",
-        f"  Critical items now: {critical_now:>6}",
+        f"  Critical items now: {critical_now:>4} of {len(items)} ({critical_pct:.0%})",
     ]
 
     if store is not None:

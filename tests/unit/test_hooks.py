@@ -336,7 +336,10 @@ class TestRenderStatusline:
 
         assert "ctx 62%" in line
 
-    def test_shows_a_real_critical_item_count_from_the_transcript(self, tmp_path):
+    def test_shows_critical_share_as_a_percentage_not_a_raw_count(self, tmp_path):
+        """A raw count ("433 crit") is meaningless without knowing the
+        transcript size -- 433 of 500 items reads very differently from
+        433 of 50,000. A percentage is legible on its own."""
         MemoryStore.init(tmp_path)
         transcript = tmp_path / "transcript.jsonl"
         transcript.write_text(TRANSCRIPT_WITH_DECISION)
@@ -344,7 +347,7 @@ class TestRenderStatusline:
 
         line = render_statusline(payload, root=tmp_path)
 
-        assert "1 crit" in line
+        assert "33% crit" in line
 
     def test_points_at_verity_status_when_not_healthy(self, tmp_path):
         store = MemoryStore.init(tmp_path)

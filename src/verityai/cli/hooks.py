@@ -303,8 +303,14 @@ def render_statusline(payload: dict[str, Any], root: Path | None = None) -> str 
     if used_pct is not None:
         segments.append(f"ctx {used_pct:.0f}%")
     if classified:
-        critical_now = sum(1 for i in classified if i.relevance is Relevance.CRITICAL)
-        segments.append(f"{critical_now} crit")
+        # A percentage of the current transcript, not a raw count -- "433
+        # crit" tells a reader nothing without knowing how large the
+        # transcript is (433 of 500 items is very different from 433 of
+        # 50,000). "9% crit" is legible on its own.
+        critical_pct = sum(1 for i in classified if i.relevance is Relevance.CRITICAL) / len(
+            classified
+        )
+        segments.append(f"{critical_pct:.0%} crit")
 
     segments.append(f"{summary['decisions']}D {summary['failures']}F")
 
