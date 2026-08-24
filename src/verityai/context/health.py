@@ -57,6 +57,22 @@ def compute_health(
         )
     if not counter.is_exact:
         notes.append(f"token counts are estimates ({counter.method}), not exact")
+    # Both fields below are structurally constant through this function --
+    # not a measurement that happened to come back clean. Surfacing that
+    # here, rather than letting `critical_retained: 100%` and
+    # `contradiction_count: 0` read as reassurance, is the same fix
+    # ADR-0043 made for `cli/hooks.py::verdict()`; this closes the same gap
+    # in `render_health()`, which every other caller of this function still
+    # goes through (`verity ingest`, `verity health`, `--adaptive`, MCP).
+    notes.append(
+        "critical_retained is always 100% here -- nothing has been pruned "
+        "yet at measurement time; call verity context to see what a real "
+        "prune actually retains"
+    )
+    notes.append(
+        "contradiction_count is always 0 here -- no check in this project "
+        "currently populates it; treat it as unmeasured, not as a clean scan"
+    )
 
     by_bucket = {bucket: 0 for bucket in Relevance}
     for item in items:

@@ -102,6 +102,23 @@ class TestDimensions:
 
         assert any("estimates" in note for note in health.notes)
 
+    def test_critical_retained_is_flagged_as_structurally_constant(self):
+        """critical_retained is always 1.0 through compute_health() -- no
+        caller of this function ever passes a before/after pruning pair,
+        only critical_retention() (a different function) does. Displaying
+        100% here without saying why would repeat the exact trap ADR-0043
+        found and fixed in cli/hooks.py::verdict()."""
+        health = compute_health(measured([item("anything")]))
+
+        assert health.critical_retained == 1.0
+        assert any("critical_retained is always 100%" in note for note in health.notes)
+
+    def test_contradiction_count_is_flagged_as_unmeasured(self):
+        health = compute_health(measured([item("anything")]))
+
+        assert health.contradiction_count == 0
+        assert any("contradiction_count is always 0" in note for note in health.notes)
+
     def test_redundancy_rises_with_duplicates(self):
         unique = measured([item(f"unique content {n}", index=n) for n in range(4)])
         duplicated = measured([item("identical content", index=n) for n in range(4)])
