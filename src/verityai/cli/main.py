@@ -554,6 +554,7 @@ def snapshots_list(ctx: typer.Context) -> None:
     for snap in manager.list():
         label = f"  {snap.label}" if snap.label else ""
         typer.echo(f"  {snap.number:03d}  {snap.created_at:%Y-%m-%d %H:%M}{label}")
+        typer.secho(f"       {manager.path_for(snap.number)}", fg=typer.colors.BRIGHT_BLACK)
     for report in manager.integrity():
         typer.secho(f"  ! {report.source}: {report.note}", fg=typer.colors.YELLOW)
     if manager.list():

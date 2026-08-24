@@ -327,6 +327,15 @@ class TestSnapshots:
         assert "first" in result.output
         assert "second" in result.output
 
+    def test_listing_snapshots_shows_the_file_path(self, initialized):
+        """Without this, seeing what a snapshot contains meant already
+        knowing .verity/snapshots/NNN/snapshot.json's layout by heart."""
+        runner.invoke(app, ["snapshot"])
+
+        result = runner.invoke(app, ["snapshots"])
+
+        assert str(initialized / ".verity" / "snapshots" / "001" / "snapshot.json") in result.output
+
     def test_snapshot_reports_the_path_it_saved_to(self, initialized):
         result = runner.invoke(app, ["snapshot"])
 

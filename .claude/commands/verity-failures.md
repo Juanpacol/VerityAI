@@ -4,11 +4,8 @@ argument-hint: "[resolve N] [note text]"
 allowed-tools: Bash(verity failures:*)
 ---
 
-Current failures:
+!`N=$(echo "$ARGUMENTS" | awk '{print $2}'); NOTE=$(echo "$ARGUMENTS" | cut -s -d' ' -f3-); if echo "$ARGUMENTS" | grep -q '^resolve '; then verity failures resolve "$N" --note "$NOTE"; else verity failures; fi`
 
-!`verity failures`
-
-If `$ARGUMENTS` starts with "resolve", run `verity failures resolve <N> --note "<rest>"`
-using the number and note text from `$ARGUMENTS`, then show the updated list.
-Otherwise, just present the list above as-is -- do not summarize or invent commentary
-beyond what the output already says.
+Present the output above as-is. This ran deterministically -- word-splitting
+`$ARGUMENTS` with `set --` was tried first and turned out unreliable across
+shell environments, so this avoids it entirely (`awk`/`cut` instead).
