@@ -1,10 +1,12 @@
 ---
 description: Multi-dimensional context health against this session's own transcript.
-allowed-tools: Bash(verity health:*), Bash(ls:*)
+allowed-tools: Bash(verity health:*)
 ---
 
-Health against the most recent session transcript in this project:
+Health against *this* session's own transcript (`${CLAUDE_SESSION_ID}`, not
+"most recently touched file" -- a stale-mtime file from a just-ended prior
+session used to win that race silently):
 
-!`PROJ_DIR="$HOME/.claude/projects/$(echo "${CLAUDE_PROJECT_DIR}" | sed 's/\//-/g')"; verity health "$(ls -t "$PROJ_DIR"/*.jsonl 2>/dev/null | head -1)"`
+!`verity health "$HOME/.claude/projects/$(echo "${CLAUDE_PROJECT_DIR}" | sed 's/\//-/g')/${CLAUDE_SESSION_ID}.jsonl"`
 
 Present the output above as-is.
